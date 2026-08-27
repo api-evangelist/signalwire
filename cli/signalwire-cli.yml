@@ -1,0 +1,63 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/platform/swsh, https://pypi.org/project/swsh/,
+  https://github.com/signalwire/swsh,
+  https://signalwire.com/docs/server-sdks/reference/python/agents/cli/
+clis:
+- name: SWSH
+  full_name: SignalWire interactive SHell
+  binary: swsh
+  language: Python
+  purpose: >-
+    Command-line utility to interface with SignalWire APIs and to configure and manage SignalWire
+    Spaces from a shell. Documented as useful in scripting contexts for repeated tasks by passing
+    commands into SWSH.
+  install:
+  - method: pip
+    command: pip3.11 install swsh
+    note: Provider notes a Python 3.12 dependency issue and recommends pinning to 3.11.
+  - method: docker
+    command: WireStarter container
+    repository: https://github.com/signalwire/WireStarter
+    note: WireStarter also sets up the SignalWire SDKs and a dev/test environment.
+  package:
+    registry: pypi
+    name: swsh
+    version: 0.1.14
+    published: '2024-03-20'
+  repository: https://github.com/signalwire/swsh
+  docs: https://signalwire.com/docs/platform/swsh
+  credentials: Project ID + API Token from the Dashboard API tab
+- name: swaig-test
+  language: Python
+  purpose: Test a SignalWire AI agent's SWAIG tools without placing a call — list tools, dump the
+    generated SWML, and execute a function directly.
+  commands:
+  - swaig-test my_agent.py --list-tools
+  - swaig-test my_agent.py --dump-swml
+  - swaig-test my_agent.py --dump-swml --raw
+  - swaig-test my_agent.py --exec <function> --<arg> <value>
+  ships_with: signalwire-agents (PyPI)
+  docs: https://signalwire.com/docs/server-sdks/reference/python/agents/cli/swaig-test
+- name: sw-agent-init
+  language: Python
+  purpose: Scaffold a new SignalWire AI agent project.
+  ships_with: signalwire-agents (PyPI)
+  docs: https://signalwire.com/docs/server-sdks/reference/python/agents/cli/sw-agent-init
+- name: sw-search
+  language: Python
+  purpose: Build and query local vector-search indexes for agent knowledge (Datasphere-style
+    retrieval without a hosted vector DB).
+  ships_with: signalwire-agents (PyPI)
+  docs: https://signalwire.com/docs/server-sdks/reference/python/agents/cli/sw-search
+- name: sw-agent-dokku
+  language: Python
+  purpose: Deploy a SignalWire agent to a Dokku host.
+  ships_with: signalwire-agents (PyPI)
+  docs: https://signalwire.com/docs/server-sdks/reference/python/agents/cli/sw-agent-dokku
+- name: mcp-gateway
+  language: Python
+  purpose: Run the MCP Gateway that lets a SignalWire agent consume third-party MCP servers.
+  ships_with: signalwire-agents (PyPI)
+  docs: https://signalwire.com/docs/server-sdks/reference/python/agents/cli/mcp-gateway
+  see: mcp/signalwire-mcp.yml

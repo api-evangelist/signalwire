@@ -1,0 +1,54 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/browser-sdk/v4/guides/web-components,
+  https://signalwire.com/docs/browser-sdk/v4/web-components/sw-click-to-call,
+  registry.npmjs.org, https://github.com/signalwire
+note: >-
+  SignalWire ships embeddable client-side components distinct from its SDKs — custom elements you
+  drop into a page, plus prebuilt widgets. Versions read from npm on 2026-08-27.
+families:
+- family: Web Components (Browser SDK v4)
+  loader:
+    package: '@signalwire/web-components'
+    registry: npm
+    version: 4.0.0-rc.2
+    published: '2026-07-14'
+  docs: https://signalwire.com/docs/browser-sdk/v4/guides/web-components
+  components:
+  - tag: sw-click-to-call
+    purpose: Click-to-call button that opens a WebRTC call to a SignalWire address.
+    docs: https://signalwire.com/docs/browser-sdk/v4/web-components/sw-click-to-call
+  - tag: sw-call-status
+    purpose: Renders live call status in the page.
+    docs: https://signalwire.com/docs/browser-sdk/v4/web-components/sw-call-status
+- family: Call Widget
+  loader:
+    package: '@signalwire/call-widget'
+    registry: npm
+    version: 3.15.0
+    published: '2025-08-25'
+  repository: https://github.com/signalwire/call-widget
+  purpose: Drop-in call widget built on the SignalWire SDK and the AI Agent feature.
+  docs: https://signalwire.com/docs/browser-sdk/click-to-call/overview
+- family: Address Widget
+  loader:
+    package: '@signalwire/address-widget'
+    registry: npm
+    version: 0.1.1
+    published: '2026-04-21'
+  repository: https://github.com/signalwire/signalwire-address-widget
+  purpose: Embeddable SignalWire call widget — attach to any div; opens a full-view call surface.
+- family: Status Widget
+  repository: https://github.com/signalwire/status-widget
+  purpose: Embeddable platform status widget — footer indicator or full dashboard, no dependencies
+    and no runtime backend.
+  registry: null
+  note: Distributed as a repository, not a published npm package; no registry version to record.
+- family: Call Flow Builder client
+  loader:
+    package: '@signalwire/cfb'
+    registry: npm
+    version: 0.0.19
+    published: '2026-08-19'
+  purpose: Client library behind the drag-and-drop Call Flow Builder surface.
+  docs: https://signalwire.com/docs/call-flow-builder

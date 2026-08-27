@@ -1,0 +1,221 @@
+generated: '2026-08-27'
+method: derived
+source: openapi/signalwire-rest-openapi.yml (webhooks:), openapi/signalwire-compatibility-openapi.yml
+  (webhooks:), https://signalwire.com/docs/platform/webhooks
+asyncapi: null
+asyncapi_note: 'SignalWire publishes NO AsyncAPI document. Its event surface is declared instead inside
+  the two OpenAPI 3.1 contracts as first-class `webhooks:` objects — 14 in the REST API and 5 in the Compatibility
+  API, each with a full request body schema. That is a real, machine-readable event contract; it is simply
+  expressed in OpenAPI 3.1 rather than AsyncAPI. Nothing is fabricated here: every row below is transcribed
+  from a webhook the provider declares in its own spec. The docs repo also carries a typespec-webhook
+  emitter (specs/emitters/typespec-webhook), which is how these are generated.'
+delivery:
+  style: HTTP callback to a customer-supplied URL
+  configuration: A phone number is pointed at a Resource (SWML Script, cXML Application, Relay Application,
+    AI Agent, Call Flow) that holds the webhook URL.
+  response_contract: The handler replies 200 OK with SWML (or cXML on the Compatibility API) telling SignalWire
+    how to handle the call or message.
+  signature_validation: validate_webhook_signature / validate_request helpers ship in the Server SDKs;
+    SWAIG tool webhooks carry a signature request flow.
+  docs: https://signalwire.com/docs/platform/webhooks
+  security_docs: https://signalwire.com/docs/swml/guides/webhook-security
+webhook_count: 19
+catalogs:
+- contract: openapi/signalwire-rest-openapi.yml
+  title: SignalWire REST API
+  count: 14
+  webhooks:
+  - event: aiDebugWebhook
+    method: POST
+    operationId: ai_debug_webhook
+    summary: AI debug webhook
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: aiPostPromptCallback
+    method: POST
+    operationId: ai_post_prompt_callback
+    summary: AI post-prompt callback
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: aiSidecarCallback
+    method: POST
+    operationId: ai_sidecar_callback
+    summary: AI sidecar callback
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: aiSidecarSwaigToolWebhook
+    method: POST
+    operationId: ai_sidecar_swaig_tool_webhook
+    summary: AI sidecar SWAIG tool webhook
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: aiSwaigToolWebhook
+    method: POST
+    operationId: ai_swaig_tool_webhook
+    summary: AI SWAIG tool webhook
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: bedrockPostPromptCallback
+    method: POST
+    operationId: bedrock_post_prompt_callback
+    summary: Amazon Bedrock post-prompt callback
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: bedrockSwaigToolWebhook
+    method: POST
+    operationId: bedrock_swaig_tool_webhook
+    summary: Amazon Bedrock SWAIG tool webhook
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: inboundCallWebhook
+    method: POST
+    operationId: inbound_call_webhook
+    summary: SWML inbound call webhook
+    tags:
+    - Calling Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: inboundMessageWebhook
+    method: POST
+    operationId: inbound_message_webhook
+    summary: SWML inbound message webhook
+    tags:
+    - Messaging Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: messageStatusCallback
+    method: POST
+    operationId: message_status_callback
+    summary: Message status callback
+    tags:
+    - Messaging Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: streamStatusCallback
+    method: POST
+    operationId: stream_status_callback
+    summary: Stream status callback
+    tags:
+    - Calling Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: swaigSignatureRequest
+    method: POST
+    operationId: swaig_signature_request
+    summary: SWAIG function signature request
+    tags:
+    - AI Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: tenDlcStatusCallback
+    method: POST
+    operationId: ten_dlc_status_callback
+    summary: 10DLC status callback
+    tags:
+    - Messaging Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: transcribeStatusCallback
+    method: POST
+    operationId: transcribe_status_callback
+    summary: Transcript status callback
+    tags:
+    - Calling Webhooks
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+- contract: openapi/signalwire-compatibility-openapi.yml
+  title: Compatibility API
+  count: 5
+  webhooks:
+  - event: incomingCallStatusCallback
+    method: POST
+    operationId: incoming_call_status_callback
+    summary: Incoming call status callback
+    tags:
+    - Incoming Phone Numbers
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: recordingStatusCallback
+    method: POST
+    operationId: recording_status_callback
+    summary: Recording status callback
+    tags:
+    - Recordings
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: smsStatusCallback
+    method: POST
+    operationId: sms_status_callback
+    summary: SMS status callback
+    tags:
+    - Messages
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: transcriptionStatusCallback
+    method: POST
+    operationId: transcription_status_callback
+    summary: Transcription status callback
+    tags:
+    - Recording Transcriptions
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'
+  - event: voiceStatusCallback
+    method: POST
+    operationId: voice_status_callback
+    summary: Voice status callback
+    tags:
+    - Calls
+    request_media_types:
+    - application/json
+    expected_responses:
+    - '200'

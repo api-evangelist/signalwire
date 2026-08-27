@@ -1,0 +1,64 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the SignalWire REST API
+  version: 1.0.0
+extends: ../openapi/signalwire-rest-openapi.yml
+x-generated: '2026-08-27'
+x-method: generated
+x-source: openapi/signalwire-rest-openapi.yml plus the artifacts in this repository
+x-note: >-
+  Non-destructive Overlay 1.0.0 capturing API Evangelist's enrichment of SignalWire's own contract.
+  The upstream spec is never mutated. Every value asserted below is sourced from SignalWire's own
+  published documentation or from a probe recorded in this repository.
+actions:
+- target: $.info
+  description: Point the contract at the provider's published operating references.
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/signalwire-authentication.yml
+      conventions: conventions/signalwire-conventions.yml
+      errors: errors/signalwire-problem-types.yml
+      rate_limits: rate-limits/signalwire-rate-limits.yml
+      lifecycle: lifecycle/signalwire-lifecycle.yml
+      webhooks: asyncapi/signalwire-webhooks.yml
+      data_model: data-model/signalwire-data-model.yml
+      conformance: conformance/signalwire-conformance.yml
+      mcp: mcp/signalwire-mcp.yml
+- target: $.info
+  description: Record the runtime facts an agent needs that the contract does not state.
+  update:
+    x-agent-notes:
+      tenancy: >-
+        servers[] is templated on {space_name}. Every request goes to the customer's own Space
+        subdomain; there is no shared production host. An agent must be given the Space subdomain
+        before any call is possible.
+      https_only: Plain HTTP requests are refused with no automatic upgrade.
+      idempotency: >-
+        Not supported. No Idempotency-Key header is declared on any operation. Retrying a POST that
+        places a call or sends a message can duplicate it.
+      pagination: Link-based — follow links.next rather than constructing page URLs.
+      error_envelope: '{"errors":[{type,code,message,attribute,url}]} on /api/*; {"errors":[{detail,status,title,code}]} on /api/relay/rest. May carry multiple entries.'
+      rate_limit_on_exhaustion: HTTP 429; back off and retry.
+      test_mode: >-
+        None published. There is no test credential prefix and no magic test number range; calls and
+        messages placed with a live token are real and billed.
+- target: $.info
+  description: Record the reversibility posture derived from the contract itself.
+  update:
+    x-reversibility:
+      grade: verified
+      cancel_call: >-
+        Update the call with Status=canceled before it connects, or Status=completed to hang up an
+        in-progress call.
+      cancel_fax: >-
+        Update the fax with Status=canceled; the fax must still be in queued status.
+      redact_message: Terminal-state messages only; irreversible once redacted.
+      deletes: 37 DELETE/redact operations, no restore path and no retention window published.
+- target: "$.tags[?(@.name=='Campaign Registry: Brands')]"
+  description: Name the domain standard the tag implements.
+  update:
+    x-domain-standard: A2P 10DLC / The Campaign Registry (TCR)
+- target: "$.tags[?(@.name=='E911 Addresses')]"
+  description: Name the domain standard the tag implements.
+  update:
+    x-domain-standard: E911 emergency address registration

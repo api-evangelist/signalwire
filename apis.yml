@@ -1,18 +1,116 @@
 aid: signalwire
 name: SignalWire
-description: 'SignalWire is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: SignalWire is a Programmable Unified Communications (PUC) platform for voice, messaging,
+  video, fax, SIP and AI voice agents, built by the team behind FreeSWITCH. It publishes two first-party
+  OpenAPI 3.1 contracts from its public documentation repository — a 253-operation SignalWire REST API
+  covering calling, messaging, video rooms, phone number management, Campaign Registry/10DLC, WhatsApp,
+  Datasphere, SIP resources, subscribers, AI agents and logs, and a 79-operation Twilio-compatible
+  Compatibility (LaML) API at /api/laml/2010-04-01 — plus an OpenRPC 1.3.2 JSON-RPC contract for live
+  call control, a JSON Schema for SWML (SignalWire Markup Language), and 19 OpenAPI 3.1 webhook
+  definitions covering AI/SWAIG, calling and messaging callbacks. Every request is served from a
+  per-customer Space subdomain, {space_name}.signalwire.com, over HTTPS only.
 url: https://raw.githubusercontent.com/api-evangelist/signalwire/refs/heads/main/apis.yml
+image: https://framerusercontent.com/images/51HrN1SGYsDuDnTD4zDO4buJMM.png
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-27'
 modified: '2026-08-27'
 tags:
 - Company
-apis: []
+- Communications
+- CPaaS
+- Voice
+- Messaging
+- SMS
+- Video
+- WebRTC
+- SIP
+- Telephony
+- Fax
+- AI Agents
+- Conversational AI
+- Contact Center
+apis:
+- aid: signalwire:signalwire-rest-api
+  name: SignalWire REST API
+  description: The first-party SignalWire REST API — 253 operations across 151 paths covering calling,
+    queues, recordings, video rooms and sessions, messaging, Campaign Registry (10DLC) brands and
+    campaigns, WhatsApp, phone numbers and E911 addresses, number groups, verified caller ID, SIP
+    credentials/gateways/profiles/addresses, subscribers and subscriber tokens, Fabric resources and
+    addresses, SWML and cXML scripts and webhooks, call flows, AI agents (custom and Dialogflow),
+    Datasphere documents and chunks, projects and project tokens, PubSub and chat tokens, and logs.
+    Declares 14 OpenAPI 3.1 webhooks for AI/SWAIG, calling and messaging callbacks.
+  humanURL: https://signalwire.com/docs/apis
+  baseURL: https://{space_name}.signalwire.com
+  tags:
+  - Voice
+  - Messaging
+  - Video
+  - SIP
+  - AI Agents
+  - Phone Numbers
+  properties:
+  - type: OpenAPI
+    url: openapi/signalwire-rest-openapi.yml
+  - type: Documentation
+    url: https://signalwire.com/docs/apis
+  - type: APIReference
+    url: https://signalwire.com/docs/apis/rest
+  - type: Authentication
+    url: https://signalwire.com/docs/apis/authorization
+  - type: ErrorCatalog
+    url: https://signalwire.com/docs/apis/error-codes
+  - type: Webhooks
+    url: openapi/signalwire-rest-openapi.yml
+  - type: Overlay
+    url: overlays/signalwire-rest-overlay.yaml
+- aid: signalwire:signalwire-compatibility-api
+  name: SignalWire Compatibility API
+  description: The Twilio-compatible (LaML) REST API — 79 operations across 45 paths for accounts,
+    applications, available and incoming phone numbers, calls, conferences and participants,
+    recordings and transcriptions, streams, faxes and fax media, messages and message media, queues
+    and queue members, cXML scripts, and API tokens. Accepts Twilio-style requests so most migrations
+    change the endpoint and credentials rather than rewriting the application. Declares 5 OpenAPI 3.1
+    webhooks for call, recording, SMS, transcription and voice status callbacks.
+  humanURL: https://signalwire.com/docs/compatibility-api
+  baseURL: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  tags:
+  - Voice
+  - Messaging
+  - Fax
+  - Twilio Compatible
+  properties:
+  - type: OpenAPI
+    url: openapi/signalwire-compatibility-openapi.yml
+  - type: Documentation
+    url: https://signalwire.com/docs/compatibility-api
+  - type: APIReference
+    url: https://signalwire.com/docs/compatibility-api/rest
+  - type: Authentication
+    url: https://signalwire.com/docs/compatibility-api/authorization
+  - type: ErrorCatalog
+    url: https://signalwire.com/docs/compatibility-api/rest/error-codes
+  - type: Webhooks
+    url: openapi/signalwire-compatibility-openapi.yml
+  - type: Overlay
+    url: overlays/signalwire-compatibility-overlay.yaml
+- aid: signalwire:signalwire-calling-rpc
+  name: SignalWire Calling API (JSON-RPC)
+  description: An OpenRPC 1.3.2 contract for real-time control of live calls over RELAY — 8 methods
+    (calling.dial, calling.update, calling.end, calling.ai_hold, calling.ai_unhold, calling.ai_message,
+    calling.live_transcribe, calling.live_translate) addressed by call UUID.
+  humanURL: https://signalwire.com/docs/apis
+  baseURL: https://{space_name}.signalwire.com/api/calling/rpc
+  tags:
+  - Voice
+  - RELAY
+  - JSON-RPC
+  properties:
+  - type: OpenRPC
+    url: openapi/signalwire-calling-openrpc.yml
+  - type: Documentation
+    url: https://signalwire.com/docs/apis
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +118,89 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/signalwire_stock/
+  url: https://signalwire.com
+- type: DeveloperPortal
+  url: https://signalwire.com/docs
+- type: Documentation
+  url: https://signalwire.com/docs
+- type: APIReference
+  url: https://signalwire.com/docs/apis
+- type: GettingStarted
+  url: https://signalwire.com/docs/platform/getting-started
+- type: Support
+  url: https://support.signalwire.com/portal/en/home
+- type: Blog
+  url: https://signalwire.com/blog
+- type: GitHubOrganization
+  url: https://github.com/signalwire
+- type: Postman
+  url: https://signalwire.com/docs/apis#try-it-in-postman
+- type: Pricing
+  url: https://signalwire.com/pricing
+- type: SignUp
+  url: https://signalwire.com/signup
+- type: Login
+  url: https://id.signalwire.com
+- type: TermsOfService
+  url: https://signalwire.com/legal
+- type: PrivacyPolicy
+  url: https://signalwire.com/legal
+- type: StatusPage
+  url: https://status.signalwire.com
+- type: TrustCenter
+  url: https://compliance.signalwire.com
+- type: Compliance
+  url: security/signalwire-trust-center.yml
+- type: Authentication
+  url: authentication/signalwire-authentication.yml
+- type: Packages
+  url: packages/signalwire-packages.yml
+- type: SDKs
+  url: packages/signalwire-packages.yml
+- type: CLI
+  url: cli/signalwire-cli.yml
+- type: Components
+  url: components/signalwire-components.yml
+- type: Sandbox
+  url: sandbox/signalwire-sandbox.yml
+- type: MCPServer
+  url: mcp/signalwire-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/signalwire-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/signalwire-llms.txt
+- type: LLMsTxt
+  url: llms/signalwire-docs-llms.txt
+- type: Conventions
+  url: conventions/signalwire-conventions.yml
+- type: ErrorCatalog
+  url: errors/signalwire-problem-types.yml
+- type: DataModel
+  url: data-model/signalwire-data-model.yml
+- type: Webhooks
+  url: asyncapi/signalwire-webhooks.yml
+- type: Conformance
+  url: conformance/signalwire-conformance.yml
+- type: Lifecycle
+  url: lifecycle/signalwire-lifecycle.yml
+- type: ChangeLog
+  url: changelog/signalwire-changelog.yml
+- type: RateLimits
+  url: rate-limits/signalwire-rate-limits.yml
+- type: Plans
+  url: plans/signalwire-plans-pricing.yml
+- type: DomainSecurity
+  url: security/signalwire-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/signalwire-vulnerability-disclosure.yml
+- type: JSONSchema
+  url: json-schema/signalwire-swml.json
+- type: OpenRPC
+  url: openapi/signalwire-calling-openrpc.yml
+x-enrichment:
+  date: '2026-08-27'
+  status: enriched
+  artifacts_added: 37
+  pass: local-v1

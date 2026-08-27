@@ -1,0 +1,102 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/platform/rate-limits
+docs: https://signalwire.com/docs/platform/rate-limits
+note: >-
+  SignalWire publishes account-level throughput limits that count activity across every Project in a
+  Space, plus a separate API request limit. Voice and Messaging limits are independent — exceeding
+  one does not queue the other. Over-rate traffic is QUEUED rather than rejected, up to a backlog
+  ceiling. The docs say "Every HTTP request includes the user's current limit and remaining requests
+  in its X-Header" but do NOT name the header keys, so no header names are recorded here rather than
+  guessed at; an agent should read whatever X-RateLimit-style headers the response carries.
+limit_count: 10
+response_headers:
+  documented: true
+  header_names_published: false
+  statement: Every HTTP request includes the user's current limit and remaining requests in its X-Header.
+  exhaustion_status: 429
+  exhaustion_note: 429 Too Many Requests is documented in the error-code reference as "you've exceeded
+    a rate limit. Back off and retry."
+  retry_after: unknown
+limits:
+- name: API writes
+  scope: per-account (all Projects in a Space)
+  applies_to: POST, PUT, PATCH across the SignalWire platform
+  limit: 13800
+  window: 10 seconds
+  burst: null
+- name: API reads
+  scope: per-account (all Projects in a Space)
+  applies_to: GET, DELETE across the SignalWire platform
+  limit: null
+  window: null
+  note: Documented as "effectively unlimited".
+- name: Outbound calls
+  scope: per-account
+  applies_to: Voice (and Fax, which is sent over phone calls)
+  limit: 1
+  window: 1 second
+  unit: calls per second (CPS)
+  increase: Contact Support / Space Increase Request Form
+- name: Messaging — toll-free
+  scope: per-account
+  applies_to: SMS/MMS from toll-free numbers
+  limit: 3
+  window: 1 second
+  unit: messages per second (MPS)
+- name: Messaging — US long code (10DLC)
+  scope: per-account
+  applies_to: SMS/MMS from US 10DLC numbers
+  limit: 4
+  window: 1 second
+  unit: messages per second (MPS)
+  note: Actual throughput may be lower or higher depending on carrier and TCR (Campaign Registry) limits.
+- name: Messaging — Canadian long code
+  scope: per-account
+  applies_to: SMS/MMS from Canadian long code numbers
+  limit: 1
+  window: 1 second
+  unit: messages per second (MPS)
+- name: Messaging — short code
+  scope: per-account
+  applies_to: SMS/MMS from short codes
+  limit: 10
+  window: 1 second
+  unit: messages per second (MPS)
+- name: Voice backlog
+  scope: per-account
+  applies_to: queued outbound calls
+  limit: 10000
+  window: null
+  unit: queued calls
+  note: When the backlog is full SignalWire stops adding calls to the Voice queue.
+- name: Messaging backlog
+  scope: per-account
+  applies_to: queued outbound messages
+  limit: 10000
+  window: null
+  unit: queued messages
+  note: Separate from the Voice backlog.
+- name: Phone numbers per Project
+  scope: per-project
+  applies_to: provisioned phone numbers
+  limit: 1000
+  window: null
+  note: >-
+    Space limit, applies to Spaces not in Trial mode. Requests above 1000 require additional
+    verification and auto top-up configured to the monthly cost of the numbers.
+queueing:
+  behavior: >-
+    Traffic above the applicable rate is queued in the order received and processed at the maximum
+    applicable rate; new work is accepted while the backlog has capacity.
+  voice_backlog: 10000
+  messaging_backlog: 10000
+  independent: true
+increase_process:
+  form: https://forms.signalwire.me/Space-Increase-Request.html
+  support: https://support.signalwire.com/portal/en/newticket
+  reviewer: SignalWire Space Compliance team
+  note: Message segments each count toward the MPS limit; large messages are split into segments.
+trial_mode:
+  note: New accounts remain in Trial mode until at least $5 USD of credit is added; Space limits above
+    apply to Spaces not in Trial mode.

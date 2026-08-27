@@ -1,0 +1,162 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  openapi/signalwire-rest-openapi.yml, openapi/signalwire-compatibility-openapi.yml,
+  openapi/signalwire-calling-openrpc.yml, json-schema/signalwire-swml.json,
+  https://signalwire.com/docs/apis/authorization, https://signalwire.com/docs/apis/error-codes,
+  https://signalwire.com/docs/apis/paging, https://signalwire.com/llms.txt,
+  https://signalwire.com/docs/platform/compliance
+standards:
+- id: openapi-3.1
+  name: OpenAPI 3.1.0
+  conforms: true
+  evidence: Both first-party contracts declare openapi 3.1.0 — 253 operations / 151 paths (SignalWire
+    REST API) and 79 operations / 45 paths (Compatibility API), each with tags, operationIds,
+    summaries, securitySchemes and 4xx/5xx responses.
+- id: openapi-3.1-webhooks
+  name: OpenAPI 3.1 webhooks object
+  conforms: true
+  evidence: 19 first-class `webhooks:` entries across the two contracts (14 REST, 5 Compatibility),
+    each with a request body schema. See asyncapi/signalwire-webhooks.yml.
+- id: openrpc-1.3
+  name: OpenRPC 1.3.2
+  conforms: true
+  evidence: openapi/signalwire-calling-openrpc.yml declares openrpc 1.3.2 with 8 JSON-RPC methods for
+    live call control.
+- id: json-schema-2020-12
+  name: JSON Schema 2020-12
+  conforms: true
+  evidence: json-schema/signalwire-swml.json is a 512KB TypeSpec-emitted JSON Schema for the SWML
+    document object, published in github.com/signalwire/docs under specs/swml/.
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: A live remote MCP server at https://signalwire.com/docs/_mcp/server answered initialize
+    with protocolVersion 2025-06-18 (serverInfo fern-docs-mcp-server 1.0.0) and tools/list with one
+    tool on 2026-08-27. Scope is documentation search only — see mcp/signalwire-mcp.yml.
+- id: http-basic
+  name: HTTP Basic Authentication (RFC 7617)
+  conforms: true
+  evidence: SignalWireBasicAuth securityScheme (type http, scheme Basic) applied as the default
+    security on both contracts; Project ID as username, API Token as password.
+- id: bearer-token
+  name: HTTP Bearer Authentication (RFC 6750-style)
+  conforms: true
+  evidence: SignalWireBearerAuth securityScheme on the SignalWire REST API for Subscriber Access
+    Tokens and Guest Tokens.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: No oauth2 securityScheme in either contract; no authorization-server metadata document
+    is served (/.well-known/oauth-authorization-server 404 on signalwire.com and api.signalwire.com).
+    Token scoping is configured in the Dashboard, not negotiated over OAuth.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on signalwire.com and api.signalwire.com.
+- id: rfc9457
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: No application/problem+json response is declared anywhere in either contract; error
+    bodies use a vendor {"errors":[...]} envelope. See errors/signalwire-problem-types.yml.
+- id: idempotency
+  name: Idempotency keys (draft-ietf-httpapi-idempotency-key-header)
+  conforms: false
+  evidence: No Idempotency-Key request header is declared on any of the 332 operations and no
+    idempotency documentation exists.
+- id: rfc8594
+  name: RFC 8594 Sunset header
+  conforms: false
+  evidence: No Sunset or Deprecation response header is declared in either contract, and no
+    deprecation policy page was found.
+- id: rfc9116
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on signalwire.com and api.signalwire.com.
+- id: pagination
+  name: Link-based pagination
+  conforms: true
+  evidence: All index routes return a links object with self / first / next / prev alongside data;
+    the docs advise navigating by link value. https://signalwire.com/docs/apis/paging
+- id: rate-limit-headers
+  name: RateLimit header fields
+  conforms: partial
+  evidence: The docs state every HTTP response carries the caller's current limit and remaining
+    requests in an X- header, but do not publish the header names, so conformance to either the
+    IETF RateLimit fields or the X-RateLimit-* convention cannot be confirmed from published material.
+- id: e164
+  name: E.164 phone number format
+  conforms: true
+  evidence: https://signalwire.com/docs/apis/data-formats — all phone numbers in requests and
+    responses are E.164.
+- id: iso8601
+  name: ISO 8601 date-times
+  conforms: true
+  evidence: https://signalwire.com/docs/apis/data-formats — all dates and times are UTC ISO 8601.
+- id: llms-txt
+  name: llms.txt
+  conforms: true
+  evidence: Two published documents — https://signalwire.com/llms.txt (company) and
+    https://signalwire.com/docs/llms.txt (documentation index), plus per-section /llms.txt and a
+    .md suffix for every documentation page.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json return 404 on signalwire.com
+    and api.signalwire.com; developer.signalwire.com answers 200 with an SPA HTML shell, not a card.
+domain_standards:
+- id: stir-shaken
+  name: STIR/SHAKEN (RFC 8224 / 8588 — telephone identity attestation)
+  conforms: true
+  evidence: >-
+    SignalWire maintains libstirshaken, a C library implementing STIR/SHAKEN STI-SP AS/VS and
+    STI-CA (https://github.com/signalwire/libstirshaken), and kamailio-shaken. Attestation is a
+    carrier-layer obligation for US voice originators rather than a REST contract shape, so the
+    evidence is the published implementation, not a spec path.
+- id: a2p-10dlc-tcr
+  name: A2P 10DLC / The Campaign Registry
+  conforms: true
+  evidence: >-
+    Declared directly in the contract: openapi/signalwire-rest-openapi.yml carries 12 operations
+    under the tags "Campaign Registry: Brands" (3), "Campaign Registry: Campaigns" (4) and
+    "Campaign Registry: Phone Number Assignments" (5) at /api/relay/rest/registry/beta/. The
+    error-code reference names associated_campaign_inactive and associated_campaign_suspended as
+    carrier-returned TCR states.
+- id: sip
+  name: SIP (RFC 3261)
+  conforms: true
+  evidence: >-
+    Native SIP is a first-class product surface — 5 SIP Address, 7 SIP Credential, 6 SIP Gateway,
+    2 SIP Profile and 5 legacy SIP Endpoint operations in the REST contract, plus a FreeSWITCH
+    Connector resource. SignalWire is the maintainer of FreeSWITCH.
+- id: webrtc
+  name: WebRTC
+  conforms: true
+  evidence: '@signalwire/webrtc is a published first-party package; the Browser SDK and Video
+    surface (rooms, room sessions, room tokens, streams) are WebRTC-native.'
+- id: e911
+  name: E911 / NG911 address registration
+  conforms: true
+  evidence: 5 operations under the "E911 Addresses" tag in openapi/signalwire-rest-openapi.yml.
+- id: twiml-laml
+  name: TwiML-compatible markup (cXML / LaML)
+  conforms: true
+  evidence: >-
+    The Compatibility API accepts Twilio-style requests at /api/laml/2010-04-01 with Twilio-shaped
+    SIDs and cXML script resources. SignalWire states plainly in its own docs that Twilio and TwiML
+    are trademarks of Twilio, Inc. and that SignalWire is not affiliated with or endorsed by Twilio.
+compliance_programs:
+- name: SOC 2 Type II
+  status: certified
+  source: https://signalwire.com/llms.txt
+- name: PCI DSS
+  status: certified
+  source: https://signalwire.com/llms.txt
+- name: HIPAA
+  status: eligible (BAAs available to all customers)
+  source: https://signalwire.com/llms.txt
+- name: TCPA
+  status: implementation guidance published
+  source: https://signalwire.com/docs/platform/compliance/tcpa
+trust_center: https://compliance.signalwire.com
+see: security/signalwire-trust-center.yml

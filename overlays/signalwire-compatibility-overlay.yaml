@@ -1,0 +1,54 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the SignalWire Compatibility API
+  version: 1.0.0
+extends: ../openapi/signalwire-compatibility-openapi.yml
+x-generated: '2026-08-27'
+x-method: generated
+x-source: openapi/signalwire-compatibility-openapi.yml plus the artifacts in this repository
+x-note: >-
+  Non-destructive Overlay 1.0.0. The upstream spec is never mutated. The Compatibility API's own
+  info block carries only title and version, so the additions below are the operating context an
+  integrator or agent otherwise has to find by hand.
+actions:
+- target: $.info
+  description: Attach provider identity the upstream info block omits.
+  update:
+    x-provider:
+      name: SignalWire
+      website: https://signalwire.com
+      documentation: https://signalwire.com/docs/compatibility-api
+      error_codes: https://signalwire.com/docs/compatibility-api/rest/error-codes
+      support: https://support.signalwire.com/portal/en/newticket
+- target: $.info
+  description: Link the artifacts derived from this contract.
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/signalwire-authentication.yml
+      conventions: conventions/signalwire-conventions.yml
+      errors: errors/signalwire-problem-types.yml
+      webhooks: asyncapi/signalwire-webhooks.yml
+      data_model: data-model/signalwire-data-model.yml
+- target: $.info
+  description: Record the compatibility posture and its limits.
+  update:
+    x-compatibility:
+      models: Twilio REST API (2010-04-01) request shapes and TwiML-style markup (cXML/LaML)
+      migration: Most migrations change the endpoint and credentials rather than rewriting the
+        application.
+      trademark_notice: >-
+        SignalWire states in its own documentation that Twilio and TwiML are trademarks of Twilio,
+        Inc., and that SignalWire and its products are not affiliated with or endorsed by Twilio, Inc.
+      not_claimed: >-
+        SignalWire does NOT document compatibility with Twilio test credentials or Twilio magic test
+        numbers. Do not assume the +1500555xxxx range behaves as it does on Twilio.
+- target: $.info
+  description: Record reversal windows the parameter descriptions state.
+  update:
+    x-reversibility:
+      grade: verified
+      update_a_call: >-
+        Status accepts canceled (before connect) or completed (hang up in progress).
+      update_fax: >-
+        Status accepts only canceled, and the fax must be in queued status.
+      deletes: 14 DELETE operations, no restore path published.

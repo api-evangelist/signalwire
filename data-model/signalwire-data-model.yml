@@ -1,0 +1,988 @@
+generated: '2026-08-27'
+method: derived
+source: openapi/signalwire-rest-openapi.yml, openapi/signalwire-compatibility-openapi.yml
+note: Entity graph derived from components.schemas in the two first-party OpenAPI contracts. Relationships
+  come from $ref links between object schemas and from *_sid / *_id / *_uuid reference fields resolving
+  to a schema of the same name. Request/response/error wrapper schemas are excluded. Nothing here is invented
+  — an entity or edge appears only because the spec declares it.
+contracts:
+- contract: openapi/signalwire-rest-openapi.yml
+  title: SignalWire REST API
+  schema_count: 902
+  entity_count: 416
+  relationship_count: 101
+- contract: openapi/signalwire-compatibility-openapi.yml
+  title: Compatibility API
+  schema_count: 130
+  entity_count: 29
+  relationship_count: 26
+identifier_conventions:
+- surface: Compatibility API
+  pattern: 34-character Twilio-style SIDs (two-letter prefix + 32 hex), e.g. CA/MM/RE/CF/FX prefixes on
+    Calls, Messages, Recordings, Conferences and Faxes.
+  source: openapi/signalwire-compatibility-openapi.yml
+- surface: SignalWire REST API
+  pattern: UUID (v4) identifiers on Fabric resources, addresses, subscribers, projects and AI agents.
+  source: openapi/signalwire-rest-openapi.yml
+- surface: Both
+  pattern: Phone numbers are E.164 (+15551234567); dates and times are UTC ISO 8601.
+  source: https://signalwire.com/docs/apis/data-formats
+entities:
+  signalwire_rest:
+  - AI.JsonRpcRequestEnvelope
+  - AI.JsonRpcResponseEnvelope
+  - AIAgent
+  - AIAgentCreateStatusCode422
+  - AIAgentUpdateStatusCode422
+  - Address
+  - AddressCandidate
+  - AssignedNumber
+  - AssignedPhoneNumber
+  - AudioChannel
+  - AvailablePhoneNumber
+  - Brand
+  - CXMLScript
+  - CXMLScriptCreateStatusCode422
+  - CXMLScriptUpdateStatusCode422
+  - CXMLWebhook
+  - CXMLWebhookCreateStatusCode422
+  - CXMLWebhookUpdateStatusCode422
+  - CallFlow
+  - CallFlowCreateStatusCode422
+  - CallFlowUpdateStatusCode422
+  - CallFlowVersion
+  - CallFlowVersionDeployByDocumentVersion
+  - CallFlowVersionDeployByVersionId
+  - Calling.CallBase
+  - Calling.CallCreateParamsBase
+  - Calling.CallCreateParamsSWML
+  - Calling.CallCreateParamsURL
+  - Calling.CallLeg
+  - Calling.CallUpdateParamsBase
+  - Calling.CallUpdateParamsSWML
+  - Calling.CallUpdateParamsURL
+  - Calling.ChargeDetails
+  - Calling.DetectConfig
+  - Calling.DetectDigitConfig
+  - Calling.DetectFaxConfig
+  - Calling.DetectMachineConfig
+  - Calling.FabricDeviceLeg
+  - Calling.LiveTranscribeStartAction
+  - Calling.LiveTranscribeSummarizeAction
+  - Calling.LiveTranslateInjectAction
+  - Calling.LiveTranslateStartAction
+  - Calling.LiveTranslateSummarizeAction
+  - Calling.PlayAudioItem
+  - Calling.PlayMediaItem
+  - Calling.PlayRingtoneItem
+  - Calling.PlaySilenceItem
+  - Calling.PlayTtsItem
+  - Calling.ReferDevice
+  - Calling.TapConfig
+  - Calling.TapDevice
+  - Calling.TapDeviceRtp
+  - Calling.TapDeviceWs
+  - CallingSwmlScript
+  - Campaign
+  - CarrierLookupInfo
+  - Chat.ChatPermissionWithRead
+  - Chat.ChatPermissionWithWrite
+  - Chat.ChatToken
+  - Chat.NewChatToken
+  - CnamInfo
+  - ConferenceRecording
+  - ConferenceRoom
+  - ConferenceRoomCreateStatusCode422
+  - ConferenceRoomUpdateStatusCode422
+  - CxmlApplication
+  - CxmlApplicationUpdateStatusCode422
+  - Datasphere.Chunk
+  - Datasphere.CreateStatusCode422
+  - Datasphere.Document
+  - Datasphere.DocumentCreateRequestBase
+  - Datasphere.ListStatusCode422
+  - Datasphere.SearchStatusCode422
+  - Datasphere.UpdateStatusCode422
+  - DialogflowAgent
+  - DialogflowAgentUpdateStatusCode422
+  - DomainApplication
+  - DomainApplicationCreateStatusCode422
+  - EmbedTokenCreateStatusCode422
+  - FabricAddress
+  - FabricAddressApp
+  - FabricAddressCall
+  - FabricAddressRoom
+  - FabricAddressSubscriber
+  - FabricSipEndpoint
+  - Fax.ChargeDetail
+  - Fax.FaxLog
+  - Fax.FaxLogShowStatusCode422
+  - Fax.FaxLogsListStatusCode422
+  - FreeswitchConnector
+  - FreeswitchConnectorCreateStatusCode422
+  - FreeswitchConnectorUpdateStatusCode422
+  - GuestTokenCreateStatusCode422
+  - InviteTokenCreateStatusCode422
+  - Logs.BaseConference
+  - Logs.ChargeDetails
+  - Logs.Conference
+  - Logs.ConferenceLogPaginationLinks
+  - Logs.ConferenceLogsStatusCode422
+  - Logs.CxmlConference
+  - Logs.RelayConference
+  - Logs.VideoRoomSessionConference
+  - MembershipPhoneNumber
+  - Message.ChargeDetail
+  - Message.Message
+  - Message.MessageLog
+  - Message.MessageLogShowStatusCode422
+  - Message.MessageLogsListStatusCode422
+  - Message.MessagesCreateStatusCode422
+  - Message.MessagesUpdateStatusCode422
+  - Message.WhatsAppAudioBody
+  - Message.WhatsAppContact
+  - Message.WhatsAppContactName
+  - Message.WhatsAppDocumentBody
+  - Message.WhatsAppImageBody
+  - Message.WhatsAppInteractiveBody
+  - Message.WhatsAppLocationBody
+  - Message.WhatsAppReactionBody
+  - Message.WhatsAppSendBase
+  - Message.WhatsAppStickerBody
+  - Message.WhatsAppVideoBody
+  - MessagingChannel
+  - MessagingSwmlScript
+  - NumberGroup
+  - NumberGroupMembership
+  - Order
+  - PaginationLinks
+  - PhoneNumber
+  - PhoneNumberCapabilities
+  - PhoneRouteCreateStatusCode422
+  - Project.TokenStatusCode422
+  - Projects.CreateProjectStatusCode422
+  - Projects.DeleteProjectStatusCode422
+  - Projects.Project
+  - Projects.ProjectPaginationLinks
+  - Projects.ProjectWithSigningKey
+  - Projects.UpdateProjectStatusCode422
+  - PstnRecording
+  - PubSub.NewPubSubToken
+  - PubSub.PubSubPermissionWithRead
+  - PubSub.PubSubPermissionWithWrite
+  - PubSub.PubSubToken
+  - Queue
+  - QueueMember
+  - RefreshTokenStatusCode422
+  - RelayApplication
+  - RelayApplicationCreateStatusCode422
+  - RelayApplicationUpdateStatusCode422
+  - ResourceResponseAI
+  - ResourceResponseCXMLApplication
+  - ResourceResponseCXMLScript
+  - ResourceResponseCXMLWebhook
+  - ResourceResponseCallFlow
+  - ResourceResponseConferenceRoom
+  - ResourceResponseDialogFlowAgent
+  - ResourceResponseFSConnector
+  - ResourceResponseRelayApp
+  - ResourceResponseSWMLScript
+  - ResourceResponseSWMLWebhook
+  - ResourceResponseSipEndpoint
+  - ResourceResponseSipGateway
+  - ResourceResponseSubscriber
+  - ResourceSipEndpointCreateStatusCode422
+  - ResourceSipEndpointUpdateStatusCode422
+  - ResourceSubSipEndpointCreateStatusCode422
+  - SWML.Calling.AI
+  - SWML.Calling.AIObject
+  - SWML.Calling.AIPostPromptPom
+  - SWML.Calling.AIPostPromptText
+  - SWML.Calling.AIPromptPom
+  - SWML.Calling.AIPromptText
+  - SWML.Calling.AISidecar
+  - SWML.Calling.AISidecarArrayParam
+  - SWML.Calling.AISidecarBooleanParam
+  - SWML.Calling.AISidecarFunctionParameters
+  - SWML.Calling.AISidecarIntegerParam
+  - SWML.Calling.AISidecarNumberParam
+  - SWML.Calling.AISidecarObject
+  - SWML.Calling.AISidecarObjectParam
+  - SWML.Calling.AISidecarPermissions
+  - SWML.Calling.AISidecarPromptFile
+  - SWML.Calling.AISidecarPromptPom
+  - SWML.Calling.AISidecarPromptText
+  - SWML.Calling.AISidecarSWAIG
+  - SWML.Calling.AISidecarSWAIGDefaults
+  - SWML.Calling.AISidecarSWAIGFunction
+  - SWML.Calling.AISidecarStringParam
+  - SWML.Calling.AISidecarSummarizeAction
+  - SWML.Calling.AllOfProperty
+  - SWML.Calling.AmazonBedrock
+  - SWML.Calling.AmazonBedrockObject
+  - SWML.Calling.Answer
+  - SWML.Calling.AnyOfProperty
+  - SWML.Calling.ArrayProperty
+  - SWML.Calling.BedrockDataMap
+  - SWML.Calling.BedrockExpression
+  - SWML.Calling.BedrockOutput
+  - SWML.Calling.BedrockSWAIG
+  - SWML.Calling.BedrockWebhook
+  - SWML.Calling.BooleanProperty
+  - SWML.Calling.ChangeContextAction
+  - SWML.Calling.ChangeStepAction
+  - SWML.Calling.Cond
+  - SWML.Calling.CondElse
+  - SWML.Calling.CondReg
+  - SWML.Calling.Connect
+  - SWML.Calling.ConnectDestination
+  - SWML.Calling.ConnectDeviceParallel
+  - SWML.Calling.ConnectDeviceSerial
+  - SWML.Calling.ConnectDeviceSerialParallel
+  - SWML.Calling.ConnectDeviceSingle
+  - SWML.Calling.ConnectHeaders
+  - SWML.Calling.ConnectSwitch
+  - SWML.Calling.ConstProperty
+  - SWML.Calling.ContextPOMSteps
+  - SWML.Calling.ContextSwitchAction
+  - SWML.Calling.ContextTextSteps
+  - SWML.Calling.Contexts
+  - SWML.Calling.ContextsPOMObject
+  - SWML.Calling.ContextsTextObject
+  - SWML.Calling.ConversationMessage
+  - SWML.Calling.DataMap
+  - SWML.Calling.Denoise
+  - SWML.Calling.DetectMachine
+  - SWML.Calling.EnterQueue
+  - SWML.Calling.EnterQueueObject
+  - SWML.Calling.Execute
+  - SWML.Calling.ExecuteSwitch
+  - SWML.Calling.Expression
+  - SWML.Calling.FunctionFillers
+  - SWML.Calling.FunctionParameters
+  - SWML.Calling.Goto
+  - SWML.Calling.HangUpHookSWAIGFunction
+  - SWML.Calling.Hangup
+  - SWML.Calling.HangupAction
+  - SWML.Calling.Hint
+  - SWML.Calling.HoldAction
+  - SWML.Calling.InjectAction
+  - SWML.Calling.IntegerProperty
+  - SWML.Calling.JoinConference
+  - SWML.Calling.JoinConferenceObject
+  - SWML.Calling.JoinConferenceStream
+  - SWML.Calling.JoinRoom
+  - SWML.Calling.Label
+  - SWML.Calling.Languages
+  - SWML.Calling.LiveTranscribe
+  - SWML.Calling.LiveTranslate
+  - SWML.Calling.MCPServer
+  - SWML.Calling.Multilingual
+  - SWML.Calling.MultilingualLanguage
+  - SWML.Calling.NullProperty
+  - SWML.Calling.NumberProperty
+  - SWML.Calling.ObjectProperty
+  - SWML.Calling.OneOfProperty
+  - SWML.Calling.Output
+  - SWML.Calling.Pay
+  - SWML.Calling.PayParameters
+  - SWML.Calling.PayPromptPlayAction
+  - SWML.Calling.PayPromptSayAction
+  - SWML.Calling.PayPrompts
+  - SWML.Calling.Play
+  - SWML.Calling.PlayWithURL
+  - SWML.Calling.PlayWithURLS
+  - SWML.Calling.PlaybackBGAction
+  - SWML.Calling.PomSectionBodyContent
+  - SWML.Calling.PomSectionBulletsContent
+  - SWML.Calling.Prompt
+  - SWML.Calling.Pronounce
+  - SWML.Calling.ReceiveFax
+  - SWML.Calling.Record
+  - SWML.Calling.RecordCall
+  - SWML.Calling.Return
+  - SWML.Calling.SIPRefer
+  - SWML.Calling.SMSWithBody
+  - SWML.Calling.SMSWithMedia
+  - SWML.Calling.SWAIG
+  - SWML.Calling.SWAIGDefaults
+  - SWML.Calling.SWAIGIncludes
+  - SWML.Calling.SWAIGInternalFiller
+  - SWML.Calling.SWMLAction
+  - SWML.Calling.SWMLObject
+  - SWML.Calling.SayAction
+  - SWML.Calling.Section
+  - SWML.Calling.SendDigits
+  - SWML.Calling.SendFax
+  - SWML.Calling.SendSMS
+  - SWML.Calling.Set
+  - SWML.Calling.SetGlobalDataAction
+  - SWML.Calling.SetMetaDataAction
+  - SWML.Calling.Sleep
+  - SWML.Calling.StartAction
+  - SWML.Calling.StartUpHookSWAIGFunction
+  - SWML.Calling.StopAction
+  - SWML.Calling.StopDenoise
+  - SWML.Calling.StopPlaybackBGAction
+  - SWML.Calling.StopRecordCall
+  - SWML.Calling.StopStream
+  - SWML.Calling.StopTap
+  - SWML.Calling.Stream
+  - SWML.Calling.StringProperty
+  - SWML.Calling.SummarizeAction
+  - SWML.Calling.SummarizeConversationSWAIGFunction
+  - SWML.Calling.SwaigToolResult
+  - SWML.Calling.Switch
+  - SWML.Calling.Tap
+  - SWML.Calling.ToggleFunctionsAction
+  - SWML.Calling.Transcribe
+  - SWML.Calling.TranscribeStartAction
+  - SWML.Calling.TranscribeStop
+  - SWML.Calling.TranscribeSummarizeAction
+  - SWML.Calling.Transfer
+  - SWML.Calling.TurnFillers
+  - SWML.Calling.Unset
+  - SWML.Calling.UnsetGlobalDataAction
+  - SWML.Calling.UnsetMetaDataAction
+  - SWML.Calling.UserEvent
+  - SWML.Calling.UserInputAction
+  - SWML.Calling.UserSWAIGFunction
+  - SWML.Calling.Webhook
+  - SWML.Messaging.Execute
+  - SWML.Messaging.Goto
+  - SWML.Messaging.Label
+  - SWML.Messaging.Receive
+  - SWML.Messaging.Reply
+  - SWML.Messaging.ReplyInlineSwitch
+  - SWML.Messaging.ReplyWithBody
+  - SWML.Messaging.ReplyWithMedia
+  - SWML.Messaging.Return
+  - SWML.Messaging.SWMLObject
+  - SWML.Messaging.Section
+  - SWML.Messaging.Switch
+  - SWML.Messaging.Transfer
+  - SWMLWebhook
+  - ShortCode
+  - SipAddress
+  - SipAddressCreateStatusCode422
+  - SipAddressListStatusCode422
+  - SipAddressUpdateStatusCode422
+  - SipEndpoint
+  - SipEndpointCreateStatusCode422
+  - SipEndpointUpdateStatusCode422
+  - SipGateway
+  - SipGatewayCreateStatusCode422
+  - SipGatewayRequestUpdate
+  - SipRecording
+  - Subscriber
+  - SubscriberCreateStatusCode422
+  - SubscriberSIPEndpoint
+  - SubscriberSipEndpointRequestUpdate
+  - SubscriberTokenStatusCode422
+  - SubscriberUpdateStatusCode422
+  - SwmlScriptCreateStatusCode422
+  - SwmlScriptPaginationresponse
+  - SwmlScriptUpdateStatusCode422
+  - SwmlWebhookCreateStatusCode422
+  - SwmlWebhookUpdateStatusCode422
+  - Types.StatusCodes.RestApiErrorItem
+  - Types.StatusCodes.SpaceApiErrorItem
+  - Types.StatusCodes.StatusCode400
+  - Types.StatusCodes.StatusCode401
+  - Types.StatusCodes.StatusCode403
+  - Types.StatusCodes.StatusCode404
+  - Types.StatusCodes.StatusCode422
+  - Types.StatusCodes.StatusCode500
+  - VerifiedCallerID
+  - Video.ActiveSession
+  - Video.ChargeDetail
+  - Video.Conference
+  - Video.ConferenceThemeColors
+  - Video.ConferenceToken
+  - Video.CreateConferenceThemeColors
+  - Video.DiscardedLog
+  - Video.Log
+  - Video.PaginationLinks
+  - Video.RoomRecording
+  - Video.RoomRequestProperties
+  - Video.RoomSession
+  - Video.RoomSessionEvent
+  - Video.RoomSessionMember
+  - Video.RoomSessionSummary
+  - Video.Stream
+  - Video.UpdateConferenceThemeColors
+  - Video.VideoStatusCode422
+  - VideoChannel
+  - Voice.ChargeDetail
+  - Voice.DialogflowVoiceLog
+  - Voice.DiscardedVoiceLog
+  - Voice.FabricVoiceLog
+  - Voice.LogEvent
+  - Voice.RelayVoiceLog
+  - Voice.VideoRoomVoiceLog
+  - Voice.VoiceLogCommon
+  - Voice.VoiceLogsListStatusCode422
+  - WebRtcRecording
+  - Webhooks.AI.AICallInfo
+  - Webhooks.AI.AICallLogEntry
+  - Webhooks.AI.AICallTimelineEntry
+  - Webhooks.AI.AIDebugConversationAdd
+  - Webhooks.AI.AIDebugFlowLocation
+  - Webhooks.AI.AIDebugWebhookFail
+  - Webhooks.AI.AIPostPromptData
+  - Webhooks.AI.AIResponseTiming
+  - Webhooks.AI.AISidecarChannelData
+  - Webhooks.AI.AISidecarEvent
+  - Webhooks.AI.AISwaigLogEntry
+  - Webhooks.Calling.InboundCallContext
+  - Webhooks.Calling.InboundCallHeader
+  - Webhooks.Calling.InboundCallParent
+  - Webhooks.Calling.InboundCallPeer
+  - Webhooks.Calling.InboundCallSipData
+  - Webhooks.Messaging.InboundMessageContext
+  - Webhooks.Messaging.InboundMessageMediaItem
+  - WhatsAppBusiness
+  - WhatsAppNumber
+  - WhatsAppTemplate
+  - WhatsAppTemplateComponent
+  compatibility:
+  - Account
+  - Application
+  - AvailablePhoneNumber
+  - Call
+  - CallSubresourceUris
+  - CompatibilityErrorArrayItem
+  - Conference
+  - ConferenceParticipant
+  - ConferenceRecording
+  - ConferenceRecordingSubresourceUris
+  - ConferenceSubresourceUris
+  - CountryResource
+  - CountrySubresourceUris
+  - CxmlScript
+  - Fax
+  - FaxLinks
+  - FaxMedia
+  - IncomingPhoneNumber
+  - IncomingPhoneNumberCapabilities
+  - Message
+  - MessageMedia
+  - MessageSubresourceUris
+  - PhoneNumberCapabilities
+  - Queue
+  - QueueMember
+  - Recording
+  - RecordingSubresourceUris
+  - SubresourceUris
+  - Transcription
+relationships:
+  signalwire_rest:
+  - from: AIAgentCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: AIAgentUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: AssignedNumber
+    to: Campaign
+    kind: belongs_to
+    via: campaign_id
+  - from: CXMLScriptCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CXMLScriptUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CXMLWebhookCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CXMLWebhookUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CallFlowCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CallFlowUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CallFlowVersionDeployByVersionId
+    to: CallFlowVersion
+    kind: belongs_to
+    via: call_flow_version_id
+  - from: Calling.CallBase
+    to: Calling.ChargeDetails
+    kind: has_many
+    via: charge_details
+  - from: Calling.CallLeg
+    to: Calling.ChargeDetails
+    kind: has_many
+    via: charge_details
+  - from: Calling.FabricDeviceLeg
+    to: Calling.ChargeDetails
+    kind: has_many
+    via: charge_details
+  - from: ConferenceRoomCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: ConferenceRoomUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: CxmlApplicationUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Datasphere.CreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Datasphere.ListStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Datasphere.SearchStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Datasphere.UpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: DialogflowAgentUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: DomainApplicationCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: EmbedTokenCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Fax.FaxLog
+    to: Fax.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Fax.FaxLogShowStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Fax.FaxLogsListStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: FreeswitchConnectorCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: FreeswitchConnectorUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: GuestTokenCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: InviteTokenCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Logs.ConferenceLogsStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Logs.VideoRoomSessionConference
+    to: Logs.ChargeDetails
+    kind: has_many
+    via: charge_details
+  - from: Message.MessageLog
+    to: Message.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Message.MessageLogShowStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Message.MessageLogsListStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Message.MessagesCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Message.MessagesUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: NumberGroupMembership
+    to: NumberGroup
+    kind: belongs_to
+    via: number_group_id
+  - from: PhoneRouteCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Project.TokenStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Projects.CreateProjectStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Projects.DeleteProjectStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Projects.UpdateProjectStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: QueueMember
+    to: Queue
+    kind: belongs_to
+    via: queue_id
+  - from: RefreshTokenStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: RelayApplicationCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: RelayApplicationUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: ResourceSipEndpointCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: ResourceSipEndpointUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: ResourceSubSipEndpointCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SWML.Calling.AIObject
+    to: SWML.Calling.Languages
+    kind: has_many
+    via: languages
+  - from: SWML.Calling.AIObject
+    to: SWML.Calling.Pronounce
+    kind: has_many
+    via: pronounce
+  - from: SWML.Calling.AISidecarSWAIG
+    to: SWML.Calling.AISidecarSWAIGFunction
+    kind: has_many
+    via: functions
+  - from: SWML.Calling.AISidecarSWAIG
+    to: SWML.Calling.MCPServer
+    kind: has_many
+    via: mcp_servers
+  - from: SWML.Calling.BedrockDataMap
+    to: SWML.Calling.BedrockExpression
+    kind: has_many
+    via: expressions
+  - from: SWML.Calling.BedrockDataMap
+    to: SWML.Calling.BedrockWebhook
+    kind: has_many
+    via: webhooks
+  - from: SWML.Calling.BedrockWebhook
+    to: SWML.Calling.BedrockExpression
+    kind: has_many
+    via: expressions
+  - from: SWML.Calling.ConnectDestination
+    to: SWML.Calling.ConnectHeaders
+    kind: has_many
+    via: headers
+  - from: SWML.Calling.ConnectDeviceParallel
+    to: SWML.Calling.ConnectHeaders
+    kind: has_many
+    via: headers
+  - from: SWML.Calling.ConnectDeviceParallel
+    to: SWML.Calling.ConnectDestination
+    kind: has_many
+    via: parallel
+  - from: SWML.Calling.ConnectDeviceSerial
+    to: SWML.Calling.ConnectHeaders
+    kind: has_many
+    via: headers
+  - from: SWML.Calling.ConnectDeviceSerial
+    to: SWML.Calling.ConnectDestination
+    kind: has_many
+    via: serial
+  - from: SWML.Calling.ConnectDeviceSerialParallel
+    to: SWML.Calling.ConnectHeaders
+    kind: has_many
+    via: headers
+  - from: SWML.Calling.ConnectDeviceSingle
+    to: SWML.Calling.ConnectHeaders
+    kind: has_many
+    via: headers
+  - from: SWML.Calling.DataMap
+    to: SWML.Calling.Expression
+    kind: has_many
+    via: expressions
+  - from: SWML.Calling.DataMap
+    to: SWML.Calling.Webhook
+    kind: has_many
+    via: webhooks
+  - from: SWML.Calling.Languages
+    to: SWML.Calling.Pronounce
+    kind: has_many
+    via: pronounce
+  - from: SWML.Calling.Multilingual
+    to: SWML.Calling.MultilingualLanguage
+    kind: has_many
+    via: languages
+  - from: SWML.Calling.SWAIG
+    to: SWML.Calling.MCPServer
+    kind: has_many
+    via: mcp_servers
+  - from: SWML.Calling.SWAIG
+    to: SWML.Calling.SWAIGIncludes
+    kind: has_many
+    via: includes
+  - from: SWML.Calling.SWMLObject
+    to: SWML.Calling.Section
+    kind: has_one
+    via: sections
+  - from: SWML.Calling.Webhook
+    to: SWML.Calling.Expression
+    kind: has_many
+    via: expressions
+  - from: SWML.Messaging.SWMLObject
+    to: SWML.Messaging.Section
+    kind: has_one
+    via: sections
+  - from: SipAddressCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SipAddressListStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SipAddressUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SipEndpointCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SipEndpointUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SipGatewayCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SubscriberCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SubscriberTokenStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SubscriberUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SwmlScriptCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SwmlScriptUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SwmlWebhookCreateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: SwmlWebhookUpdateStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Types.StatusCodes.StatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Video.Log
+    to: Video.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Video.VideoStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Voice.DialogflowVoiceLog
+    to: Voice.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Voice.FabricVoiceLog
+    to: Voice.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Voice.RelayVoiceLog
+    to: Voice.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Voice.VideoRoomVoiceLog
+    to: Voice.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Voice.VoiceLogCommon
+    to: Voice.ChargeDetail
+    kind: has_many
+    via: charge_details
+  - from: Voice.VoiceLogsListStatusCode422
+    to: Types.StatusCodes.RestApiErrorItem
+    kind: has_many
+    via: errors
+  - from: Webhooks.Calling.InboundCallContext
+    to: Webhooks.Calling.InboundCallHeader
+    kind: has_many
+    via: headers
+  - from: Webhooks.Messaging.InboundMessageContext
+    to: Webhooks.Messaging.InboundMessageMediaItem
+    kind: has_many
+    via: media
+  - from: WhatsAppBusiness
+    to: WhatsAppBusiness
+    kind: belongs_to
+    via: whatsapp_business_id
+  - from: WhatsAppNumber
+    to: WhatsAppBusiness
+    kind: belongs_to
+    via: whatsapp_business_id
+  - from: WhatsAppTemplate
+    to: WhatsAppTemplateComponent
+    kind: has_many
+    via: components
+  - from: WhatsAppTemplate
+    to: WhatsAppBusiness
+    kind: belongs_to
+    via: whatsapp_business_id
+  compatibility:
+  - from: Application
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Call
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Conference
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: ConferenceParticipant
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: ConferenceParticipant
+    to: Call
+    kind: belongs_to
+    via: call_sid
+  - from: ConferenceParticipant
+    to: Conference
+    kind: belongs_to
+    via: conference_sid
+  - from: ConferenceRecording
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: ConferenceRecording
+    to: Call
+    kind: belongs_to
+    via: call_sid
+  - from: ConferenceRecording
+    to: Conference
+    kind: belongs_to
+    via: conference_sid
+  - from: CxmlScript
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Fax
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: FaxMedia
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: FaxMedia
+    to: Fax
+    kind: belongs_to
+    via: fax_sid
+  - from: IncomingPhoneNumber
+    to: Account
+    kind: belongs_to
+    via: account_id
+  - from: IncomingPhoneNumber
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Message
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: MessageMedia
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Queue
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: QueueMember
+    to: Call
+    kind: belongs_to
+    via: call_sid
+  - from: QueueMember
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: QueueMember
+    to: Queue
+    kind: belongs_to
+    via: queue_sid
+  - from: Recording
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Recording
+    to: Call
+    kind: belongs_to
+    via: call_sid
+  - from: Recording
+    to: Conference
+    kind: belongs_to
+    via: conference_sid
+  - from: Transcription
+    to: Account
+    kind: belongs_to
+    via: account_sid
+  - from: Transcription
+    to: Recording
+    kind: belongs_to
+    via: recording_sid

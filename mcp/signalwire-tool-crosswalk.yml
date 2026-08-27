@@ -1,0 +1,66 @@
+generated: '2026-08-27'
+method: derived
+source: mcp/signalwire-mcp.yml (probed tools/list), openapi/signalwire-rest-openapi.yml,
+  openapi/signalwire-compatibility-openapi.yml, openapi/signalwire-calling-openrpc.yml
+note: >-
+  SignalWire's only live MCP surface is a Fern documentation-search server. It shares NO backing
+  operation with either OpenAPI contract, so the crosswalk is deliberately lopsided: one mcp_only
+  row and 332 rest_only operations. Recording the divergence is the point — an agent that connects
+  to https://signalwire.com/docs/_mcp/server can read the docs but cannot place a call, send a
+  message, or provision a number. Nothing here is mapped by guesswork.
+surfaces:
+  openapi:
+  - file: openapi/signalwire-rest-openapi.yml
+    title: SignalWire REST API
+    operations: 253
+    webhooks: 14
+    gated: false
+  - file: openapi/signalwire-compatibility-openapi.yml
+    title: Compatibility API
+    operations: 79
+    webhooks: 5
+    gated: false
+  openrpc:
+  - file: openapi/signalwire-calling-openrpc.yml
+    title: Calling API (JSON-RPC)
+    methods: 8
+    gated: false
+  graphql: null
+  mcp:
+    url: https://signalwire.com/docs/_mcp/server
+    tools: 1
+    gated: false
+    auth: none
+crosswalk: []
+mcp_only:
+- tool: searchDocs
+  reason: >-
+    Full-text search over the published documentation corpus. There is no REST operation, OpenRPC
+    method, or GraphQL field behind it — it is a docs-platform capability, not a product API.
+rest_only_summary:
+  signalwire_rest: 253
+  compatibility: 79
+  calling_openrpc: 8
+  total: 340
+  reason: >-
+    No MCP tool binds to any product operation. Every REST operation and every JSON-RPC method is
+    REST-only with respect to the MCP surface.
+rest_only_examples:
+- operationId_area: Calls
+  note: create/list/get/update call operations on the REST and Compatibility contracts
+- operationId_area: Messages
+  note: send and list SMS/MMS on both contracts
+- operationId_area: Phone Numbers
+  note: search, buy, configure and release numbers
+- operationId_area: Rooms / Room Sessions / Room Tokens
+  note: the full video surface
+- operationId_area: 'AI Agents: Custom'
+  note: create and manage hosted AI agent resources
+- operationId_area: Campaign Registry
+  note: 10DLC brand, campaign and phone-number-assignment registration
+coverage:
+  mcp_tools: 1
+  mcp_tools_bound_to_rest: 0
+  rest_operations: 340
+  rest_operations_with_a_tool: 0
+  binding_rate: 0.0

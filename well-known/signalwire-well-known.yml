@@ -1,0 +1,108 @@
+generated: '2026-08-27'
+method: probed
+source: live GET probes on 2026-08-27
+note: >-
+  No /.well-known document is served by SignalWire on any host probed. signalwire.com and
+  api.signalwire.com return a real 404 for every path. developer.signalwire.com answers HTTP 200
+  with an identical 472,879-byte HTML shell for EVERY /.well-known/* path — it is a Fern
+  single-page-app catch-all, not a document, and is recorded as a miss. No WellKnown, SecurityTxt
+  or AgentCard pointer is emitted from this file, because none of these surfaces is actually served.
+hosts:
+- host: signalwire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: api.signalwire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: developer.signalwire.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell (472879 bytes), identical for every path — not a document.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not an AgentCard JSON object.
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    result: miss
+    note: HTML SPA shell — not an AgentCard JSON object.
+summary:
+  documents_found: 0
+  hosts_probed: 3
+  paths_probed: 24

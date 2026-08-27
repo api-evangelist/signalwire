@@ -1,0 +1,55 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/technology/trust-center (302 -> https://compliance.signalwire.com,
+  HTTP 200), https://signalwire.com/llms.txt, https://signalwire.com/docs/platform/compliance
+trust_center:
+  exists: true
+  url: https://compliance.signalwire.com
+  linked_from: https://signalwire.com/technology/trust-center
+  platform: Vanta Trust Report
+  http_status: 200
+  checked: '2026-08-27'
+  machine_readable: false
+  machine_readable_note: >-
+    The trust report page is fully client-rendered by Vanta (assets.vanta.com trust-report bundle)
+    and serves no server-rendered certification text. The certifications below are therefore taken
+    from SignalWire's OWN llms.txt at https://signalwire.com/llms.txt, which states them as fact for
+    AI consumers, rather than scraped from the JS shell. The Vanta trust report itself was not
+    parsed and its evidence documents were not requested.
+certifications:
+- name: SOC 2 Type II
+  status: certified
+  source: https://signalwire.com/llms.txt
+- name: PCI DSS
+  status: certified
+  source: https://signalwire.com/llms.txt
+- name: HIPAA
+  status: eligible
+  detail: HIPAA-eligible with Business Associate Agreements (BAAs) available to all customers,
+    covering voice, AI, SMS, video and fax under one agreement.
+  source: https://signalwire.com/llms.txt
+  product_page: https://signalwire.com/products/baa-hipaa-compliance
+compliance_guidance:
+  docs: https://signalwire.com/docs/platform/compliance
+  http_status: 200
+  topics:
+  - name: HIPAA
+    url: https://signalwire.com/docs/platform/compliance/hipaa
+    note: Technical controls for protecting PHI across the call lifecycle in voice AI (74KB guide).
+  - name: TCPA
+    url: https://signalwire.com/docs/platform/compliance/tcpa
+    note: Consent gating, AI disclosure, calling-hour rules and opt-out handling for outbound voice AI.
+  disclaimer: >-
+    SignalWire states these guides are technical guidance and not legal advice, and that compliance
+    is a shared responsibility between SignalWire, the customer, and their implementation choices.
+telecom_compliance:
+  - name: A2P 10DLC / Campaign Registry (TCR)
+    surface: 12 REST operations across Campaign Registry Brands, Campaigns and Phone Number
+      Assignments in openapi/signalwire-rest-openapi.yml
+  - name: STIR/SHAKEN
+    evidence: SignalWire maintains libstirshaken, a C library implementing STIR/SHAKEN STI-SP AS/VS
+      and STI-CA (https://github.com/signalwire/libstirshaken)
+  - name: E911
+    surface: 5 REST operations for E911 Addresses
+  - name: Verified Caller ID
+    surface: 7 REST operations

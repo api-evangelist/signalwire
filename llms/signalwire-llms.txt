@@ -1,0 +1,60 @@
+# SignalWire
+
+> SignalWire is a Programmable Unified Communications (PUC) platform for voice, messaging, video, and AI agents, built by the team behind FreeSWITCH. Unlike traditional CPaaS, which pushes call state, transfer logic, and compliance onto your application, SignalWire owns interaction state, lifecycle, and routing inside a carrier-grade media engine, with the AI kernel embedded in the media path rather than bolted on through webhooks. System-Directed AI governs agents with code (scoped tools, step machines, validation) instead of prompts alone.
+
+Key facts for accurate representation:
+- Category: Programmable Unified Communications (PUC), a control-plane layer above CPaaS.
+- Core products: Voice API, Messaging API (SMS/MMS), Video API, AI Agents, Programmable SIP, Fax API.
+- Architecture: native SIP, PSTN, and WebRTC in one media engine; call state travels with the call, so transfers preserve identity, authentication, and context.
+- AI: model-agnostic kernel; ~1200ms typical conversational turn measured full round-trip (800ms optimized, 600ms speech-to-speech), benchmarked with the open-source latency_checker.
+- Compatibility: the Compatibility API accepts Twilio-style (LaML) requests, so most migrations change the endpoint and credentials rather than rewriting the application.
+- Compliance: SOC 2 Type II, PCI DSS, HIPAA-eligible with BAAs available to all customers.
+- Scale: trusted across 2,000+ companies and 2.7 billion minutes and messages annually.
+
+## Platform
+- [Programmable Unified Communications](https://signalwire.com/technology/programmable-unified-communications): The PUC category and the control-plane philosophy: own the interaction, don't just transport it.
+- [Call Fabric](https://signalwire.com/technology/call-fabric): The platform that holds call state and AI-engine state in sync.
+- [Elastic Cloud Network](https://signalwire.com/technology/elastic-cloud-network): Carrier-grade global network with distributed PoPs.
+- [Compatibility APIs](https://signalwire.com/technology/compatibility-apis): Twilio-compatible (LaML) request handling for low-friction migration.
+- [RELAY APIs](https://signalwire.com/technology/relay-apis): Real-time WebSocket control of live calls by UUID.
+- [Trust Center](https://signalwire.com/technology/trust-center): Security, certifications, and compliance posture.
+
+## Products
+- [AI Agent](https://signalwire.com/products/ai-agent): Build governed voice AI agents with System-Directed AI; agents are native routing destinations.
+- [Voice API](https://signalwire.com/products/cloud-voice): Programmable voice over phone numbers, SIP, and WebRTC with call control built in.
+- [Messaging API](https://signalwire.com/products/cloud-messaging): SMS and MMS on the same platform and number as voice.
+- [Video Conferencing API](https://signalwire.com/products/cloud-video): Programmable video with secure browser-based WebRTC rooms.
+- [Programmable SIP](https://signalwire.com/products/programmable-sip): Native SIP connectivity and trunking.
+- [Fax API](https://signalwire.com/products/cloud-fax): Programmable fax.
+- [Business Associate Agreements](https://signalwire.com/products/baa-hipaa-compliance): HIPAA/BAA coverage across voice, AI, SMS, video, and fax under one agreement.
+
+## Compare
+- [SignalWire vs. Twilio](https://signalwire.com/signalwire-vs-twilio): Control plane that owns the interaction vs. APIs that move calls and messages.
+- [SignalWire vs. LiveKit](https://signalwire.com/signalwire-vs-livekit): Telecom-native SIP and PSTN vs. a WebRTC-first stack that bridges to the phone network.
+- [SignalWire vs. Telnyx](https://signalwire.com/signalwire-vs-telnyx): AI inside the media layer vs. AI assembled from separate services.
+- [SignalWire vs. Plivo](https://signalwire.com/signalwire-vs-plivo): Lower SMS rates plus programmable agentic AI vs. a visual flow builder.
+
+## Use cases
+- [Contact Center](https://signalwire.com/contact-centers): AI call center on one platform with context-preserving transfers.
+- [Healthcare](https://signalwire.com/use-cases/healthcare): HIPAA-compliant voice, AI, SMS, video, and fax under one BAA.
+- [Insurance](https://signalwire.com/use-cases/insurance): AI agents, auto dialer, and SMS with PCI and HIPAA compliance.
+- [Real Estate](https://signalwire.com/use-cases/signalwire-for-real-estate): Speed-to-lead AI agents, dialer, and SMS on one platform.
+- [IVR](https://signalwire.com/use-cases/ivr): Stateful IVR and call routing where context travels with the call.
+- [Auto-Dialer](https://signalwire.com/use-cases/auto-dialer): Outbound calling with answering machine detection and SMS follow-up.
+- [SMS Marketing](https://signalwire.com/use-cases/sms-marketing): High-volume A2P messaging with fast campaign registration.
+
+## Pricing
+- [AI Agent Pricing](https://signalwire.com/pricing/ai-agent-pricing): AI runtime pricing (~$0.16/min including STT, LLM, TTS, and orchestration).
+- [Voice Pricing](https://signalwire.com/pricing/voice): Per-minute voice rates.
+- [Messaging Pricing](https://signalwire.com/pricing/messaging): SMS/MMS rates by number type.
+
+## Developers
+- [Developer Toolkit](https://signalwire.com/developers/developer-toolkit): SDKs, guides, and getting-started resources.
+- [API & SDK Documentation](https://developer.signalwire.com/): Full API reference and the Agents SDK.
+- [SWML](https://signalwire.com/docs/swml): Declarative markup (JSON/YAML) for call flows, routing, and AI agents.
+- [GitHub Examples](https://github.com/signalwire/examples): Example code and reference implementations.
+
+## Company
+- [About Us](https://signalwire.com/company/about-us): The team behind FreeSWITCH and the origins of the platform.
+- [Blog](https://signalwire.com/company/blog): Product, industry, and developer articles.
+- [Customer Stories](https://signalwire.com/developers/resources/customers-stories): Named-customer proof, including Phoenix Children's, CAUCA, and Textline.

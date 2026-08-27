@@ -1,0 +1,93 @@
+generated: '2026-08-27'
+method: searched
+source: https://api.github.com/repos/signalwire/signalwire-python/releases,
+  https://api.github.com/repos/signalwire/signalwire-typescript/releases,
+  registry metadata for the first-party package matrix, https://github.com/signalwire/docs
+platform_changelog:
+  published: false
+  probes:
+  - url: https://signalwire.com/changelog
+    status: 404
+  - url: https://signalwire.com/docs/changelog
+    status: 404
+  - url: https://signalwire.com/company/changelog
+    status: 404
+  - url: https://signalwire.com/developers/changelog
+    status: 404
+  note: >-
+    SignalWire publishes NO dated platform/API changelog page. The docs site (Fern) has no changelog
+    product and the marketing site 404s on every changelog path probed on 2026-08-27. What IS dated
+    and public is release history per SDK repository and per package registry, so that is what is
+    recorded below. There is also no release-notes surface for the REST contracts themselves — both
+    OpenAPI documents declare info.version 1.0.0 and carry no dated history, so an integrator cannot
+    tell from the contract what changed between two fetches of it.
+scheme: semver (per SDK); the REST contracts are unversioned apart from the Compatibility API's
+  date-versioned /api/laml/2010-04-01 path
+docs_source_of_truth:
+  repository: https://github.com/signalwire/docs
+  note: >-
+    The documentation, both OpenAPI contracts and the SWML JSON Schema are generated from a public
+    repository, so its commit history is the de-facto contract changelog. It was last pushed
+    2026-08-27.
+entries:
+- component: signalwire-sdk (Python)
+  version: v3.4.0
+  date: '2026-08-25'
+  source: https://github.com/signalwire/signalwire-python/releases
+  breaking: unknown
+- component: signalwire-sdk (Python)
+  version: v3.0.2
+  date: '2026-05-05'
+  source: https://github.com/signalwire/signalwire-python/releases
+- component: signalwire-sdk (Python)
+  version: v3.0.1
+  date: '2026-04-12'
+  source: https://github.com/signalwire/signalwire-python/releases
+- component: '@signalwire/cfb (Call Flow Builder client)'
+  version: 0.0.19
+  date: '2026-08-19'
+  source: https://registry.npmjs.org/@signalwire/cfb
+- component: '@signalwire/js (Browser SDK v4)'
+  version: 4.0.0-rc.2
+  date: '2026-07-14'
+  source: https://registry.npmjs.org/@signalwire/js
+  breaking: true
+  highlight: v4 major line in release candidate; a v3-to-v4 migration guide is published.
+- component: signalwire-sdk (Rust)
+  version: 1.1.2
+  date: '2026-05-27'
+  source: https://crates.io/crates/signalwire-sdk
+- component: signalwire-sdk (Ruby)
+  version: 2.0.0
+  date: '2026-05-27'
+  source: https://rubygems.org/gems/signalwire-sdk
+  breaking: true
+  highlight: Major version bump on the new unified Ruby SDK.
+- component: '@signalwire/sdk (TypeScript)'
+  version: v2.0.5
+  date: '2026-05-06'
+  source: https://github.com/signalwire/signalwire-typescript/releases
+- component: '@signalwire/address-widget'
+  version: 0.1.1
+  date: '2026-04-21'
+  source: https://registry.npmjs.org/@signalwire/address-widget
+- component: '@signalwire/core, @signalwire/realtime-api, @signalwire/web-api'
+  version: 4.3.3 / 4.2.1 / 3.1.7
+  date: '2026-04-03'
+  source: https://registry.npmjs.org/@signalwire/core
+- component: SignalWire-Agents (Perl)
+  version: v1.1.0
+  date: '2026-03-18'
+  source: https://metacpan.org/dist/SignalWire-Agents
+- component: signalwire_agents (Ruby)
+  version: 1.1.0
+  date: '2026-03-18'
+  source: https://rubygems.org/gems/signalwire_agents
+- component: signalwire-agents (Python)
+  version: 1.1.0
+  date: '2026-03-17'
+  source: https://pypi.org/project/signalwire-agents/
+- component: signalwire-go
+  version: v1.1.0
+  date: '2026-03-15'
+  source: https://proxy.golang.org/github.com/signalwire/signalwire-go/@latest

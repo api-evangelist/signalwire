@@ -1,0 +1,59 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://github.com/signalwire/swml_claude_skill and https://github.com/signalwire/signalwire-claude
+  (provider-published, saved verbatim); the remaining skills were generated from
+  openapi/signalwire-rest-openapi.yml, openapi/signalwire-compatibility-openapi.yml and the
+  conventions/, errors/, rate-limits/ and sandbox/ artifacts in this repository.
+note: >-
+  Every operationId referenced in a generated skill was read out of the two OpenAPI contracts in
+  openapi/ — none is invented. Facts about idempotency, reversal windows, rate limits and the
+  absence of a test mode come from the artifacts in this repo, each of which cites its own source.
+skills:
+- file: signalwire-swml.md
+  name: swml
+  method: searched
+  official: true
+  source: https://github.com/signalwire/swml_claude_skill/blob/main/SKILL.md
+  summary: SignalWire's own Agent Skill for authoring SWML documents — call flow control, IVR, AI
+    agents, recording, conferencing.
+- file: signalwire-builder.md
+  name: signalwire
+  method: searched
+  official: true
+  source: https://github.com/signalwire/signalwire-claude/blob/main/skills/signalwire/SKILL.md
+  summary: SignalWire's own Claude Code plugin skill covering REST APIs, SWML, Relay, the AI Agents
+    SDK and the Video API, with an explicit list of deprecated surfaces to avoid.
+- file: signalwire-send-sms.md
+  name: signalwire-send-sms
+  method: generated
+  official: false
+  operations: [create_message, list_messages, retrieve_message, update_message, list_message_logs,
+    get_message_log]
+  summary: Send and track an SMS/MMS on either contract, with the MPS ceilings, the no-idempotency
+    warning and the redaction-is-not-undo rule.
+- file: signalwire-place-call.md
+  name: signalwire-place-call
+  method: generated
+  official: false
+  operations: [create_a_call, retrieve_a_call, update_a_call, list_all_calls, call-commands,
+    list_call_recordings, get_call_recording]
+  summary: Place and steer an outbound call, including the exact state window inside which
+    Status=canceled still works.
+- file: signalwire-provision-number.md
+  name: signalwire-provision-number
+  method: generated
+  official: false
+  operations: [search_available_phone_numbers, purchase_phone_number, list_phone_numbers,
+    retrieve_phone_number, update_phone_number, release_phone_number, lookup_phone_number,
+    create_imported_phone_number]
+  summary: Search, buy, route and release a number, and register it for A2P 10DLC so messages
+    actually deliver.
+- file: signalwire-video-room.md
+  name: signalwire-video-room
+  method: generated
+  official: false
+  operations: [create_room, get_room_by_name, create_room_token, create_room_stream,
+    list_room_sessions, list_room_session_recordings, get_room_recording, delete_room_recording]
+  summary: Stand up a video room, mint per-participant tokens server-side, stream/record, and read
+    the session back.

@@ -1,0 +1,65 @@
+generated: '2026-08-27'
+method: probed
+source: https://signalwire.com/docs/_mcp/server (JSON-RPC tools/list + initialize, 2026-08-27)
+name: SignalWire Documentation MCP Server
+status: live
+deployment:
+  mode: remote
+  endpoint: https://signalwire.com/docs/_mcp/server
+  install: null
+  package: null
+  auth: none
+  verified: probed
+server_info:
+  name: fern-docs-mcp-server
+  version: 1.0.0
+  protocol_version: '2025-06-18'
+  capabilities:
+    tools:
+      listChanged: true
+  transport: Streamable HTTP (text/event-stream response to POST)
+advertised_at: https://signalwire.com/docs/llms.txt
+advertised_endpoint: https://signalwire.com/_mcp/server
+discovery_note: >-
+  SignalWire's own llms.txt tells AI clients to "connect to the MCP server at
+  https://signalwire.com/_mcp/server". That exact URL returns HTTP 404 from the Framer marketing
+  site (nginx, "Page Not Found | SignalWire") because the Fern docs are mounted under /docs. The
+  working endpoint is https://signalwire.com/docs/_mcp/server, which answered tools/list and
+  initialize anonymously on 2026-08-27. The same server is reachable at
+  https://signalwire.com/docs/_mcp/server and https://signalwire.docs.buildwithfern.com/_mcp/server.
+  This is a published-endpoint defect worth reporting back to the provider.
+scope_note: >-
+  This is a documentation-search MCP server provided by the Fern docs platform, not an
+  API-operations MCP server. It exposes one read-only tool over the docs corpus; none of the 332
+  REST operations in SignalWire's two OpenAPI contracts is callable through it. SignalWire's
+  Agents SDK separately ships an MCP GATEWAY that lets a SignalWire AI agent CONSUME third-party
+  MCP servers, and AgentBase methods (enable_mcp_server / handle_mcp_request) that let a
+  self-hosted agent EXPOSE itself as an MCP server — both are customer-run, not a SignalWire-hosted
+  agent surface, and are recorded below rather than as deployment modes.
+tool_count: 1
+tools:
+- name: searchDocs
+  title: Search signalwire.com Docs
+  description: Search the documentation at https://signalwire.com. Returns relevant doc passages
+    with source URLs.
+  read_only: true
+  input_schema:
+    type: object
+    properties:
+      query:
+        type: string
+        description: The search query to run against the docs
+    required:
+    - query
+    additionalProperties: false
+related_customer_run_mcp:
+- name: MCP Gateway (Python/TypeScript Agents SDK)
+  kind: gateway-consumer
+  docs: https://signalwire.com/docs/server-sdks/guides/build-ai-agents/mcp-gateway
+  note: Lets a SignalWire AI agent call tools on third-party MCP servers the customer configures.
+- name: AgentBase.enable_mcp_server / handle_mcp_request
+  kind: self-hosted-server
+  docs: https://signalwire.com/docs/server-sdks/reference/typescript/agents/agent-base/enable-mcp-server
+  note: >-
+    Turns a customer's own deployed SignalWire agent into an MCP server. The endpoint is the
+    customer's host, not SignalWire's, so it is not a provider-operated agent surface.

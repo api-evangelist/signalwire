@@ -1,0 +1,288 @@
+generated: '2026-08-27'
+method: searched
+source: registry.npmjs.org, pypi.org, rubygems.org, crates.io, api.nuget.org, proxy.golang.org,
+  repo.packagist.org, fastapi.metacpan.org, https://github.com/signalwire, https://signalwire.com/docs/server-sdks
+note: >-
+  Versions and publish dates were read from each registry's own metadata endpoint on 2026-08-27.
+  Official=true is asserted only where the registry record links a repository under
+  github.com/signalwire, or (for the @signalwire npm scope) where the package shares the same
+  first-party maintainer set as the scope's repo-linked packages. SignalWire re-platformed its SDKs
+  in 2026 onto a "SignalWire AI Agents SDK, Relay and REST" port matrix across ten languages; the
+  older per-language clients (signalwire-python 2.1.1, the signalwire Ruby gem 2.5.0, the
+  signalwire/signalwire PHP package v2.3.10) are the previous generation and their dates reflect
+  that, not abandonment of the platform.
+package_count: 28
+packages:
+- name: '@signalwire/js'
+  registry: npm
+  version: 4.0.0-rc.2
+  published: '2026-07-14'
+  official: true
+  language: JavaScript/TypeScript
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/js
+  note: Browser SDK (v4 release candidate at time of check).
+- name: '@signalwire/core'
+  registry: npm
+  version: 4.3.3
+  published: '2026-04-03'
+  official: true
+  language: JavaScript/TypeScript
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/core
+- name: '@signalwire/webrtc'
+  registry: npm
+  version: 3.15.0
+  published: '2026-03-23'
+  official: true
+  language: JavaScript/TypeScript
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/webrtc
+- name: '@signalwire/realtime-api'
+  registry: npm
+  version: 4.2.1
+  published: '2026-04-03'
+  official: true
+  language: Node.js
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/realtime-api
+  note: RELAY realtime server SDK for Node.js.
+- name: '@signalwire/node'
+  registry: npm
+  version: 3.0.4
+  published: '2026-02-05'
+  official: true
+  language: Node.js
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/node
+- name: '@signalwire/web-api'
+  registry: npm
+  version: 3.1.7
+  published: '2026-04-03'
+  official: true
+  language: JavaScript/TypeScript
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/web-api
+- name: '@signalwire/compatibility-api'
+  registry: npm
+  version: 3.2.0
+  published: '2025-10-03'
+  official: true
+  language: Node.js
+  repository: https://github.com/signalwire/compatibility-api-js
+  url: https://www.npmjs.com/package/@signalwire/compatibility-api
+  note: Twilio-compatible (LaML) REST client.
+- name: '@signalwire/sdk'
+  registry: npm
+  version: 2.0.5
+  published: '2026-05-06'
+  official: true
+  language: TypeScript
+  repository: https://github.com/signalwire/signalwire-typescript
+  url: https://www.npmjs.com/package/@signalwire/sdk
+  note: >-
+    Current unified TypeScript SDK (AI Agents + Relay + REST). The npm record carries no repository
+    field; official is asserted from the shared @signalwire scope maintainer set and the
+    signalwire/signalwire-typescript repo of the same description.
+- name: '@signalwire/web-components'
+  registry: npm
+  version: 4.0.0-rc.2
+  published: '2026-07-14'
+  official: true
+  language: JavaScript/TypeScript
+  url: https://www.npmjs.com/package/@signalwire/web-components
+  note: Embeddable web components; no repository field on the npm record.
+- name: '@signalwire/call-widget'
+  registry: npm
+  version: 3.15.0
+  published: '2025-08-25'
+  official: true
+  language: TypeScript
+  repository: https://github.com/signalwire/call-widget
+  url: https://www.npmjs.com/package/@signalwire/call-widget
+- name: '@signalwire/address-widget'
+  registry: npm
+  version: 0.1.1
+  published: '2026-04-21'
+  official: true
+  language: TypeScript
+  repository: https://github.com/signalwire/signalwire-address-widget
+  url: https://www.npmjs.com/package/@signalwire/address-widget
+- name: '@signalwire/client'
+  registry: npm
+  version: 0.0.1
+  published: '2025-07-28'
+  official: true
+  language: JavaScript/TypeScript
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/client
+- name: '@signalwire/swaig'
+  registry: npm
+  version: 0.0.1
+  published: '2025-03-05'
+  official: true
+  language: JavaScript/TypeScript
+  repository: https://github.com/signalwire/signalwire-js
+  url: https://www.npmjs.com/package/@signalwire/swaig
+- name: '@signalwire/cfb'
+  registry: npm
+  version: 0.0.19
+  published: '2026-08-19'
+  official: true
+  language: JavaScript/TypeScript
+  url: https://www.npmjs.com/package/@signalwire/cfb
+  note: Call Flow Builder client; no repository field on the npm record.
+- name: '@signalwire/react-native'
+  registry: npm
+  version: 1.0.4
+  published: '2023-05-24'
+  official: true
+  language: React Native
+  repository: https://github.com/signalwire/signalwire-node
+  url: https://www.npmjs.com/package/@signalwire/react-native
+  note: Last published 2023 — the oldest first-party npm package in the set.
+- name: signalwire-sdk
+  registry: pypi
+  version: 3.4.0
+  published: '2026-08-25'
+  official: true
+  language: Python
+  repository: https://github.com/signalwire/signalwire-python
+  url: https://pypi.org/project/signalwire-sdk/
+  note: Current unified Python SDK (AI Agents + Relay + REST); the most recently released
+    first-party package in the set.
+- name: signalwire-agents
+  registry: pypi
+  version: 1.1.0
+  published: '2026-03-17'
+  official: true
+  language: Python
+  repository: https://github.com/signalwire/signalwire-agents
+  url: https://pypi.org/project/signalwire-agents/
+  note: SignalWire AI Agents SDK for Python.
+- name: signalwire
+  registry: pypi
+  version: 2.1.1
+  published: '2025-02-04'
+  official: true
+  language: Python
+  repository: https://github.com/signalwire/signalwire-python
+  url: https://pypi.org/project/signalwire/
+  note: Previous-generation Python client.
+- name: swsh
+  registry: pypi
+  version: 0.1.14
+  published: '2024-03-20'
+  official: true
+  language: Python
+  repository: https://github.com/signalwire/swsh
+  url: https://pypi.org/project/swsh/
+  note: SWSH, the SignalWire interactive shell (CLI). See cli/signalwire-cli.yml.
+- name: signalwire_agents
+  registry: rubygems
+  version: 1.1.0
+  published: '2026-03-18'
+  official: true
+  language: Ruby
+  repository: https://github.com/signalwire/signalwire-agents-ruby
+  url: https://rubygems.org/gems/signalwire_agents
+- name: signalwire-sdk
+  registry: rubygems
+  version: 2.0.0
+  published: '2026-05-27'
+  official: true
+  language: Ruby
+  repository: https://github.com/signalwire/signalwire-ruby
+  url: https://rubygems.org/gems/signalwire-sdk
+- name: signalwire
+  registry: rubygems
+  version: 2.5.0
+  published: '2023-11-02'
+  official: true
+  language: Ruby
+  repository: https://github.com/signalwire/signalwire-ruby-old
+  url: https://rubygems.org/gems/signalwire
+  note: Previous-generation Ruby client; superseded by the signalwire-sdk gem.
+- name: signalwire-sdk
+  registry: crates.io
+  version: 1.1.2
+  published: '2026-05-27'
+  official: true
+  language: Rust
+  repository: https://github.com/signalwire/signalwire-rust
+  url: https://crates.io/crates/signalwire-sdk
+- name: SignalWire.Sdk
+  registry: nuget
+  version: 1.1.2
+  published: null
+  official: true
+  language: .NET
+  repository: https://github.com/signalwire/signalwire-dotnet
+  url: https://www.nuget.org/packages/SignalWire.Sdk
+  note: >-
+    Two versions published (1.1.1, 1.1.2). The NuGet flat-container index returns versions without
+    dates and the registration blob was not read for a date; published recorded as null rather than
+    guessed.
+- name: SignalWire-DotNet
+  registry: nuget
+  version: 2.4.6
+  published: null
+  official: true
+  language: .NET
+  repository: https://github.com/signalwire/signalwire-dotnet
+  url: https://www.nuget.org/packages/SignalWire-DotNet
+  note: Previous-generation .NET client; publish date not returned by the flat-container index.
+- name: github.com/signalwire/signalwire-go
+  registry: go
+  version: v1.1.0
+  published: '2026-03-15'
+  official: true
+  language: Go
+  repository: https://github.com/signalwire/signalwire-go
+  url: https://pkg.go.dev/github.com/signalwire/signalwire-go
+- name: signalwire/signalwire
+  registry: packagist
+  version: v2.3.10
+  published: '2022-01-11'
+  official: true
+  language: PHP
+  repository: https://github.com/signalwire/signalwire-php
+  url: https://packagist.org/packages/signalwire/signalwire
+  note: >-
+    Oldest first-party release in the set (2022). github.com/signalwire/signalwire-php was pushed
+    2026-08-21 as part of the 2026 SDK port matrix, so the Packagist release is behind the repo.
+- name: SignalWire-Agents
+  registry: cpan
+  version: v1.1.0
+  published: '2026-03-18'
+  official: true
+  language: Perl
+  repository: https://github.com/signalwire/signalwire-perl
+  url: https://metacpan.org/dist/SignalWire-Agents
+third_party_seen:
+- name: signalwire
+  registry: crates.io
+  version: 0.2.0
+  published: '2026-05-06'
+  official: false
+  note: Self-described "unofficial SignalWire SDK for Rust" (github.com/ZmoleCristian/signalwire).
+- name: signalwire-community/signalwire
+  registry: packagist
+  official: false
+  note: Community PHP client under the signalwire-community org, not github.com/signalwire.
+- name: io.github.signalwire-community:compatibility-api-java
+  registry: maven
+  version: 1.1.0
+  official: false
+  note: >-
+    The only Maven Central artifact matching SignalWire is published by the signalwire-community
+    org. github.com/signalwire/signalwire-java exists (pushed 2026-08-21) but no first-party Maven
+    Central coordinate was found on 2026-08-27.
+- name: omniauth-signalwire
+  registry: rubygems
+  version: 0.2.1
+  published: '2024-02-29'
+  official: false
+  note: >-
+    Gem summary says "Official OmniAuth strategy for SignalWire" but source_code_uri is
+    github.com/ryanwi/omniauth-signalwire, not the signalwire org — recorded as unconfirmed.

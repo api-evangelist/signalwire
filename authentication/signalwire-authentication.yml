@@ -1,0 +1,112 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/apis/authorization, https://signalwire.com/docs/apis/permissions,
+  https://signalwire.com/docs/browser-sdk/v4/guides/authentication, derived from openapi/signalwire-rest-openapi.yml
+  + openapi/signalwire-compatibility-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: SignalWireBasicAuth
+  type: http
+  scheme: Basic
+  description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+    The client sends HTTP requests with the Authorization header containing
+
+    the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+    The project ID will be used as the username and the API token as the password.
+
+
+    Example:
+
+    ```
+
+    Authorization: Basic base64(project_id:token)
+
+    ```'
+  sources:
+  - openapi/signalwire-compatibility-openapi.yml
+  - openapi/signalwire-rest-openapi.yml
+- name: SignalWireBearerAuth
+  type: http
+  scheme: Bearer
+  description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+    The client sends HTTP requests with the Authorization header containing
+
+    the word Bearer followed by a space and the subscriber token.
+
+
+    Example:
+
+    ```
+
+    Authorization: Bearer <subscriber_token>
+
+    ```'
+  sources:
+  - openapi/signalwire-rest-openapi.yml
+docs: https://signalwire.com/docs/apis/authorization
+note: SignalWire REST APIs support exactly two authentication methods and each endpoint specifies which
+  it accepts. There is no OAuth 2.0 or OpenID Connect surface — /.well-known/oauth-authorization-server
+  and /.well-known/openid-configuration both 404 — so no scopes/ artifact is emitted. Token permissions
+  ARE scoped, but the scopes are selected in the Dashboard when a token is created or edited rather than
+  requested over an authorization flow.
+methods:
+- name: HTTP Basic
+  scheme: SignalWireBasicAuth
+  header: 'Authorization: Basic <base64(ProjectID:APIToken)>'
+  credential:
+    username: Project ID (UUID)
+    password: API Token
+  expiry: API credentials do not expire; rotate them from the Dashboard.
+  where_to_get: SignalWire Dashboard > API Credentials (https://my.signalwire.com?page=credentials)
+  default_security: true
+  applies_to: Both the SignalWire REST API and the Compatibility API (the default security on both contracts).
+- name: HTTP Bearer
+  scheme: SignalWireBearerAuth
+  header: 'Authorization: Bearer <token>'
+  token_types:
+  - name: Subscriber Access Token (SAT)
+    purpose: Authenticate end users in Fabric applications so client apps can call on behalf of a subscriber.
+    obtain: POST /api/fabric/subscribers/tokens using Basic Auth
+    refresh: Refresh Subscriber Token endpoint, called before expiry
+  - name: Guest Token
+    purpose: Limited, temporary access restricted to specific Fabric addresses — click-to-call widgets
+      and guest access.
+    obtain: POST /api/fabric/guests/tokens using an existing SAT
+  expiry: Short-lived; an expired token returns 401 Unauthorized.
+  applies_to: SignalWire REST API only; intended for client-side calls where API credentials cannot be
+    exposed.
+scoping:
+  supported: true
+  mechanism: Dashboard-selected token scopes
+  oauth2: false
+  failure_mode: 403 Forbidden when the token lacks the required scope; 401 Unauthorized when credentials
+    are missing or invalid.
+  docs: https://signalwire.com/docs/apis/permissions
+transport:
+  https_required: true
+  note: Plain HTTP requests fail; there is no automatic upgrade.
+best_practices_published:
+- Keep API credentials server-side; use Bearer tokens for client applications.
+- Set short token lifetimes to reduce risk if a token leaks.
+- Scope tokens narrowly — only grant what is needed.
+- Always use HTTPS.
+- Rotate API tokens periodically from the Dashboard.
+webhook_authentication:
+  signature_validation: validate_webhook_signature / validate_request helpers ship in the Server SDKs
+    (Python and TypeScript).
+  basic_auth: SWML services and agents expose get_basic_auth_credentials / validate_basic_auth so the
+    customer endpoint can require Basic auth from SignalWire.
+  docs: https://signalwire.com/docs/swml/guides/webhook-security
+no_oauth_evidence:
+- url: https://signalwire.com/.well-known/oauth-authorization-server
+  status: 404
+- url: https://signalwire.com/.well-known/openid-configuration
+  status: 404
+- url: https://api.signalwire.com/.well-known/oauth-authorization-server
+  status: 404

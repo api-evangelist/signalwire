@@ -1,0 +1,177 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/apis/base-url, https://signalwire.com/docs/apis/authorization,
+  https://signalwire.com/docs/apis/paging, https://signalwire.com/docs/apis/data-formats,
+  https://signalwire.com/docs/apis/error-codes, https://signalwire.com/docs/platform/rate-limits,
+  https://signalwire.com/docs/platform/webhooks, and derived from openapi/signalwire-rest-openapi.yml
+  + openapi/signalwire-compatibility-openapi.yml
+base_url:
+  pattern: https://{your_space}.signalwire.com
+  structure: https://{your_space}.signalwire.com/api/{family}/{resource}
+  families:
+  - messaging
+  - calling
+  - fabric
+  - video
+  - datasphere
+  - project
+  - relay/rest
+  - laml/2010-04-01 (Compatibility API)
+  per_tenant: true
+  per_tenant_note: >-
+    Every Space has its own subdomain and every request goes through it. There is no single shared
+    API host — this is why servers[] in both contracts is templated on {space_name}. An agent must be
+    told the Space subdomain before it can call anything.
+  https_only: true
+  https_note: Plain HTTP requests are refused; there is no automatic upgrade.
+  docs: https://signalwire.com/docs/apis/base-url
+authentication:
+  styles:
+  - name: HTTP Basic
+    credential: Project ID as username, API Token as password, base64-encoded
+    scope: The standard method for SignalWire REST APIs
+    expiry: API credentials do not expire
+  - name: HTTP Bearer
+    credential: Subscriber Access Token (SAT) or Guest Token
+    scope: Client-side calls where API credentials cannot be exposed
+    expiry: Short-lived; a 401 means fetch a fresh token
+    refresh: Refresh Subscriber Token endpoint
+  token_scopes:
+    supported: true
+    granularity: Tokens can be scoped in the Dashboard to limit API access; a 403 means the token
+      lacks the required scope.
+    oauth2: false
+    note: Scopes are selected in the Dashboard, not negotiated over OAuth. There is no OAuth 2.0
+      securityScheme in either contract, so no scopes/ artifact is emitted.
+  docs: https://signalwire.com/docs/apis/authorization
+  see: authentication/signalwire-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  evidence: >-
+    Neither OpenAPI contract declares an Idempotency-Key (or any) request header parameter on any of
+    its 332 operations, and no idempotency page exists in the documentation. Retrying a POST that
+    places a call or sends a message can duplicate it. This is a real gap for agent use, not a
+    documentation gap on our side — no Idempotency pointer is emitted.
+  checked: '2026-08-27'
+pagination:
+  style: link-based (HAL-ish links object)
+  response_fields:
+    links:
+      self: URL of the current page
+      first: URL of the first page
+      next: URL of the next page
+      prev: URL of the previous page
+    data: array of resources
+  guidance: >-
+    The docs state it is "highly recommended" to navigate using the returned link values rather than
+    constructing page URLs, so that results are not affected by new resources being created or by a
+    paging-scheme change.
+  docs: https://signalwire.com/docs/apis/paging
+data_formats:
+  datetimes: UTC, ISO 8601 (e.g. 2018-07-23T13:01:00Z)
+  phone_numbers: E.164 (+15551234567); if a number cannot be represented in E.164, the raw Caller ID
+    string received is used
+  case_sensitivity: All REST parameters are case-sensitive
+  docs: https://signalwire.com/docs/apis/data-formats
+error_envelope:
+  rfc9457: false
+  shapes:
+  - surface: /api/*
+    body: '{"errors":[{"type","code","message","attribute","url"}]}'
+  - surface: /api/relay/rest
+    body: '{"errors":[{"detail","status","title","code"}]}'
+  multi_error: true
+  code_reference: https://signalwire.com/docs/apis/error-codes
+  see: errors/signalwire-problem-types.yml
+rate_limit_signalling:
+  documented: true
+  headers_named: false
+  statement: Every HTTP request includes the user's current limit and remaining requests in its X-Header.
+  exhaustion_status: 429
+  see: rate-limits/signalwire-rate-limits.yml
+versioning:
+  api_version_in_path: Compatibility API only (/api/laml/2010-04-01, the Twilio-compatible date-versioned path)
+  signalwire_rest: Unversioned paths under /api/{family}; both contracts declare info.version 1.0.0
+  sdk_versioning: Browser SDK is explicitly versioned in the docs (v2, v3, v4) with a published
+    v3-to-v4 migration guide
+  see: lifecycle/signalwire-lifecycle.yml
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation header is declared in either contract or documented; call and
+    message SIDs/UUIDs are the correlation handle, along with the Logs API surface.
+metadata_fields:
+  supported: partial
+  note: The Compatibility API carries Twilio-style user-supplied fields; there is no general-purpose
+    metadata bag documented across the SignalWire REST API.
+field_expansion:
+  supported: false
+  note: No expand / fields / sparse-fieldset parameter is declared in either contract.
+webhooks:
+  style: HTTP callback to a customer URL, configured via a Resource attached to a phone number
+  response_contract: Handler replies 200 OK with SWML (or cXML on the Compatibility API)
+  signature_validation: validate_webhook_signature / validate_request helpers in the Server SDKs
+  declared_in_spec: true
+  count: 19
+  see: asyncapi/signalwire-webhooks.yml
+  docs: https://signalwire.com/docs/platform/webhooks
+reversibility:
+  grade: verified
+  write_surface: true
+  summary: >-
+    SignalWire publishes reversal paths for the two most consequential real-money actions — an
+    outbound call and an outbound fax — and states the state window each one works inside. It does
+    NOT publish an undo or restore for resource deletion: every DELETE in both contracts is
+    terminal, and message redaction is explicitly irreversible. An agent should treat resource
+    deletion and message redaction as one-way doors and cancellation as time-boxed to a pre-terminal
+    call/fax state.
+  reversals:
+  - action: Place an outbound call
+    reversal: Update the call with Status=canceled (before it is answered) or Status=completed (to
+      hang up an in-progress call)
+    operationId: update_a_call
+    contract: openapi/signalwire-compatibility-openapi.yml
+    window: >-
+      canceled applies only while the call has not yet connected — the error-code reference lists
+      "An attempt was made to cancel an in-progress call" as error 10000. Once in progress the only
+      reversal is completed (hang up); once the call is completed no update is accepted.
+    window_stated: true
+    docs: https://signalwire.com/docs/compatibility-api/rest/error-codes
+  - action: Send a fax
+    reversal: Update the fax with Status=canceled
+    operationId: update_fax
+    contract: openapi/signalwire-compatibility-openapi.yml
+    window: >-
+      "The fax must be in 'queued' status to be canceled." Stated verbatim in the spec's own
+      parameter description. An attempt to cancel an in-progress or finished fax returns error 10000.
+    window_stated: true
+    docs: https://signalwire.com/docs/compatibility-api/rest/error-codes
+  - action: Send a message
+    reversal: none (redaction is not a reversal)
+    operationId: update_message
+    contract: openapi/signalwire-rest-openapi.yml
+    window: >-
+      A delivered message cannot be recalled. The body can be REDACTED (PATCH with body="") only
+      after the message reaches a terminal state (delivered, undelivered, failed); messages still
+      queued or initiated cannot be redacted. "Once redacted, the original body is overwritten and
+      cannot be recovered."
+    window_stated: true
+    irreversible: true
+  irreversible_operations:
+    count: 51
+    classes:
+    - 37 DELETE/redact operations on the SignalWire REST API (Fabric resources, Datasphere documents
+      and chunks, subscribers, SIP credentials and gateways, rooms, recordings, streams, phone
+      numbers, project tokens, subprojects, verified caller IDs, number groups)
+    - 14 DELETE operations on the Compatibility API (calls, messages, recordings, transcriptions,
+      faxes and media, applications, queues, incoming phone numbers, cXML scripts, tokens)
+    restore_path: none published
+    retention_window: none published
+    note: >-
+      No restore, undelete, trash or retention window is documented for any deletion. Releasing a
+      phone number (release_phone_number) is not reversible either — the number returns to the pool.
+dry_run_mode:
+  supported: false
+  note: No dry-run, preview or validate-only parameter is declared in either contract. The closest
+    published equivalent is the swaig-test CLI, which exercises an agent's tools locally without
+    placing a call — see sandbox/signalwire-sandbox.yml.

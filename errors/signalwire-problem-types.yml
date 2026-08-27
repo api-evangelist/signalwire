@@ -1,0 +1,656 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/apis/error-codes (253 codes), https://signalwire.com/docs/compatibility-api/rest/error-codes,
+  derived from openapi/signalwire-rest-openapi.yml + openapi/signalwire-compatibility-openapi.yml
+format: vendor-json
+rfc9457: false
+note: SignalWire does not use RFC 9457 application/problem+json. Both contracts return application/json
+  with a vendor error envelope. The /api/* surface returns {"errors":[{type,code,message,attribute,url}]}
+  and may carry several entries when multiple fields fail validation at once; the /api/relay/rest surface
+  returns {"errors":[{detail,status,title,code}]}. The `code` field in both maps to the same published
+  reference. Error code names and meanings below are transcribed verbatim from the provider's own error-code
+  reference page; HTTP status coverage is derived from the two OpenAPI contracts.
+envelopes:
+- surface: /api/* (messaging, calling, fabric, and others)
+  media_type: application/json
+  shape: '{"errors": [{"type": "...", "code": "...", "message": "...", "attribute": "...", "url": "..."}]}'
+  fields:
+    type: The category of the error (e.g. validation_error).
+    code: A specific, machine-readable code — matches the published error-code reference.
+    message: A human-readable description of what went wrong.
+    attribute: The request parameter that triggered the error, when applicable.
+    url: A link back to the error-code documentation.
+  multi_error: true
+  docs: https://signalwire.com/docs/apis/error-codes
+- surface: /api/relay/rest
+  media_type: application/json
+  shape: '{"errors": [{"detail": "...", "status": ..., "title": "...", "code": "..."}]}'
+  fields:
+    detail: Human-readable detail.
+    status: HTTP status.
+    title: Short title.
+    code: Machine-readable code, same reference as above.
+  multi_error: true
+  docs: https://signalwire.com/docs/apis/error-codes
+- surface: Compatibility API (/api/laml/2010-04-01)
+  media_type: application/json
+  shape: Twilio-compatible error body carrying a numeric code (4xxx / 1xxxx / 3xxxx / 6xxxx classes).
+  multi_error: false
+  docs: https://signalwire.com/docs/compatibility-api/rest/error-codes
+http_status_classes:
+- status: '400'
+  meaning: Bad Request — malformed request (bad JSON, missing required fields).
+  retry: false
+- status: '401'
+  meaning: Unauthorized — credentials missing or invalid.
+  retry: false
+- status: '403'
+  meaning: Forbidden — the token lacks the required scope.
+  retry: false
+- status: '404'
+  meaning: Not Found — the resource doesn't exist, or doesn't belong to your project.
+  retry: false
+- status: '409'
+  meaning: Conflict (Compatibility API).
+  retry: false
+- status: '422'
+  meaning: Unprocessable Entity — well-formed but failed validation; body carries the errors array.
+  retry: false
+- status: '429'
+  meaning: Too Many Requests — a rate limit was exceeded. Back off and retry.
+  retry: true
+- status: '500'
+  meaning: Internal Server Error — unexpected server-side failure. Retry with backoff.
+  retry: true
+- status: '502'
+  meaning: Bad Gateway.
+  retry: true
+- status: '503'
+  meaning: Service Unavailable (Compatibility API).
+  retry: true
+spec_coverage:
+  signalwire_rest:
+    responses_4xx_5xx:
+      '400': 62
+      '401': 253
+      '502': 1
+      '404': 194
+      '422': 137
+      '500': 251
+      '403': 3
+    media_types:
+      application/json: 901
+      text/plain: 1
+  compatibility:
+    responses_4xx_5xx:
+      '400': 79
+      '401': 79
+      '422': 56
+      '404': 53
+      '503': 8
+      '409': 3
+    media_types:
+      application/json: 278
+code_count: 253
+codes:
+- code: account_limit_exceeded
+  description: The account must be upgraded to perform this action.
+- code: allowed_address_limit_exceeded
+  description: The maximum number of allowed addresses has been exceeded.
+- code: already_assigned
+  description: This resource is already assigned.
+- code: already_verified
+  description: This number is already verified.
+- code: address_has_no_valid_channels
+  description: The address has no valid channels.
+- code: associated_campaign_inactive
+  description: The carrier flagged the A2P 10DLC campaign associated with this number as inactive, so
+    the message was not delivered. Verify the campaign's status in your dashboard and contact Support
+    if it should be active.
+- code: associated_campaign_suspended
+  description: The carrier flagged the A2P 10DLC campaign associated with this number as suspended, so
+    the message was not delivered. Review the campaign's compliance status and contact Support for help
+    resolving the suspension.
+- code: auto_top_up_deactivated
+  description: Auto top-up is not active on this account.
+- code: authblock_is_invalid
+  description: The authblock is invalid or doesn't reference an existing [subscriber](/docs/platform/subscribers).
+- code: authblock_is_expired
+  description: The expires_at timestamp of the subscriber from the authblock has passed.
+- code: billing_route_not_found
+  description: Unable to locate a billing route.
+- code: body_must_be_empty
+  description: The `body` value must be an empty string to redact the message.
+- code: body_or_media_required
+  description: A `body` must be included if there is no `media`.
+- code: brand_not_unique
+  description: The CSP Brand Reference must be unique within the Space
+- code: call_id_is_duplicated
+  description: The provided call ID is already associated with an existing call.
+- code: call_update_failed
+  description: The call update could not be completed at this time. Please try again, and contact support
+    if issues persist.
+- code: campaign_inactive
+  description: Numbers cannot be assigned to an inactive campaign
+- code: campaign_limit_exceeded
+  description: The campaign limit has been exceeded.
+- code: campaign_not_active
+  description: Campaign must be active.
+- code: campaign_not_found
+  description: The campaign ID provided could not be found.
+- code: campaign_throughput_exceeded
+  description: The message exceeded the throughput (messages-per-second) limit the carrier allows for
+    this US A2P 10DLC campaign. Slow your send rate or request a higher throughput tier, then retry.
+- code: cannot_cancel_in_progress
+  description: Cannot cancel an in-progress call.
+- code: cannot_process
+  description: The request cannot be processed right now.
+- code: cannot_redact_in_progress_message
+  description: Cannot redact a message that is in progress. Messages in `queued` or `initiated` state
+    cannot be redacted; only messages in terminal states (`delivered`, `undelivered`, `failed`) are eligible.
+- code: cannot_redirect_not_in_progress
+  description: Call is not in-progress. Cannot redirect.
+- code: cannot_remove_assignment_from_integration_test
+  description: You cannot remove the assignment from an integration test campaign.
+- code: cannot_update_completed
+  description: Completed calls cannot be updated.
+- code: carrier_violation
+  description: The carrier flagged the message as spam and did not deliver it. Review the message content
+    for spam-like patterns and confirm the sending number is registered to an approved campaign.
+- code: channel_has_missing_properties
+  description: Channel must have read or write property.
+- code: channel_name_is_reserved
+  description: The channel name uses a reserved prefix.
+- code: channel_name_size_limit_exceeded
+  description: The channel name exceeds the maximum allowed length.
+- code: channel_size_limit_exceeded
+  description: The number of channels exceeds the allowed limit.
+- code: character_limit_exceeded
+  description: The message `body` exceeds the provider-specific character limit.
+- code: chat_token_invalid_for_session
+  description: The provided token is invalid for the provided room session.
+- code: chat_token_is_invalid
+  description: The provided token is not a valid chat token.
+- code: contains_external_entities
+  description: XML contains external entity definitions which are not allowed for security reasons.
+- code: conversation_flow_steps_are_invalid
+  description: 'This value must be an array. Example: ["Intro", ["Introduce yourself", "Ask caller''s
+    name"], "Summarize the conversation and thank the caller"]'
+- code: could_not_purchase
+  description: The resource could not be purchased.
+- code: custom_variable_value_too_long
+  description: A `custom_variables` value exceeds the maximum size. Each value must be at most 1024 bytes.
+- code: destination_number_not_supported
+  description: The destination phone number is not supported.
+- code: document_version_mismatch
+  description: The document_version does not match the current record's document_version.
+- code: does_not_exist
+  description: This entry does not exist.
+- code: domain_has_no_password
+  description: The domain has not been configured with a password.
+- code: duplicate_skill_type
+  description: Only one skill of this type can exist per AI Agent.
+- code: exceeds_history_logs_limit
+  description: This value exceeds the allowed date limit.
+- code: exceeds_platform_stream_limit
+  description: Adding an additional stream would exceed the allowed number of streams per room.
+- code: feature_not_available
+  description: This feature is not available to this account.
+- code: file_already_exists
+  description: An asset already exists with this project, path, and filename.
+- code: file_can_not_be_opened
+  description: An error occurred trying to open the provided file.
+- code: file_exceeds_size_limit
+  description: The file exceeds the maximum allowed size.
+- code: file_not_found
+  description: The requested file could not be found (404 Not Found). Please check the URL and try again.
+- code: from_fabric_address_id_does_not_match_subscriber
+  description: The provided from_fabric_address_id does not match an address for the provided subscriber.
+- code: header_value_too_long
+  description: The header value exceeds the maximum allowed byte length.
+- code: inactive_campaign
+  description: The `from` number must belong to an active campaign.
+- code: incompatible_parameters
+  description: The parameters that were input cannot be specified together.
+- code: incorrect_keyword_format
+  description: Keywords must be comma separated values with no space.
+- code: incorrect_number_of_sub_use_cases_low_volume
+  description: Mixed use case campaigns require minimum 2 and maximum 5 sub use cases.
+- code: incorrect_number_of_sub_use_cases_mixed
+  description: Mixed use case campaigns require minimum 2 and maximum 5 sub use cases.
+- code: inline_swml_or_swml_webhook_required
+  description: You must pass instructions through inline SWML or a URL to a SWML document.
+- code: insufficient_balance
+  description: This account has an insufficient balance.
+- code: insufficient_balance_to_receive_message
+  description: The account has an insufficient balance to receive the message.
+- code: insufficient_balance_to_send_message
+  description: The account does not have enough balance to send the message. Add funds or enable auto
+    top-up, then retry.
+- code: integration_test_verified_caller_required
+  description: The `to` number must be the verified caller ID for the trial campaign.
+- code: internal_error_occurred
+  description: An internal error occurred while processing the message. This is a temporary server-side
+    issue — retry with backoff, and contact Support if it persists.
+- code: invalid_addresses_for_transfer_skill
+  description: Addresses must contain non-empty values for name and destination
+- code: invalid_auth_token_permissions
+  description: Permissions list contains invalid selections. Valid permissions are calling, chat, fax,
+    management, messaging, numbers, pubsub, storage, tasking, and video.
+- code: invalid_call_handler_for_external_swml_handler
+  description: Handler must be calling or messaging.
+- code: invalid_call_handler_for_swml_application
+  description: Handler must be external_url or script.
+- code: invalid_call_id_passed
+  description: The call ID must not point to a cXML call.
+- code: invalid_campaign_id
+  description: The campaign ID provided is invalid.
+- code: invalid_campaign_status
+  description: The campaign status is invalid.
+- code: invalid_codecs_format
+  description: Codecs must be an array of strings or a comma-separated string.
+- code: invalid_command_attempted
+  description: The specified command is invalid.
+- code: invalid_content_type
+  description: Invalid content type.
+- code: invalid_custom_variable_name
+  description: A `custom_variables` key is invalid. Keys must start with a letter or underscore and contain
+    only letters, numbers, and underscores.
+- code: invalid_custom_variable_value
+  description: A `custom_variables` value is invalid. Values must be non-empty strings.
+- code: invalid_destination_number
+  description: The destination phone number is invalid.
+- code: invalid_for_type
+  description: This is not valid for the current type.
+- code: invalid_for_page_chunking
+  description: Chunking parameters are not allowed for page chunking.
+- code: invalid_for_paragraph_chunking
+  description: Chunking parameters are not allowed for paragraph chunking.
+- code: invalid_for_sentence_chunking
+  description: Provided chunking parameters are not valid for sentence chunking. Allowed parameters are
+    max_sentences_per_chunk and split_newlines.
+- code: invalid_for_sliding_chunking
+  description: Provided chunking parameters are not valid for sliding chunking. Allowed parameters are
+    chunk_size and overlap_size.
+- code: invalid_from_number
+  description: The `from` value must be a valid purchased phone number on your SignalWire project. Verified
+    caller IDs cannot be used for outbound messaging.
+- code: invalid_group_configuration
+  description: Fabric addresses must form a valid conversation group (a single room or two non-room subscribers)
+    and group ID must start with 'sw_'.
+- code: invalid_handler_use
+  description: Handler must be calling or messaging.
+- code: invalid_header_name
+  description: Header name must be a non-empty RFC 7230 token (no CR/LF or whitespace).
+- code: invalid_header_value
+  description: Header value must be a non-empty string with no CR/LF characters.
+- code: invalid_http_method
+  description: This request method must be GET or POST.
+- code: invalid_join_until_date
+  description: Join Until date can't be in the past of Join From date.
+- code: invalid_list_items
+  description: The list items are invalid.
+- code: invalid_media_type
+  description: The media type provided is invalid.
+- code: invalid_media_url
+  description: The media URL provided is invalid.
+- code: invalid_message_body
+  description: The message body provided is invalid.
+- code: invalid_mustache_syntax
+  description: The mustache syntax is invalid..
+- code: invalid_number_format
+  description: The phone number is not in the correct format. Please use E.164 format, i.e., +15558675309.
+- code: invalid_object
+  description: This object is invalid. Refer to the error message for more details.
+- code: invalid_parameter
+  description: This list contains an invalid entry.
+- code: invalid_pstn_destination
+  description: The PSTN destination is either missing or not in E164 format.
+- code: invalid_relay_connector_parameters
+  description: Send relay_connector_id to link to an existing connector or relay_connector_name and relay_connector_token
+    to create a new one.
+- code: invalid_resource_for_handler
+  description: This resource is not valid for the specified handler type.
+- code: invalid_resource_type
+  description: The passed resource type is not a valid resource type.
+- code: invalid_room_session
+  description: The room session ID does not point to a valid room session.
+- code: invalid_sip_configuration
+  description: The SIP configuration value is invalid.
+- code: invalid_sip_destination
+  description: The SIP destination is either missing or could not be parsed.
+- code: invalid_state
+  description: The object is not in the correct state for this action.
+- code: invalid_sub_use_cases
+  description: This sub use case is not valid.
+- code: invalid_subproject_id
+  description: The subproject ID passed could not be found or does not belong to the project being used
+    to authenticate the request.
+- code: invalid_to_number
+  description: The destination number for the message is invalid. Check the format and location, or reach
+    out to Support if issues persist.
+- code: invalid_token_format
+  description: The format of the provided token is invalid.
+- code: invalid_zendesk_capability
+  description: The Zendesk Capability is invalid.
+- code: list_contains_invalid_entries
+  description: The list contains an invalid entry.
+- code: malformed_xml
+  description: The XML is not well formed
+- code: max_queued_calls_exceeded
+  description: The maximum number of queued calls has been exceeded.
+- code: max_queued_messages_exceeded
+  description: has exceeded the maximum number of queued messages/calls for this number
+- code: media_connection_timeout
+  description: The connection to the media URL timed out before the file could be retrieved. Verify the
+    URL is reachable and responds promptly, then retry.
+- code: media_download_failed
+  description: The media file could not be downloaded from the provided URL (for example, the resource
+    was not found). Verify the URL points to a valid, publicly accessible file and retry.
+- code: media_exceeds_size_limit
+  description: The media file exceeds the maximum allowed size. Reduce the file size or host a smaller
+    version, then retry.
+- code: media_limit_exceeded
+  description: Exceeded the maximum number of media items allowed per message (currently 8).
+- code: media_processing_failed
+  description: The media could not be processed (for example, too many redirects or an internal processing
+    error). Verify the media URL serves the file directly and retry.
+- code: media_request_failed
+  description: The media URL returned an error during retrieval (for example, an SSL or HTTP error). Verify
+    the URL is valid and serves the media over HTTPS, then retry.
+- code: media_size_exceeds_limit
+  description: The media size exceeds the allowed limit.
+- code: media_url_required
+  description: A media URL is required.
+- code: message_backlog_limit_exceeded
+  description: The project's messaging backlog limit has been exceeded. Wait before sending more messages.
+- code: message_blocked_by_carrier
+  description: The carrier blocked the message — for example, because the recipient has opted out. Confirm
+    the recipient has consented to receive messages before retrying.
+- code: message_blocked_by_number
+  description: The destination number blocked messages from the sending number. No further messages can
+    be delivered to this recipient from this number.
+- code: message_body_required
+  description: The message body is required.
+- code: message_filtered
+  description: Message Filtered. SignalWire's spam filter blocked the message. Distinct from `carrier_violation`,
+    which is a carrier determination.
+- code: message_length_exceeds_limit
+  description: The message length exceeds the allowed limit.
+- code: message_validity_period_expired_at_carrier
+  description: The message's validity period expired at the carrier before it could be delivered — for
+    example, the handset was unreachable for too long. Retry when the recipient is likely available.
+- code: messaging_provider_invalid
+  description: Messaging provider is invalid.
+- code: missing_messaging_capability
+  description: The `from` number is not capable of sending the determined message kind (SMS or MMS).
+- code: missing_required_parameter
+  description: The passed value is blank or empty, but it is required.
+- code: missing_sub_use_cases
+  description: Sub use cases are required for MIXED and LOW_VOLUME_MIXED campaigns.
+- code: missing_sip_configuration
+  description: The SIP configuration requires at least one selection.
+- code: mms_expired_rejected_failed_or_unsupported
+  description: 'MMS Sent: Expired, Rejected, Failed, or Not Supported'
+- code: must_be_array_of_objects
+  description: Value must be an array of `{name, value}` objects.
+- code: must_be_object
+  description: The `custom_variables` parameter must be an object of string key/value pairs.
+- code: must_belong_to_project
+  description: The requested resource must belong to the project being used to authenticate the request.
+- code: must_specify_related_parameter
+  description: This parameter must be used in combination with a related parameter.
+- code: nested_subprojects_not_allowed
+  description: Subprojects can only be created under a top-level project. Returned by `POST /api/projects`
+    when authenticated as a subproject.
+- code: no_channel_specified
+  description: You must specify a channel.
+- code: no_devices_or_registrations
+  description: The fabric address has no registered devices or current online registrations.
+- code: no_fabric_addresses
+  description: The resource has no fabric addresses.
+- code: no_installed_applications
+  description: Fabric Application must be installed in this project.
+- code: no_registered_devices
+  description: The fabric address has no registered devices.
+- code: no_steered_resource
+  description: The project has a steering tag set, but no steered resource is available for that tag.
+- code: no_valid_number_for_random_send_as_selection
+  description: There is no purchased or verified number in the project to select as the send_as.
+- code: not_a_boolean
+  description: Value must be true or false.
+- code: not_a_datetime
+  description: Value must be a datetime.
+- code: not_a_hash
+  description: Value must be a valid hash.
+- code: not_a_refresh_token
+  description: Invalid token type. You must use a Refresh token.
+- code: not_a_string
+  description: Value must be formatted as a string.
+- code: not_a_valid_json
+  description: This value must be valid JSON.
+- code: not_allowed_on_subscription_plan
+  description: This feature is not allowed on your current subscription plan.
+- code: not_alphanumeric
+  description: Value must be alphanumeric.
+- code: not_an_array_of_hashes
+  description: Value must be an array of hashes.
+- code: not_an_array_of_strings
+  description: Value must be an array of strings.
+- code: not_an_http_url
+  description: Value must be an HTTP or HTTPS URL.
+- code: not_available_for_assignment
+  description: This can not be assigned to the current target.
+- code: not_e164
+  description: The number must be in E.164 format.
+- code: not_json_or_yaml
+  description: Value must be a valid JSON or YAML document.
+- code: not_parsable
+  description: Value is not parsable.
+- code: not_parseable
+  description: Value is not parseable.
+- code: not_purchased_or_verified
+  description: The phone number must be purchased or verified.
+- code: not_registered
+  description: The endpoint is not registered.
+- code: not_routable
+  description: Unable to locate a route to the destination number. Please check [geographic permissions](/docs/platform/how-to-enable-international-services)
+    and the destination number, and contact Support if issues persist.
+- code: not_routeable
+  description: The `to` number is not routeable.
+- code: not_valid_for_caller_id
+  description: The value is not valid (must be an E.164 number, caller ID string or SIP URI)
+- code: not_voice_capable
+  description: The number must be voice capable.
+- code: not_unique_within_project
+  description: Value must be unique within project.
+- code: not_unique_within_space
+  description: Value must be unique within space.
+- code: number_assignment_cannot_be_removed
+  description: Number assignments can only be removed if they are active, failed, or assigned to a pending
+    campaign.
+- code: number_blacklisted
+  description: The phone number is blacklisted.
+- code: number_not_supported
+  description: The phone number is not supported.
+- code: number_not_verified
+  description: '''From'' phone number not verified.'
+- code: number_of_assignments_exceed_limit
+  description: The requested assignment would exceed the allowed number of assigned numbers for the selected
+    campaign.
+- code: only_subprojects_can_be_deleted
+  description: Only subprojects can be deleted through the API. Returned by `DELETE /api/projects/{id}`
+    when the target is a root/parent project.
+- code: out_of_sync
+  description: The resource is out of sync.
+- code: page_token_is_invalid
+  description: The provided page token is not valid.
+- code: page_token_required
+  description: A page token is required if the page_number value is greater than 0.
+- code: page_token_required_for_next_page
+  description: The page token is required when the page number is passed and greater than 0.
+- code: pft_daily_limit_exceeded
+  description: The Platform Free Trial campaign daily message cap of 200 messages has been reached.
+- code: phone_numbers_must_be_removed
+  description: All phone numbers must be removed from a project before it can be deleted. Returned by
+    `DELETE /api/projects/{id}` when the project still has phone numbers assigned.
+- code: provided_id_is_unrecognized
+  description: The provided ID is unrecognized. Verify that the ID points to a valid resource belonging
+    to the current project.
+- code: purchased_too_recently
+  description: This number was purchased too recently to release. Please wait 14 days after purchase to
+    release this number or 30 days if your account is in trial mode. Contact Support for further assistance.
+- code: query_processing_failed
+  description: The query cannot be processed at the moment. Please try again later.
+- code: rate_limit_exceeded
+  description: The rate limit has been exceeded.
+- code: rejected_by_receiving_carrier_for_unspecified_reason
+  description: The receiving carrier rejected the message without providing a specific reason. Retry later,
+    and contact Support if the issue persists.
+- code: reserved_custom_variable_name
+  description: A `custom_variables` key uses a reserved prefix. The prefixes `signalwire_`, `sw_`, `rtc_`,
+    and `internal_` are reserved for internal use and cannot be used in your own keys.
+- code: reserved_header_name
+  description: The provided header name is reserved and cannot be set by the caller.
+- code: resource_assigned_as_handler
+  description: You cannot delete a resource if it is currently assigned as a call or message handler
+- code: resource_in_different_project
+  description: The fabric resource is in a different project.
+- code: resource_not_allowed
+  description: Calls to this fabric resource are not allowed with this authorization.
+- code: resource_not_callable
+  description: The fabric resource is not callable.
+- code: resource_not_deletable
+  description: Resource cannot be deleted.
+- code: room_is_not_chat_enabled
+  description: The room for the provided room session does not have chat enabled.
+- code: room_token_invalid_for_session
+  description: The provided token is invalid for the provided room session.
+- code: room_token_is_invalid
+  description: The provided token is not a valid room token.
+- code: sat_must_have_application
+  description: SignalWire Access Token must be associated with a Fabric Application to perform this action.
+- code: send_as_is_invalid
+  description: The provided send_as number is missing or invalid.
+- code: sending_disabled_for_space
+  description: Outbound messaging is disabled for this Space. Contact Support to enable messaging for
+    your Space.
+- code: sending_restricted_to_verified
+  description: Sending is restricted to verified numbers for this account.
+- code: sip_gateway_uri_must_be_external
+  description: Only external SIP entities are supported for the SIP Gateway. Do not provide a SignalWire-managed
+    SIP entity.
+- code: sole_proprietor_daily_limit_exceeded
+  description: The sole proprietor campaign daily message cap of 1,000 messages has been reached.
+- code: sort_order_validations
+  description: Sort order cannot be specified without sort by.
+- code: state_size_limit_exceeded
+  description: The state size exceeds the maximum allowed limit.
+- code: sub_use_cases_present
+  description: Sub use cases are not permitted for non mixed campaign use case.
+- code: terms_and_conditions_required
+  description: You must agree to the terms and conditions to complete registration.
+- code: tmobile_daily_limit_reached
+  description: The US A2P 10DLC campaign reached its T-Mobile daily message limit. Messages to T-Mobile
+    recipients resume the next day.
+- code: to_destination_unresolvable
+  description: The destination does not resolve to a valid destination.
+- code: token_expired
+  description: Token has expired.
+- code: token_has_invalid_prefix
+  description: The token includes an invalid format prefix.
+- code: token_invalid
+  description: The provided token is invalid.
+- code: token_invalid_or_unadoptable
+  description: The provided FreeSWITCH token is incorrect or not ready for adoption
+- code: token_not_associated_with_video_room
+  description: The provided token is not associated with a valid video room.
+- code: too_many_custom_variables
+  description: The request contains too many custom variables. A maximum of 20 keys is allowed.
+- code: too_many_headers
+  description: The number of headers exceeds the maximum allowed.
+- code: too_many_verification_attempts
+  description: Too many incorrect attempts to verify this number.
+- code: too_many_verification_requests
+  description: Too many call requests without verifying this number.
+- code: too_many_verification_requests_in_time_frame
+  description: This account has had too many Verified Caller ID requests within a short timeframe. As
+    a precaution, we have disabled creating more for a short time. Please contact support if you need
+    this restriction lifted sooner.
+- code: unable_to_deliver_to_carrier
+  description: The message could not be handed off to the carrier. This is typically a temporary issue
+    — retry with backoff, and contact Support if it persists.
+- code: unknown_destination_handset
+  description: The message could not be routed to the destination handset because the number is unknown
+    or unreachable. Verify the destination number and its format.
+- code: unknown_download_error
+  description: An unexpected error occurred while downloading the file. Please try again later or contact
+    support if the issue persists.
+- code: unknown_error
+  description: The delivery failed at the carrier level for an unspecified reason. Retry, and contact
+    Support if the issue persists.
+- code: unreachable_destination_handset
+  description: The destination handset could not be reached — it may be busy, offline, not SMS-capable,
+    or have full storage. This is often temporary, so retry later.
+- code: unrecognized_fabric_addresses
+  description: One or more of the provided fabric addresses is unrecognized. Check that all IDs are valid
+    and belong to the current project.
+- code: unrouteable_message
+  description: The outbound message could not be routed to a destination. Verify the destination number
+    and your project's [geographic permissions](/docs/platform/how-to-enable-international-services).
+- code: unrouteable_message_received
+  description: An inbound message could not be routed to a destination in your project. Verify that the
+    receiving number is configured with a handler for inbound messages.
+- code: unsupported_file_extension
+  description: Unsupported file extension.
+- code: unsupported_media_type
+  description: The media content type `%{content_type}` is not supported. Use a supported media format
+    and retry.
+- code: unsupported_mode
+  description: This mode is not supported on this number.
+- code: unsupported_option
+  description: The specified option is not supported.
+- code: unsupported_region
+  description: This number must be from an allowed region.
+- code: uri_does_not_resolve_to_address
+  description: The provided URI does not resolve to a recognized address.
+- code: uri_does_not_resolve_to_resource
+  description: The provided URI does not resolve to a valid resource.
+- code: uri_resolves_to_unsupported_resource
+  description: The provided URI resolves to a resource that is unsupported for dialing.
+- code: upload_error
+  description: There was an error while uploading the file. Please try again.
+- code: url_failed_to_parse
+  description: An unknown error occurred when parsing the provided URL.
+- code: url_is_unsafe
+  description: URL must not point to internal/private networks.
+- code: value_not_unique
+  description: This value **must** be unique.
+- code: verification_request_too_soon
+  description: This number has received a verification call too recently. Please wait a minute before
+    requesting another call.
+- code: verified_caller_id_not_permitted
+  description: Verified caller IDs are not permitted for outbound messaging.
+- code: '-32001'
+  description: No conversation with that id exists in your project.
+- code: '-32002'
+  description: Your `config_url` could not be fetched. Check that it's reachable from the public internet
+    — not `localhost`, not a private address.
+- code: '-32003'
+  description: The model provider failed.
+- code: '-32004'
+  description: Storage failure.
+- code: '-32005'
+  description: Too many `summarize` calls on this conversation, which allows one per minute.
+- code: '-32006'
+  description: The chat rate limit was exceeded.
+- code: '-32007'
+  description: Another chat operation is already in progress for this conversation.
+- code: '-32600'
+  description: The JSON-RPC envelope was malformed.
+- code: '-32601'
+  description: No method by that name.
+- code: '-32602'
+  description: A required param is missing, or one carries an invalid value.
+- code: '-32603'
+  description: An unexpected failure.

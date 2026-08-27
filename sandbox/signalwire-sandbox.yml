@@ -1,0 +1,58 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/docs/server-sdks/guides/testing,
+  https://signalwire.com/docs/platform/trial-mode,
+  https://signalwire.com/docs/platform/rate-limits,
+  https://signalwire.com/docs/platform/webhooks
+note: >-
+  SignalWire publishes NO test-mode credential prefix, no magic test phone numbers, and no hosted
+  sandbox Space. Testing is done against a real Space in Trial mode with real (billed) traffic, or
+  entirely offline against the agent tooling. No test values are invented here; where the provider
+  publishes none, that is recorded as none.
+test_mode:
+  separate_test_credentials: false
+  key_prefixes: none published
+  note: >-
+    There is one Project ID / API Token pair per project and one Space subdomain. Nothing in the
+    documentation distinguishes a test key from a live key, so an agent cannot tell from a
+    credential whether an action will place a real, billed call.
+trial_mode:
+  exists: true
+  description: New Spaces remain in Trial mode until at least $5 USD of credit is added; Space limits
+    documented on the rate-limits page apply to Spaces not in Trial mode.
+  source: https://signalwire.com/docs/platform/rate-limits
+  docs: https://signalwire.com/docs/platform/trial-mode
+magic_test_numbers:
+  published: false
+  note: >-
+    No published magic test identifier range was found (the Twilio equivalent would be the
+    +1500555xxxx block). The Compatibility API is Twilio-request-compatible but the docs do not
+    claim compatibility with Twilio's test credentials or magic numbers.
+offline_testing:
+- tool: swaig-test
+  purpose: Exercise an AI agent's SWAIG tools and inspect the generated SWML without placing a call.
+  commands:
+  - swaig-test my_agent.py --list-tools
+  - swaig-test my_agent.py --dump-swml
+  - swaig-test my_agent.py --exec get_weather --city Seattle
+  docs: https://signalwire.com/docs/server-sdks/reference/python/agents/cli/swaig-test
+- tool: Local agent server
+  purpose: Run the agent locally and POST to it directly with basic auth; the HTTP interface is
+    identical regardless of language.
+  example: curl -X POST -u "$SWML_BASIC_AUTH_USER:$SWML_BASIC_AUTH_PASSWORD" http://localhost:3000/
+    -H "Content-Type application/json" -d '{"call_id":"test-123"}'
+  docs: https://signalwire.com/docs/server-sdks/guides/testing
+- tool: WireStarter
+  purpose: Docker container that sets up the SignalWire SDKs and a dev/test environment.
+  repository: https://github.com/signalwire/WireStarter
+tunnel_testing:
+  tool: ngrok (third-party, recommended by the docs)
+  purpose: Expose a local webhook handler or agent to the internet for real inbound calls.
+  docs: https://signalwire.com/docs/platform/webhooks
+api_playground:
+  exists: true
+  description: An API playground is built into the documentation site (Fern), alongside the official
+    Postman collection.
+  docs: https://signalwire.com/docs/apis
+test_clocks: none published
+fixtures: none published

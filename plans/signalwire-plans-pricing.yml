@@ -1,0 +1,67 @@
+generated: '2026-08-27'
+method: searched
+source: https://signalwire.com/pricing
+docs: https://signalwire.com/pricing
+note: >-
+  SignalWire sells usage-based, pay-as-you-go pricing with no named subscription tiers — there is no
+  Free/Pro/Enterprise ladder to record. The pricing page is one tabbed reference (AI Agents, Voice
+  API, Messaging API, MFA API, Video API, Fax API) of per-minute and per-message rates, plus a
+  "Talk to an Expert" path for volume pricing, committed-use discounts and enterprise agreements.
+  Accounts start in Trial mode until at least $5 USD of credit is added (source:
+  https://signalwire.com/docs/platform/rate-limits). Rates below are transcribed verbatim from the
+  pricing page as published on 2026-08-27; rate cards change, and per-destination voice and
+  messaging rates vary by country and number type beyond what is captured here.
+pricing_model: usage-based
+plan_count: 0
+plan_note: No named subscription plans are published. plan_count is an honest zero, not a gap.
+free_tier: false
+trial:
+  exists: true
+  description: Spaces remain in Trial mode until at least $5 USD of credit is added.
+  source: https://signalwire.com/docs/platform/rate-limits
+published_rates:
+- product: SignalWire AI Agent Runtime
+  price: 0.16
+  currency: USD
+  unit: per minute
+  includes:
+  - Real-time STT, LLM and standard TTS
+  - AI orchestration with barge-in, memory and tool calls
+  - Full media control and real-time API triggers
+  - Built-in agent memory and retrieval (RAG-style grounding via Datasphere)
+  excludes:
+  - Voice transport (SIP/PSTN/WebRTC), billed at standard rates on top of the runtime
+  - Premium TTS (e.g. ElevenLabs, Rime) at an additional per-character cost
+  all_in_note: Provider states most customers see ~$0.163–$0.168/min all-in for standard SIP/PSTN
+    usage with standard TTS.
+- product: Voice transport — SIP / WebRTC
+  price: 0.0030
+  currency: USD
+  unit: per minute
+- product: Voice transport — PSTN (10DLC) inbound
+  price: 0.0066
+  currency: USD
+  unit: per minute
+- product: Voice transport — PSTN (10DLC) outbound
+  price: 0.0080
+  currency: USD
+  unit: per minute
+- product: Voice transport — Toll-free inbound
+  price: 0.0147
+  currency: USD
+  unit: per minute
+- product: Voice transport — Toll-free outbound
+  price: 0.0069
+  currency: USD
+  unit: per minute
+product_pricing_pages:
+- product: AI Agents
+  url: https://signalwire.com/pricing/ai-agent-pricing
+- product: Voice API
+  url: https://signalwire.com/pricing/voice
+- product: Messaging API
+  url: https://signalwire.com/pricing/messaging
+enterprise:
+  contact_sales: true
+  note: Volume pricing, committed-use discounts and enterprise agreements available via "Talk to an
+    Expert".

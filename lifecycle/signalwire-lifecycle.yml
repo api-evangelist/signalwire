@@ -1,0 +1,76 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://status.signalwire.com (redirects to https://signalwire.trust.pagerduty.com),
+  https://signalwire.com/docs/browser-sdk/v4/guides/migrate-from-v3,
+  https://signalwire.com/docs/call-flow-builder/guides/version, and derived from
+  openapi/signalwire-rest-openapi.yml plus the Fern navigation, which marks
+  'SIP Endpoints (Legacy)' with availability deprecated.
+status_page:
+  exists: true
+  url: https://status.signalwire.com
+  resolves_to: https://signalwire.trust.pagerduty.com
+  provider: PagerDuty Status
+  http_status: 200
+  checked: '2026-08-27'
+  embeddable_widget: https://github.com/signalwire/status-widget
+  widget_note: SignalWire publishes an open-source embeddable status widget (footer indicator or
+    full dashboard, no dependencies, no runtime backend).
+deprecation_policy:
+  published: false
+  sunset_header: unknown
+  deprecation_header: unknown
+  rfc8594: unknown
+  note: >-
+    No standalone deprecation or sunset policy page was found on signalwire.com/docs on 2026-08-27,
+    and neither OpenAPI contract declares a Sunset or Deprecation response header. Deprecation IS
+    practised and visible in the artifacts below, but it is not stated as a policy with a notice
+    period, so no Deprecation pointer is emitted.
+  checked: '2026-08-27'
+deprecated_surfaces:
+- name: SIP Endpoints (Legacy)
+  kind: API resource group
+  operations: 5
+  evidence: >-
+    fern/products/apis/apis.yml marks the section with availability deprecated and hidden true; the
+    operations remain in openapi/signalwire-rest-openapi.yml under the tag "SIP Endpoints (Legacy)".
+    The replacement is SIP Credentials under /api/fabric/resources/sip_endpoints.
+- name: Browser SDK v2 and v3
+  kind: SDK major version
+  evidence: >-
+    The docs carry versioned trees for v2, v3 and v4 and a published "Migrate from v3" guide
+    (https://signalwire.com/docs/browser-sdk/v4/guides/migrate-from-v3). v4 was at release-candidate
+    (@signalwire/js 4.0.0-rc.2) on 2026-07-14.
+- name: Agents SDK / Server SDK as separate products
+  kind: documentation product
+  evidence: >-
+    fern/docs.yml comments: "Deprecated: Agents SDK and Server SDK are now part of the unified SDKs
+    product above. Their directories are preserved for reference but no longer rendered as products."
+- name: Previous-generation language clients
+  kind: SDK generation
+  evidence: >-
+    github.com/signalwire carries signalwire-python-old, signalwire-ruby-old, signalwire-perl-old,
+    signalwire-legacy-node, signalwire-legacy-js and signalwire-dotnet-deprecated alongside the 2026
+    port matrix (signalwire-python, -typescript, -go, -ruby, -perl, -java, -cpp, -php, -dotnet,
+    -rust). The naming is the deprecation signal; no dated end-of-life notice was found.
+- name: signalwire/rest-apis (Postman/Bruno collections repo)
+  kind: repository
+  evidence: >-
+    Repo README: "this manually maintained repo will be archived" — superseded by the official
+    Postman workspace linked from https://signalwire.com/docs/apis#try-it-in-postman.
+versioning:
+  api:
+    signalwire_rest: Unversioned resource paths under /api/{family}; info.version 1.0.0
+    compatibility: Date-versioned Twilio-compatible path /api/laml/2010-04-01
+  sdk: Semantic versioning across the npm/PyPI/RubyGems/crates/NuGet/Go/Packagist/CPAN matrix
+  call_flow_builder: Call Flows carry explicit versions with list-versions and deploy-version
+    operations (https://signalwire.com/docs/call-flow-builder/guides/version)
+sla:
+  published: false
+  note: No public SLA document was found; commercial terms live in the SignalWire Cloud Agreement
+    (https://signalwire.com/legal).
+support:
+  portal: https://support.signalwire.com/portal/en/home
+  new_ticket: https://support.signalwire.com/portal/en/newticket
+  contact_in_spec: info.contact on openapi/signalwire-rest-openapi.yml points at the support portal
+    and support@signalwire.com
