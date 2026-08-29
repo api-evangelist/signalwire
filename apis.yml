@@ -10,6 +10,17 @@ description: SignalWire is a Programmable Unified Communications (PUC) platform 
   definitions covering AI/SWAIG, calling and messaging callbacks. Every request is served from a
   per-customer Space subdomain, {space_name}.signalwire.com, over HTTPS only.
 url: https://raw.githubusercontent.com/api-evangelist/signalwire/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://framerusercontent.com/images/51HrN1SGYsDuDnTD4zDO4buJMM.png
 x-type: company
 x-source: harvest:secondary-market
@@ -2440,6 +2451,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/signalwire-capability-edges.yml
+  name: SignalWire Business Capability Map
 - type: Overlay
   url: overlays/signalwire-rest-overlay.yaml
 - type: Overlay
