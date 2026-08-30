@@ -1,0 +1,937 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST cXML Webhook API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Endpoints related to creating & managing cXML Webhooks
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: cXML Webhook
+  description: Endpoints related to creating & managing cXML Webhooks
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on cXML Webhook, Fabric API endpoints
+paths:
+  /api/fabric/resources/cxml_webhooks:
+    get:
+      operationId: list_cxml_webhooks
+      summary: List cXML webhooks
+      description: 'A list of cXML Webhooks
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - cXML Webhook
+    post:
+      operationId: create_cxml_webhook
+      summary: Create cXML webhook
+      description: 'Creates an cXML Webhook
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - cXML Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CXMLWebhookCreateRequest'
+  /api/fabric/resources/cxml_webhooks/{cxml_webhook_id}/addresses:
+    get:
+      operationId: list_cxml_webhook_addresses
+      summary: List cXML webhook Addresses
+      description: 'This endpoint returns a list of addresses associated with a specific cXML Webhook.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CXMLWebhookIDPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookAddressListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - cXML Webhook
+  /api/fabric/resources/cxml_webhooks/{id}:
+    get:
+      operationId: get_cxml_webhook
+      summary: Get cXML webhook
+      description: 'Returns an cXML Webhook by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CXMLWebhookID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - cXML Webhook
+    patch:
+      operationId: update_cxml_webhook
+      summary: Update cXML webhook
+      description: 'Updates an cXML Webhook by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CXMLWebhookID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CXMLWebhookUpdateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - cXML Webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CXMLWebhookUpdateRequest'
+    delete:
+      operationId: delete_cxml_webhook
+      summary: Delete cXML webhook
+      description: 'Deletes an cXML Webhook by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CXMLWebhookID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - cXML Webhook
+components:
+  parameters:
+    CXMLWebhookID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a CXML Webhook.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CXMLWebhookIDPath:
+      name: cxml_webhook_id
+      in: path
+      required: true
+      description: Unique ID of a CXML Webhook.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    CXMLWebhook:
+      type: object
+      required:
+      - id
+      - name
+      - used_for
+      - primary_request_url
+      - primary_request_method
+      - fallback_request_url
+      - fallback_request_method
+      - status_callback_url
+      - status_callback_method
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the CXML Webhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        name:
+          type: string
+          description: Name of the CXML Webhook.
+          examples:
+          - My CXML Webhook
+        used_for:
+          allOf:
+          - $ref: '#/components/schemas/UsedForType'
+          description: Used for of the CXML Webhook.
+          examples:
+          - calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: Primary request url of the CXML Webhook.
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the CXML Webhook.
+          examples:
+          - GET
+        fallback_request_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Fallback request url of the CXML Webhook.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the CXML Webhook.
+          examples:
+          - GET
+        status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Status callback url of the CXML Webhook.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the CXML Webhook.
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CXMLWebhookResponse'
+          description: An array of objects containing a list of cXML Webhook data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CXMLWebhookPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    CXMLWebhookCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: http_url_required
+          message: This value must be an HTTP or HTTPS URL.
+          attribute: status_callback_url
+          url: https://signalwire.com/docs/apis/error-codes
+    CXMLWebhookUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: http_url_required
+          message: This value must be an HTTP or HTTPS URL.
+          attribute: status_callback_url
+          url: https://signalwire.com/docs/apis/error-codes
+    CXMLWebhookPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      - next
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&type=cxml_webhook
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&type=cxml_webhook
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    UsedForType:
+      type: string
+      enum:
+      - calling
+      - messaging
+      description: Sets the handler to handle incoming `calls` or `messages`.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CXMLWebhookAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      - next
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=cxml_webhook
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=cxml_webhook
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+        links:
+          $ref: '#/components/schemas/CXMLWebhookAddressPaginationResponse'
+      unevaluatedProperties:
+        not: {}
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    FabricAddressApp:
+      type: object
+      required:
+      - id
+      - name
+      - display_name
+      - cover_url
+      - preview_url
+      - locked
+      - channels
+      - created_at
+      - type
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Fabric Address.
+          examples:
+          - 691af061-cd86-4893-a605-173f47afc4c2
+        name:
+          type: string
+          description: Name of the Fabric Address.
+          examples:
+          - justice-league
+        display_name:
+          type: string
+          description: Display name of the Fabric Address.
+          examples:
+          - Justice League
+        cover_url:
+          type: string
+          description: Cover url of the Fabric Address.
+          examples:
+          - https://coverurl.com
+        preview_url:
+          type: string
+          description: Preview url of the Fabric Address.
+          examples:
+          - https://previewurl.com
+        locked:
+          type: boolean
+          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
+          examples:
+          - true
+        channels:
+          allOf:
+          - $ref: '#/components/schemas/AddressChannel'
+          description: Channels of the Fabric Address.
+        created_at:
+          type: string
+          format: date-time
+          description: Fabric Address Creation Date.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - app
+          description: The display type of a fabric address pointing to an application.
+          examples:
+          - app
+      unevaluatedProperties:
+        not: {}
+      title: Application Address
+    CXMLWebhookCreateRequest:
+      type: object
+      required:
+      - primary_request_url
+      properties:
+        name:
+          type: string
+          description: Name of the CXML Webhook.
+          examples:
+          - My CXML Webhook
+        used_for:
+          allOf:
+          - $ref: '#/components/schemas/UsedForType'
+          description: Used for of the CXML Webhook.
+          examples:
+          - calling
+          default: calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: Primary request url of the CXML Webhook.
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+        fallback_request_url:
+          type: string
+          format: uri
+          description: Fallback request url of the CXML Webhook.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+        status_callback_url:
+          type: string
+          format: uri
+          description: Status callback url of the CXML Webhook.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - cxml_webhook
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the CXMLWebhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 99151cf8-9548-4860-ba70-a8de824f3312
+        display_name:
+          type: string
+          description: Display name of the CXMLWebhook Fabric Resource
+          examples:
+          - Booking Assistant
+        type:
+          type: string
+          enum:
+          - cxml_webhook
+          description: Type of the Fabric Resource
+          examples:
+          - cxml_webhook
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        cxml_webhook:
+          allOf:
+          - $ref: '#/components/schemas/CXMLWebhook'
+          description: CXMLWebhook data.
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the CXML Webhook.
+          examples:
+          - My CXML Webhook
+        used_for:
+          allOf:
+          - $ref: '#/components/schemas/UsedForType'
+          description: Used for of the CXML Webhook.
+          examples:
+          - calling
+          default: calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: Primary request url of the CXML Webhook.
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+        fallback_request_url:
+          type: string
+          format: uri
+          description: Fallback request url of the CXML Webhook.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+        status_callback_url:
+          type: string
+          format: uri
+          description: Status callback url of the CXML Webhook.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the CXML Webhook.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

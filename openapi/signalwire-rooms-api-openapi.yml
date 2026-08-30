@@ -1,0 +1,1146 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Rooms API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Manage video rooms
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Rooms
+  description: Manage video rooms
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SignalWire REST APIs
+paths:
+  /api/video/rooms:
+    post:
+      operationId: create_room
+      summary: Create room
+      description: 'Create a room.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.RoomResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Rooms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video.CreateRoomRequest'
+    get:
+      operationId: list_rooms
+      summary: List rooms
+      description: 'List rooms.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: include_active_session
+        in: query
+        required: false
+        description: Specifies whether or not to include information about the room's active session (if any).
+        schema:
+          type: boolean
+        explode: false
+      - name: starts_after
+        in: query
+        required: false
+        description: Return rooms with a join_from date on or after this date. Expects RFC 3339 datetime or date string.
+        schema:
+          type: string
+        explode: false
+      - name: ends_before
+        in: query
+        required: false
+        description: Return rooms with a join_until date on or before this date. Expects RFC 3339 datetime or date string.
+        schema:
+          type: string
+        explode: false
+      - name: page_number
+        in: query
+        required: false
+        description: Page number to return. Requires `page_token` for values greater than 0.
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: page_size
+        in: query
+        required: false
+        description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: page_token
+        in: query
+        required: false
+        description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.ListRoomsResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Rooms
+  /api/video/rooms/{id}:
+    get:
+      operationId: get_room
+      summary: Get room
+      description: 'Find a room by ID.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique ID of the room.
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: include_active_session
+        in: query
+        required: false
+        description: Specifies whether or not to include information about the room's active session (if any).
+        schema:
+          type: boolean
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.RoomResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Rooms
+    put:
+      operationId: update_room
+      summary: Update room
+      description: 'Update a room.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique ID of the room.
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.RoomResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Rooms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video.UpdateRoomRequest'
+    delete:
+      operationId: delete_room
+      summary: Delete room
+      description: 'Delete a room.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique ID of the room.
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Rooms
+  /api/video/rooms/{name}:
+    get:
+      operationId: get_room_by_name
+      summary: Get room by name
+      description: 'Find a room by name.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: Unique name of the room.
+        schema:
+          type: string
+      - name: include_active_session
+        in: query
+        required: false
+        description: Specifies whether or not to include information about the room's active session (if any).
+        schema:
+          type: boolean
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.RoomResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Rooms
+components:
+  schemas:
+    Video.RoomLayout:
+      type: string
+      enum:
+      - grid-responsive
+      - grid-responsive-mobile
+      - highlight-1-responsive
+      - 1x1
+      - 2x1
+      - 2x2
+      - 5up
+      - 3x3
+      - 4x4
+      - 5x5
+      - 6x6
+      - 8x8
+      - 10x10
+      description: The room's layout.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Video.VideoFps:
+      type: number
+      enum:
+      - 20
+      - 30
+      description: Video frames per second.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Video.PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=2
+        first:
+          type: string
+          description: Link to the first page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+        next:
+          type: string
+          description: Link to the next page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=3
+        prev:
+          type: string
+          description: Link to the previous page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Video.ActiveSession:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the session.
+          examples:
+          - c22d24f6-5a47-4597-9a23-c7d01e696b92
+        room_id:
+          type: string
+          description: Unique ID of the Room if the Session was created from a Room and was not an auto-created Session.
+          examples:
+          - a1b2c3d4-5e6f-7890-abcd-ef1234567890
+        name:
+          type: string
+          description: The named identifier of room session.
+          examples:
+          - my_example_room
+        display_name:
+          type: string
+          description: Display name of room, no character limitations. Maximum of 200 characters. Defaults to the value of name.
+          examples:
+          - My Room's Name
+        join_from:
+          type: string
+          format: date-time
+          description: Room Session does not accept new Members before this time.
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: Room Session stops accepting new Members at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          type: string
+          format: date-time
+          description: Remove Members from the Room Session at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          type: integer
+          format: int32
+          description: Remove Members after they are in the Room Session for N seconds.
+          examples:
+          - 120
+        layout:
+          type: string
+          description: The Room Session's initial layout. See documentation for a full list of supported layouts.
+          examples:
+          - grid-responsive
+        max_members:
+          type: integer
+          format: int32
+          description: The maximum number of members allowed in the room at a time.
+          examples:
+          - 20
+        fps:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoFps'
+          description: The Room Session's frames per second.
+          examples:
+          - 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The Room Session's resolution.
+          examples:
+          - 720p
+        start_time:
+          type: string
+          format: date-time
+          description: Start time of the session.
+          examples:
+          - '2022-01-01T10:00:00Z'
+        end_time:
+          type: string
+          format: date-time
+          description: End time of the session.
+          examples:
+          - '2022-01-01T11:00:00Z'
+        duration:
+          type: integer
+          format: int32
+          description: How long, in seconds, the Room Session lasted.
+          examples:
+          - 120
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomSessionStatus'
+          description: Status of the session.
+          examples:
+          - completed
+        record_on_start:
+          type: boolean
+          description: Whether a recording was automatically started when this Room Session began.
+          examples:
+          - true
+        enable_room_previews:
+          type: boolean
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - true
+        preview_url:
+          type: string
+          description: If room previews are enabled and the room session is in progress, this is the URL of the preview video.
+          examples:
+          - https://example.signalwire.com/api/video/room_sessions/c22d24f6-5a47-4597-9a23-c7d01e696b92/preview
+        audio_video_sync:
+          type: boolean
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Active session information for a room.
+    Video.RoomSessionStatus:
+      type: string
+      enum:
+      - in-progress
+      - completed
+      description: Status of a room session.
+    Video.UpdateRoomRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          maxLength: 200
+          description: Display name of the room. Maximum of 200 characters. Defaults to the value of name.
+          examples:
+          - My Room's Name
+        description:
+          type: string
+          maxLength: 3000
+          description: Description of the room. Maximum of 3000 characters.
+          examples:
+          - This room will be used for full company all hands meetings
+        max_members:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 300
+          description: The maximum number of members in the room at a time. Must be at least 1 to a maximum of 300.
+          examples:
+          - 20
+          default: 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The room's resolution.
+          examples:
+          - 720p
+          default: 720p
+        join_from:
+          type: string
+          format: date-time
+          description: 'Room does not accept new participants before this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: 'Room stops accepting new participants at this time, but keeps running until all participants leave. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          type: string
+          format: date-time
+          description: 'Remove users from the room at this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 200000
+          description: Remove users after they are in the room for N seconds.
+          examples:
+          - 120
+        layout:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomLayout'
+          description: The room's initial layout.
+          examples:
+          - grid-responsive
+          default: grid-responsive
+        record_on_start:
+          type: boolean
+          description: Specifies whether to start recording a Room Session when one is started for this Room.
+          examples:
+          - false
+          default: false
+        enable_room_previews:
+          type: boolean
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - false
+          default: false
+        meta:
+          type: object
+          unevaluatedProperties: {}
+          description: User-defined metadata for the room. Must be a valid JSON object. Maximum of 2000 characters when serialized.
+          examples:
+          - {}
+        sync_audio_video:
+          type: boolean
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a room.
+    Video.ListRoomsResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.RoomResponse'
+          description: List of rooms.
+      unevaluatedProperties:
+        not: {}
+      description: List rooms response.
+    Video.CreateRoomRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9_\-]+$
+          description: 'A named unique identifier for the room. Allowed characters: `A-Za-z0-9_-`. Maximum of 100 characters.'
+          examples:
+          - my_room
+        display_name:
+          type: string
+          maxLength: 200
+          description: Display name of the room. Maximum of 200 characters. Defaults to the value of name.
+          examples:
+          - My Room's Name
+        description:
+          type: string
+          maxLength: 3000
+          description: Description of the room. Maximum of 3000 characters.
+          examples:
+          - This room will be used for full company all hands meetings
+        max_members:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 300
+          description: The maximum number of members in the room at a time. Must be at least 1 to a maximum of 300.
+          examples:
+          - 20
+          default: 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The room's resolution.
+          examples:
+          - 720p
+          default: 720p
+        join_from:
+          type: string
+          format: date-time
+          description: 'Room does not accept new participants before this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: 'Room stops accepting new participants at this time, but keeps running until all participants leave. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          type: string
+          format: date-time
+          description: 'Remove users from the room at this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 200000
+          description: Remove users after they are in the room for N seconds.
+          examples:
+          - 120
+        layout:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomLayout'
+          description: The room's initial layout.
+          examples:
+          - grid-responsive
+          default: grid-responsive
+        record_on_start:
+          type: boolean
+          description: Specifies whether to start recording a Room Session when one is started for this Room.
+          examples:
+          - false
+          default: false
+        enable_room_previews:
+          type: boolean
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - false
+          default: false
+        meta:
+          type: object
+          unevaluatedProperties: {}
+          description: User-defined metadata for the room. Must be a valid JSON object. Maximum of 2000 characters when serialized.
+          examples:
+          - {}
+        sync_audio_video:
+          type: boolean
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a room.
+    Video.RoomResponse:
+      type: object
+      required:
+      - id
+      - name
+      - display_name
+      - description
+      - max_members
+      - quality
+      - fps
+      - join_from
+      - join_until
+      - remove_at
+      - remove_after_seconds_elapsed
+      - layout
+      - record_on_start
+      - tone_on_entry_and_exit
+      - room_join_video_off
+      - user_join_video_off
+      - enable_room_previews
+      - sync_audio_video
+      - meta
+      - prioritize_handraise
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A unique identifier for the room.
+          examples:
+          - c22d24f6-5a47-4597-9a23-c7d01e696b92
+        name:
+          type: string
+          description: A named unique identifier for the room.
+          examples:
+          - my_room
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Display name of the room.
+          examples:
+          - My Room's Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Description of the room.
+          examples:
+          - This room will be used for full company all hands meetings
+        max_members:
+          type: integer
+          format: int32
+          description: The maximum number of members in the room at a time.
+          examples:
+          - 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The room's resolution.
+          examples:
+          - 720p
+        fps:
+          type: integer
+          format: int32
+          description: Frames per second parameter of room video quality.
+          examples:
+          - 20
+        join_from:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Room does not accept new participants before this time.
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Room stops accepting new participants at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Remove users from the room at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: Remove users after they are in the room for N seconds.
+          examples:
+          - 120
+        layout:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomLayout'
+          description: The room's initial layout.
+          examples:
+          - grid-responsive
+        record_on_start:
+          type: boolean
+          description: Specifies whether to start recording a Room Session when one is started for this Room.
+          examples:
+          - false
+        tone_on_entry_and_exit:
+          type: boolean
+          description: Whether a tone is played when participants enter or exit the room.
+          examples:
+          - true
+        room_join_video_off:
+          type: boolean
+          description: Whether the room's video is turned off when participants join.
+          examples:
+          - false
+        user_join_video_off:
+          type: boolean
+          description: Whether a user's video is turned off when they join the room.
+          examples:
+          - false
+        enable_room_previews:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - false
+        sync_audio_video:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+        meta:
+          anyOf:
+          - type: object
+            unevaluatedProperties: {}
+          - type: 'null'
+          description: User-defined metadata for the room.
+          examples:
+          - {}
+        prioritize_handraise:
+          type: boolean
+          description: Whether hand raises are prioritized in the room layout.
+          examples:
+          - false
+        active_session:
+          allOf:
+          - $ref: '#/components/schemas/Video.ActiveSession'
+          description: Active session information for the room.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the room was created.
+          examples:
+          - '2022-01-01T10:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the room was last updated.
+          examples:
+          - '2022-01-01T11:00:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: Room response object.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Video.VideoQuality:
+      type: string
+      enum:
+      - 720p
+      - 1080p
+      description: Video quality resolution.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Video.VideoStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

@@ -1,0 +1,390 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST WhatsApp Numbers API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: List and retrieve the WhatsApp numbers connected to your Space.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: WhatsApp Numbers
+  description: List and retrieve the WhatsApp numbers connected to your Space.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on Message API endpoints
+paths:
+  /api/messaging/whatsapp/numbers:
+    get:
+      operationId: list_whatsapp_numbers
+      summary: List WhatsApp numbers
+      description: 'Returns the WhatsApp numbers connected to your Space. Each record includes its association with a WhatsApp Business Account, voice-capability flags, and the resource IDs used for routing calls or messages. Use `phone_number` (prefixed with `whatsapp:`) as the `from` address when [sending messages](/docs/platform/messaging/whatsapp/send-messages).
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppNumberListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - WhatsApp Numbers
+  /api/messaging/whatsapp/numbers/{id}:
+    get:
+      operationId: retrieve_whatsapp_number
+      summary: Get a WhatsApp number
+      description: 'Retrieves the details of a single WhatsApp number.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/WhatsAppNumberPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppNumberResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - WhatsApp Numbers
+components:
+  parameters:
+    WhatsAppNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: The SignalWire identifier of the WhatsApp number.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    WhatsAppNumberListResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppNumber'
+          description: List of WhatsApp numbers available to the Space.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of WhatsApp numbers.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    WhatsAppNumber:
+      type: object
+      required:
+      - id
+      - business_phone_number_id
+      - phone_number
+      - calling_handler_resource_id
+      - messaging_handler_resource_id
+      - business_name
+      - waba_id
+      - whatsapp_business_id
+      - voice_enabled
+      - voice_capable
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SignalWire identifier of the WhatsApp number.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        business_phone_number_id:
+          type: string
+          description: The Meta phone number ID for this WhatsApp number.
+          examples:
+          - '102290129340398'
+        phone_number:
+          type: string
+          description: The WhatsApp number, prefixed with `whatsapp:`. Use this value as the `from` address when sending messages.
+          examples:
+          - whatsapp:+15557654321
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the resource (Call Flow, AI Agent, SWML script, etc.) that handles inbound calls to this number. Null if no calling handler is configured.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        messaging_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the resource that handles inbound messages to this number. Null if no messaging handler is configured.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The business name as registered with Meta.
+          examples:
+          - Acme, Inc.
+        waba_id:
+          type: string
+          description: The WhatsApp Business Account ID (WABA ID) assigned by Meta.
+          examples:
+          - '109876543210987'
+        whatsapp_business_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SignalWire identifier of the WhatsApp Business Account this number belongs to.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        voice_enabled:
+          type: boolean
+          description: Whether SIP calling is enabled for this number.
+          examples:
+          - false
+        voice_capable:
+          type: boolean
+          description: Whether this number can place and receive calls — true when a calling handler is configured and voice is enabled.
+          examples:
+          - false
+        created_at:
+          type: string
+          description: The date and time when the record was created.
+          examples:
+          - '2024-01-15T10:30:00Z'
+        updated_at:
+          type: string
+          description: The date and time when the record was last updated.
+          examples:
+          - '2024-01-15T10:30:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: A WhatsApp phone number connected to your Space. Numbers are linked during the Meta embedded signup flow and used as the `from` address when sending messages.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    WhatsAppNumberResponse:
+      type: object
+      required:
+      - id
+      - business_phone_number_id
+      - phone_number
+      - calling_handler_resource_id
+      - messaging_handler_resource_id
+      - business_name
+      - waba_id
+      - whatsapp_business_id
+      - voice_enabled
+      - voice_capable
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SignalWire identifier of the WhatsApp number.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        business_phone_number_id:
+          type: string
+          description: The Meta phone number ID for this WhatsApp number.
+          examples:
+          - '102290129340398'
+        phone_number:
+          type: string
+          description: The WhatsApp number, prefixed with `whatsapp:`. Use this value as the `from` address when sending messages.
+          examples:
+          - whatsapp:+15557654321
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the resource (Call Flow, AI Agent, SWML script, etc.) that handles inbound calls to this number. Null if no calling handler is configured.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        messaging_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the resource that handles inbound messages to this number. Null if no messaging handler is configured.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The business name as registered with Meta.
+          examples:
+          - Acme, Inc.
+        waba_id:
+          type: string
+          description: The WhatsApp Business Account ID (WABA ID) assigned by Meta.
+          examples:
+          - '109876543210987'
+        whatsapp_business_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SignalWire identifier of the WhatsApp Business Account this number belongs to.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        voice_enabled:
+          type: boolean
+          description: Whether SIP calling is enabled for this number.
+          examples:
+          - false
+        voice_capable:
+          type: boolean
+          description: Whether this number can place and receive calls — true when a calling handler is configured and voice is enabled.
+          examples:
+          - false
+        created_at:
+          type: string
+          description: The date and time when the record was created.
+          examples:
+          - '2024-01-15T10:30:00Z'
+        updated_at:
+          type: string
+          description: The date and time when the record was last updated.
+          examples:
+          - '2024-01-15T10:30:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single WhatsApp number.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

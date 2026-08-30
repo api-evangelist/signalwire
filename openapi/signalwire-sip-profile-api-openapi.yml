@@ -1,0 +1,300 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST SIP Profile API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Manage SIP profile settings.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: SIP Profile
+  description: Manage SIP profile settings.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SignalWire REST APIs
+paths:
+  /api/relay/rest/sip_profile:
+    get:
+      operationId: retrieve_sip_profile
+      summary: Get SIP profile
+      description: 'Retrieves the SIP profile settings for your project.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SipProfileResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SIP Profile
+    put:
+      operationId: update_sip_profile
+      summary: Update SIP profile
+      description: 'Updates the SIP profile settings for your project.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SipProfileResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SIP Profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSipProfileRequest'
+components:
+  schemas:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    UpdateSipProfileRequest:
+      type: object
+      properties:
+        domain_identifier:
+          type: string
+          description: String representing the domain_identifier portion of the profile. Must be unique across your project.
+          examples:
+          - example
+        default_codecs:
+          type: array
+          items:
+            type: string
+          description: 'A list of codecs this profile will support. Currently supported values are: OPUS, G722, PCMU, PCMA, VP8, H264.'
+        default_ciphers:
+          type: array
+          items:
+            type: string
+          description: 'A list of encryption ciphers this profile will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, AES_CM_128_HMAC_SHA1_32.'
+        default_encryption:
+          type: string
+          enum:
+          - required
+          - optional
+          description: A string representing whether connections to an endpoint that uses this profile require encryption or if encryption is optional. Encryption will always be used if possible. Possible values are required or optional.
+          examples:
+          - optional
+        default_send_as:
+          type: string
+          description: The e164 formatted number you wish to set as the originating number when dialing PSTN phone numbers from a SIP Endpoint that uses this profile. Specify null or an empty string to randomly choose a purchased or verified number from within the project.
+          examples:
+          - '+15551234567'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating the SIP profile.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    SipProfileResponse:
+      type: object
+      properties:
+        domain:
+          type: string
+          description: A string representation of the fully qualified domain name for this profile.
+          examples:
+          - your-space-example.sip.signalwire.com
+        domain_identifier:
+          type: string
+          description: String representing the domain_identifier portion of the profile. Must be unique across your project.
+          examples:
+          - example
+        default_codecs:
+          type: array
+          items:
+            type: string
+          description: 'A list of codecs this profile will support. Currently supported values are: OPUS, G722, PCMU, PCMA, VP8, H264.'
+        default_ciphers:
+          type: array
+          items:
+            type: string
+          description: 'A list of encryption ciphers this profile will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, AES_CM_128_HMAC_SHA1_32.'
+        default_encryption:
+          type: string
+          enum:
+          - required
+          - optional
+          description: A string representing whether connections to an endpoint that uses this profile require encryption or if encryption is optional. Encryption will always be used if possible. Possible values are required or optional.
+          examples:
+          - optional
+        default_send_as:
+          type: string
+          description: The e164 formatted number you wish to set as the originating number when dialing PSTN phone numbers from a SIP Endpoint that uses this profile. Specify null or an empty string to randomly choose a purchased or verified number from within the project.
+          examples:
+          - '+15551234567'
+      unevaluatedProperties:
+        not: {}
+      description: Response containing the SIP profile.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

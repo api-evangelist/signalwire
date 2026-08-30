@@ -1,0 +1,856 @@
+openapi: 3.2.0
+info:
+  title: Compatibility Faxes API
+  version: 1.0.0
+  description: Send and manage faxes.
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Faxes
+  description: Send and manage faxes.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Faxes:
+    get:
+      operationId: list_all_faxes
+      summary: List all Faxes
+      description: 'List all faxes.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/FaxesAccountSidPath'
+      - name: Page
+        in: query
+        required: false
+        description: The page index to retrieve. Zero-indexed.
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of results per page. Default is 50, maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: Token for cursor-based pagination. Required when Page > 0.
+        schema:
+          type: string
+        explode: false
+      - name: DateCreatedAfter
+        in: query
+        required: false
+        description: The date, in ISO 8601 format, after which the fax was sent.
+        schema:
+          type: string
+        explode: false
+      - name: DateCreatedOnOrBefore
+        in: query
+        required: false
+        description: The date, in ISO 8601 format, on or before which the fax was sent.
+        schema:
+          type: string
+        explode: false
+      - name: From
+        in: query
+        required: false
+        description: The phone number, in E.164 format, the fax was sent from.
+        schema:
+          type: string
+        explode: false
+      - name: To
+        in: query
+        required: false
+        description: The phone number, in E.164 format, the fax was sent to.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaxListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Faxes
+    post:
+      operationId: send_fax
+      summary: Send a Fax
+      description: 'Send a fax.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/FaxesAccountSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaxResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Faxes
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendFaxRequest'
+  /Accounts/{AccountSid}/Faxes/{Sid}:
+    get:
+      operationId: retrieve_fax
+      summary: Retrieve a Fax
+      description: 'Retrieve a fax.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/FaxesAccountSidPath'
+      - $ref: '#/components/parameters/FaxSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaxResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Faxes
+    post:
+      operationId: update_fax
+      summary: Update a Fax
+      description: 'Allows you to cancel a queued fax. Only faxes in ''queued'' status can be canceled.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/FaxesAccountSidPath'
+      - $ref: '#/components/parameters/FaxSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaxResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Faxes
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateFaxRequest'
+    delete:
+      operationId: delete_fax
+      summary: Delete a Fax
+      description: 'Delete a fax. Cannot delete a fax that is currently in progress (processing, sending, or receiving).
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/FaxesAccountSidPath'
+      - $ref: '#/components/parameters/FaxSidPath'
+      responses:
+        '204':
+          description: 204 No Content response.
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the resource. The operation cannot be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Faxes
+components:
+  schemas:
+    Fax:
+      type: object
+      required:
+      - account_sid
+      - api_version
+      - date_created
+      - date_updated
+      - direction
+      - from
+      - media_url
+      - media_sid
+      - num_pages
+      - price
+      - price_unit
+      - quality
+      - sid
+      - status
+      - to
+      - duration
+      - links
+      - url
+      - error_code
+      - error_message
+      properties:
+        account_sid:
+          type: string
+          description: The unique identifier for the account this fax is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - v1
+        date_created:
+          type: string
+          description: The date and time, in ISO 8601 format, the fax was created.
+          examples:
+          - '2018-11-26T20:00:00Z'
+        date_updated:
+          type: string
+          description: The date and time, in ISO 8601 format, the fax was updated.
+          examples:
+          - '2018-11-27T20:00:00Z'
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/FaxDirection'
+          description: The direction of the fax.
+        from:
+          type: string
+          description: The phone number, in E.164 format, the fax was sent from.
+          examples:
+          - '+13103383454'
+        media_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL hosting the received media, or null if not available.
+          examples:
+          - https://example.com/fax.pdf
+        media_sid:
+          type: string
+          description: The unique identifier for the media instance associated with the fax instance.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        num_pages:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The number of pages in the fax document, or null if not yet determined.
+          examples:
+          - '3'
+        price:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The cost of the fax, or null if not yet calculated.
+          examples:
+          - '-0.005'
+        price_unit:
+          type: string
+          description: The currency, in ISO 4217 format, of the price.
+          examples:
+          - USD
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/FaxQuality'
+          description: The quality of the fax.
+        sid:
+          type: string
+          description: The unique identifier of the fax.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472fx
+        status:
+          allOf:
+          - $ref: '#/components/schemas/FaxStatus'
+          description: The status of the fax.
+        to:
+          type: string
+          description: The phone number, in E.164 format, the fax was sent to.
+          examples:
+          - '+13104456789'
+        duration:
+          type: integer
+          format: int32
+          description: The time, in seconds, it took to deliver a fax.
+          examples:
+          - 5000
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FaxLinks'
+          description: The URL links for resources associated with the fax.
+        url:
+          type: string
+          description: The URL of this resource.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error code for this resource, or null if no error.
+          examples:
+          - null
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The description of this error, or null if no error.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Fax model.
+    FaxDirection:
+      type: string
+      enum:
+      - inbound
+      - outbound
+      description: Fax direction.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    UpdateFaxRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - canceled
+          description: The status to set. Only 'canceled' is allowed. The fax must be in 'queued' status to be canceled.
+          examples:
+          - canceled
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating (canceling) a fax.
+    FaxQuality:
+      type: string
+      enum:
+      - standard
+      - fine
+      - superfine
+      description: Fax quality.
+    FaxListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - faxes
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /fax/v1/Faxes?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /fax/v1/Faxes?PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - /fax/v1/Faxes?Page=1&PageSize=50&PageToken=PAb3877c40da604998
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        faxes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fax'
+          description: List of faxes.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of faxes.
+    FaxResponse:
+      type: object
+      required:
+      - account_sid
+      - api_version
+      - date_created
+      - date_updated
+      - direction
+      - from
+      - media_url
+      - media_sid
+      - num_pages
+      - price
+      - price_unit
+      - quality
+      - sid
+      - status
+      - to
+      - duration
+      - links
+      - url
+      - error_code
+      - error_message
+      properties:
+        account_sid:
+          type: string
+          description: The unique identifier for the account this fax is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - v1
+        date_created:
+          type: string
+          description: The date and time, in ISO 8601 format, the fax was created.
+          examples:
+          - '2018-11-26T20:00:00Z'
+        date_updated:
+          type: string
+          description: The date and time, in ISO 8601 format, the fax was updated.
+          examples:
+          - '2018-11-27T20:00:00Z'
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/FaxDirection'
+          description: The direction of the fax.
+        from:
+          type: string
+          description: The phone number, in E.164 format, the fax was sent from.
+          examples:
+          - '+13103383454'
+        media_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL hosting the received media, or null if not available.
+          examples:
+          - https://example.com/fax.pdf
+        media_sid:
+          type: string
+          description: The unique identifier for the media instance associated with the fax instance.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        num_pages:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The number of pages in the fax document, or null if not yet determined.
+          examples:
+          - '3'
+        price:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The cost of the fax, or null if not yet calculated.
+          examples:
+          - '-0.005'
+        price_unit:
+          type: string
+          description: The currency, in ISO 4217 format, of the price.
+          examples:
+          - USD
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/FaxQuality'
+          description: The quality of the fax.
+        sid:
+          type: string
+          description: The unique identifier of the fax.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472fx
+        status:
+          allOf:
+          - $ref: '#/components/schemas/FaxStatus'
+          description: The status of the fax.
+        to:
+          type: string
+          description: The phone number, in E.164 format, the fax was sent to.
+          examples:
+          - '+13104456789'
+        duration:
+          type: integer
+          format: int32
+          description: The time, in seconds, it took to deliver a fax.
+          examples:
+          - 5000
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FaxLinks'
+          description: The URL links for resources associated with the fax.
+        url:
+          type: string
+          description: The URL of this resource.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error code for this resource, or null if no error.
+          examples:
+          - null
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The description of this error, or null if no error.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single fax.
+    FaxStatus:
+      type: string
+      enum:
+      - queued
+      - processing
+      - sending
+      - delivered
+      - receiving
+      - received
+      - no-answer
+      - busy
+      - failed
+      - canceled
+      description: Fax status.
+    FaxLinks:
+      type: object
+      required:
+      - media
+      properties:
+        media:
+          type: string
+          description: Media associated with this fax.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media
+      unevaluatedProperties:
+        not: {}
+      description: Fax links.
+    SendFaxRequest:
+      type: object
+      required:
+      - MediaUrl
+      - To
+      - From
+      properties:
+        MediaUrl:
+          type: string
+          description: The URL hosting the fax media to send.
+          examples:
+          - https://example.com/fax.pdf
+        To:
+          type: string
+          description: The phone number, in E.164 format, or SIP URI the fax will be sent to.
+          examples:
+          - '+13104456789'
+        From:
+          type: string
+          description: The phone number, in E.164 format, or client identifier the fax will be sent from.
+          examples:
+          - '+13103383454'
+        Quality:
+          type: string
+          enum:
+          - standard
+          - fine
+          - superfine
+          description: The quality of the fax. Default is 'fine'.
+          examples:
+          - fine
+          default: fine
+        StatusCallback:
+          type: string
+          description: The URL to send status callback requests to when the fax status changes.
+          examples:
+          - https://your-api-endpoint.com/fax-status
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use for status callback requests. Default is 'POST'.
+          examples:
+          - POST
+          default: POST
+        StatusCallbackEvent:
+          type: array
+          items:
+            type: string
+          description: 'The events that trigger status callback requests. Valid values: ''initiated'', ''ringing'', ''answered'', ''completed'', ''ringing_forwarded'', ''ringing_queued''. Default is [''completed''].'
+          examples:
+          - - completed
+        StoreMedia:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: Whether to store the fax media. Default is 'true'.
+          examples:
+          - 'true'
+          default: 'true'
+        Ttl:
+          type: integer
+          format: int32
+          minimum: 5
+          maximum: 300
+          description: Time to live in minutes for the fax. Must be between 5 and 300. Default is 60.
+          examples:
+          - 60
+          default: 60
+        SipAuthUsername:
+          type: string
+          description: The username for SIP authentication.
+          examples:
+          - user123
+        SipAuthPassword:
+          type: string
+          description: The password for SIP authentication.
+          examples:
+          - password123
+      unevaluatedProperties:
+        not: {}
+      description: Request body for sending a fax.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+  parameters:
+    FaxSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The Fax ID that uniquely identifies the Fax.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FaxesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN

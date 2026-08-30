@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: Compatibility Message Media API
+  version: 1.0.0
+  description: Manage media files attached to messages.
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Message Media
+  description: Manage media files attached to messages.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Messages/{MessageSid}/Media:
+    get:
+      operationId: list_media
+      summary: List Message Media
+      description: 'List all media for a message.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - $ref: '#/components/parameters/MessageSidPathForMedia'
+      - name: DateCreated
+        in: query
+        required: false
+        description: Only return media created on this particular date, formatted as YYYY-MM-DD in UTC.
+        schema:
+          type: string
+        explode: false
+      - name: DateCreated<
+        in: query
+        required: false
+        description: Only return media created before this date, formatted as YYYY-MM-DD in UTC.
+        schema:
+          type: string
+        explode: false
+      - name: DateCreated>
+        in: query
+        required: false
+        description: Only return media created after this date, formatted as YYYY-MM-DD in UTC.
+        schema:
+          type: string
+        explode: false
+      - name: Page
+        in: query
+        required: false
+        description: The page number to retrieve. Default is 0.
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of items per page. Default is 50, maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: The token for cursor-based pagination. Must start with 'PA' or 'PB'.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageMediaListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Message Media
+  /Accounts/{AccountSid}/Messages/{MessageSid}/Media/{Sid}:
+    get:
+      operationId: retrieve_media
+      summary: Retrieve Message Media
+      description: 'Retrieve media for a message.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - $ref: '#/components/parameters/MessageSidPathForMedia'
+      - $ref: '#/components/parameters/MessageSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageMediaResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Message Media
+    delete:
+      operationId: delete_message_media
+      summary: Delete Message Media
+      description: 'Delete media for a message. Media cannot be deleted if the parent message is still in progress (initiated or queued status).
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - $ref: '#/components/parameters/MessageSidPathForMedia'
+      - $ref: '#/components/parameters/MessageSidPath'
+      responses:
+        '204':
+          description: 204 No Content response.
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Message Media
+components:
+  schemas:
+    MessageMediaListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - media_list
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - null
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        media_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageMedia'
+          description: List of media.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of message media.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    MessageMediaResponse:
+      type: object
+      required:
+      - account_sid
+      - content_type
+      - date_created
+      - date_updated
+      - parent_sid
+      - sid
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - ea108133-d6b3-407c-9536-9fad8a929a6a
+        content_type:
+          type: string
+          description: The content type of the media.
+          examples:
+          - image/jpeg
+        date_created:
+          type: string
+          description: The date, in RFC 2822 GMT format, this media was created.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this media was updated.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        parent_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the message.
+          examples:
+          - 0a059168-ead0-41af-9d1f-343dae832527
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the media.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        uri:
+          type: string
+          description: The URI for the media.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single message media.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    MessageMedia:
+      type: object
+      required:
+      - account_sid
+      - content_type
+      - date_created
+      - date_updated
+      - parent_sid
+      - sid
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - ea108133-d6b3-407c-9536-9fad8a929a6a
+        content_type:
+          type: string
+          description: The content type of the media.
+          examples:
+          - image/jpeg
+        date_created:
+          type: string
+          description: The date, in RFC 2822 GMT format, this media was created.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this media was updated.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        parent_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the message.
+          examples:
+          - 0a059168-ead0-41af-9d1f-343dae832527
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the media.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        uri:
+          type: string
+          description: The URI for the media.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+      unevaluatedProperties:
+        not: {}
+      description: Message media model.
+  parameters:
+    MessageSidPathForMedia:
+      name: MessageSid
+      in: path
+      required: true
+      description: A unique ID that identifies this specific message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    MessagesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier of the project that sent or received this message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    MessageSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: A unique ID that identifies this specific message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN

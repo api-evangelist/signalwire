@@ -1,0 +1,1274 @@
+openapi: 3.2.0
+info:
+  title: Compatibility Incoming Phone Numbers API
+  version: 1.0.0
+  description: Manage phone numbers in your project.
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Incoming Phone Numbers
+  description: Manage phone numbers in your project.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/IncomingPhoneNumbers:
+    get:
+      operationId: list_incoming_phone_numbers
+      summary: List all Incoming Phone Numbers
+      description: 'List all incoming phone numbers.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/IncomingPhoneNumbersAccountSidPath'
+      - name: Page
+        in: query
+        required: false
+        description: The page index to retrieve. Zero-indexed.
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of results per page. Default is 50, maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: Token for cursor-based pagination. Required when Page > 0.
+        schema:
+          type: string
+        explode: false
+      - name: PhoneNumber
+        in: query
+        required: false
+        description: Only show numbers that match this pattern.
+        schema:
+          type: string
+        explode: false
+      - name: FriendlyName
+        in: query
+        required: false
+        description: Only show numbers with this friendly name.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncomingPhoneNumberListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Incoming Phone Numbers
+    post:
+      operationId: create_incoming_phone_number
+      summary: Create an Incoming Phone Number
+      description: 'Purchase and provision a new incoming phone number.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/IncomingPhoneNumbersAccountSidPath'
+      responses:
+        '201':
+          description: Response returned when an incoming phone number is created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncomingPhoneNumber'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Incoming Phone Numbers
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateIncomingPhoneNumberRequest'
+  /Accounts/{AccountSid}/IncomingPhoneNumbers/{Sid}:
+    get:
+      operationId: retrieve_incoming_phone_number
+      summary: Retrieve an incoming phone number
+      description: 'Retrieve an incoming phone number.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/IncomingPhoneNumbersAccountSidPath'
+      - $ref: '#/components/parameters/IncomingPhoneNumberSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncomingPhoneNumberResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Incoming Phone Numbers
+    post:
+      operationId: update_incoming_phone_number
+      summary: Update an incoming phone number
+      description: 'Update an incoming phone number.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/IncomingPhoneNumbersAccountSidPath'
+      - $ref: '#/components/parameters/IncomingPhoneNumberSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncomingPhoneNumberResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Incoming Phone Numbers
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateIncomingPhoneNumberRequest'
+    delete:
+      operationId: delete_incoming_phone_number
+      summary: Delete an incoming phone number
+      description: 'Release an incoming phone number. The number will be removed from your account.
+
+
+        Note: Numbers cannot be released within a cooldown period after purchase.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/IncomingPhoneNumbersAccountSidPath'
+      - $ref: '#/components/parameters/IncomingPhoneNumberSidPath'
+      responses:
+        '204':
+          description: 204 No Content response.
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the resource. The operation cannot be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Incoming Phone Numbers
+webhooks:
+  incomingCallStatusCallback:
+    post:
+      operationId: incoming_call_status_callback
+      summary: Incoming call status callback
+      description: 'Payload sent by SignalWire to your Inbound Call Status Callback URL for inbound calls to a phone number.
+
+
+        Configure `StatusCallback` at the phone number level via the dashboard
+
+        (**Phone Numbers** → select a number → **Phone Number Settings**) or programmatically via the
+
+        [create](/docs/compatibility-api/rest/incoming-phone-numbers/create-incoming-phone-number) or
+
+        [update](/docs/compatibility-api/rest/incoming-phone-numbers/update-incoming-phone-number) Incoming Phone Number API endpoints.
+
+
+        By default, the webhook fires only when the call is `completed` or `failed`, making it well-suited
+
+        for tracking inbound call success rate, call quality, and total call volume in a call center context.
+
+
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+      parameters: []
+      responses:
+        '200':
+          description: Webhook received
+      tags:
+      - Incoming Phone Numbers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboundCallStatusCallbackPayload'
+      security:
+      - {}
+components:
+  schemas:
+    CreateIncomingPhoneNumberRequest:
+      type: object
+      required:
+      - PhoneNumber
+      properties:
+        PhoneNumber:
+          type: string
+          minLength: 6
+          maxLength: 18
+          pattern: ^\+\d{5,17}$
+          description: The phone number to purchase in E.164 format. Must start with `+` followed by 5-17 digits.
+          examples:
+          - '+13103386745'
+        FriendlyName:
+          type: string
+          description: A friendly name for the phone number. If not provided, the formatted phone number will be used.
+          examples:
+          - My Business Line
+        SmsApplicationSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the application associated with SMS handling on this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472sa
+        SmsFallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsFallbackUrl:
+          type: string
+          format: uri
+          description: The URL to request if errors occur when fetching SmsUrl.
+          examples:
+          - https://example.com/sms-fallback
+        SmsMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to SmsUrl is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsUrl:
+          type: string
+          format: uri
+          description: The URL to request when an incoming SMS is received.
+          examples:
+          - https://example.com/sms
+        StatusCallback:
+          type: string
+          format: uri
+          description: The URL to request to pass status updates to. See the [Incoming call status callback](/docs/compatibility-api/rest/incoming-phone-numbers/webhooks/incoming-call-status-callback) webhook for the payload your URL will receive.
+          examples:
+          - https://example.com/status
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to StatusCallback is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceApplicationSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the application associated with call handling on this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472va
+        VoiceFallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to VoiceFallbackUrl is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceFallbackUrl:
+          type: string
+          format: uri
+          description: The URL to request if errors occur when fetching VoiceUrl.
+          examples:
+          - https://example.com/voice-fallback
+        VoiceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to VoiceUrl is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceReceiveMode:
+          type: string
+          enum:
+          - voice
+          - fax
+          description: Whether this number can receive voice calls or faxes. Default is `voice`.
+          examples:
+          - voice
+          default: voice
+        VoiceUrl:
+          type: string
+          format: uri
+          description: The URL to request when an incoming call is received.
+          examples:
+          - https://example.com/voice
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an incoming phone number.
+    IncomingPhoneNumberCapabilities:
+      type: object
+      required:
+      - voice
+      - sms
+      - mms
+      - fax
+      properties:
+        voice:
+          type: boolean
+          description: Whether or not voice is enabled.
+          examples:
+          - true
+        sms:
+          type: boolean
+          description: Whether or not SMS is enabled.
+          examples:
+          - true
+        mms:
+          type: boolean
+          description: Whether or not MMS is enabled.
+          examples:
+          - true
+        fax:
+          type: boolean
+          description: Whether or not fax is enabled.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Phone number capabilities.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    UpdateIncomingPhoneNumberRequest:
+      type: object
+      properties:
+        AccountSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for an account to which the number should be transferred. Must be within the same Space.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        EmergencyAddressSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the address associated with E911 for this phone number. Not supported for toll-free numbers or certain providers.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ad
+        FriendlyName:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: A friendly name for the phone number.
+          examples:
+          - My Business Line
+        SmsApplicationSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the application associated with SMS handling on this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472sa
+        SmsFallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsFallbackUrl:
+          type: string
+          format: uri
+          description: The URL to request if errors occur when fetching SmsUrl.
+          examples:
+          - https://example.com/sms-fallback
+        SmsMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to SmsUrl is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsUrl:
+          type: string
+          format: uri
+          description: The URL to request when an incoming SMS is received.
+          examples:
+          - https://example.com/sms
+        StatusCallback:
+          type: string
+          format: uri
+          description: The URL to request to pass status updates to.
+          examples:
+          - https://example.com/status
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to StatusCallback is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceApplicationSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the application associated with call handling on this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472va
+        VoiceFallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to VoiceFallbackUrl is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceFallbackUrl:
+          type: string
+          format: uri
+          description: The URL to request if errors occur when fetching VoiceUrl.
+          examples:
+          - https://example.com/voice-fallback
+        VoiceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to VoiceUrl is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceReceiveMode:
+          type: string
+          enum:
+          - voice
+          - fax
+          description: Whether this number can receive voice calls or faxes.
+          examples:
+          - voice
+        VoiceUrl:
+          type: string
+          format: uri
+          description: The URL to request when an incoming call is received.
+          examples:
+          - https://example.com/voice
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an incoming phone number.
+    InboundCallStatusCallbackPayload:
+      type: object
+      required:
+      - CallSid
+      - AccountSid
+      - From
+      - To
+      - Timestamp
+      - CallStatus
+      - CallDuration
+      - AudioInMos
+      properties:
+        CallSid:
+          type: string
+          description: A unique identifier for the call. May be used to later retrieve this call from the REST API.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        AccountSid:
+          type: string
+          description: The unique ID of the project this call is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        From:
+          type: string
+          description: The From number in E.164 format.
+          examples:
+          - '+15551234567'
+        To:
+          type: string
+          description: The To number in E.164 format.
+          examples:
+          - '+18005559876'
+        Timestamp:
+          type: string
+          description: The timestamp of the call creation date/time.
+          examples:
+          - Thu, 04 Apr 2024 18:32:15 +0000
+        CallStatus:
+          type: string
+          enum:
+          - failed
+          - completed
+          description: The status of the call. For this callback, the value will be either `failed` or `completed`.
+          examples:
+          - completed
+        CallDuration:
+          type: string
+          description: The duration, in seconds, of the call.
+          examples:
+          - '142'
+        AudioInMos:
+          type: string
+          description: A mean opinion score on a scale of 1–5 that represents the quality of the call.
+          examples:
+          - '4.5'
+      unevaluatedProperties:
+        not: {}
+    AddressRequirements:
+      type: string
+      enum:
+      - none
+      - any
+      - local
+      - foreign
+      description: Address requirements.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    IncomingPhoneNumberListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - incoming_phone_numbers
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=1&PageSize=50&PageToken=PAb3877c40da604998
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        incoming_phone_numbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncomingPhoneNumber'
+          description: List of incoming phone numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of incoming phone numbers.
+    PhoneNumberOrigin:
+      type: string
+      enum:
+      - signalwire
+      - hosted
+      description: Phone number origin.
+    IncomingPhoneNumberResponse:
+      type: object
+      required:
+      - account_id
+      - account_sid
+      - address_requirements
+      - address_sid
+      - api_version
+      - beta
+      - capabilities
+      - country_code
+      - date_created
+      - date_updated
+      - emergency_address_sid
+      - emergency_status
+      - friendly_name
+      - identity_sid
+      - origin
+      - phone_number
+      - sid
+      - sms_application_sid
+      - sms_fallback_method
+      - sms_fallback_url
+      - sms_method
+      - sms_url
+      - status_callback
+      - status_callback_method
+      - trunk_sid
+      - uri
+      - voice_application_sid
+      - voice_caller_id_lookup
+      - voice_fallback_method
+      - voice_fallback_url
+      - voice_method
+      - voice_url
+      properties:
+        account_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        address_requirements:
+          allOf:
+          - $ref: '#/components/schemas/AddressRequirements'
+          description: Whether or not a registered address with SignalWire is required. Always 'none'.
+        address_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the address associated with this phone number. Always null.
+          examples:
+          - null
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        beta:
+          type: boolean
+          description: New numbers on SignalWire are marked as beta. Always false.
+          examples:
+          - false
+        capabilities:
+          allOf:
+          - $ref: '#/components/schemas/IncomingPhoneNumberCapabilities'
+          description: Whether or not a number can receive calls and messages.
+        country_code:
+          type: string
+          description: The ISO 3166-1 alpha-2 country code for this phone number.
+          examples:
+          - US
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this phone number was created.
+          examples:
+          - Tue, 25 Sept 2018 23:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this phone number was updated.
+          examples:
+          - Wed, 26 Sept 2018 22:00:00 +0000
+        emergency_address_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier of the address associated with E911 for this phone number, or null if not set.
+          examples:
+          - null
+        emergency_status:
+          type: string
+          description: Whether the phone route has an active E911 address associated. 'Active' or 'Inactive'.
+          examples:
+          - Inactive
+        friendly_name:
+          type: string
+          description: A formatted version of the number.
+          examples:
+          - (310) 338-6745
+        identity_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the identity associated with this phone number. Always null.
+          examples:
+          - null
+        origin:
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumberOrigin'
+          description: The origin of the phone number.
+        phone_number:
+          type: string
+          description: The incoming number in E.164 format.
+          examples:
+          - '+13103386745'
+        sid:
+          type: string
+          description: The unique identifier for this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472pn
+        sms_application_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the application associated with SMS handling on this phone number, or null if not set.
+          examples:
+          - null
+        sms_fallback_method:
+          type: string
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`.
+          examples:
+          - POST
+        sms_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request if errors occur when fetching SmsUrl, or null if not set.
+          examples:
+          - null
+        sms_method:
+          type: string
+          description: Whether the request to SmsUrl is a `GET` or a `POST`.
+          examples:
+          - POST
+        sms_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an incoming SMS is received, or null if not set.
+          examples:
+          - null
+        status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request to pass status updates to, or null if not set.
+          examples:
+          - null
+        status_callback_method:
+          type: string
+          description: Whether the request to StatusCallback is a `GET` or a `POST`.
+          examples:
+          - POST
+        trunk_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the Trunk associated with this phone number. Always null.
+          examples:
+          - null
+        uri:
+          type: string
+          description: The URI for this number.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/IncomingPhoneNumbers/b3877c40-da60-4998-90ad-b792e98472pn.json
+        verification_status:
+          type: string
+          description: The verification status for toll-free numbers. Only present for toll-free numbers.
+          examples:
+          - Unverified
+        voice_application_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the application associated with call handling on this phone number, or null if not set.
+          examples:
+          - null
+        voice_caller_id_lookup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether or not to look up a caller's name in the database. Always null.
+          examples:
+          - null
+        voice_fallback_method:
+          type: string
+          description: Whether the request to VoiceFallbackUrl is a `GET` or a `POST`.
+          examples:
+          - POST
+        voice_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request if errors occur when fetching `Url`, or null if not set.
+          examples:
+          - null
+        voice_method:
+          type: string
+          description: Whether the request to Url is a `GET` or a `POST`.
+          examples:
+          - POST
+        voice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an incoming call is received, or null if not set.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single incoming phone number.
+    IncomingPhoneNumber:
+      type: object
+      required:
+      - account_id
+      - account_sid
+      - address_requirements
+      - address_sid
+      - api_version
+      - beta
+      - capabilities
+      - country_code
+      - date_created
+      - date_updated
+      - emergency_address_sid
+      - emergency_status
+      - friendly_name
+      - identity_sid
+      - origin
+      - phone_number
+      - sid
+      - sms_application_sid
+      - sms_fallback_method
+      - sms_fallback_url
+      - sms_method
+      - sms_url
+      - status_callback
+      - status_callback_method
+      - trunk_sid
+      - uri
+      - voice_application_sid
+      - voice_caller_id_lookup
+      - voice_fallback_method
+      - voice_fallback_url
+      - voice_method
+      - voice_url
+      properties:
+        account_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        address_requirements:
+          allOf:
+          - $ref: '#/components/schemas/AddressRequirements'
+          description: Whether or not a registered address with SignalWire is required. Always 'none'.
+        address_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the address associated with this phone number. Always null.
+          examples:
+          - null
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        beta:
+          type: boolean
+          description: New numbers on SignalWire are marked as beta. Always false.
+          examples:
+          - false
+        capabilities:
+          allOf:
+          - $ref: '#/components/schemas/IncomingPhoneNumberCapabilities'
+          description: Whether or not a number can receive calls and messages.
+        country_code:
+          type: string
+          description: The ISO 3166-1 alpha-2 country code for this phone number.
+          examples:
+          - US
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this phone number was created.
+          examples:
+          - Tue, 25 Sept 2018 23:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this phone number was updated.
+          examples:
+          - Wed, 26 Sept 2018 22:00:00 +0000
+        emergency_address_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier of the address associated with E911 for this phone number, or null if not set.
+          examples:
+          - null
+        emergency_status:
+          type: string
+          description: Whether the phone route has an active E911 address associated. 'Active' or 'Inactive'.
+          examples:
+          - Inactive
+        friendly_name:
+          type: string
+          description: A formatted version of the number.
+          examples:
+          - (310) 338-6745
+        identity_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the identity associated with this phone number. Always null.
+          examples:
+          - null
+        origin:
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumberOrigin'
+          description: The origin of the phone number.
+        phone_number:
+          type: string
+          description: The incoming number in E.164 format.
+          examples:
+          - '+13103386745'
+        sid:
+          type: string
+          description: The unique identifier for this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472pn
+        sms_application_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the application associated with SMS handling on this phone number, or null if not set.
+          examples:
+          - null
+        sms_fallback_method:
+          type: string
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`.
+          examples:
+          - POST
+        sms_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request if errors occur when fetching SmsUrl, or null if not set.
+          examples:
+          - null
+        sms_method:
+          type: string
+          description: Whether the request to SmsUrl is a `GET` or a `POST`.
+          examples:
+          - POST
+        sms_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an incoming SMS is received, or null if not set.
+          examples:
+          - null
+        status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request to pass status updates to, or null if not set.
+          examples:
+          - null
+        status_callback_method:
+          type: string
+          description: Whether the request to StatusCallback is a `GET` or a `POST`.
+          examples:
+          - POST
+        trunk_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the Trunk associated with this phone number. Always null.
+          examples:
+          - null
+        uri:
+          type: string
+          description: The URI for this number.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/IncomingPhoneNumbers/b3877c40-da60-4998-90ad-b792e98472pn.json
+        verification_status:
+          type: string
+          description: The verification status for toll-free numbers. Only present for toll-free numbers.
+          examples:
+          - Unverified
+        voice_application_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the application associated with call handling on this phone number, or null if not set.
+          examples:
+          - null
+        voice_caller_id_lookup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether or not to look up a caller's name in the database. Always null.
+          examples:
+          - null
+        voice_fallback_method:
+          type: string
+          description: Whether the request to VoiceFallbackUrl is a `GET` or a `POST`.
+          examples:
+          - POST
+        voice_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request if errors occur when fetching `Url`, or null if not set.
+          examples:
+          - null
+        voice_method:
+          type: string
+          description: Whether the request to Url is a `GET` or a `POST`.
+          examples:
+          - POST
+        voice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an incoming call is received, or null if not set.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Incoming phone number model.
+  parameters:
+    IncomingPhoneNumbersAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that is associated with this phone number.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    IncomingPhoneNumberSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier of the phone number.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN

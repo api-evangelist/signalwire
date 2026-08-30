@@ -1,0 +1,1206 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST SWML Scripts API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Endpoints related to creating & managing SWML Scripts
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: SWML Scripts
+  description: Endpoints related to creating & managing SWML Scripts
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SWML Script, Fabric API endpoints
+paths:
+  /api/fabric/resources/swml_scripts:
+    get:
+      operationId: list_swml_scripts
+      summary: List SWML Scripts
+      description: 'A list of SWML Scripts
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SwmlScriptListResponse'
+              examples:
+                SWML Script list:
+                  summary: SWML Script list
+                  description: A page containing one compact Calling script.
+                  value:
+                  - data:
+                    - id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                      display_name: Welcome Script
+                      type: swml_script
+                      created_at: '2024-05-06T12:20:00Z'
+                      updated_at: '2024-05-06T12:25:00Z'
+                      swml_script:
+                        id: 993ed018-9e79-4e50-b97b-984bd5534095
+                        display_name: Welcome Script
+                        script_type: calling
+                        request_url: https://example.com/swml_script
+                        contents:
+                          version: 1.0.0
+                          sections:
+                            main:
+                            - play:
+                                url: https://cdn.signalwire.com/swml/audio.mp3
+                    links:
+                      self: https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50
+                      first: https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SWML Scripts
+    post:
+      operationId: create_swml_script
+      summary: Create SWML Script
+      description: 'Creates a SWML Script
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwmlScriptResponse'
+              examples:
+                Simple messaging script:
+                  summary: Simple messaging script
+                  description: Create a Messaging SWML Script that sends a single reply.
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Reply Bot
+                    type: swml_script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    swml_script:
+                      id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                      display_name: Reply Bot
+                      script_type: messaging
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - reply: Thanks for your message!
+                Simple calling script:
+                  summary: Simple calling script
+                  description: Create a Calling SWML Script that plays a single audio file.
+                  value:
+                    id: 993ed018-9e79-4e50-b97b-984bd5534095
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Welcome Script
+                    type: swml_script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    swml_script:
+                      id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      display_name: Welcome Script
+                      script_type: calling
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - play:
+                              url: https://cdn.signalwire.com/swml/audio.mp3
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwmlScriptCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SWML Scripts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwmlScriptCreateRequest'
+            examples:
+              Simple messaging script:
+                summary: Simple messaging script
+                description: Create a Messaging SWML Script that sends a single reply.
+                value:
+                  name: Reply Bot
+                  script_type: messaging
+                  contents:
+                    version: 1.0.0
+                    sections:
+                      main:
+                      - reply: Thanks for your message!
+              Simple calling script:
+                summary: Simple calling script
+                description: Create a Calling SWML Script that plays a single audio file.
+                value:
+                  name: Welcome Script
+                  script_type: calling
+                  contents:
+                    version: 1.0.0
+                    sections:
+                      main:
+                      - play:
+                          url: https://cdn.signalwire.com/swml/audio.mp3
+  /api/fabric/resources/swml_scripts/{id}:
+    get:
+      operationId: get_swml_script
+      summary: Get SWML Script
+      description: 'Returns a SWML Script by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/SwmlScriptPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwmlScriptResponse'
+              examples:
+                Messaging script:
+                  summary: Messaging script
+                  description: A Messaging script that sends one reply.
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Reply Bot
+                    type: swml_script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    swml_script:
+                      id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                      display_name: Reply Bot
+                      script_type: messaging
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - reply: Thanks for your message!
+                Calling script:
+                  summary: Calling script
+                  description: A Calling script that plays one audio file.
+                  value:
+                    id: 993ed018-9e79-4e50-b97b-984bd5534095
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Welcome Script
+                    type: swml_script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    swml_script:
+                      id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      display_name: Welcome Script
+                      script_type: calling
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - play:
+                              url: https://cdn.signalwire.com/swml/audio.mp3
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SWML Scripts
+    put:
+      operationId: update_swml_script
+      summary: Update SWML Script
+      description: 'Updates a SWML Script by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/SwmlScriptPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwmlScriptResponse'
+              examples:
+                Update a messaging script:
+                  summary: Update a messaging script
+                  description: Update a Messaging script with a compact SWML document.
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Reply Bot
+                    type: swml_script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    swml_script:
+                      id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                      display_name: Reply Bot
+                      script_type: messaging
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - reply: Thanks for your message!
+                Update a calling script:
+                  summary: Update a calling script
+                  description: Update a Calling script with a compact SWML document.
+                  value:
+                    id: 993ed018-9e79-4e50-b97b-984bd5534095
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Welcome Script
+                    type: swml_script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    swml_script:
+                      id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      display_name: Welcome Script
+                      script_type: calling
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - play:
+                              url: https://cdn.signalwire.com/swml/audio.mp3
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SwmlScriptUpdateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SWML Scripts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwmlScriptUpdateRequest'
+            examples:
+              Update a messaging script:
+                summary: Update a messaging script
+                description: Update a Messaging script with a compact SWML document.
+                value:
+                  display_name: Updated Reply Bot
+                  script_type: messaging
+                  contents:
+                    version: 1.0.0
+                    sections:
+                      main:
+                      - reply: Thanks for your message!
+              Update a calling script:
+                summary: Update a calling script
+                description: Update a Calling script with a compact SWML document.
+                value:
+                  display_name: Updated Welcome Script
+                  script_type: calling
+                  contents:
+                    version: 1.0.0
+                    sections:
+                      main:
+                      - play:
+                          url: https://cdn.signalwire.com/swml/audio.mp3
+    delete:
+      operationId: delete_swml_script
+      summary: Delete SWML Script
+      description: 'Deletes a SWML Script by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/SwmlScriptPathID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SWML Scripts
+  /api/fabric/resources/swml_scripts/{id}/addresses:
+    get:
+      operationId: list_swml_script_addresses
+      summary: List SWML Script Addresses
+      description: 'This endpoints returns a list of addresses associated with a specific SWML script.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/SWMLScriptAddressPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SWMLScriptAddressListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - SWML Scripts
+components:
+  schemas:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    SwmlScriptResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - swml_script
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the SWML Script.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the SWML Script Fabric Resource
+          examples:
+          - Welcome Script
+        type:
+          type: string
+          enum:
+          - swml_script
+          description: Type of the Fabric Resource
+          examples:
+          - swml_script
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        swml_script:
+          allOf:
+          - $ref: '#/components/schemas/SwmlScript'
+          description: SWML Script data.
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    SwmlScriptPaginationresponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link to the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50&type=swml_script
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_size=50&type=swml_script
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_script
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_script
+      unevaluatedProperties:
+        not: {}
+    MessagingSwmlScriptUpdateRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Reply Bot
+        script_type:
+          type: string
+          enum:
+          - messaging
+          description: Set to `messaging` for a Messaging Script.
+          examples:
+          - messaging
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The messaging SWML document. Uses [messaging SWML methods](/docs/swml/reference/messaging).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - reply: Thanks for your message!
+      unevaluatedProperties:
+        not: {}
+      description: Request body to update an existing messaging SWML Script. All fields are optional — include only what you want to change.
+      title: Update Messaging Script
+    SwmlScriptUpdateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/CallingSwmlScriptUpdateRequest'
+      - $ref: '#/components/schemas/MessagingSwmlScriptUpdateRequest'
+      description: Body shape for updating an existing SWML Script. All fields are optional — include only what you want to change. Choose a [Calling Script](#schema/CallingSwmlScriptUpdateRequest) for inbound or outbound calls or a [Messaging Script](#schema/MessagingSwmlScriptUpdateRequest) for inbound SMS or MMS messages.
+      title: Update SWML Script
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    SwmlScriptCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: contents is required
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
+    MessagingSwmlScript:
+      type: object
+      required:
+      - id
+      - display_name
+      - script_type
+      - request_url
+      - contents
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a SWML Script.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        display_name:
+          type: string
+          description: The displayed name of the SWML script.
+          examples:
+          - Reply Bot
+        script_type:
+          type: string
+          enum:
+          - messaging
+          description: Set to `messaging` for SWML Scripts that handle inbound SMS or MMS messages.
+          examples:
+          - messaging
+        request_url:
+          type: string
+          format: uri
+          description: URL where this SWML Script is hosted.
+          examples:
+          - https://example.com/swml_script
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The messaging SWML document executed when this script runs. Uses [messaging SWML methods](/docs/swml/reference/messaging).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - reply: Thanks for your message!
+      unevaluatedProperties:
+        not: {}
+      description: A SWML Script that handles inbound SMS or MMS messages. The `contents` field carries a [messaging SWML document](/docs/swml/reference/messaging).
+      title: Messaging Script
+    SwmlScriptCreateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/CallingSwmlScriptCreateRequest'
+      - $ref: '#/components/schemas/MessagingSwmlScriptCreateRequest'
+      description: Body shape for creating a SWML Script. Choose a [Calling Script](#schema/CallingSwmlScriptCreateRequest) for inbound or outbound calls or a [Messaging Script](#schema/MessagingSwmlScriptCreateRequest) for inbound SMS or MMS messages. `script_type` is optional and defaults to `"calling"` when omitted — set it explicitly to `"messaging"` to create a Messaging Script. The script kind determines whether the script can be assigned as a call handler or a message handler on a phone number.
+      title: Create SWML Script
+    CallingSwmlScriptCreateRequest:
+      type: object
+      required:
+      - name
+      - contents
+      properties:
+        name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Welcome Script
+        script_type:
+          type: string
+          enum:
+          - calling
+          description: Set to `calling` for a Calling Script. This is the default when `script_type` is omitted.
+          examples:
+          - calling
+          default: calling
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL that receives status callbacks for messages sent or calls made by this script.
+          examples:
+          - https://example.com/status
+      unevaluatedProperties:
+        not: {}
+      description: Request body to create a SWML Script that handles inbound or outbound calls.
+      title: Create Calling Script
+    MessagingSwmlScriptCreateRequest:
+      type: object
+      required:
+      - name
+      - contents
+      properties:
+        name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Reply Bot
+        script_type:
+          type: string
+          enum:
+          - messaging
+          description: Set to `messaging` to create a Messaging Script. If omitted, the API defaults to `calling`, so this field must be set explicitly for messaging scripts.
+          examples:
+          - messaging
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The messaging SWML document. Uses [messaging SWML methods](/docs/swml/reference/messaging).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - reply: Thanks for your message!
+      unevaluatedProperties:
+        not: {}
+      description: Request body to create a SWML Script that handles inbound SMS or MMS messages.
+      title: Create Messaging Script
+    SwmlScript:
+      oneOf:
+      - $ref: '#/components/schemas/CallingSwmlScript'
+      - $ref: '#/components/schemas/MessagingSwmlScript'
+      description: 'A SWML Script — either a [Calling Script](#schema/CallingSwmlScript) for inbound or
+
+        outbound calls, or a [Messaging Script](#schema/MessagingSwmlScript) for inbound SMS or
+
+        MMS messages. The `script_type` field on each script (`"calling"` or `"messaging"`)
+
+        identifies which kind it is.'
+      title: SWML Script
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    SwmlScriptListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SwmlScriptResponse'
+          description: An array of objects that contain a list of SWML Script data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SwmlScriptPaginationresponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    CallingSwmlScript:
+      type: object
+      required:
+      - id
+      - display_name
+      - script_type
+      - request_url
+      - contents
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a SWML Script.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        display_name:
+          type: string
+          description: The displayed name of the SWML script.
+          examples:
+          - Booking Assistant
+        script_type:
+          type: string
+          enum:
+          - calling
+          description: Set to `calling` for SWML Scripts that handle inbound or outbound calls.
+          examples:
+          - calling
+        request_url:
+          type: string
+          format: uri
+          description: URL where this SWML Script is hosted.
+          examples:
+          - https://example.com/swml_script
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document executed when this script runs. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL that receives status callbacks for messages sent or calls made by this script.
+          examples:
+          - https://website.com/status
+        status_callback_method:
+          type: string
+          enum:
+          - POST
+          description: HTTP method used for status callbacks.
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+      description: A SWML Script that handles inbound or outbound calls. The `contents` field carries a [calling SWML document](/docs/swml/reference/calling).
+      title: Calling Script
+    SWMLScriptAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link of the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=1&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link of the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=2&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad
+        prev:
+          type: string
+          format: uri
+          description: Link of the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_script/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad
+      unevaluatedProperties:
+        not: {}
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    FabricAddressApp:
+      type: object
+      required:
+      - id
+      - name
+      - display_name
+      - cover_url
+      - preview_url
+      - locked
+      - channels
+      - created_at
+      - type
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Fabric Address.
+          examples:
+          - 691af061-cd86-4893-a605-173f47afc4c2
+        name:
+          type: string
+          description: Name of the Fabric Address.
+          examples:
+          - justice-league
+        display_name:
+          type: string
+          description: Display name of the Fabric Address.
+          examples:
+          - Justice League
+        cover_url:
+          type: string
+          description: Cover url of the Fabric Address.
+          examples:
+          - https://coverurl.com
+        preview_url:
+          type: string
+          description: Preview url of the Fabric Address.
+          examples:
+          - https://previewurl.com
+        locked:
+          type: boolean
+          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
+          examples:
+          - true
+        channels:
+          allOf:
+          - $ref: '#/components/schemas/AddressChannel'
+          description: Channels of the Fabric Address.
+        created_at:
+          type: string
+          format: date-time
+          description: Fabric Address Creation Date.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - app
+          description: The display type of a fabric address pointing to an application.
+          examples:
+          - app
+      unevaluatedProperties:
+        not: {}
+      title: Application Address
+    SWMLScriptAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects that contain a list of SWML Script Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SWMLScriptAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    SwmlScriptUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: contents must be valid SWML JSON
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
+    CallingSwmlScriptUpdateRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Welcome Script
+        script_type:
+          type: string
+          enum:
+          - calling
+          description: Set to `calling` for a Calling Script.
+          examples:
+          - calling
+          default: calling
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL that receives status callbacks for messages sent or calls made by this script.
+          examples:
+          - https://example.com/status
+      unevaluatedProperties:
+        not: {}
+      description: Request body to update an existing calling SWML Script. All fields are optional — include only what you want to change.
+      title: Update Calling Script
+  parameters:
+    SWMLScriptAddressPathID:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the SWML Script.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    SwmlScriptPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a SWML Script.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

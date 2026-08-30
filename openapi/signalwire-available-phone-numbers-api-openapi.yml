@@ -1,0 +1,680 @@
+openapi: 3.2.0
+info:
+  title: Compatibility Available Phone Numbers API
+  version: 1.0.0
+  description: Search for available phone numbers to purchase.
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Available Phone Numbers
+  description: Search for available phone numbers to purchase.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/AvailablePhoneNumbers:
+    get:
+      operationId: list_available_phone_number_resources
+      summary: List of AvailablePhoneNumber resources
+      description: 'Returns a list of URIs to phone number resources available to the account, categorized by type (Local, Toll-Free, Mobile, etc) and ISO country.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailablePhoneNumberResourcesResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Available Phone Numbers
+  /Accounts/{AccountSid}/AvailablePhoneNumbers/{IsoCountry}:
+    get:
+      operationId: list_available_phone_number_resources_by_country
+      summary: List of AvailablePhoneNumber resources by country
+      description: 'Returns a list of URIs to phone number resources available to the account in the specified ISO country, categorized by type (Local, Toll-Free, Mobile, etc).
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
+      - $ref: '#/components/parameters/IsoCountryPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailablePhoneNumberByCountryResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Available Phone Numbers
+  /Accounts/{AccountSid}/AvailablePhoneNumbers/{IsoCountry}/Local:
+    get:
+      operationId: search_local_available_phone_numbers
+      summary: Search for available phone numbers that match your criteria.
+      description: 'Search for Local AvailablePhoneNumbers.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
+      - $ref: '#/components/parameters/IsoCountryPath'
+      - name: AreaCode
+        in: query
+        required: false
+        description: Find numbers in the provided area code. Only available for numbers in US and Canada.
+        schema:
+          type: string
+        explode: false
+      - name: Beta
+        in: query
+        required: false
+        description: New numbers on SignalWire are marked as `beta`.
+        schema:
+          type: boolean
+        explode: false
+      - name: Contains
+        in: query
+        required: false
+        description: Find numbers based off of a pattern. Valid characters are `[0-9a-zA-Z]`.
+        schema:
+          type: string
+        explode: false
+      - name: ExcludeAllAddressRequired
+        in: query
+        required: false
+        description: Accepted for Twilio compatibility but has no effect on the response.
+        schema:
+          type: boolean
+        explode: false
+      - name: ExcludeForeignAddressRequired
+        in: query
+        required: false
+        description: Accepted for Twilio compatibility but has no effect on the response.
+        schema:
+          type: boolean
+        explode: false
+      - name: ExcludeLocalAddressRequired
+        in: query
+        required: false
+        description: Accepted for Twilio compatibility but has no effect on the response.
+        schema:
+          type: boolean
+        explode: false
+      - name: FaxEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      - name: InLocality
+        in: query
+        required: false
+        description: Limits search to a city/locality. Requires InRegion to also be set.
+        schema:
+          type: string
+        explode: false
+      - name: InRegion
+        in: query
+        required: false
+        description: Limits search to same region as number. Must be a two-letter state/province code.
+        schema:
+          type: string
+        explode: false
+      - name: MmsEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      - name: SmsEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      - name: VoiceEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailablePhoneNumberListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Available Phone Numbers
+  /Accounts/{AccountSid}/AvailablePhoneNumbers/{IsoCountry}/TollFree:
+    get:
+      operationId: search_toll_free_available_phone_numbers
+      summary: Find toll-free numbers
+      description: 'Search for toll-free AvailablePhoneNumbers.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
+      - $ref: '#/components/parameters/IsoCountryPath'
+      - name: AreaCode
+        in: query
+        required: false
+        description: Find numbers in the provided area code. Only available for numbers in US and Canada.
+        schema:
+          type: string
+        explode: false
+      - name: Beta
+        in: query
+        required: false
+        description: New numbers on SignalWire are marked as `beta`.
+        schema:
+          type: boolean
+        explode: false
+      - name: Contains
+        in: query
+        required: false
+        description: Find numbers based off of a pattern. Valid characters are `[0-9a-zA-Z]`.
+        schema:
+          type: string
+        explode: false
+      - name: ExcludeAllAddressRequired
+        in: query
+        required: false
+        description: Accepted for Twilio compatibility but has no effect on the response.
+        schema:
+          type: boolean
+        explode: false
+      - name: ExcludeForeignAddressRequired
+        in: query
+        required: false
+        description: Accepted for Twilio compatibility but has no effect on the response.
+        schema:
+          type: boolean
+        explode: false
+      - name: ExcludeLocalAddressRequired
+        in: query
+        required: false
+        description: Accepted for Twilio compatibility but has no effect on the response.
+        schema:
+          type: boolean
+        explode: false
+      - name: FaxEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      - name: InLocality
+        in: query
+        required: false
+        description: Limits search to a city/locality. Requires InRegion to also be set.
+        schema:
+          type: string
+        explode: false
+      - name: InRegion
+        in: query
+        required: false
+        description: Limits search to same region as number. Must be a two-letter state/province code.
+        schema:
+          type: string
+        explode: false
+      - name: MmsEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      - name: SmsEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      - name: VoiceEnabled
+        in: query
+        required: false
+        description: Not supported. Accepted for Twilio API compatibility.
+        schema:
+          type: boolean
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailablePhoneNumberListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Available Phone Numbers
+components:
+  parameters:
+    IsoCountryPath:
+      name: IsoCountry
+      in: path
+      required: true
+      description: The ISO country code of the number.
+      schema:
+        type: string
+    AvailablePhoneNumbersAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account to retrieve.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    CountryResource:
+      type: object
+      required:
+      - country_code
+      - country
+      - uri
+      - beta
+      - subresource_uris
+      properties:
+        country_code:
+          type: string
+          description: The ISO country code of the number.
+          examples:
+          - US
+        country:
+          type: string
+          description: The country the number is from.
+          examples:
+          - United States
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US
+        beta:
+          type: boolean
+          description: Always `false`. Included for Twilio API compatibility.
+          examples:
+          - false
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/CountrySubresourceUris'
+          description: URIs for subresources.
+      unevaluatedProperties:
+        not: {}
+      description: Country resource for available phone numbers.
+    CountrySubresourceUris:
+      type: object
+      required:
+      - local
+      - toll_free
+      properties:
+        local:
+          type: string
+          description: The URI for local numbers.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
+        toll_free:
+          type: string
+          description: The URI for toll-free numbers.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/TollFree
+      unevaluatedProperties:
+        not: {}
+      description: Country subresource URIs.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    AvailablePhoneNumberResourcesResponse:
+      type: object
+      required:
+      - uri
+      - countries
+      properties:
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryResource'
+          description: List of available countries.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of available phone number resources (countries).
+    PhoneNumberCapabilities:
+      type: object
+      required:
+      - voice
+      - SMS
+      - MMS
+      properties:
+        voice:
+          type: boolean
+          description: Whether or not voice is enabled on the number.
+          examples:
+          - true
+        SMS:
+          type: boolean
+          description: Whether or not SMS is enabled on the number.
+          examples:
+          - true
+        MMS:
+          type: boolean
+          description: Whether or not MMS is enabled on the number.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Phone number capabilities.
+    AvailablePhoneNumber:
+      type: object
+      required:
+      - friendly_name
+      - phone_number
+      - lata
+      - locality
+      - rate_center
+      - latitude
+      - longitude
+      - region
+      - postal_code
+      - iso_country
+      - capabilities
+      - beta
+      properties:
+        friendly_name:
+          type: string
+          description: A formatted version of the number.
+          examples:
+          - (253) 218-6751
+        phone_number:
+          type: string
+          description: The number in E.164 format.
+          examples:
+          - '+12532186751'
+        lata:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The LATA of the number. Always null.
+          examples:
+          - null
+        locality:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The locality/city of the number. Always null.
+          examples:
+          - null
+        rate_center:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The rate center of the number. Only available for numbers in US and Canada.
+          examples:
+          - AUBURN
+        latitude:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The latitude of the number. Always null.
+          examples:
+          - null
+        longitude:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The longitude of the number. Always null.
+          examples:
+          - null
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The state or province abbreviation of the number. Only available for numbers in US and Canada.
+          examples:
+          - WA
+        postal_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The postal/zip code of the number. Always null.
+          examples:
+          - null
+        iso_country:
+          type: string
+          description: The ISO country code of the number.
+          examples:
+          - US
+        capabilities:
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumberCapabilities'
+          description: Whether or not a number can receive calls and messages.
+        beta:
+          type: boolean
+          description: Always `false`. Included for Twilio API compatibility.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+      description: Available phone number model.
+    AvailablePhoneNumberByCountryResponse:
+      type: object
+      required:
+      - country_code
+      - country
+      - uri
+      - beta
+      - subresource_uris
+      properties:
+        country_code:
+          type: string
+          description: The ISO country code of the number.
+          examples:
+          - US
+        country:
+          type: string
+          description: The country the number is from.
+          examples:
+          - United States
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US
+        beta:
+          type: boolean
+          description: New numbers on SignalWire are marked as `beta`.
+          examples:
+          - false
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/CountrySubresourceUris'
+          description: URIs for subresources.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing available phone number resources for a specific country.
+    AvailablePhoneNumberListResponse:
+      type: object
+      required:
+      - uri
+      - available_phone_numbers
+      properties:
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
+        available_phone_numbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailablePhoneNumber'
+          description: List of available phone numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of available phone numbers.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN

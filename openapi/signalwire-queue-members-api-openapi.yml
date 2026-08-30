@@ -1,0 +1,872 @@
+openapi: 3.2.0
+info:
+  title: Signalwire Queue Members API
+  version: 1.0.0
+  description: 'Operations tagged Queue Members across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Queue Members
+  description: Manage members in call queues.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Queues/{QueueSid}/Members:
+    get:
+      operationId: list_all_queue_members
+      summary: List All Queue Members
+      description: 'Retrieve all members currently waiting in a queue. Results are returned as a paginated list ordered by enqueue time.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - $ref: '#/components/parameters/QueueSidPathForMembers'
+      - name: Page
+        in: query
+        required: false
+        description: The page number to retrieve (zero-indexed).
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of results per page. Default is 50, maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: Token for cursor-based pagination. Required when navigating to pages beyond the first.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMemberListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queue Members
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /Accounts/{AccountSid}/Queues/{QueueSid}/Members/{CallSid}:
+    get:
+      operationId: retrieve_queue_member
+      summary: Retrieve a Queue Member
+      description: 'Retrieve a single queue member by call SID. Use the special value `Front` to retrieve the member at the front of the queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - $ref: '#/components/parameters/QueueSidPathForMembers'
+      - $ref: '#/components/parameters/QueueMemberCallSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMemberResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queue Members
+    post:
+      operationId: update_queue_member
+      summary: Update a Queue Member
+      description: 'Dequeue a member from a queue and redirect them to a new URL. Use the special value `Front` for the CallSid to dequeue the member at the front of the queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - $ref: '#/components/parameters/QueueSidPathForMembers'
+      - $ref: '#/components/parameters/QueueMemberCallSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMemberResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '503':
+          description: The service is temporarily unavailable. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queue Members
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateQueueMemberRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /api/relay/rest/queues/{queue_id}/members:
+    get:
+      operationId: list_queue_members
+      summary: List queue members
+      description: 'Returns a list of members in a queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueueIdPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMemberListResponse_2'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queue Members
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+  /api/relay/rest/queues/{queue_id}/members/next:
+    get:
+      operationId: retrieve_next_queue_member
+      summary: Get next queue member
+      description: 'Retrieves the next member in the queue without dequeuing.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueueIdPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMemberResponse_2'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queue Members
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+  /api/relay/rest/queues/{queue_id}/members/{id}:
+    get:
+      operationId: retrieve_queue_member
+      summary: Get queue member
+      description: 'Retrieves the details of a queue member.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueueIdPath'
+      - $ref: '#/components/parameters/QueueMemberPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMemberResponse_2'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queue Members
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+components:
+  parameters:
+    QueuesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account this Queue is associated with.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueueSidPathForMembers:
+      name: QueueSid
+      in: path
+      required: true
+      description: The unique identifier for the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueueMemberCallSidPath:
+      name: CallSid
+      in: path
+      required: true
+      description: The unique identifier for the call, or the special value 'Front' to reference the member at the front of the queue.
+      schema:
+        type: string
+    QueueIdPath:
+      name: queue_id
+      in: path
+      required: true
+      description: Unique ID of the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueueMemberPathID:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier (ID) of the queue member.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    UpdateQueueMemberRequest:
+      type: object
+      required:
+      - Url
+      properties:
+        Url:
+          type: string
+          format: uri
+          description: The URL to redirect the dequeued member to. This URL should return cXML instructions for handling the call.
+          examples:
+          - https://your-application.com/dequeue-handler
+        Method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use when requesting the URL. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+      description: Request body for dequeuing a queue member.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    QueueMember:
+      type: object
+      required:
+      - call_sid
+      - account_sid
+      - queue_sid
+      - date_enqueued
+      - position
+      - wait_time
+      - member_type
+      - uri
+      properties:
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the call.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        queue_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the queue.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472qu
+        date_enqueued:
+          type: string
+          description: The date and time, in RFC 2822 format, when the member was enqueued.
+          examples:
+          - Wed, 26 Sep 2018 18:00:00 +0000
+        position:
+          type: integer
+          format: int32
+          minimum: 1
+          description: The position of the member in the queue (1-indexed).
+          examples:
+          - 1
+        wait_time:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The wait time, in seconds, since the member was enqueued.
+          examples:
+          - 30
+        member_type:
+          type: string
+          description: The type of the queue member.
+          examples:
+          - laml_call
+        uri:
+          type: string
+          description: The URI of this resource, relative to the API base URL.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members/b3877c40-da60-4998-90ad-b792e98472ca.json
+      unevaluatedProperties:
+        not: {}
+      description: Queue member model representing a call waiting in a queue.
+    QueueMemberListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - queue_members
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page. Null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472me
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page. Null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number (zero-indexed).
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        queue_members:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueMember'
+          description: List of queue members.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of queue members.
+    QueueMemberResponse:
+      type: object
+      required:
+      - call_sid
+      - account_sid
+      - queue_sid
+      - date_enqueued
+      - position
+      - wait_time
+      - member_type
+      - uri
+      properties:
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the call.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        queue_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the queue.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472qu
+        date_enqueued:
+          type: string
+          description: The date and time, in RFC 2822 format, when the member was enqueued.
+          examples:
+          - Wed, 26 Sep 2018 18:00:00 +0000
+        position:
+          type: integer
+          format: int32
+          minimum: 1
+          description: The position of the member in the queue (1-indexed).
+          examples:
+          - 1
+        wait_time:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The wait time, in seconds, since the member was enqueued.
+          examples:
+          - 30
+        member_type:
+          type: string
+          description: The type of the queue member.
+          examples:
+          - laml_call
+        uri:
+          type: string
+          description: The URI of this resource, relative to the API base URL.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members/b3877c40-da60-4998-90ad-b792e98472ca.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single queue member.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    QueueMember_2:
+      type: object
+      required:
+      - call_id
+      - project_id
+      - queue_id
+      - position
+      - uri
+      properties:
+        call_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The call ID of the queue member.
+          examples:
+          - 596e2dea-a269-4765-a0b4-01b82d11c120
+        project_id:
+          type: string
+          description: The ID of the project associated with this queue member.
+          examples:
+          - d421473b-d696-449a-a1a1-4ddd83d2d0e5
+        queue_id:
+          type: string
+          description: The ID of the queue associated with this queue member.
+          examples:
+          - 596e2dea-a269-4765-a0b4-01b82d11c120
+        position:
+          type: integer
+          format: int32
+          description: Queue member position in the queue.
+          examples:
+          - 2
+        uri:
+          type: string
+          description: The URL of this queue member.
+          examples:
+          - /api/relay/rest/queues/596e2dea-a269-4765-a0b4-01b82d11c120/members/596e2dea-a269-4765-a0b4-01b82d11c120
+        wait_time:
+          type: integer
+          format: int32
+          description: Wait time in seconds since the member was enqueued. If not yet enqueued, it will be null.
+          examples:
+          - 172975
+        date_enqueued:
+          type: string
+          format: date-time
+          description: When the queue member was last enqueued.
+      unevaluatedProperties:
+        not: {}
+      description: Queue member model.
+    QueueMemberResponse_2:
+      type: object
+      required:
+      - call_id
+      - project_id
+      - queue_id
+      - position
+      - uri
+      properties:
+        call_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The call ID of the queue member.
+          examples:
+          - 596e2dea-a269-4765-a0b4-01b82d11c120
+        project_id:
+          type: string
+          description: The ID of the project associated with this queue member.
+          examples:
+          - d421473b-d696-449a-a1a1-4ddd83d2d0e5
+        queue_id:
+          type: string
+          description: The ID of the queue associated with this queue member.
+          examples:
+          - 596e2dea-a269-4765-a0b4-01b82d11c120
+        position:
+          type: integer
+          format: int32
+          description: Queue member position in the queue.
+          examples:
+          - 2
+        uri:
+          type: string
+          description: The URL of this queue member.
+          examples:
+          - /api/relay/rest/queues/596e2dea-a269-4765-a0b4-01b82d11c120/members/596e2dea-a269-4765-a0b4-01b82d11c120
+        wait_time:
+          type: integer
+          format: int32
+          description: Wait time in seconds since the member was enqueued. If not yet enqueued, it will be null.
+          examples:
+          - 172975
+        date_enqueued:
+          type: string
+          format: date-time
+          description: When the queue member was last enqueued.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single queue member.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    QueueMemberListResponse_2:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueMember_2'
+          description: List of queue members.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of queue members.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'
+x-refined-from:
+- signalwire-compatibility-openapi.yml
+- signalwire-rest-openapi.yml

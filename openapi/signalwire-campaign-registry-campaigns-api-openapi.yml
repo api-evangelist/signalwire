@@ -1,0 +1,939 @@
+openapi: 3.2.0
+info:
+  title: 'SignalWire REST Campaign Registry: Campaigns API'
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Create and manage 10DLC campaigns for A2P messaging compliance.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: 'Campaign Registry: Campaigns'
+  description: Create and manage 10DLC campaigns for A2P messaging compliance.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SignalWire REST APIs
+paths:
+  /api/relay/rest/registry/beta/brands/{id}/campaigns:
+    get:
+      operationId: list_campaigns
+      summary: List campaigns
+      description: 'Returns a list of campaigns for a brand.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/BrandPathID'
+      - name: filter_name
+        in: query
+        required: false
+        description: The name given to the campaign. Will return all Campaigns containing this value as a substring.
+        schema:
+          type: string
+        explode: false
+      - name: filter_state
+        in: query
+        required: false
+        description: The state of the campaign in the registration process, such as pending or complete. Will return all campaigns with this value.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Campaigns'
+    post:
+      operationId: create_campaign
+      summary: Create campaign
+      description: 'Creates a new campaign for 10DLC registration.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/BrandPathID'
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Campaigns'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/CreateManagedCampaignRequest'
+              - $ref: '#/components/schemas/CreatePartnerCampaignRequest'
+  /api/relay/rest/registry/beta/campaigns/{id}:
+    get:
+      operationId: retrieve_campaign
+      summary: Get campaign
+      description: 'Retrieves the details of a campaign.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CampaignPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Campaigns'
+    put:
+      operationId: update_campaign
+      summary: Update campaign
+      description: 'Updates a campaign.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CampaignPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Campaigns'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignRequest'
+components:
+  schemas:
+    UpdateCampaignRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a campaign.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    CampaignResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the campaign.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+        state:
+          type: string
+          description: The current state of the campaign.
+          examples:
+          - pending
+        sms_use_case:
+          type: string
+          description: An SMS Use Case category for the campaign (2FA, ACCOUNT_NOTIFICATION, AGENTS_FRANCHISES, CARRIER_EXEMPT, CHARITY, CUSTOMER_CARE, DELIVERY_NOTIFICATION, EMERGENCY, FRAUD_ALERT, HIGHER_EDUCATION, K12_EDUCATION, LOW_VOLUME_MIXED, MARKETING, MIXED, POLITICAL, POLITICAL_SECTION_527, POLLING_VOTING, PROXY, PUBLIC_SERVICE_ANNOUNCEMENT, SECURITY_ALERT, SOCIAL, SWEEPSTAKE, TRIAL, UCAAS_HIGH_VOLUME, UCAAS_LOW_VOLUME).
+          examples:
+          - MARKETING
+        sub_use_cases:
+          type: array
+          items:
+            type: string
+          description: A sub use case category for MIXED or LOW_VOLUME_MIXED campaigns (CUSTOMER_CARE, HIGHER_EDUCATION, POLLING_VOTING, PUBLIC_SERVICE_ANNOUNCEMENT, MARKETING, SECURITY_ALERT, 2FA, ACCOUNT_NOTIFICATION, DELIVERY_NOTIFICATION, FRAUD_ALERT).
+        campaign_verify_token:
+          type: string
+          description: Campaign Verify token. Required if sms use case is POLITICAL_SECTION_527.
+        description:
+          type: string
+          description: A description for the campaign. Please use at least 40 characters.
+        sample1:
+          type: string
+          description: Sample message template/content. At least two samples are required and up to five can be provided. Please use at least 20 characters.
+          examples:
+          - this is a sample message your customer might receive
+        sample2:
+          type: string
+          description: Sample 2.
+          examples:
+          - this is a sample message your customer might receive
+        sample3:
+          type: string
+          description: Sample 3.
+        sample4:
+          type: string
+          description: Sample 4.
+        sample5:
+          type: string
+          description: Sample 5.
+        dynamic_templates:
+          type: string
+          description: If your messaging content will be modified in any way beyond what you shared in your templates, please describe the nature of how the content will change.
+        message_flow:
+          type: string
+          description: Please describe the call to action/message flow your intended recipients will experience.
+          examples:
+          - Users will opt in to receive messages from their doctor through a written form and we will send them an opt in message. Appointment reminders will then be sent ahead of their appointments.
+        opt_in_message:
+          type: string
+          description: Please share the message subscribers receive when they opt in.
+          examples:
+          - Thanks for subscribing. Reply STOP to cancel at any time.
+        opt_out_message:
+          type: string
+          description: Please share the message subscribers receive when they opt out.
+          examples:
+          - You have successfully been opted out. Reply START to opt back in at any time.
+        help_message:
+          type: string
+          description: Please share the message subscribers receive when they request help.
+          examples:
+          - You have successfully been opted out. Reply SUBSCRIBE to opt back in at any time.
+        opt_in_keywords:
+          type: string
+          description: Opt in keywords that subscribers can use.
+          examples:
+          - Start,Subscribe,Opt In
+          default: START
+        opt_out_keywords:
+          type: string
+          description: Opt out keywords that subscribers can use.
+          examples:
+          - Stop,Opt Out,Unsubscribe
+          default: STOP
+        help_keywords:
+          type: string
+          description: Help keywords that subscribers can use.
+          examples:
+          - Help,Support,Request Call
+          default: HELP
+        number_pooling_required:
+          type: boolean
+          description: Will 50 or more numbers be used with this single campaign? If so, please enter true.
+          examples:
+          - true
+        number_pooling_per_campaign:
+          type: string
+          description: If you will be using number pooling, please provide an explanation as to why it is needed.
+          examples:
+          - We have customer reps in every state and they each need their own number with local area code.
+        direct_lending:
+          type: boolean
+          description: Will this campaign include content related to direct lending or other loan agreements?
+          examples:
+          - true
+        embedded_link:
+          type: boolean
+          description: Will you be using an embedded link of any kind? Note that public URL shorteners (bitly, tinyurl) will not be accepted.
+          examples:
+          - false
+        embedded_phone:
+          type: boolean
+          description: Are you using an embedded phone number (except the required HELP information contact phone number)?
+          examples:
+          - false
+        age_gated_content:
+          type: boolean
+          description: Will this campaign include any age gated content as defined by carrier and CTA guidelines?
+          examples:
+          - true
+        lead_generation:
+          type: boolean
+          description: Is there any intent of this campaign to generate leads?
+          examples:
+          - true
+        csp_campaign_reference:
+          type: string
+          description: If you are your own Campaign Service Provider, what is the approved Campaign ID? (Mandatory for CSPs, otherwise please omit)
+          examples:
+          - '1231231'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your campaign''s state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the campaign was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the campaign was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single campaign.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    CampaignListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+          description: List of campaigns.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of campaigns.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    CreatePartnerCampaignRequest:
+      type: object
+      required:
+      - name
+      - brand_id
+      - csp_campaign_reference
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+        brand_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the brand to associate with this campaign. Must be a CSP/partner brand.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        csp_campaign_reference:
+          type: string
+          description: The approved Campaign ID from TCR. Required for CSP/self-registered campaigns.
+          examples:
+          - C123456
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your campaign's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a partner/CSP campaign. Used when the brand is a CSP (self-registered) brand.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CreateManagedCampaignRequest:
+      type: object
+      required:
+      - name
+      - brand_id
+      - sms_use_case
+      - description
+      - sample1
+      - sample2
+      - message_flow
+      - opt_out_message
+      - help_message
+      - number_pooling_required
+      - direct_lending
+      - embedded_link
+      - embedded_phone
+      - age_gated_content
+      - lead_generation
+      - terms_and_conditions
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+        brand_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the brand to associate with this campaign.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        sms_use_case:
+          type: string
+          description: An SMS Use Case category for the campaign.
+          examples:
+          - MARKETING
+        sub_use_cases:
+          type: array
+          items:
+            type: string
+          description: A sub use case category. Required for MIXED (2-5 sub use cases) or LOW_VOLUME_MIXED (1-5 sub use cases) campaigns. Must not be provided for other use cases.
+        campaign_verify_token:
+          type: string
+          description: Campaign Verify token. Required if sms_use_case is POLITICAL_SECTION_527.
+        description:
+          type: string
+          minLength: 40
+          description: A description for the campaign.
+          examples:
+          - This campaign sends appointment reminders to patients who have opted in to receive notifications from their healthcare provider.
+        sample1:
+          type: string
+          minLength: 20
+          description: Sample message template/content.
+          examples:
+          - Hi John, this is a reminder that your appointment is tomorrow at 2pm. Reply STOP to unsubscribe.
+        sample2:
+          type: string
+          minLength: 20
+          description: Second sample message template/content.
+          examples:
+          - Your prescription is ready for pickup at Main St Pharmacy. Reply STOP to unsubscribe.
+        sample3:
+          type: string
+          minLength: 20
+          description: Third sample message template/content.
+        sample4:
+          type: string
+          minLength: 20
+          description: Fourth sample message template/content.
+        sample5:
+          type: string
+          minLength: 20
+          description: Fifth sample message template/content.
+        dynamic_messages:
+          type: string
+          description: If your messaging content will be modified in any way beyond what you shared in your templates, please describe the nature of how the content will change.
+        message_flow:
+          type: string
+          minLength: 40
+          description: Please describe the call to action/message flow your intended recipients will experience.
+          examples:
+          - Users will opt in to receive messages from their doctor through a written form and we will send them an opt in message. Appointment reminders will then be sent ahead of their appointments.
+        opt_in_message:
+          type: string
+          minLength: 20
+          description: Please share the message subscribers receive when they opt in.
+          examples:
+          - Thanks for subscribing to appointment reminders. Reply STOP to cancel at any time.
+        opt_out_message:
+          type: string
+          minLength: 20
+          description: Please share the message subscribers receive when they opt out.
+          examples:
+          - You have successfully been opted out. Reply START to opt back in at any time.
+        help_message:
+          type: string
+          minLength: 20
+          description: Please share the message subscribers receive when they request help.
+          examples:
+          - For help, contact support@example.com or call 1-800-555-0123. Reply STOP to unsubscribe.
+        opt_in_keywords:
+          type: string
+          description: Opt in keywords that subscribers can use. Must be comma-separated values with no spaces between keywords.
+          examples:
+          - START,SUBSCRIBE,OPTIN
+        opt_out_keywords:
+          type: string
+          description: Opt out keywords that subscribers can use. Must be comma-separated values with no spaces between keywords.
+          examples:
+          - STOP,UNSUBSCRIBE,OPTOUT
+        help_keywords:
+          type: string
+          description: Help keywords that subscribers can use. Must be comma-separated values with no spaces between keywords.
+          examples:
+          - HELP,INFO,SUPPORT
+        number_pooling_required:
+          type: boolean
+          description: Will 50 or more numbers be used with this single campaign?
+          examples:
+          - false
+        number_pooling_per_campaign:
+          type: string
+          description: If you will be using number pooling, please provide an explanation as to why it is needed. Required if number_pooling_required is true.
+          examples:
+          - We have customer reps in every state and they each need their own number with local area code.
+        direct_lending:
+          type: boolean
+          description: Will this campaign include content related to direct lending or other loan agreements?
+          examples:
+          - false
+        embedded_link:
+          type: boolean
+          description: Will you be using an embedded link of any kind? Note that public URL shorteners (bitly, tinyurl) will not be accepted.
+          examples:
+          - false
+        embedded_phone:
+          type: boolean
+          description: Are you using an embedded phone number (except the required HELP information contact phone number)?
+          examples:
+          - false
+        age_gated_content:
+          type: boolean
+          description: Will this campaign include any age gated content as defined by carrier and CTA guidelines?
+          examples:
+          - false
+        lead_generation:
+          type: boolean
+          description: Is there any intent of this campaign to generate leads?
+          examples:
+          - false
+        terms_and_conditions:
+          type: boolean
+          description: I agree to the terms and conditions which do not allow me to use this campaign for affiliate marketing.
+          examples:
+          - true
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your campaign's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a managed campaign. Used when the brand is a managed (non-CSP) brand.
+    Campaign:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the campaign.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+        state:
+          type: string
+          description: The current state of the campaign.
+          examples:
+          - pending
+        sms_use_case:
+          type: string
+          description: An SMS Use Case category for the campaign (2FA, ACCOUNT_NOTIFICATION, AGENTS_FRANCHISES, CARRIER_EXEMPT, CHARITY, CUSTOMER_CARE, DELIVERY_NOTIFICATION, EMERGENCY, FRAUD_ALERT, HIGHER_EDUCATION, K12_EDUCATION, LOW_VOLUME_MIXED, MARKETING, MIXED, POLITICAL, POLITICAL_SECTION_527, POLLING_VOTING, PROXY, PUBLIC_SERVICE_ANNOUNCEMENT, SECURITY_ALERT, SOCIAL, SWEEPSTAKE, TRIAL, UCAAS_HIGH_VOLUME, UCAAS_LOW_VOLUME).
+          examples:
+          - MARKETING
+        sub_use_cases:
+          type: array
+          items:
+            type: string
+          description: A sub use case category for MIXED or LOW_VOLUME_MIXED campaigns (CUSTOMER_CARE, HIGHER_EDUCATION, POLLING_VOTING, PUBLIC_SERVICE_ANNOUNCEMENT, MARKETING, SECURITY_ALERT, 2FA, ACCOUNT_NOTIFICATION, DELIVERY_NOTIFICATION, FRAUD_ALERT).
+        campaign_verify_token:
+          type: string
+          description: Campaign Verify token. Required if sms use case is POLITICAL_SECTION_527.
+        description:
+          type: string
+          description: A description for the campaign. Please use at least 40 characters.
+        sample1:
+          type: string
+          description: Sample message template/content. At least two samples are required and up to five can be provided. Please use at least 20 characters.
+          examples:
+          - this is a sample message your customer might receive
+        sample2:
+          type: string
+          description: Sample 2.
+          examples:
+          - this is a sample message your customer might receive
+        sample3:
+          type: string
+          description: Sample 3.
+        sample4:
+          type: string
+          description: Sample 4.
+        sample5:
+          type: string
+          description: Sample 5.
+        dynamic_templates:
+          type: string
+          description: If your messaging content will be modified in any way beyond what you shared in your templates, please describe the nature of how the content will change.
+        message_flow:
+          type: string
+          description: Please describe the call to action/message flow your intended recipients will experience.
+          examples:
+          - Users will opt in to receive messages from their doctor through a written form and we will send them an opt in message. Appointment reminders will then be sent ahead of their appointments.
+        opt_in_message:
+          type: string
+          description: Please share the message subscribers receive when they opt in.
+          examples:
+          - Thanks for subscribing. Reply STOP to cancel at any time.
+        opt_out_message:
+          type: string
+          description: Please share the message subscribers receive when they opt out.
+          examples:
+          - You have successfully been opted out. Reply START to opt back in at any time.
+        help_message:
+          type: string
+          description: Please share the message subscribers receive when they request help.
+          examples:
+          - You have successfully been opted out. Reply SUBSCRIBE to opt back in at any time.
+        opt_in_keywords:
+          type: string
+          description: Opt in keywords that subscribers can use.
+          examples:
+          - Start,Subscribe,Opt In
+          default: START
+        opt_out_keywords:
+          type: string
+          description: Opt out keywords that subscribers can use.
+          examples:
+          - Stop,Opt Out,Unsubscribe
+          default: STOP
+        help_keywords:
+          type: string
+          description: Help keywords that subscribers can use.
+          examples:
+          - Help,Support,Request Call
+          default: HELP
+        number_pooling_required:
+          type: boolean
+          description: Will 50 or more numbers be used with this single campaign? If so, please enter true.
+          examples:
+          - true
+        number_pooling_per_campaign:
+          type: string
+          description: If you will be using number pooling, please provide an explanation as to why it is needed.
+          examples:
+          - We have customer reps in every state and they each need their own number with local area code.
+        direct_lending:
+          type: boolean
+          description: Will this campaign include content related to direct lending or other loan agreements?
+          examples:
+          - true
+        embedded_link:
+          type: boolean
+          description: Will you be using an embedded link of any kind? Note that public URL shorteners (bitly, tinyurl) will not be accepted.
+          examples:
+          - false
+        embedded_phone:
+          type: boolean
+          description: Are you using an embedded phone number (except the required HELP information contact phone number)?
+          examples:
+          - false
+        age_gated_content:
+          type: boolean
+          description: Will this campaign include any age gated content as defined by carrier and CTA guidelines?
+          examples:
+          - true
+        lead_generation:
+          type: boolean
+          description: Is there any intent of this campaign to generate leads?
+          examples:
+          - true
+        csp_campaign_reference:
+          type: string
+          description: If you are your own Campaign Service Provider, what is the approved Campaign ID? (Mandatory for CSPs, otherwise please omit)
+          examples:
+          - '1231231'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your campaign''s state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the campaign was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the campaign was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Campaign model for 10DLC registration.
+  parameters:
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    BrandPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the brand.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

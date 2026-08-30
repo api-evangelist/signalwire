@@ -1,0 +1,621 @@
+openapi: 3.2.0
+info:
+  title: 'SignalWire REST Campaign Registry: Phone Number Assignments API'
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Assign and manage phone numbers within 10DLC campaigns.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: 'Campaign Registry: Phone Number Assignments'
+  description: Assign and manage phone numbers within 10DLC campaigns.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SignalWire REST APIs
+paths:
+  /api/relay/rest/registry/beta/campaigns/{id}/numbers:
+    get:
+      operationId: list_number_assignments
+      summary: List phone number assignments
+      description: 'Returns a list of phone numbers assigned to a campaign.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CampaignPathID'
+      - name: filter_state
+        in: query
+        required: false
+        description: The state of the assignments in the registration process, such as pending or complete. Will return all assignments with this value.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignedNumberListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Phone Number Assignments'
+  /api/relay/rest/registry/beta/campaigns/{id}/orders:
+    get:
+      operationId: list_orders
+      summary: List phone number assignment orders
+      description: 'Returns a list of orders for a campaign.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CampaignPathID'
+      - name: filter_state
+        in: query
+        required: false
+        description: The state of the orders in the registration process, such as pending or processed. Will return all orders with this value.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Phone Number Assignments'
+    post:
+      operationId: create_order
+      summary: Create phone number assignment order
+      description: 'Creates a new order for a campaign.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CampaignPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Phone Number Assignments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+  /api/relay/rest/registry/beta/numbers/{id}:
+    delete:
+      operationId: delete_number_assignment
+      summary: Delete phone number assignment
+      description: 'Removes a phone number from a campaign.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/AssignedNumberPathID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Phone Number Assignments'
+  /api/relay/rest/registry/beta/orders/{id}:
+    get:
+      operationId: retrieve_order
+      summary: Get phone number assignment order
+      description: 'Retrieves the details of an order.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/OrderPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - 'Campaign Registry: Phone Number Assignments'
+components:
+  parameters:
+    AssignedNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the assigned number.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    OrderPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the order.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    AssignedNumberListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignedNumber'
+          description: List of assigned numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of assigned numbers.
+    OrderListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+          description: List of orders.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of orders.
+    CreateOrderRequest:
+      type: object
+      properties:
+        phone_numbers:
+          type: array
+          items:
+            type: string
+          description: A list of phone numbers in E164 format.
+          examples:
+          - - '+15558675309'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an order.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    AssignedNumber:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the assignment.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the assignment.
+          examples:
+          - pending
+        campaign_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The campaign ID associated with the number.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        phone_number:
+          allOf:
+          - $ref: '#/components/schemas/AssignedPhoneNumber'
+          description: The phone number details.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the assignment was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the assignment was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Assigned number model for campaign registration.
+    Order:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the order.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the order.
+          examples:
+          - pending
+        processed_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was processed.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was last updated.
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Order model for campaign registry operations.
+    AssignedPhoneNumber:
+      type: object
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the phone number.
+        name:
+          type: string
+          description: The name of the phone number.
+          examples:
+          - Jenny
+        number:
+          type: string
+          description: The phone number in E.164 format.
+          examples:
+          - '+15558675309'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Phone number details in an assignment.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    OrderResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the order.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the order.
+          examples:
+          - pending
+        processed_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was processed.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was last updated.
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single order.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

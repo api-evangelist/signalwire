@@ -1,0 +1,1192 @@
+openapi: 3.2.0
+info:
+  title: Signalwire Queues API
+  version: 1.0.0
+  description: 'Operations tagged Queues across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Queues
+  description: Manage call queues.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Queues:
+    get:
+      operationId: list_queues
+      summary: List All Queues
+      description: 'Retrieve all queues associated with your account. Results are returned as a paginated list.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - name: Page
+        in: query
+        required: false
+        description: The page number to retrieve (zero-indexed).
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of results per page. Default is 50, maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: Token for cursor-based pagination. Required when navigating to pages beyond the first.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queues
+    post:
+      operationId: create_queue
+      summary: Create a Queue
+      description: 'Create a call queue. Queue names must be unique among active queues within an account and can only contain alphanumeric characters and underscores. Deleted queue names can be reused.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      responses:
+        '201':
+          description: Response returned when a queue is successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Queue'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queues
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateQueueRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /Accounts/{AccountSid}/Queues/{Sid}:
+    get:
+      operationId: retrieve_queue
+      summary: Retrieve a Queue
+      description: 'Retrieve a single queue by its unique identifier.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - $ref: '#/components/parameters/QueueSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queues
+    post:
+      operationId: update_queue
+      summary: Update a Queue
+      description: 'Modify the properties of a call queue. Queue names must be unique among active queues within an account. Deleted queue names can be reused.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - $ref: '#/components/parameters/QueueSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queues
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateQueueRequest'
+    delete:
+      operationId: delete_queue
+      summary: Delete a Queue
+      description: 'Delete a call queue. Only empty queues can be deleted - attempting to delete a queue with members will return a 422 error.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuesAccountSidPath'
+      - $ref: '#/components/parameters/QueueSidPath'
+      responses:
+        '204':
+          description: 204 No Content response.
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Queues
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /api/relay/rest/queues:
+    get:
+      operationId: list_queues
+      summary: List queues
+      description: 'Returns a list of your queues.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueListResponse_2'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queues
+    post:
+      operationId: create_queue
+      summary: Create queue
+      description: 'Creates a new queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse_2'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queues
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQueueRequest_2'
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+  /api/relay/rest/queues/{id}:
+    get:
+      operationId: get_queue
+      summary: Get queue
+      description: 'Retrieves the details of a queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuePathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse_2'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queues
+    put:
+      operationId: update_queue
+      summary: Update queue
+      description: 'Updates a queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuePathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse_2'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queues
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQueueRequest_2'
+    delete:
+      operationId: delete_queue
+      summary: Delete queue
+      description: 'Deletes a queue.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/QueuePathID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Queues
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+components:
+  schemas:
+    QueueListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - queues
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page. Null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472qu
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page. Null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number (zero-indexed).
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        queues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Queue'
+          description: List of queues.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of queues.
+    QueueResponse:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - friendly_name
+      - max_size
+      - current_size
+      - average_wait_time
+      - date_created
+      - date_updated
+      - api_version
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the queue.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472qu
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account this Queue is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        friendly_name:
+          type: string
+          description: A description that distinguishes a queue.
+          examples:
+          - Queue1
+        max_size:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The maximum number of calls that are allowed to wait in a queue. Null if no limit is set.
+          examples:
+          - 100
+        current_size:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The number of calls currently waiting in the queue.
+          examples:
+          - 0
+        average_wait_time:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The average wait time, in seconds, of callers in a queue.
+          examples:
+          - 0
+        date_created:
+          type: string
+          description: The date and time, in RFC 2822 format, the Queue was created.
+          examples:
+          - Wed, 26 Sep 2018 18:00:00 +0000
+        date_updated:
+          type: string
+          description: The date and time, in RFC 2822 format, the Queue was updated.
+          examples:
+          - Thu, 27 Sep 2018 19:00:00 +0000
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        uri:
+          type: string
+          description: The URI of this resource, relative to the API base URL.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single queue.
+    CreateQueueRequest:
+      type: object
+      required:
+      - FriendlyName
+      properties:
+        FriendlyName:
+          type: string
+          minLength: 1
+          pattern: ^\w+$
+          description: A unique name for the queue. Must contain only alphanumeric characters and underscores.
+          examples:
+          - Queue1
+        MaxSize:
+          type: integer
+          format: int32
+          description: The maximum number of calls that are allowed to wait in a queue. Must be a positive integer.
+          exclusiveMinimum: 0
+          examples:
+          - 100
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a queue.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    UpdateQueueRequest:
+      type: object
+      required:
+      - FriendlyName
+      properties:
+        FriendlyName:
+          type: string
+          minLength: 1
+          pattern: ^\w+$
+          description: A unique name for the queue. Must contain only alphanumeric characters and underscores.
+          examples:
+          - Queue1
+        MaxSize:
+          type: integer
+          format: int32
+          description: The maximum number of calls that are allowed to wait in a queue. Must be a positive integer.
+          exclusiveMinimum: 0
+          examples:
+          - 100
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a queue.
+    Queue:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - friendly_name
+      - max_size
+      - current_size
+      - average_wait_time
+      - date_created
+      - date_updated
+      - api_version
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the queue.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472qu
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account this Queue is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        friendly_name:
+          type: string
+          description: A description that distinguishes a queue.
+          examples:
+          - Queue1
+        max_size:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The maximum number of calls that are allowed to wait in a queue. Null if no limit is set.
+          examples:
+          - 100
+        current_size:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The number of calls currently waiting in the queue.
+          examples:
+          - 0
+        average_wait_time:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The average wait time, in seconds, of callers in a queue.
+          examples:
+          - 0
+        date_created:
+          type: string
+          description: The date and time, in RFC 2822 format, the Queue was created.
+          examples:
+          - Wed, 26 Sep 2018 18:00:00 +0000
+        date_updated:
+          type: string
+          description: The date and time, in RFC 2822 format, the Queue was updated.
+          examples:
+          - Thu, 27 Sep 2018 19:00:00 +0000
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        uri:
+          type: string
+          description: The URI of this resource, relative to the API base URL.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu.json
+      unevaluatedProperties:
+        not: {}
+      description: Queue model.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    QueueListResponse_2:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Queue_2'
+          description: List of queues.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of queues.
+    QueueResponse_2:
+      type: object
+      required:
+      - id
+      - project_id
+      - friendly_name
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the queue.
+          examples:
+          - aae131db-214c-46f5-88b6-92004f8467cf
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The project ID associated with this queue.
+          examples:
+          - c6c4679b-716a-456a-9e41-a03821005005
+        friendly_name:
+          type: string
+          description: The friendly name of the queue.
+          examples:
+          - test
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 5
+        current_size:
+          type: integer
+          format: int32
+          description: The current number of callers in the queue.
+          examples:
+          - 0
+        average_wait_time:
+          type: integer
+          format: int32
+          description: The average wait time in seconds.
+          examples:
+          - 0
+        uri:
+          type: string
+          description: The URL of this queue.
+          examples:
+          - /api/relay/rest/queues/aae131db-214c-46f5-88b6-92004f8467cf
+        date_created:
+          type: string
+          format: date-time
+          description: Timestamp when the queue was created.
+        date_updated:
+          type: string
+          format: date-time
+          description: Timestamp when the queue was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single queue.
+    CreateQueueRequest_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the queue.
+          examples:
+          - Name 2
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 600
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a queue.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    UpdateQueueRequest_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the queue.
+          examples:
+          - Name 2
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 600
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a queue.
+    Queue_2:
+      type: object
+      required:
+      - id
+      - project_id
+      - friendly_name
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the queue.
+          examples:
+          - aae131db-214c-46f5-88b6-92004f8467cf
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The project ID associated with this queue.
+          examples:
+          - c6c4679b-716a-456a-9e41-a03821005005
+        friendly_name:
+          type: string
+          description: The friendly name of the queue.
+          examples:
+          - test
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 5
+        current_size:
+          type: integer
+          format: int32
+          description: The current number of callers in the queue.
+          examples:
+          - 0
+        average_wait_time:
+          type: integer
+          format: int32
+          description: The average wait time in seconds.
+          examples:
+          - 0
+        uri:
+          type: string
+          description: The URL of this queue.
+          examples:
+          - /api/relay/rest/queues/aae131db-214c-46f5-88b6-92004f8467cf
+        date_created:
+          type: string
+          format: date-time
+          description: Timestamp when the queue was created.
+        date_updated:
+          type: string
+          format: date-time
+          description: Timestamp when the queue was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Queue model.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+  parameters:
+    QueueSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueuesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account this Queue is associated with.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueuePathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'
+x-refined-from:
+- signalwire-compatibility-openapi.yml
+- signalwire-rest-openapi.yml

@@ -1,0 +1,2292 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Resources API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Endpoints related to creating & managing Resources
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Resources
+  description: Endpoints related to creating & managing Resources
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on Resource, Fabric API endpoints
+paths:
+  /api/fabric/resources:
+    get:
+      operationId: list_resources
+      summary: List Resources
+      description: 'A list of Fabric Resources
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceListResponse'
+              examples:
+                Resource list:
+                  summary: Resource list
+                  description: A page containing one compact AI Agent resource.
+                  value:
+                    data:
+                    - id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                      display_name: Support Assistant
+                      created_at: '2024-05-06T12:20:00Z'
+                      updated_at: '2024-05-06T12:25:00Z'
+                      type: ai_agent
+                      ai_agent:
+                        prompt:
+                          text: You are a helpful customer support assistant.
+                        agent_id: a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+                        name: Support Assistant
+                    links:
+                      self: https://example.signalwire.com/api/fabric/resources?page_number=0&page_size=50
+                      first: https://example.signalwire.com/api/fabric/resources?page_number=0&page_size=50
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Resources
+  /api/fabric/resources/{id}:
+    get:
+      operationId: get_resource
+      summary: Get Resource
+      description: 'Returns a Resource by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ResourcePathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+              examples:
+                Messaging script:
+                  summary: Messaging script
+                  description: A compact Messaging SWML Script resource.
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Reply Bot
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    type: swml_script
+                    swml_script:
+                      id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                      display_name: Reply Bot
+                      script_type: messaging
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - reply: Thanks for your message!
+                Calling script:
+                  summary: Calling script
+                  description: A compact Calling SWML Script resource.
+                  value:
+                    id: 993ed018-9e79-4e50-b97b-984bd5534095
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Welcome Script
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    type: swml_script
+                    swml_script:
+                      id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      display_name: Welcome Script
+                      script_type: calling
+                      request_url: https://example.com/swml_script
+                      contents:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - play:
+                              url: https://cdn.signalwire.com/swml/audio.mp3
+                Call Flow:
+                  summary: Call Flow
+                  description: A Call Flow with compact SWML content.
+                  value:
+                    id: 993ed018-9e79-4e50-b97b-984bd5534095
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Welcome Call Flow
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    type: call_flow
+                    call_flow:
+                      id: 993ed018-9e79-4e50-b97b-984bd5534095
+                      title: Welcome Call Flow
+                      flow_data: {}
+                      relayml:
+                        version: 1.0.0
+                        sections:
+                          main:
+                          - play:
+                              url: https://cdn.signalwire.com/swml/audio.mp3
+                      document_version: 1
+                AI Agent:
+                  summary: AI Agent
+                  description: An AI Agent Fabric resource.
+                  value:
+                    id: 993ed018-9e79-4e50-b97b-984bd5534095
+                    project_id: 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+                    display_name: Support Assistant
+                    created_at: '2024-05-06T12:20:00Z'
+                    updated_at: '2024-05-06T12:25:00Z'
+                    type: ai_agent
+                    ai_agent:
+                      prompt:
+                        text: You are a helpful customer support assistant.
+                      agent_id: a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+                      name: Support Assistant
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Resources
+    delete:
+      operationId: delete_resource
+      summary: Delete Resource
+      description: 'Deletes a Resource by ID
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ResourcePathID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Resources
+components:
+  parameters:
+    ResourcePathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a Resource.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    ResourceResponseSipGateway:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - sip_gateway
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - sip_gateway
+          description: The type of Resource
+          examples:
+          - sip_gateway
+        sip_gateway:
+          allOf:
+          - $ref: '#/components/schemas/SipGateway'
+          description: An object containing the response data of the SIP Gateway
+      unevaluatedProperties:
+        not: {}
+      title: SIP Gateway
+    ResourceResponseConferenceRoom:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - conference_room
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - swml_script
+          description: The type of Resource
+          examples:
+          - swml_script
+        conference_room:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceRoom'
+          description: An object containing the response data of the Conference Room
+      unevaluatedProperties:
+        not: {}
+      title: Conference Room
+    ResourceResponseCXMLWebhook:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - cxml_webhook
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - cxml_webhook
+          description: The type of Resource
+          examples:
+          - cxml_webhook
+        cxml_webhook:
+          allOf:
+          - $ref: '#/components/schemas/CXMLWebhook'
+          description: An object containing the response data of the cXML Webhook
+      unevaluatedProperties:
+        not: {}
+      title: cXML Webhook
+    ResourceResponseCXMLApplication:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - cxml_application
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - cxml_application
+          description: The type of Resource
+          examples:
+          - cxml_application
+        cxml_application:
+          allOf:
+          - $ref: '#/components/schemas/CxmlApplication'
+          description: An object containing the response data of the cXML Application
+      unevaluatedProperties:
+        not: {}
+      title: cXML Application
+    Encryption:
+      type: string
+      enum:
+      - required
+      - optional
+      - default
+    CXMLWebhook:
+      type: object
+      required:
+      - id
+      - name
+      - used_for
+      - primary_request_url
+      - primary_request_method
+      - fallback_request_url
+      - fallback_request_method
+      - status_callback_url
+      - status_callback_method
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the CXML Webhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        name:
+          type: string
+          description: Name of the CXML Webhook.
+          examples:
+          - My CXML Webhook
+        used_for:
+          allOf:
+          - $ref: '#/components/schemas/UsedForType'
+          description: Used for of the CXML Webhook.
+          examples:
+          - calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: Primary request url of the CXML Webhook.
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the CXML Webhook.
+          examples:
+          - GET
+        fallback_request_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Fallback request url of the CXML Webhook.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the CXML Webhook.
+          examples:
+          - GET
+        status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Status callback url of the CXML Webhook.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the CXML Webhook.
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    SipGateway:
+      type: object
+      required:
+      - id
+      - uri
+      - name
+      - ciphers
+      - codecs
+      - encryption
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the SIP Gateway.
+          examples:
+          - cce59cad-104d-4c28-ada4-98cfd102ae09
+        uri:
+          type: string
+          description: The URI for the SIP Gateway.
+          examples:
+          - user3@domain.com
+        name:
+          type: string
+          description: Display name of the SIP Gateway.
+          examples:
+          - My SIP Gateway
+        ciphers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ciphers'
+          description: List of supported SIP ciphers.
+          examples:
+          - - AEAD_AES_256_GCM_8
+        codecs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Codecs'
+          description: List of supported codecs.
+          examples:
+          - - OPUS
+        encryption:
+          allOf:
+          - $ref: '#/components/schemas/Encryption'
+          description: Specifies the encryption requirement.
+          examples:
+          - required
+      unevaluatedProperties:
+        not: {}
+    ResourceResponseSipEndpoint:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - sip_endpoint
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - sip_endpoint
+          description: The type of Resource
+          examples:
+          - sip_endpoint
+        sip_endpoint:
+          allOf:
+          - $ref: '#/components/schemas/FabricSipEndpoint'
+          description: An object containing the response data of the SIP Endpoint
+      unevaluatedProperties:
+        not: {}
+      title: SIP Endpoint
+    Codecs:
+      type: string
+      enum:
+      - PCMU
+      - PCMA
+      - G722
+      - G729
+      - OPUS
+      - OPUS@48000H@20I
+      - OPUS@24000H@20I
+      - OPUS@16000H@20I
+      - OPUS@8000H@20I
+      - VP8
+      - H264
+    ResourceResponseSWMLWebhook:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - swml_webhook
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - swml_webhook
+          description: The type of Resource
+          examples:
+          - swml_webhook
+        swml_webhook:
+          allOf:
+          - $ref: '#/components/schemas/SWMLWebhook'
+          description: An object containing the response data of the SWML Webhook
+      unevaluatedProperties:
+        not: {}
+      title: SWML Webhook
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    ResourceResponse:
+      oneOf:
+      - $ref: '#/components/schemas/ResourceResponseAI'
+      - $ref: '#/components/schemas/ResourceResponseCallFlow'
+      - $ref: '#/components/schemas/ResourceResponseCXMLWebhook'
+      - $ref: '#/components/schemas/ResourceResponseCXMLScript'
+      - $ref: '#/components/schemas/ResourceResponseCXMLApplication'
+      - $ref: '#/components/schemas/ResourceResponseDialogFlowAgent'
+      - $ref: '#/components/schemas/ResourceResponseFSConnector'
+      - $ref: '#/components/schemas/ResourceResponseRelayApp'
+      - $ref: '#/components/schemas/ResourceResponseSipEndpoint'
+      - $ref: '#/components/schemas/ResourceResponseSipGateway'
+      - $ref: '#/components/schemas/ResourceResponseSubscriber'
+      - $ref: '#/components/schemas/ResourceResponseSWMLWebhook'
+      - $ref: '#/components/schemas/ResourceResponseSWMLScript'
+      - $ref: '#/components/schemas/ResourceResponseConferenceRoom'
+    Ciphers:
+      type: string
+      enum:
+      - AEAD_AES_256_GCM_8
+      - AES_256_CM_HMAC_SHA1_80
+      - AES_CM_128_HMAC_SHA1_80
+      - AES_256_CM_HMAC_SHA1_32
+      - AES_CM_128_HMAC_SHA1_32
+    ResourceResponseSubscriber:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - subscriber
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - subscriber
+          description: The type of Resource
+          examples:
+          - subscriber
+        subscriber:
+          allOf:
+          - $ref: '#/components/schemas/Subscriber'
+          description: An object containing the response data of the [Subscriber](/docs/platform/subscribers).
+      unevaluatedProperties:
+        not: {}
+      title: Subscriber
+    AIAgent:
+      type: object
+      required:
+      - prompt
+      - agent_id
+      - name
+      properties:
+        hints:
+          type: array
+          items:
+            type: string
+          description: 'Hints help the AI agent understand certain words or phrases better. Words that can commonly be misinterpreted can be added to the hints to help the AI speak more accurately.
+
+
+            See [`ai.hints` in the SWML reference](/docs/swml/reference/calling/ai#aihints).'
+          examples:
+          - - pizza
+            - pepperoni
+        languages:
+          type: array
+          items:
+            type: object
+            unevaluatedProperties: {}
+          description: 'An array of JSON objects defining supported languages in the conversation.
+
+            Mutually exclusive with `multilingual`: if both are set, `multilingual` is used and
+
+            this array is ignored.
+
+
+            See [`ai.languages` in the SWML reference](/docs/swml/reference/calling/ai#ailanguages).'
+          examples:
+          - - name: English
+              code: en-US
+              voice: rime.spore
+        params:
+          type: object
+          unevaluatedProperties: {}
+          description: 'A JSON object containing parameters as key-value pairs.
+
+
+            See [`ai.params` in the SWML reference](/docs/swml/reference/calling/ai#aiparams).'
+          examples:
+          - ai_model: gpt-4o-mini
+            wait_for_user: true
+        post_prompt:
+          type: object
+          unevaluatedProperties: {}
+          description: 'The final set of instructions and configuration settings to send to the agent.
+
+
+            See [`ai.post_prompt` in the SWML reference](/docs/swml/reference/calling/ai#aipost_prompt).'
+          examples:
+          - text: Summarize the conversation and provide any follow-up action items.
+        pronounce:
+          type: array
+          items:
+            type: object
+            unevaluatedProperties: {}
+          description: 'An array of JSON objects to clarify the AI''s pronunciation of words or expressions.
+
+
+            See [`ai.pronounce` in the SWML reference](/docs/swml/reference/calling/ai#aipronounce).'
+          examples:
+          - - replace: SWML
+              with: swim-el
+              ignore_case: true
+        prompt:
+          type: object
+          unevaluatedProperties: {}
+          description: 'Defines the AI agent''s personality, goals, behaviors, and instructions for handling conversations.
+
+            The prompt establishes how the agent should interact with callers, what information it should gather,
+
+            and how it should respond to various scenarios. It is recommended to write prompts using markdown formatting.
+
+
+            See [`ai.prompt` in the SWML reference](/docs/swml/reference/calling/ai#aiprompt).'
+          examples:
+          - text: You are a helpful customer support assistant.
+        SWAIG:
+          type: object
+          unevaluatedProperties: {}
+          description: 'An array of JSON objects to create user-defined functions/endpoints that can be executed during the dialogue.
+
+
+            See [`ai.SWAIG` in the SWML reference](/docs/swml/reference/calling/ai#aiswaig).'
+          examples:
+          - native_functions:
+            - check_time
+        agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of an AI Agent.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: Name of the AI Agent.
+          examples:
+          - My AI Agent
+      unevaluatedProperties:
+        not: {}
+      description: 'Creates an AI agent that conducts voice conversations using automatic speech recognition (ASR),
+
+        large language models (LLMs), and text-to-speech (TTS) synthesis.
+
+        The agent processes caller speech in real-time, generates contextually appropriate responses,
+
+        and can execute custom functions to interact with external systems through SignalWire AI Gateway (SWAIG).
+
+
+        See the [SWML `ai` method reference](/docs/swml/reference/calling/ai) for the complete configuration contract.'
+      title: AI Agent
+    ResourceResponseCXMLScript:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - cxml_script
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - cxml_script
+          description: The type of Resource
+          examples:
+          - cxml_script
+        cxml_script:
+          allOf:
+          - $ref: '#/components/schemas/CXMLScript'
+          description: An object containing the response data of the cXML Script
+      unevaluatedProperties:
+        not: {}
+      title: cXML Script
+    CallHandlerType:
+      type: string
+      enum:
+      - default
+      - passthrough
+      - block-pstn
+      - resource
+    Subscriber:
+      type: object
+      required:
+      - id
+      - email
+      - first_name
+      - last_name
+      - display_name
+      - job_title
+      - timezone
+      - country
+      - company_name
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Subscriber.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        email:
+          type: string
+          description: Email of the Subscriber.
+          examples:
+          - johndoe@example.com
+        first_name:
+          type: string
+          description: First name of the Subscriber.
+          examples:
+          - John
+        last_name:
+          type: string
+          description: Last name of the Subscriber.
+          examples:
+          - Doe
+        display_name:
+          type: string
+          description: Display name of the Subscriber.
+          examples:
+          - John Doe
+        job_title:
+          type: string
+          description: Job title of the Subscriber.
+          examples:
+          - Software Engineer
+        timezone:
+          type: string
+          description: Timezone of the Subscriber.
+          examples:
+          - America/New_York
+        country:
+          type: string
+          description: Country of the Subscriber.
+          examples:
+          - United States
+        company_name:
+          type: string
+          description: Company name of the Subscriber.
+          examples:
+          - SignalWire
+      unevaluatedProperties:
+        not: {}
+    ResourceResponseDialogFlowAgent:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - dialogflow_agent
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - dialogflow_agent
+          description: The type of Resource
+          examples:
+          - dialogflow_agent
+        dialogflow_agent:
+          allOf:
+          - $ref: '#/components/schemas/DialogflowAgent'
+          description: An object containing the response data of the Dialogflow Agent
+      unevaluatedProperties:
+        not: {}
+      title: Dialogflow Agent
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    ResourceListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceResponse'
+          description: An array of objects that contain a list of Resource data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/ResourcePaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    UsedForType:
+      type: string
+      enum:
+      - calling
+      - messaging
+      description: Sets the handler to handle incoming `calls` or `messages`.
+    MessagingSwmlScript:
+      type: object
+      required:
+      - id
+      - display_name
+      - script_type
+      - request_url
+      - contents
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a SWML Script.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        display_name:
+          type: string
+          description: The displayed name of the SWML script.
+          examples:
+          - Reply Bot
+        script_type:
+          type: string
+          enum:
+          - messaging
+          description: Set to `messaging` for SWML Scripts that handle inbound SMS or MMS messages.
+          examples:
+          - messaging
+        request_url:
+          type: string
+          format: uri
+          description: URL where this SWML Script is hosted.
+          examples:
+          - https://example.com/swml_script
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The messaging SWML document executed when this script runs. Uses [messaging SWML methods](/docs/swml/reference/messaging).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - reply: Thanks for your message!
+      unevaluatedProperties:
+        not: {}
+      description: A SWML Script that handles inbound SMS or MMS messages. The `contents` field carries a [messaging SWML document](/docs/swml/reference/messaging).
+      title: Messaging Script
+    FreeswitchConnector:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a FreeSWITCH Connector.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: Name of the FreeSWITCH Connector
+          examples:
+          - Booking Assistant
+        caller_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Caller ID for the connector
+          examples:
+          - '123456'
+        send_as:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Send as identifier
+          examples:
+          - '123456'
+      unevaluatedProperties:
+        not: {}
+    RelayApplication:
+      type: object
+      required:
+      - id
+      - name
+      - topic
+      - call_status_callback_url
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a Relay Application.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: Name of the Relay Application
+          examples:
+          - Booking Assistant
+        topic:
+          type: string
+          description: Topic of the Relay Application
+          examples:
+          - booking
+        call_status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Call status callback URL
+          examples:
+          - https://example.com/callbacks
+      unevaluatedProperties:
+        not: {}
+    SwmlScript:
+      oneOf:
+      - $ref: '#/components/schemas/CallingSwmlScript'
+      - $ref: '#/components/schemas/MessagingSwmlScript'
+      description: 'A SWML Script — either a [Calling Script](#schema/CallingSwmlScript) for inbound or
+
+        outbound calls, or a [Messaging Script](#schema/MessagingSwmlScript) for inbound SMS or
+
+        MMS messages. The `script_type` field on each script (`"calling"` or `"messaging"`)
+
+        identifies which kind it is.'
+      title: SWML Script
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CallingSwmlScript:
+      type: object
+      required:
+      - id
+      - display_name
+      - script_type
+      - request_url
+      - contents
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a SWML Script.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        display_name:
+          type: string
+          description: The displayed name of the SWML script.
+          examples:
+          - Booking Assistant
+        script_type:
+          type: string
+          enum:
+          - calling
+          description: Set to `calling` for SWML Scripts that handle inbound or outbound calls.
+          examples:
+          - calling
+        request_url:
+          type: string
+          format: uri
+          description: URL where this SWML Script is hosted.
+          examples:
+          - https://example.com/swml_script
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document executed when this script runs. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL that receives status callbacks for messages sent or calls made by this script.
+          examples:
+          - https://website.com/status
+        status_callback_method:
+          type: string
+          enum:
+          - POST
+          description: HTTP method used for status callbacks.
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+      description: A SWML Script that handles inbound or outbound calls. The `contents` field carries a [calling SWML document](/docs/swml/reference/calling).
+      title: Calling Script
+    ResourceResponseFSConnector:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - freeswitch_connector
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - freeswitch_connector
+          description: The type of Resource
+          examples:
+          - freeswitch_connector
+        freeswitch_connector:
+          allOf:
+          - $ref: '#/components/schemas/FreeswitchConnector'
+          description: An object containing the response data of the FreeSWITCH Connector
+      unevaluatedProperties:
+        not: {}
+      title: FreeSWITCH Connector
+    CxmlApplication:
+      type: object
+      required:
+      - id
+      - project_id
+      - friendly_name
+      - voice_url
+      - voice_method
+      - voice_fallback_url
+      - voice_fallback_method
+      - status_callback
+      - status_callback_method
+      - sms_url
+      - sms_method
+      - sms_fallback_url
+      - sms_fallback_method
+      - sms_status_callback
+      - sms_status_callback_method
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the cXML Application.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Project ID for the cXML Application
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        friendly_name:
+          type: string
+          description: Display name of the cXML Application
+          examples:
+          - Reception App
+        voice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: URL to handle incoming calls
+          examples:
+          - https://example.com/voice/incoming
+        voice_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for voice URL
+          examples:
+          - GET
+        voice_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Fallback URL for voice errors
+          examples:
+          - https://example.com/voice/fallback
+        voice_fallback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for voice fallback URL
+          examples:
+          - GET
+        status_callback:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: URL to receive status callbacks
+          examples:
+          - https://example.com/voice/status
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for status callbacks
+          examples:
+          - GET
+        sms_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: URL to handle incoming messages
+          examples:
+          - https://example.com/message/incoming
+        sms_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for SMS URL
+          examples:
+          - GET
+        sms_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Fallback URL for SMS errors
+          examples:
+          - https://example.com/message/fallback
+        sms_fallback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for SMS fallback URL
+          examples:
+          - GET
+        sms_status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: URL to receive SMS status callbacks
+          examples:
+          - https://example.com/message/status
+        sms_status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for SMS status callbacks
+          examples:
+          - GET
+      unevaluatedProperties:
+        not: {}
+    CXMLScript:
+      type: object
+      required:
+      - id
+      - contents
+      - request_count
+      - last_accessed_at
+      - request_url
+      - script_type
+      - display_name
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a cXML Script.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        contents:
+          type: string
+          description: The cXML script contents
+          examples:
+          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
+        request_count:
+          type: integer
+          format: int32
+          description: The amout of times the cXML script has been requested
+          examples:
+          - 5
+        last_accessed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: The date and time when the cXML script was last accessed
+          examples:
+          - '2023-10-01T12:00:00Z'
+        request_url:
+          type: string
+          format: uri
+          description: The URL where the cXML script can be accessed
+          examples:
+          - https://example.signalwire.com/laml-bins/2537c89e-2606-48c2-b3c2-bb601d863d1e
+        script_type:
+          type: string
+          enum:
+          - calling
+          - messaging
+          description: The script type the cXML Script is used for
+          examples:
+          - calling
+        display_name:
+          type: string
+          description: Display name of the cXML Script Fabric Resource
+          examples:
+          - Booking Assistant Script
+        status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: The url that will send status updates for the cXML Script
+          examples:
+          - https://example.com/cxml/status
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for status callback URL
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+    ResourceResponseAI:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - ai_agent
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - ai_agent
+          description: The type of Resource
+          examples:
+          - ai_agent
+        ai_agent:
+          allOf:
+          - $ref: '#/components/schemas/AIAgent'
+          description: An object containing the response data of the AI Agent
+      unevaluatedProperties:
+        not: {}
+      title: AI Agent
+    DialogflowAgent:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a Dialogflow Agent.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        say_enabled:
+          type: boolean
+          description: Whether to enable the 'say' feature
+          examples:
+          - true
+        say:
+          type: string
+          description: Default message to say
+          examples:
+          - Welcome to the Booking Assistant
+        voice:
+          type: string
+          description: Voice to use for speech
+          examples:
+          - en-US-Wavenet-D
+        display_name:
+          type: string
+          description: Display name of the Dialogflow Agent
+          examples:
+          - Booking Assistant
+        dialogflow_reference_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Dialogflow reference ID
+          examples:
+          - 12345678-1234-1234-1234-1234567890ab
+        dialogflow_reference_name:
+          type: string
+          description: Dialogflow reference name
+          examples:
+          - my dialogflow agent
+      unevaluatedProperties:
+        not: {}
+    CallFlow:
+      type: object
+      required:
+      - id
+      - title
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a Call Flow.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        title:
+          type: string
+          description: The name of the Call Flow
+          examples:
+          - Booking Assistant
+        flow_data:
+          type: object
+          unevaluatedProperties: {}
+          description: Call Flow Builder state, stored as an opaque JSON object. Produced and consumed by the SignalWire Call Flow Builder UI; not used by SWML execution.
+          examples:
+          - {}
+        relayml:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document this Call Flow executes. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        document_version:
+          type: integer
+          format: int32
+          description: The current revision of the call flow. Every update must increase this number.
+          examples:
+          - 1
+      unevaluatedProperties:
+        not: {}
+    Layout:
+      type: string
+      enum:
+      - grid-responsive
+      - grid-responsive-mobile
+      - highlight-1-responsive
+      - 1x1
+      - 2x1
+      - 2x2
+      - 5up
+      - 3x3
+      - 4x4
+      - 5x5
+      - 6x6
+      - 8x8
+      - 10x10
+    ResourceResponseSWMLScript:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - swml_script
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - swml_script
+          description: The type of Resource
+          examples:
+          - swml_script
+        swml_script:
+          allOf:
+          - $ref: '#/components/schemas/SwmlScript'
+          description: An object containing the response data of the SWML Script
+      unevaluatedProperties:
+        not: {}
+      title: SWML Script
+    FabricSipEndpoint:
+      type: object
+      required:
+      - id
+      - username
+      - caller_id
+      - send_as
+      - ciphers
+      - codecs
+      - encryption
+      - call_handler
+      - calling_handler_resource_id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The id of the Sip Endpoint
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        username:
+          type: string
+          description: The username of the Sip Endpoint
+          examples:
+          - User
+        caller_id:
+          type: string
+          description: The caller ID that will showup when dialing from this Sip Endpoint
+          examples:
+          - '123456789'
+        send_as:
+          type: string
+          description: The Sip username that will show up on the calle's side. Overrides the username.
+          examples:
+          - Support
+        ciphers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ciphers'
+          description: Ciphers that can be enabled for calls on this Sip Endpoint.
+          examples:
+          - - AEAD_AES_256_GCM_8
+            - AES_256_CM_HMAC_SHA1_32
+        codecs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Codecs'
+          description: Codecs that can be enabled for calls on this Sip Endpoint.
+          examples:
+          - - G722
+            - PCMA
+            - PCMU
+            - VP8
+        encryption:
+          allOf:
+          - $ref: '#/components/schemas/Encryption'
+          description: The set encryption type on the Sip Endpoint.
+          examples:
+          - default
+          default: default
+        call_handler:
+          allOf:
+          - $ref: '#/components/schemas/CallHandlerType'
+          description: 'Specify how the SIP endpoint will handle outbound calls.
+
+            - **default**: The SIP endpoint will pull the outbound policy setting from the [SIP Profile Settings](https://my.signalwire.com?page=sip_profile/edit). This allows centralized management of outbound call behavior across multiple endpoints from a single configuration.
+
+            - **passthrough**: The SIP endpoint will be allowed to dial PSTN numbers. This permits outbound calling to traditional phone numbers without restrictions.
+
+            - **block-pstn**: The SIP endpoint will be blocked from dialing PSTN numbers. Use this to restrict the endpoint from initiating calls to the public telephone network.
+
+            - **resource**: Outbound calls from this SIP endpoint will dial the specified resource and execute its instructions. Requires setting `calling_handler_resource_id` to a valid resource. This enables custom call handling workflows for outbound calls.'
+          examples:
+          - default
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: If `call_handler` is set to `resource`, this field expects the id of the set resouce. Will be `null` otherwise.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+      unevaluatedProperties:
+        not: {}
+    ResourceResponseRelayApp:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - relay_application
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - relay_application
+          description: The type of Resource
+          examples:
+          - relay_application
+        relay_application:
+          allOf:
+          - $ref: '#/components/schemas/RelayApplication'
+          description: An object containing the response data of the Relay Application
+      unevaluatedProperties:
+        not: {}
+      title: Relay Application
+    ResourcePaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: The link to the current page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: The link to the first page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources?page_size=50
+        next:
+          type: string
+          format: uri
+          description: The link to the next page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources?page_number=1&page_size=50&page_token=PA0f2b7869-304c-45ac-8863-3455ccb34cdc
+        prev:
+          type: string
+          format: uri
+          description: The link to the previous page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources?page_number=0&page_size=50&page_token=PA0f2b7869-304c-45ac-8863-3455ccb34cdc
+      unevaluatedProperties:
+        not: {}
+    SWMLWebhook:
+      type: object
+      required:
+      - id
+      - name
+      - used_for
+      - primary_request_url
+      - primary_request_method
+      - fallback_request_url
+      - fallback_request_method
+      - status_callback_url
+      - status_callback_method
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the SWML Webhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        name:
+          type: string
+          description: Name of the SWML Webhook.
+          examples:
+          - My SWML Webhook
+        used_for:
+          type: string
+          enum:
+          - calling
+          - messaging
+          description: Indicates whether this SWML Webhook handles inbound calls or inbound messages. Determines the payload SignalWire POSTs to `primary_request_url`.
+          examples:
+          - calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: 'Primary URL SignalWire fetches the SWML document from when the webhook fires. The webhook payload depends on `used_for`: for `calling`, see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook); for `messaging`, see the [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook).'
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the SWML Webhook.
+          examples:
+          - GET
+        fallback_request_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Fallback URL SignalWire fetches the SWML document from if the primary URL fails. Receives the same payload as `primary_request_url` — see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook) or [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook) depending on `used_for`.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the SWML Webhook.
+          examples:
+          - GET
+        status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: URL to receive message status callback events for outbound messages sent by this webhook (`reply` or `send_sms`). See the [Message status callback](/docs/apis/rest/webhooks/message-status-callback) webhook for the payload your URL will receive.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the SWML Webhook.
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+    ResourceResponseCallFlow:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - created_at
+      - updated_at
+      - type
+      - call_flow
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Resource.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Resource
+          examples:
+          - My Resource
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - call_flow
+          description: The type of Resource
+          examples:
+          - call_flow
+        call_flow:
+          allOf:
+          - $ref: '#/components/schemas/CallFlow'
+          description: An object containing the response data of the Call Flow
+      unevaluatedProperties:
+        not: {}
+      title: Call Flow
+    ConferenceRoom:
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - display_name
+      - max_members
+      - quality
+      - fps
+      - join_from
+      - join_until
+      - remove_at
+      - remove_after_seconds_elapsed
+      - layout
+      - record_on_start
+      - tone_on_entry_and_exit
+      - room_join_video_off
+      - user_join_video_off
+      - enable_room_previews
+      - sync_audio_video
+      - meta
+      - prioritize_handraise
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique id of the Conference Room
+          examples:
+          - 1bd571e4-5ea4-4a70-a3c8-2bab5d20e754
+        name:
+          type: string
+          description: The name of the Conference Room
+          examples:
+          - coffee_cafe
+        description:
+          type: string
+          maxLength: 3000
+          description: The descrption of the Conference Room
+          examples:
+          - This room is for coffee, no shop talk
+        display_name:
+          type: string
+          maxLength: 200
+          description: Display name of the Conference Room
+          examples:
+          - Reception
+        max_members:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 300
+          description: Maximum number of members allowed in the conference room
+          examples:
+          - 30
+        quality:
+          type: string
+          enum:
+          - 1080p
+          - 720p
+          description: The viudeo quality of the Conference Room.
+          examples:
+          - 1080p
+          default: 720p
+        fps:
+          type: number
+          enum:
+          - 30
+          - 20
+          description: The frames-per-second (fps) of the participants videos in the conference.
+          examples:
+          - 30
+        join_from:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: The time users are allowed to start joining the conference. Joining before this time will result in failure to join the conference.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        join_until:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: The time users are allowed to until the conference is locked. Attempting to join the conference after the set time will result in failure to join the conference.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        remove_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: The time to remove all participants from the conference.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        remove_after_seconds_elapsed:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          minimum: 0
+          maximum: 200000
+          description: The amount of time in seconds to remove a particpant from a conference after they join.
+        layout:
+          allOf:
+          - $ref: '#/components/schemas/Layout'
+          description: The video layout of the conference.
+          examples:
+          - grid-responsive
+        record_on_start:
+          type: boolean
+          description: Starts recording when the conference starts.
+          examples:
+          - true
+        tone_on_entry_and_exit:
+          type: boolean
+          description: Plays a tone when a participant joins or leaves the conference.
+          examples:
+          - true
+        room_join_video_off:
+          type: boolean
+          description: Turns the conference video off when the participant joins the room if `true`.
+          examples:
+          - true
+        user_join_video_off:
+          type: boolean
+          description: Turns the participants video off when the participant joins the room if `true`.
+          examples:
+          - true
+        enable_room_previews:
+          type: boolean
+          description: Enables live video room previews for the conference.
+          examples:
+          - true
+        sync_audio_video:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Syncs the participants audio and video.
+          examples:
+          - true
+        meta:
+          type: object
+          unevaluatedProperties: {}
+          description: Metadata of the conference.
+          examples:
+          - foo: bar
+        prioritize_handraise:
+          type: boolean
+          description: Indicator if the Conference Room will prioritize showing participants utilizing the hand raised feature.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

@@ -1,0 +1,398 @@
+openapi: 3.2.0
+info:
+  title: Compatibility Conference Streams API
+  version: 1.0.0
+  description: Manage media streams for conferences.
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Conference Streams
+  description: Manage media streams for conferences.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Conferences/{ConferenceSid}/Streams:
+    post:
+      operationId: create_conference_stream
+      summary: Create a Conference Stream
+      description: 'Create a stream for an existing conference.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ConferencesAccountSidPath'
+      - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceStreamResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Review the errors array for specific issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorStringArrayResponse'
+      tags:
+      - Conference Streams
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateConferenceStreamRequest'
+  /Accounts/{AccountSid}/Conferences/{ConferenceSid}/Streams/{Sid}:
+    post:
+      operationId: update_conference_stream
+      summary: Update Conference Stream
+      description: 'Update an existing conference stream. Commonly used to stop/start streams or modify stream properties.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ConferencesAccountSidPath'
+      - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
+      - $ref: '#/components/parameters/ConferenceStreamSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceStreamResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Review the errors array for specific issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorStringArrayResponse'
+      tags:
+      - Conference Streams
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateConferenceStreamRequest'
+components:
+  schemas:
+    CreateConferenceStreamRequest:
+      type: object
+      required:
+      - Url
+      properties:
+        Name:
+          type: string
+          description: Unique name for the Stream, per Conference. It is used to stop a Stream by name.
+          examples:
+          - my_conference_stream
+        Track:
+          type: string
+          enum:
+          - inbound_track
+          - outbound_track
+          - both_tracks
+          description: This attribute can be one of inbound_track, outbound_track, both_tracks. Default is `both_tracks`.
+          examples:
+          - both_tracks
+          default: both_tracks
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `StatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - GET
+          default: POST
+        StatusCallback:
+          type: string
+          format: uri
+          description: The URL to request to when stream is available.
+          examples:
+          - https://your-api-endpoint.com/stream-status
+        Url:
+          type: string
+          format: uri
+          description: Absolute or relative URL. A WebSocket connection to the url will be established and audio will start flowing towards the Websocket server. The only supported protocol is wss. For security reasons ws is NOT supported.
+          examples:
+          - wss://your-application.com/audiostream
+        StreamCodec:
+          type: string
+          enum:
+          - PCMU
+          - PCMA
+          - L16
+          - L16@16000h
+          - L16@24000h
+          description: The audio codec to use for the stream.
+          examples:
+          - PCMU
+        StreamRealTime:
+          type: boolean
+          description: Enable real-time streaming for the conference stream.
+          examples:
+          - true
+        Parameter1.Name:
+          type: string
+          description: Custom parameter name to pass towards the WebSocket server. You can pass up to 99 custom parameters using `Parameter1.Name` through `Parameter99.Name`.
+          examples:
+          - FirstName
+        Parameter1.Value:
+          type: string
+          description: Custom parameter value to pass towards the WebSocket server. You can pass up to 99 custom parameters using `Parameter1.Value` through `Parameter99.Value`.
+          examples:
+          - Jane
+        Parameter2.Name:
+          type: string
+          description: Custom parameter name to pass towards the WebSocket server.
+          examples:
+          - LastName
+        Parameter2.Value:
+          type: string
+          description: Custom parameter value to pass towards the WebSocket server.
+          examples:
+          - Doe
+        AuthorizationBearerToken:
+          type: string
+          description: Bearer token for authorization with the WebSocket server.
+          examples:
+          - your-bearer-token
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a conference stream.
+    ConferenceStreamStatus:
+      type: string
+      enum:
+      - queued
+      - in-progress
+      - stopped
+      description: Conference stream status.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    ConferenceStreamResponse:
+      type: object
+      required:
+      - account_sid
+      - conference_sid
+      - date_updated
+      - name
+      - sid
+      - status
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        conference_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this stream was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the stream. May be null if not specified when creating the stream.
+          examples:
+          - my_conference_stream
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the stream.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472st
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceStreamStatus'
+          description: The status of the stream.
+        uri:
+          type: string
+          description: The URI for the stream.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single conference stream.
+    CompatibilityErrorStringArrayResponse:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation error messages.
+          examples:
+          - - Validation error message
+      unevaluatedProperties:
+        not: {}
+      description: Error response with errors array of strings format.
+    UpdateConferenceStreamRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - stopped
+          description: The status of the stream. Only 'stopped' is allowed.
+          examples:
+          - stopped
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference stream.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+  parameters:
+    ConferenceStreamSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the stream.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferenceSidPathForParticipant:
+      name: ConferenceSid
+      in: path
+      required: true
+      description: The unique identifier for the conference this participant is in.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferencesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that created this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN

@@ -1,0 +1,851 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Subscriber Tokens API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Endpoints related to creating & managing [Subscriber](/docs/platform/subscribers) tokens.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Subscriber Tokens
+  description: Endpoints related to creating & managing [Subscriber](/docs/platform/subscribers) tokens.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on Subscriber token, Fabric API endpoints
+paths:
+  /api/fabric/embeds/tokens:
+    post:
+      operationId: create_guest_embed_token
+      summary: Create guest embed token
+      description: 'Creates a guest [subscriber](/docs/platform/subscribers) token from a public Click-to-Call (C2C) token. The returned short-lived token authorizes a guest subscriber to place a call through the C2C embed widget without exposing sensitive credentials or requiring a full subscriber account.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbedsTokensResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '403':
+          description: Access is forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode403'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbedTokenCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Subscriber Tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbedsTokensRequest'
+      security:
+      - {}
+  /api/fabric/guests/tokens:
+    post:
+      operationId: create_subscriber_guest_token
+      summary: Create Subscriber guest token
+      description: 'Creates a [Subscriber](/docs/platform/subscribers) Guest Token. Authenticate this request with your project''s API token.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberGuestTokenCreateResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestTokenCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Subscriber Tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberGuestTokenCreateRequest'
+  /api/fabric/subscriber/invites:
+    post:
+      operationId: create_subscriber_invite_token
+      summary: Create Subscriber invite token
+      description: 'Creates a [Subscriber](/docs/platform/subscribers) Invite Token for use with client-side API calls. Authenticate this request with a subscriber''s SAT (Subscriber Access Token), not the project level Basic Auth.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberInviteTokenCreateResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteTokenCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Subscriber Tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberInviteTokenCreateRequest'
+      security:
+      - SignalWireBearerAuth: []
+  /api/fabric/subscribers/tokens:
+    post:
+      operationId: create_subscriber_token
+      summary: Create Subscriber token
+      description: 'Create a [Subscriber](/docs/platform/subscribers) Token.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberTokenResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberTokenStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Subscriber Tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberTokenRequest'
+  /api/fabric/subscribers/tokens/refresh:
+    post:
+      operationId: refresh_subscriber_token
+      summary: Refresh Subscriber token
+      description: 'Exchanges a valid refresh token for a new [subscriber](/docs/platform/subscribers) access token and a new refresh token. The new access token is valid for 2 hours, and the new refresh token is valid for 2 hours and 5 minutes.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberRefreshTokenResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Subscriber Tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberRefreshTokenRequest'
+components:
+  schemas:
+    SubscriberRefreshTokenRequest:
+      type: object
+      required:
+      - refresh_token
+      properties:
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: The refresh token previously issued alongside a subscriber access token. This token is used to request a new access token.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    SubscriberGuestTokenCreateResponse:
+      type: object
+      required:
+      - token
+      - refresh_token
+      properties:
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Guest Token
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc2lnbmFsd2lyZS5jb20iLCJ0eXAiOiJTQVQifQ..8O4EJs349q97jAcd.H4GNrC6gsWdz91ArWF9ce00Cm62iHfsrFRRUUGW3e96j9C3IphiJXvHYHTmD4qMt8czZ8cniF8c53vVAIZF-yBQibejiMxwnqW6KkLct2EJoPUf9g-wQwM0-lGGj9iPx_7yprkQekFK-7svkLcKlo1voZyavxIsWQlXByppmR_ospVx2u8jbAab0ZjKJNEnr1yPF9oNkyMAnkpkS8k8PwKaxUHBc5SGumKlexUjL3ixZDR6UOcbApVXxrB-DmQBs3otOT7hzME7oKvR-6Xy0XJ1pt4Of7MEzNBUK5Z5NMjtFiA8IqwDlNJz3I5gn8hbjSZwSMJHRJGx2DKpNKiu6fcd-3i2VwCpnKHaNUybMJ5gV3cTNfTFJQBSearCLv-7gMx6Gqy9FF_Hm2bGlfnjTQ9BCsCqXBkQ9EQD6yboi2uUhPyLmpzPqlrBc9ik0c3qR5ey5Jym_VnZXaT_S5NxjzIjLzvs33GOKiooGMsBWOm6mzTPcf398xaSErT4dF2wXwtZANou7Dt4BoTKa.DcLVYpma-iItaGhaOStu9A
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Refresh Token
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiUmVmcmVzaCIsImNoIjoidGVzdHB1Yy5zaWduYWx3aXJlLmNvbSJ9..sHcQL_V1tZH2JEAh.FNKYe_49CazNthkgSphf-ov8_I2wGLGWKD6t2q7kiG0guBxBjGzpgD8Y-LM-Nu7ePRUg7Z6vBkKAvh3rjtZpkeXoRXobJ1lov9AO72l8tB9K9RLo-TnBxLDbh0BCDGWVBgGq8DOh9kzHz4Tot-_B8pHXY_bqXX5kC4UUszXCO9nhSi1a4rp6QMD_8b0Mm8pHDK9EtW8I-tfM0HPmXuPMuOnlft3hmZo3tiKN2CarWscveQPCGetufHfQJJssdHjjYup8USAX0gJM8dpsV7FpF9fxfpy4ZU7N9MJXgSYJM5cPrxpLLx3Lj291egob14jDkn7kZQpv7jbCtsGyYxC7HAi1FgGr_sw3AeGaf2esGCkaeE11MxL05_kwdiNYBSOaHqaY62kOzu5pIdfTKQekOogCS1fgiyBgisBZeSIEBWWF.neE9KnL5AzS165dXFXUqhQ
+      unevaluatedProperties:
+        not: {}
+    InviteTokenCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Address is invalid
+          attribute: address_id
+          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
+        - type: validation_error
+          code: invalid_parameter
+          message: Expires At must be an integer
+          attribute: expires_at
+          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
+        - type: validation_error
+          code: invalid_parameter
+          message: Expires At must be greater than 1733254773
+          attribute: expires_at
+          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
+    EmbedTokenCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: token is required
+          attribute: token
+          url: https://signalwire.com/docs/apis/error-codes
+    jwt:
+      type: string
+      format: jwt
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    EmbedsTokensResponse:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          format: jwt
+          description: Encrypted guest token.
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMubHZoLm1lIiwidHlwIjoiU0FUIn0..
+      unevaluatedProperties:
+        not: {}
+    SubscriberGuestTokenCreateRequest:
+      type: object
+      required:
+      - allowed_addresses
+      properties:
+        allowed_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+          maxItems: 10
+          description: List of up to 10 UUIDs representing the allowed Fabric addresses.
+        expire_at:
+          type: integer
+          description: A unixtime (the number of seconds since 1970-01-01 00:00:00) at which the token should no longer be valid. Defaults to 'two hours from now'
+          examples:
+          - 1725513600
+        region:
+          type: string
+          enum:
+          - us-central
+          description: A routing override that controls which regional cluster the SDK connects to.
+          examples:
+          - us-central
+        ch:
+          type: string
+          enum:
+          - us-central
+          description: A direct routing override specifying the regional cluster endpoint, set as the `ch` claim in the SAT JWE header.
+          examples:
+          - us-central
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode403:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Forbidden
+      unevaluatedProperties:
+        not: {}
+      description: Access is forbidden.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    EmbedsTokensRequest:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: Click to Call Token
+          examples:
+          - c2c_7acc0e5e968706a032983cd80cdca219
+      unevaluatedProperties:
+        not: {}
+    SubscriberTokenStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: Required parameter is missing
+          attribute: reference
+          url: https://signalwire.com/docs/apis/error-codes
+    SubscriberTokenResponse:
+      type: object
+      required:
+      - subscriber_id
+      - token
+      - refresh_token
+      properties:
+        subscriber_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the subscriber that the token is associated with.
+          examples:
+          - 32d94154-9297-418c-9a85-4a69e0c67c30
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: The token that is associated with the subscriber.
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiU0FUIn0..HahMYxqt4uI14qSH.daMTBR53lfEfEFiVAhr0pPSRqZhEod_YzavoG9-4ieiRQvl8GtP3FFNx0VLfkJqNcjUNbAaiKrEMnfOtCnQjiq1Kn0Iq90MYdM00QJ7cTaQ88vfbqdE92p-d4oDeg6z_vAsgrFgEobmrlDQndKxCWOD921iYxyLP0vqNaokN3kIM06iAWu_UpnTYEeR1l068xhK2xb6P9wbI2FDKFQoMgCdbjvABF7RRyaEzUoaQ5_Wj53YO6PFYuYcPbqMhdtvSSQiK3Nw6bFer2OfFs6s2RTukRGsocgC5Q7pwQwzYky-YgrPCb-pVAJajVSXUJrayvOi8-TeyCpICW4zTeJa5icZ380cWtafUH4rEB_FOJciJf0BCy48ajbz0NE121uBl2mqA1HE0_mQA53UqVjbrbE9hVOfnN4KpwOfULhIjx54tIekJQgG-aK2AYsLPCDNhuSpHvdwJcTM0Gzy3mS2veyaDV8q2qN5F_F9OThTQzcfy.AXzVNrJc_pGVPsticsVM0w
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Refresh token.
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiUmVmcmVzaCIsImNoIjoidGVzdHB1Yy5zaWduYWx3aXJlLmNvbSJ9..sHcQL_V1tZH2JEAh.FNKYe_49CazNthkgSphf-ov8_I2wGLGWKD6t2q7kiG0guBxBjGzpgD8Y-LM-Nu7ePRUg7Z6vBkKAvh3rjtZpkeXoRXobJ1lov9AO72l8tB9K9RLo-TnBxLDbh0BCDGWVBgGq8DOh9kzHz4Tot-_B8pHXY_bqXX5kC4UUszXCO9nhSi1a4rp6QMD_8b0Mm8pHDK9EtW8I-tfM0HPmXuPMuOnlft3hmZo3tiKN2CarWscveQPCGetufHfQJJssdHjjYup8USAX0gJM8dpsV7FpF9fxfpy4ZU7N9MJXgSYJM5cPrxpLLx3Lj291egob14jDkn7kZQpv7jbCtsGyYxC7HAi1FgGr_sw3AeGaf2esGCkaeE11MxL05_kwdiNYBSOaHqaY62kOzu5pIdfTKQekOogCS1fgiyBgisBZeSIEBWWF.neE9KnL5AzS165dXFXUqhQ
+      unevaluatedProperties:
+        not: {}
+    SubscriberInviteTokenCreateRequest:
+      type: object
+      required:
+      - address_id
+      properties:
+        address_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a Subscriber Address
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        expires_at:
+          type: integer
+          description: A unixtime (the number of seconds since 1970-01-01 00:00:00) at which the token should no longer be valid. Defaults to 'two hours from now'
+          examples:
+          - 1725513600
+      unevaluatedProperties:
+        not: {}
+    SubscriberInviteTokenCreateResponse:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Invite Token
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc2lnbmFsd2lyZS5jb20iLCJ0eXAiOiJTQVQifQ..8O4EJs349q97jAcd.H4GNrC6gsWdz91ArWF9ce00Cm62iHfsrFRRUUGW3e96j9C3IphiJXvHYHTmD4qMt8czZ8cniF8c53vVAIZF-yBQibejiMxwnqW6KkLct2EJoPUf9g-wQwM0-lGGj9iPx_7yprkQekFK-7svkLcKlo1voZyavxIsWQlXByppmR_ospVx2u8jbAab0ZjKJNEnr1yPF9oNkyMAnkpkS8k8PwKaxUHBc5SGumKlexUjL3ixZDR6UOcbApVXxrB-DmQBs3otOT7hzME7oKvR-6Xy0XJ1pt4Of7MEzNBUK5Z5NMjtFiA8IqwDlNJz3I5gn8hbjSZwSMJHRJGx2DKpNKiu6fcd-3i2VwCpnKHaNUybMJ5gV3cTNfTFJQBSearCLv-7gMx6Gqy9FF_Hm2bGlfnjTQ9BCsCqXBkQ9EQD6yboi2uUhPyLmpzPqlrBc9ik0c3qR5ey5Jym_VnZXaT_S5NxjzIjLzvs33GOKiooGMsBWOm6mzTPcf398xaSErT4dF2wXwtZANou7Dt4BoTKa.DcLVYpma-iItaGhaOStu9A
+      unevaluatedProperties:
+        not: {}
+    SubscriberRefreshTokenResponse:
+      type: object
+      required:
+      - token
+      - refresh_token
+      properties:
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: A newly generated subscriber access token, valid for 2 hours.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: A new refresh token, valid for 2 hours and 5 minutes.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    RefreshTokenStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: token_expired
+          message: Token has expired.
+          attribute: refresh_token
+          url: https://signalwire.com/docs/rest/overview/error-codes#token_expired
+    GuestTokenCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: must_belong_to_project
+          message: The addresses must belong to the project
+          attribute: allowed_addresses
+          url: https://signalwire.com/docs/apis/error-codes
+    SubscriberTokenRequest:
+      type: object
+      required:
+      - reference
+      properties:
+        reference:
+          type: string
+          description: A string that uniquely identifies the subscriber. Often it's an email, but can be any other string.
+          examples:
+          - john.doe@example.com
+        expire_at:
+          type: integer
+          description: A unixtime (the number of seconds since 1970-01-01 00:00:00) at which the token should no longer be valid. Defaults to 'two hours from now'
+          examples:
+          - 1693823284
+        application_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the application that the token is associated with.
+          examples:
+          - 123e4567-e89b-12d3-a456-426614174000
+        password:
+          type: string
+          description: Set or update the subscriber's password. Omit this field or pass an empty string if you don't want to update the password.
+          examples:
+          - password123
+        fingerprint:
+          type: string
+          minLength: 43
+          maxLength: 43
+          pattern: ^[A-Za-z0-9_-]+$
+          description: 'Binds the token to a specific device or browser session, letting the
+
+            holder refresh it without going through your backend. The [Browser SDK](/docs/browser-sdk/v4)
+
+            generates this value automatically when starting a session — forward it
+
+            to your backend when requesting a token, so tie the token to that client.
+
+
+            Without `fingerprint`, your backend can still refresh the token using
+
+            the companion [`refresh_token`](/docs/apis/rest/subscribers/tokens/refresh-subscriber-token)
+
+            returned in this response.'
+          examples:
+          - Vg1h7IDV3AR6kTpCkZPHOVs32B81DX1naHiHbYoKXgY
+        scope:
+          type: string
+          enum:
+          - sat:refresh
+          description: 'Grants the token''s holder permission to refresh it directly from the
+
+            Browser SDK client. Pair with `fingerprint` to bind the token to a
+
+            device.
+
+
+            Without this scope, your backend can still refresh the token using the
+
+            companion [`refresh_token`](/docs/apis/rest/subscribers/tokens/refresh-subscriber-token).
+
+            If `sat:refresh` is set without `fingerprint`, the token''s lifetime is
+
+            limited to 60 seconds.'
+          examples:
+          - sat:refresh
+        first_name:
+          type: string
+          description: Set or update the first name of the subscriber.
+          examples:
+          - John
+        last_name:
+          type: string
+          description: Set or update the last name of the subscriber.
+          examples:
+          - Doe
+        display_name:
+          type: string
+          description: Set or update the display name of the subscriber.
+          examples:
+          - John Doe
+        job_title:
+          type: string
+          description: Set or update the job title of the subscriber.
+          examples:
+          - Software Engineer
+        time_zone:
+          type: string
+          description: Set or update the time zone of the subscriber.
+          examples:
+          - America/New_York
+        country:
+          type: string
+          description: Set or update the country of the subscriber.
+          examples:
+          - US
+        region:
+          type: string
+          enum:
+          - us-central
+          description: A routing override that controls which regional cluster the SDK connects to.
+          examples:
+          - us-central
+        company_name:
+          type: string
+          description: Set or update the company name of the subscriber.
+          examples:
+          - SignalWire
+      unevaluatedProperties:
+        not: {}
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

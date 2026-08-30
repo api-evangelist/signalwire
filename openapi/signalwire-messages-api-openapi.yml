@@ -1,0 +1,2358 @@
+openapi: 3.2.0
+info:
+  title: Signalwire Messages API
+  version: 1.0.0
+  description: 'Operations tagged Messages across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Messages
+  description: Send and manage SMS/MMS messages.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Messages:
+    get:
+      operationId: list_messages
+      summary: List all Messages
+      description: 'List all messages.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - name: DateSent
+        in: query
+        required: false
+        description: Only return messages sent on this particular date, formatted as YYYY-MM-DD in UTC.
+        schema:
+          type: string
+        explode: false
+      - name: DateSent<
+        in: query
+        required: false
+        description: Only return messages sent before this date, formatted as YYYY-MM-DD in UTC.
+        schema:
+          type: string
+        explode: false
+      - name: DateSent>
+        in: query
+        required: false
+        description: Only return messages sent after this date, formatted as YYYY-MM-DD in UTC.
+        schema:
+          type: string
+        explode: false
+      - name: From
+        in: query
+        required: false
+        description: The phone number in E.164 format. For inbound messages, this will be the remote phone number who sent the message. For outbound messages, this will be one of your SignalWire phone numbers.
+        schema:
+          type: string
+        explode: false
+      - name: To
+        in: query
+        required: false
+        description: The phone number in E.164 format that received the message. For inbound messages, this is one of your SignalWire phone numbers; for outbound messages, this is the remote phone number that received the message.
+        schema:
+          type: string
+        explode: false
+      - name: Status
+        in: query
+        required: false
+        description: Current status of the message.
+        schema:
+          $ref: '#/components/schemas/MessageStatus'
+        explode: false
+      - name: Page
+        in: query
+        required: false
+        description: The page number to retrieve. Default is 0.
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of items per page. Default is 50, maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: The token for cursor-based pagination. Must start with 'PA' or 'PB'.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Messages
+    post:
+      operationId: create_message
+      summary: Create a Message
+      description: 'Create and send a message.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      responses:
+        '201':
+          description: Response returned when a message is created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Messages
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateMessageRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /Accounts/{AccountSid}/Messages/{Sid}:
+    get:
+      operationId: retrieve_message
+      summary: Retrieve a Message
+      description: 'Retrieve a single message.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - $ref: '#/components/parameters/MessageSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Messages
+    post:
+      operationId: update_message
+      summary: Update a Message
+      description: 'Update a message body after it has been sent. Currently, the only supported update is redacting the message by setting the body to an empty string. Messages that are still in progress (queued or initiated status) cannot be updated.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - $ref: '#/components/parameters/MessageSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Messages
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateMessageRequest'
+    delete:
+      operationId: delete_message
+      summary: Delete a Message
+      description: 'Delete a message. Messages that are still in progress (queued status) cannot be deleted.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/MessagesAccountSidPath'
+      - $ref: '#/components/parameters/MessageSidPath'
+      responses:
+        '204':
+          description: 204 No Content response.
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Messages
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /api/messaging/messages:
+    post:
+      operationId: create_message
+      summary: Send a message
+      description: 'Create and queue an outbound message for delivery. The channel is determined by the `from` number:
+
+
+        - **SMS/MMS** when `from` is a purchased SignalWire phone number or shortcode. The message is MMS when `media` is present or `send_as_mms` is set, otherwise SMS.
+
+        - **WhatsApp** when `from` is a `whatsapp:`-prefixed [WhatsApp number](/docs/platform/messaging/whatsapp/send-messages). Set `message_type` for a content message, or `template_id` for an [approved template](/docs/platform/messaging/whatsapp/message-templates). Free-form WhatsApp content is only allowed within the 24-hour customer service window.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: Response returned when a message is successfully created and queued for delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message.Message'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message.MessagesCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Messages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message.SendMessageRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+  /api/messaging/messages/{message_id}:
+    patch:
+      operationId: update_message
+      summary: Redact a message
+      description: 'Redact the body of a previously sent message. This endpoint clears the message body for compliance, privacy, or moderation purposes — it does not support arbitrary updates to message attributes. The only accepted value for `body` is an empty string (`""`); any other value is rejected.
+
+
+        Messages that are still in progress (`queued` or `initiated`) cannot be redacted. Messages in terminal states such as `delivered`, `undelivered`, or `failed` are eligible. Once redacted, the original body is overwritten and cannot be recovered.
+
+
+        The `:message_id` path parameter is the message segment ID — the same ID returned by the create endpoint and shown in `/api/messaging/logs`.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/Message.MessagePathID'
+      responses:
+        '200':
+          description: Response returned when a message has been successfully redacted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message.Message'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message.MessagesUpdateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Messages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message.UpdateMessageRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+webhooks:
+  smsStatusCallback:
+    post:
+      operationId: sms_status_callback
+      summary: SMS status callback
+      description: 'Payload sent by SignalWire to your SMS Status Callback URL when the status of an SMS/MMS message changes.
+
+
+        Configure this callback using the `StatusCallback` parameter when
+
+        [sending an outgoing message](/docs/compatibility-api/rest/messages/create-message).
+
+
+        There are 8 possible message statuses:
+
+
+        | Status | Description |
+
+        |--------|-------------|
+
+        | `queued` | The API request was processed and the message is waiting to be sent. |
+
+        | `sending` | The message is being transmitted to the nearest upstream carrier. |
+
+        | `sent` | The nearest upstream carrier has accepted the message. |
+
+        | `delivered` | The nearest upstream carrier confirmed receipt of the message. |
+
+        | `undelivered` | SignalWire received notice from the upstream carrier that the message was not delivered. |
+
+        | `failed` | SignalWire could not send the message. There is no charge for failed messages. |
+
+        | `receiving` | SignalWire has received and is currently processing an inbound message. |
+
+        | `received` | The inbound message has been received by a number in your account. |
+
+
+        <Note>
+
+        SignalWire only marks a message as `delivered` when it receives a Delivery Receipt (DLR)
+
+        from the receiving carrier confirming entry into the end carrier''s network. `sent` means the message
+
+        left SignalWire and reached the downstream peer. Some carriers send delayed DLRs; others send none
+
+        at all. MMS messages never receive DLRs, so they will only ever reach `sent` status.
+
+        </Note>
+
+
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+      parameters: []
+      responses:
+        '200':
+          description: Webhook received
+      tags:
+      - Messages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmsStatusCallbackPayload'
+      security:
+      - {}
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+components:
+  schemas:
+    CreateMessageRequest:
+      type: object
+      required:
+      - To
+      properties:
+        To:
+          type: string
+          description: The phone number in E.164 format that will receive the message.
+          examples:
+          - '+15557654321'
+        From:
+          type: string
+          description: The phone number in E.164 format that will send the message. Either `From` or `MessagingServiceSid` must be provided.
+          examples:
+          - '+15551234567'
+        Body:
+          type: string
+          description: The text of the message. Either `Body` or `MediaUrl` must be provided.
+          examples:
+          - Hello World!
+        MediaUrl:
+          anyOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          format: uri
+          description: URL(s) of media you wish to attach and send with the message. Can be specified multiple times for up to 8 media items.
+          examples:
+          - https://example.com/image.jpg
+        SendAsMms:
+          type: boolean
+          description: When set to true, forces the message to be sent as an MMS.
+          examples:
+          - false
+        ApplicationSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SID of a SignalWire cXML Application used to configure the message's status callback.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ap
+        MaxPrice:
+          type: string
+          pattern: ^\d+\.?\d{0,4}$
+          description: 'The maximum price in USD acceptable for the message to be sent. Format: decimal with up to 4 decimal places.'
+          examples:
+          - '0.0075'
+        StatusCallback:
+          type: string
+          format: uri
+          description: A URL endpoint to receive callbacks each time the status of the message changes. See the [SMS status callback](/docs/compatibility-api/rest/messages/webhooks/sms-status-callback) webhook for the payload your URL will receive.
+          examples:
+          - https://example.com/status-callback
+        ValidityPeriod:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 172800
+          description: The number of seconds a message will allow being queued before canceling. Must be between 1 and 172800 (48 hours). Default is 14400 (4 hours).
+          examples:
+          - 14400
+          default: 14400
+        MessagingServiceSid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of a number group to use when sending the message. Either `From` or `MessagingServiceSid` must be provided.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ms
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a message.
+    SmsStatusCallbackPayload:
+      type: object
+      required:
+      - MessageStatus
+      - MessageSid
+      - AccountSid
+      - From
+      - To
+      - Body
+      - NumMedia
+      - NumSegments
+      properties:
+        MessageStatus:
+          type: string
+          enum:
+          - queued
+          - sending
+          - sent
+          - delivered
+          - undelivered
+          - failed
+          - receiving
+          - received
+          description: 'The current status of the message at the time of the callback.
+
+            One of: `queued`, `sending`, `sent`, `delivered`, `undelivered`, `failed`, `receiving`, `received`.'
+          examples:
+          - delivered
+        ErrorCode:
+          type: string
+          description: If the message has failed or is undelivered, the error code may provide more information about what went wrong.
+          examples:
+          - '30003'
+        MessageSid:
+          type: string
+          description: The unique ID of this message.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ms
+        AccountSid:
+          type: string
+          description: The unique ID of the project this message is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        From:
+          type: string
+          description: The From number of the message.
+          examples:
+          - '+15551234567'
+        To:
+          type: string
+          description: The To number of the message.
+          examples:
+          - '+15559876543'
+        Body:
+          type: string
+          description: The body of the message.
+          examples:
+          - Hey, your order has shipped!
+        NumMedia:
+          type: integer
+          format: int32
+          description: The number of media files that were included with the message.
+          examples:
+          - 0
+        NumSegments:
+          type: integer
+          format: int32
+          description: 'The number of segments that make up the entire message.
+
+            If the body exceeds 160 GSM-7 characters or 70 UCS-2 characters, it is automatically split into
+
+            smaller segments that are annotated for reconstruction on the recipient handset.'
+          examples:
+          - 1
+      unevaluatedProperties:
+        not: {}
+    MessageListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - messages
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages?Page=1&PageSize=50&PageToken=PA0a059168ead041af
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: List of messages.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of messages.
+    MessageResponse:
+      type: object
+      required:
+      - account_sid
+      - api_version
+      - body
+      - num_segments
+      - num_media
+      - date_created
+      - date_sent
+      - date_updated
+      - direction
+      - error_code
+      - error_message
+      - from
+      - price
+      - price_unit
+      - sid
+      - status
+      - to
+      - messaging_service_sid
+      - uri
+      - subresource_uris
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the project that sent or received this message.
+          examples:
+          - ea108133-d6b3-407c-9536-9fad8a929a6a
+        api_version:
+          type: string
+          description: The version number of the SignalWire cXML REST API used to handle this message.
+          examples:
+          - '2010-04-01'
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The text of the message. Up to 1600 characters long. May be null if filtered for spam.
+          examples:
+          - Hello World!
+        num_segments:
+          type: integer
+          format: int32
+          description: The number of segments that make up the entire message.
+          examples:
+          - 1
+        num_media:
+          type: integer
+          format: int32
+          description: The number of media files that were included with the message.
+          examples:
+          - 1
+        date_created:
+          type: string
+          description: The date and time the message was created in RFC 2822 format.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_sent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The date and time the message was sent in RFC 2822 format, or null if not yet sent.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_updated:
+          type: string
+          description: The date and time the message was last updated in RFC 2822 format.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/MessageDirection'
+          description: The direction of the message.
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: If an error has occurred on the message, the error code will give you a specific code, or null if no error.
+          examples:
+          - '30001'
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A human readable description of the error that occurred, or null if no error.
+          examples:
+          - Queue overflow
+        from:
+          type: string
+          description: The phone number in E.164 format that sent the message.
+          examples:
+          - '+15551234567'
+        price:
+          anyOf:
+          - type: number
+            format: float
+          - type: 'null'
+          description: The cost of the individual message billed to your project, or null if not yet calculated.
+          examples:
+          - 0.005
+        price_unit:
+          type: string
+          description: The currency in which `price` is charged as.
+          examples:
+          - USD
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A unique ID that identifies this specific message.
+          examples:
+          - 0a059168-ead0-41af-9d1f-343dae832527
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MessageStatus'
+          description: Current status of the message.
+        to:
+          type: string
+          description: The phone number in E.164 format that received the message.
+          examples:
+          - '+15557654321'
+        messaging_service_sid:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: If a number group was used when sending an outbound message, the number group's ID will be present, or null otherwise.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ms
+        uri:
+          type: string
+          description: The URI of this particular message.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527.json
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/MessageSubresourceUris'
+          description: The URIs for any subresources associated with this message.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single message.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Message:
+      type: object
+      required:
+      - account_sid
+      - api_version
+      - body
+      - num_segments
+      - num_media
+      - date_created
+      - date_sent
+      - date_updated
+      - direction
+      - error_code
+      - error_message
+      - from
+      - price
+      - price_unit
+      - sid
+      - status
+      - to
+      - messaging_service_sid
+      - uri
+      - subresource_uris
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the project that sent or received this message.
+          examples:
+          - ea108133-d6b3-407c-9536-9fad8a929a6a
+        api_version:
+          type: string
+          description: The version number of the SignalWire cXML REST API used to handle this message.
+          examples:
+          - '2010-04-01'
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The text of the message. Up to 1600 characters long. May be null if filtered for spam.
+          examples:
+          - Hello World!
+        num_segments:
+          type: integer
+          format: int32
+          description: The number of segments that make up the entire message.
+          examples:
+          - 1
+        num_media:
+          type: integer
+          format: int32
+          description: The number of media files that were included with the message.
+          examples:
+          - 1
+        date_created:
+          type: string
+          description: The date and time the message was created in RFC 2822 format.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_sent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The date and time the message was sent in RFC 2822 format, or null if not yet sent.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_updated:
+          type: string
+          description: The date and time the message was last updated in RFC 2822 format.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/MessageDirection'
+          description: The direction of the message.
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: If an error has occurred on the message, the error code will give you a specific code, or null if no error.
+          examples:
+          - '30001'
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A human readable description of the error that occurred, or null if no error.
+          examples:
+          - Queue overflow
+        from:
+          type: string
+          description: The phone number in E.164 format that sent the message.
+          examples:
+          - '+15551234567'
+        price:
+          anyOf:
+          - type: number
+            format: float
+          - type: 'null'
+          description: The cost of the individual message billed to your project, or null if not yet calculated.
+          examples:
+          - 0.005
+        price_unit:
+          type: string
+          description: The currency in which `price` is charged as.
+          examples:
+          - USD
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A unique ID that identifies this specific message.
+          examples:
+          - 0a059168-ead0-41af-9d1f-343dae832527
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MessageStatus'
+          description: Current status of the message.
+        to:
+          type: string
+          description: The phone number in E.164 format that received the message.
+          examples:
+          - '+15557654321'
+        messaging_service_sid:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: If a number group was used when sending an outbound message, the number group's ID will be present, or null otherwise.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ms
+        uri:
+          type: string
+          description: The URI of this particular message.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527.json
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/MessageSubresourceUris'
+          description: The URIs for any subresources associated with this message.
+      unevaluatedProperties:
+        not: {}
+      description: Message model.
+    MessageSubresourceUris:
+      type: object
+      required:
+      - media
+      properties:
+        media:
+          type: string
+          description: The URI for media.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media.json
+      unevaluatedProperties:
+        not: {}
+      description: Message subresource URIs.
+    MessageDirection:
+      type: string
+      enum:
+      - inbound
+      - outbound-api
+      - outbound-call
+      - outbound-reply
+      description: Message direction.
+    MessageStatus:
+      type: string
+      enum:
+      - queued
+      - initiated
+      - sent
+      - failed
+      - delivered
+      - undelivered
+      - received
+      description: Message status.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    UpdateMessageRequest:
+      type: object
+      required:
+      - Body
+      properties:
+        Body:
+          type: string
+          maxLength: 0
+          description: The new body of the message. Must be an empty string to redact the message content.
+          examples:
+          - ''
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating (redacting) a message.
+    Message.WhatsAppStickerBody:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+          description: A public HTTP/HTTPS URL to the sticker file. Meta requires `.webp` format.
+          examples:
+          - https://example.com/sticker.webp
+        id:
+          type: string
+          description: The ID of media previously uploaded to WhatsApp. Mutually exclusive with `link`.
+      unevaluatedProperties:
+        not: {}
+      description: Body for a sticker message. Provide either `link` or `id` (not both). Captions are not supported.
+    Message.WhatsAppContactName:
+      type: object
+      required:
+      - formatted_name
+      properties:
+        formatted_name:
+          type: string
+          description: The contact's full formatted name. Required.
+          examples:
+          - Jane Smith
+      unevaluatedProperties: {}
+      description: The name fields of a shared contact.
+    Message.WhatsAppStickerMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_sticker
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppStickerBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send a sticker message. Captions are not supported.
+    Message.WhatsAppAudioBody:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+          description: A public HTTP/HTTPS URL to the audio file.
+          examples:
+          - https://example.com/voice-note.mp3
+        id:
+          type: string
+          description: The ID of media previously uploaded to WhatsApp. Mutually exclusive with `link`.
+      unevaluatedProperties:
+        not: {}
+      description: Body for an audio message. Provide either `link` or `id` (not both). Captions are not supported.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Message.WhatsAppVideoMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_video
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppVideoBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send a video message, with an optional caption.
+    Message.WhatsAppDocumentBody:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+          description: A public HTTP/HTTPS URL to the document.
+          examples:
+          - https://example.com/invoice.pdf
+        id:
+          type: string
+          description: The ID of media previously uploaded to WhatsApp. Mutually exclusive with `link`.
+        caption:
+          type: string
+          description: Optional caption shown with the document.
+        filename:
+          type: string
+          maxLength: 240
+          description: Optional filename shown to the recipient. Maximum 240 characters.
+          examples:
+          - invoice.pdf
+      unevaluatedProperties:
+        not: {}
+      description: Body for a document message. Provide either `link` or `id` (not both).
+    Message.WhatsAppInteractiveBody:
+      type: object
+      required:
+      - type
+      - action
+      properties:
+        type:
+          type: string
+          description: The interactive type, e.g. `button`, `list`, `cta_url`, `location_request_message`, or `flow`.
+          examples:
+          - button
+        action:
+          type: object
+          unevaluatedProperties: {}
+          description: The interactive action. Its contents depend on `type` (for example, a `buttons` array, list `sections`, or Flow parameters).
+        header:
+          type: object
+          unevaluatedProperties: {}
+          description: Optional header object.
+        body:
+          type: object
+          unevaluatedProperties: {}
+          description: 'Optional body object, e.g. `{ "text": "How can we help?" }`.'
+        footer:
+          type: object
+          unevaluatedProperties: {}
+          description: Optional footer object.
+      unevaluatedProperties:
+        not: {}
+      description: Body for an interactive message. `type` and `action` are required; `header`, `body`, and `footer` are optional. The shape of `action` depends on the interactive type — buttons, list sections, a call-to-action URL, a location request, or a Flow — and follows the WhatsApp interactive message format.
+    Message.MessageDirection:
+      type: string
+      enum:
+      - inbound
+      - outbound
+      description: The direction of a message.
+    Message.WhatsAppReactionMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_reaction
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppReactionBody'
+      unevaluatedProperties:
+        not: {}
+      description: React to a message with an emoji.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Message.Message:
+      type: object
+      required:
+      - id
+      - from
+      - to
+      - body
+      - status
+      - direction
+      - kind
+      - media
+      - number_of_segments
+      - error_code
+      - error_message
+      - created_at
+      - project_id
+      - status_callback_url
+      - message_uri
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique ID of the message. This is the `MessageSegment` ID, consistent with the dashboard and the `/api/messaging/logs` endpoint.
+          examples:
+          - c2d3e4f5-a6b7-8901-cdef-234567890abc
+        from:
+          type: string
+          description: The source phone number.
+          examples:
+          - '+15559876543'
+        to:
+          type: string
+          description: The destination phone number.
+          examples:
+          - '+15551234567'
+        body:
+          type: string
+          description: The message body text. Returns an empty string when the message has been redacted.
+          examples:
+          - 'Your order #12345 has shipped!'
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Message.MessageStatus'
+          description: Delivery state of the message.
+          examples:
+          - queued
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/Message.MessageDirection'
+          description: The direction of the message.
+          examples:
+          - outbound
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/Message.MessageKind'
+          description: The kind of message.
+          examples:
+          - sms
+        media:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Array of URLs for any media attachments on the message. Empty for SMS.
+          examples:
+          - []
+        number_of_segments:
+          type: integer
+          format: int32
+          description: Number of segments the message body was split into for delivery.
+          examples:
+          - 1
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Provider-specific error code if delivery failed. Null when no error occurred.
+          examples:
+          - null
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Human-readable error message if delivery failed. Null when no error occurred.
+          examples:
+          - null
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the message was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the project the message belongs to.
+          examples:
+          - a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Callback URL configured to receive message status events. Null if no callback was configured.
+          examples:
+          - null
+        message_uri:
+          type: string
+          description: Relative URL for retrieving the message via the `/api/messaging/logs` endpoint.
+          examples:
+          - /api/messaging/logs/c2d3e4f5-a6b7-8901-cdef-234567890abc
+      unevaluatedProperties:
+        not: {}
+      description: A message record. Returned by the create and update endpoints.
+    Message.WhatsAppImageBody:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+          description: A public HTTP/HTTPS URL to the image.
+          examples:
+          - https://example.com/promo-banner.png
+        id:
+          type: string
+          description: The ID of media previously uploaded to WhatsApp. Mutually exclusive with `link`.
+        caption:
+          type: string
+          description: Optional caption shown with the image.
+          examples:
+          - Check out our summer sale!
+      unevaluatedProperties:
+        not: {}
+      description: Body for an image message. Provide either `link` or `id` (not both).
+    Message.UpdateMessageRequest:
+      type: object
+      required:
+      - body
+      properties:
+        body:
+          type: string
+          description: Must be an empty string (`""`) to redact the message. Any non-empty value is rejected with `body_must_be_empty`. This is the only field that can be updated.
+          examples:
+          - ''
+      unevaluatedProperties:
+        not: {}
+      description: Request body for redacting the body of a previously sent message. Only `body` may be updated, and it must be an empty string.
+    Message.WhatsAppContact:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/Message.WhatsAppContactName'
+          description: The contact's name. `formatted_name` is required.
+      unevaluatedProperties: {}
+      description: A shared contact card. Additional fields (phones, emails, org, etc.) follow the WhatsApp contacts message format.
+    Message.MessageStatus:
+      type: string
+      enum:
+      - queued
+      - initiated
+      - sent
+      - delivered
+      - undelivered
+      - failed
+      - read
+      description: Delivery state of a message.
+    Message.MessageKind:
+      type: string
+      enum:
+      - sms
+      - mms
+      - whatsapp
+      description: The kind of message.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Message.SendMessageRequest:
+      anyOf:
+      - $ref: '#/components/schemas/Message.CreateMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppContentMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppTemplateMessageRequest'
+      description: 'Request body for `POST /api/messaging/messages`. The channel is determined by the `from` number:
+
+
+        - An SMS/MMS request when `from` is a purchased phone number or shortcode.
+
+        - A WhatsApp **content** message when `from` is a `whatsapp:`-prefixed number and `message_type` is set.
+
+        - A WhatsApp **template** message when `from` is a `whatsapp:`-prefixed number and `template_id` is set.'
+    Message.WhatsAppContentMessageRequest:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/Message.WhatsAppTextMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppImageMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppAudioMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppVideoMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppDocumentMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppStickerMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppLocationMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppContactsMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppReactionMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppInteractiveCtaMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppInteractiveListMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppInteractiveReplyButtonMessageRequest'
+      - $ref: '#/components/schemas/Message.WhatsAppInteractiveLocationRequestMessageRequest'
+      discriminator:
+        propertyName: message_type
+        mapping:
+          whatsapp_media_text: '#/components/schemas/Message.WhatsAppTextMessageRequest'
+          whatsapp_media_image: '#/components/schemas/Message.WhatsAppImageMessageRequest'
+          whatsapp_media_audio: '#/components/schemas/Message.WhatsAppAudioMessageRequest'
+          whatsapp_media_video: '#/components/schemas/Message.WhatsAppVideoMessageRequest'
+          whatsapp_media_document: '#/components/schemas/Message.WhatsAppDocumentMessageRequest'
+          whatsapp_media_sticker: '#/components/schemas/Message.WhatsAppStickerMessageRequest'
+          whatsapp_media_location: '#/components/schemas/Message.WhatsAppLocationMessageRequest'
+          whatsapp_media_contacts: '#/components/schemas/Message.WhatsAppContactsMessageRequest'
+          whatsapp_media_reaction: '#/components/schemas/Message.WhatsAppReactionMessageRequest'
+          whatsapp_interactive_cta: '#/components/schemas/Message.WhatsAppInteractiveCtaMessageRequest'
+          whatsapp_interactive_list: '#/components/schemas/Message.WhatsAppInteractiveListMessageRequest'
+          whatsapp_interactive_reply_button: '#/components/schemas/Message.WhatsAppInteractiveReplyButtonMessageRequest'
+          whatsapp_interactive_location_request_message: '#/components/schemas/Message.WhatsAppInteractiveLocationRequestMessageRequest'
+      description: A WhatsApp content message. The `message_type` field determines the shape of `body`.
+    Message.WhatsAppInteractiveLocationRequestMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_interactive_location_request_message
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppInteractiveBody'
+      unevaluatedProperties:
+        not: {}
+      description: Request the customer's location.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Message.WhatsAppLocationBody:
+      type: object
+      required:
+      - latitude
+      - longitude
+      - name
+      - address
+      properties:
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          description: Latitude, between -90 and 90.
+          examples:
+          - 41.8781
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          description: Longitude, between -180 and 180.
+          examples:
+          - -87.6298
+        name:
+          type: string
+          description: The name of the location.
+          examples:
+          - SignalWire HQ
+        address:
+          type: string
+          description: The address of the location.
+          examples:
+          - Chicago, IL, USA
+      unevaluatedProperties:
+        not: {}
+      description: Body for a location message. All fields are required.
+    Message.MessagesUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: body_must_be_empty
+          message: must be an empty string to redact the message
+          attribute: body
+          url: https://developer.signalwire.com/rest/overview/error-codes/#body_must_be_empty
+        - type: validation_error
+          code: cannot_redact_in_progress_message
+          message: Cannot redact a message that is in progress.
+          attribute: base
+          url: https://developer.signalwire.com/rest/overview/error-codes/#cannot_redact_in_progress_message
+    Message.WhatsAppLocationMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_location
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppLocationBody'
+      unevaluatedProperties:
+        not: {}
+      description: Share a location.
+    Message.WhatsAppAudioMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_audio
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppAudioBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send an audio message.
+    Message.WhatsAppVideoBody:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+          description: A public HTTP/HTTPS URL to the video.
+          examples:
+          - https://example.com/clip.mp4
+        id:
+          type: string
+          description: The ID of media previously uploaded to WhatsApp. Mutually exclusive with `link`.
+        caption:
+          type: string
+          description: Optional caption shown with the video.
+      unevaluatedProperties:
+        not: {}
+      description: Body for a video message. Provide either `link` or `id` (not both).
+    Message.WhatsAppInteractiveListMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_interactive_list
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppInteractiveBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send a list interactive message (up to 10 items).
+    Message.WhatsAppTextMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_text
+        body:
+          type: string
+          description: The message text.
+          examples:
+          - Your appointment is confirmed for tomorrow at 2pm.
+      unevaluatedProperties:
+        not: {}
+      description: Send a plain text WhatsApp message. Allowed only within the 24-hour customer service window.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Message.WhatsAppInteractiveCtaMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_interactive_cta
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppInteractiveBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send a call-to-action URL interactive message. The `body.type` is `cta_url` and `action` carries the button's display text and URL.
+    Message.WhatsAppDocumentMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_document
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppDocumentBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send a document message, with an optional filename and caption.
+    Message.MessagesCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_from_number
+          message: From must be a valid purchased phone number or WhatsApp business number from your SignalWire project.
+          attribute: from
+          url: https://developer.signalwire.com/rest/overview/error-codes/#invalid_from_number
+    Message.WhatsAppReactionBody:
+      type: object
+      required:
+      - message_id
+      - emoji
+      properties:
+        message_id:
+          type: string
+          description: The ID of the message being reacted to.
+          examples:
+          - wamid.HBgLMTU1NTEyMzQ1NjcVAgARGBI...
+        emoji:
+          type: string
+          description: The emoji to react with.
+          examples:
+          - 👍
+      unevaluatedProperties:
+        not: {}
+      description: Body for a reaction message.
+    Message.CreateMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      properties:
+        to:
+          type: string
+          description: Destination phone number in E.164 format (`+` followed by 5-17 digits). Also accepts passthrough numbers like `988`/`+988`.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Source phone number. Must be a purchased SignalWire phone number on the project in E.164 format, or a shortcode (5-6 digits). Verified caller IDs are not permitted.
+          examples:
+          - '+15559876543'
+        body:
+          type: string
+          description: Message body text. Required if `media` is not provided. Subject to provider-specific character limits.
+          examples:
+          - 'Your order #12345 has shipped!'
+        media:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Array of HTTP or HTTPS URLs for media attachments. Presence of media makes the message MMS. Maximum 8 items.
+          examples:
+          - - https://example.com/tracking.png
+        send_as_mms:
+          type: boolean
+          description: Force the message to be sent as MMS even when no media attachments are provided.
+          examples:
+          - false
+          default: false
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change. See the [Message status callback](/docs/apis/rest/webhooks/message-status-callback) webhook for the payload your URL will receive.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: 'Your own key/value string pairs to attach to the message — for example, an order or case number you want to recognize later. When you also set `status_callback`, SignalWire includes these pairs as a `custom_variables` object in every status callback it sends to that URL, so you can match each callback to a record in your own system. If you don''t set `status_callback`, there is nowhere for the variables to be delivered.
+
+
+            Each value must be a non-empty string of at most 1024 bytes. You can send at most 20 pairs. Each key must start with a letter or underscore and contain only letters, numbers, and underscores, and cannot begin with the reserved prefixes `signalwire_`, `sw_`, `rtc_`, or `internal_` (case-insensitive). Keys are case-sensitive.'
+          examples:
+          - id: '12345'
+            case_number: '54321'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for sending a new SMS or MMS message.
+    Message.WhatsAppInteractiveReplyButtonMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_interactive_reply_button
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppInteractiveBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send a reply-button interactive message (up to 3 buttons). The `body.type` is `button` and each entry in `action.buttons` is a `reply` button.
+    Message.WhatsAppTemplateMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - template_id
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        template_id:
+          type: string
+          description: The template to send, by SignalWire template ID or Meta template ID. The template must be `approved`.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        header_template_parameters:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: object
+            unevaluatedProperties:
+              type: string
+          - type: string
+          description: Values for the placeholders in the template header. An array for positional parameters, an object for named parameters, or a media URL string for a document/media header.
+        body_template_parameters:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: object
+            unevaluatedProperties:
+              type: string
+          description: Values for the placeholders in the template body. An array for positional parameters or an object for named parameters.
+        button_template_parameters:
+          type: array
+          items:
+            type: string
+          description: Values for URL-button placeholders. Positional only (an array); named parameters are not supported for buttons.
+      unevaluatedProperties:
+        not: {}
+      description: Send an approved WhatsApp template. Use this to reach a customer for the first time or outside the 24-hour window. Do not include `body` or `message_type`.
+    Message.WhatsAppContactsMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_contacts
+        body:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message.WhatsAppContact'
+          description: One or more contacts to share.
+      unevaluatedProperties:
+        not: {}
+      description: Share one or more contact cards.
+    Message.WhatsAppImageMessageRequest:
+      type: object
+      required:
+      - to
+      - from
+      - message_type
+      - body
+      properties:
+        to:
+          type: string
+          description: Recipient phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: Your WhatsApp business number, prefixed with `whatsapp:`. The prefix is what routes the message over WhatsApp instead of SMS/MMS.
+          examples:
+          - whatsapp:+15557654321
+        status_callback:
+          type: string
+          format: uri
+          description: A valid URL to receive message status callback events at each state change.
+          examples:
+          - https://example.com/webhooks/message-status
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          maxProperties: 20
+          description: Your own key/value string pairs to attach to the message. Delivered as `custom_variables` in status callbacks when `status_callback` is set.
+        message_type:
+          type: string
+          enum:
+          - whatsapp_media_image
+        body:
+          $ref: '#/components/schemas/Message.WhatsAppImageBody'
+      unevaluatedProperties:
+        not: {}
+      description: Send an image message, with an optional caption.
+  parameters:
+    MessagesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier of the project that sent or received this message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    MessageSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: A unique ID that identifies this specific message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Message.MessagePathID:
+      name: message_id
+      in: path
+      required: true
+      description: The message segment ID — the same ID returned by the create endpoint and shown in `/api/messaging/logs`.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'
+x-refined-from:
+- signalwire-compatibility-openapi.yml
+- signalwire-rest-openapi.yml

@@ -1,0 +1,1258 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Space Domain Applications API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Manage domain applications for call handling configuration.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Space Domain Applications
+  description: Manage domain applications for call handling configuration.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SignalWire REST APIs
+paths:
+  /api/relay/rest/domain_applications:
+    get:
+      operationId: list_domain_applications
+      summary: List domain applications
+      description: 'Returns a list of your domain applications. The domain applications are returned sorted by creation date, with the most recent domain applications appearing first.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, or _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ListDomainApplicationsQuery.filter_domain'
+      - $ref: '#/components/parameters/ListDomainApplicationsQuery.filter_name'
+      - $ref: '#/components/parameters/ListDomainApplicationsQuery.page_number'
+      - $ref: '#/components/parameters/ListDomainApplicationsQuery.page_size'
+      - $ref: '#/components/parameters/ListDomainApplicationsQuery.page_token'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainApplicationListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Space Domain Applications
+    post:
+      operationId: create_domain_application
+      summary: Create domain application
+      description: 'Creates a new domain application.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, or _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainApplicationResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Space Domain Applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDomainApplicationRequest'
+  /api/relay/rest/domain_applications/{id}:
+    get:
+      operationId: retrieve_domain_application
+      summary: Get domain application
+      description: 'Retrieves the details of a Domain Application that has been previously created.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, or _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/DomainApplicationPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainApplicationResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Space Domain Applications
+    put:
+      operationId: update_domain_application
+      summary: Update domain application
+      description: 'Updates a Domain Application.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, or _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/DomainApplicationPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainApplicationResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request failed validation. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.ValidationError'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Space Domain Applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDomainApplicationRequest'
+    delete:
+      operationId: delete_domain_application
+      summary: Delete domain application
+      description: 'Permanently deletes a Domain Application. It cannot be undone.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, or _Fax_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/DomainApplicationPathID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode400'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Space Domain Applications
+components:
+  schemas:
+    DomainAppCallHandlerRequest:
+      type: string
+      enum:
+      - relay_topic
+      - relay_application
+      - laml_webhooks
+      - laml_application
+      - video_room
+      - relay_script
+      - dialogflow
+      - ai_agent
+      - call_flow
+      - relay_context
+      description: Call handler types that can be assigned via the API.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    DomainApplicationResponse:
+      type: object
+      required:
+      - id
+      - type
+      - domain
+      - name
+      - identifier
+      - user
+      - ip_auth_enabled
+      - ip_auth
+      - call_handler
+      - calling_handler_resource_id
+      - call_relay_topic
+      - call_relay_topic_status_callback_url
+      - call_relay_context
+      - call_relay_context_status_callback_url
+      - call_request_url
+      - call_request_method
+      - call_fallback_url
+      - call_fallback_method
+      - call_status_callback_url
+      - call_status_callback_method
+      - call_laml_application_id
+      - call_video_room_id
+      - call_relay_script_url
+      - encryption
+      - codecs
+      - ciphers
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the domain application on SignalWire.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        type:
+          type: string
+          description: A string representation of the type of object this record is.
+          examples:
+          - domain_application
+        domain:
+          type: string
+          description: The unique domain for this application, combining your space subdomain and identifier.
+          examples:
+          - your-space-test_id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the friendly name for this domain application.
+          examples:
+          - Test App
+        identifier:
+          type: string
+          description: A string representing the identifier portion of the domain application.
+        user:
+          type: string
+          description: A string representing the user portion of the domain application.
+          examples:
+          - helpdesk
+        ip_auth_enabled:
+          type: boolean
+          description: Whether the domain application will enforce IP authentication for incoming requests.
+          examples:
+          - true
+        ip_auth:
+          type: array
+          items:
+            type: string
+          description: A list containing whitelisted IP addresses and IP blocks used if ip_auth_enabled is true.
+        call_handler:
+          anyOf:
+          - $ref: '#/components/schemas/DomainAppCallHandler'
+          - type: 'null'
+          description: Specify how the domain application will handle calls.
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the calling handler resource.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_topic:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the Relay topic to forward incoming calls to.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Deprecated. Use call_relay_application instead.
+          deprecated: true
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Deprecated. Use call_relay_topic_status_callback_url instead.
+          deprecated: true
+        call_request_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the LaML URL to access when a call is received.
+          examples:
+          - https://example.com/laml
+        call_request_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_request_url.
+        call_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the LaML URL to access when the call to call_request_url fails.
+          examples:
+          - https://example.com/fallback
+        call_fallback_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_fallback_url.
+        call_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://example.com/status
+        call_status_callback_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_status_callback_url.
+        call_laml_application_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the ID of the LaML application to forward incoming calls to.
+          examples:
+          - app-123456
+        call_video_room_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: A string representing the ID of the Video Room to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_script_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the URL of the Relay script to execute when a call is received.
+          examples:
+          - https://example.com/relay-script
+        encryption:
+          type: string
+          enum:
+          - optional
+          - required
+          - forbidden
+          description: A string representing whether connections to this domain application require encryption or if encryption is optional. Valid values are optional, required, and forbidden.
+          examples:
+          - required
+        codecs:
+          type: array
+          items:
+            type: string
+          description: 'A list of codecs this domain application will support. Currently supported values are: OPUS, G722, PCMU, PCMA, G729, VP8, and H264.'
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: 'A list of encryption ciphers this domain application will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, and AES_CM_128_HMAC_SHA1_32.'
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single domain application.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    CreateDomainApplicationRequest:
+      type: object
+      required:
+      - name
+      - identifier
+      properties:
+        name:
+          type: string
+          description: A string representing the friendly name for this domain application.
+          examples:
+          - Test App
+        identifier:
+          type: string
+          description: A string representing the identifier portion of the domain application.
+        user:
+          type: string
+          description: The user portion of the domain application.
+          examples:
+          - helpdesk
+          default: '*'
+        ip_auth_enabled:
+          type: boolean
+          description: Whether the domain application will enforce IP authentication for incoming requests.
+          examples:
+          - true
+        ip_auth:
+          type: array
+          items:
+            type: string
+          description: A list containing whitelisted IP addresses and IP blocks used if ip_auth_enabled is true.
+          default: []
+        encryption:
+          type: string
+          enum:
+          - optional
+          - required
+          - forbidden
+          description: Whether connections to this domain application require encryption or if encryption is optional.
+          examples:
+          - required
+          default: optional
+        codecs:
+          type: array
+          items:
+            type: string
+          description: A list of codecs this domain application will support.
+          default:
+          - PCMU
+          - PCMA
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: A list of encryption ciphers this domain application will support.
+          default:
+          - AEAD_AES_256_GCM_8
+          - AES_256_CM_HMAC_SHA1_80
+          - AES_CM_128_HMAC_SHA1_80
+          - AES_256_CM_HMAC_SHA1_32
+          - AES_CM_128_HMAC_SHA1_32
+        call_handler:
+          allOf:
+          - $ref: '#/components/schemas/DomainAppCallHandlerRequest'
+          description: Specify how the domain application will handle calls.
+        call_relay_topic:
+          type: string
+          description: A string representing the Relay topic to forward incoming calls to. Required when call_handler is relay_topic.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          type: string
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_application:
+          type: string
+          description: A string representing the Relay Application to forward incoming calls to. Required when call_handler is relay_application.
+          examples:
+          - my-relay-app
+        call_request_url:
+          type: string
+          description: A string representing the LaML URL to access when a call is received. Required when call_handler is laml_webhooks.
+          examples:
+          - https://example.com/laml
+        call_request_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: A string representing the HTTP method to use with call_request_url.
+          default: POST
+        call_fallback_url:
+          type: string
+          description: A string representing the LaML URL to access when the call to call_request_url fails.
+          examples:
+          - https://example.com/fallback
+        call_fallback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: A string representing the HTTP method to use with call_fallback_url.
+          default: POST
+        call_status_callback_url:
+          type: string
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://example.com/status
+        call_status_callback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: A string representing the HTTP method to use with call_status_callback_url.
+          default: POST
+        call_laml_application_id:
+          type: string
+          description: A string representing the ID of the LaML application to forward incoming calls to. Required when call_handler is laml_application.
+          examples:
+          - app-123456
+        call_video_room_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the Video Room to forward incoming calls to. Required when call_handler is video_room.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_script_url:
+          type: string
+          description: A string representing the URL of the Relay script to execute when a call is received. Required when call_handler is relay_script.
+          examples:
+          - https://example.com/relay-script
+        call_dialogflow_agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the Dialogflow Agent to forward incoming calls to. Required when call_handler is dialogflow.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_ai_agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the AI Agent to forward incoming calls to. Required when call_handler is ai_agent.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_flow_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the Call Flow to forward incoming calls to. Required when call_handler is call_flow.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_flow_version:
+          type: string
+          enum:
+          - working_copy
+          - current_deployed
+          description: A string representing the version of your Call Flow you'd like to use.
+        call_relay_context:
+          type: string
+          description: This handler type is deprecated. Please use call_relay_application or call_relay_topic instead.
+          deprecated: true
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          type: string
+          description: This property is deprecated. Please use call_relay_topic_status_callback_url instead.
+          deprecated: true
+          examples:
+          - https://myapplication/handle_relay_callbacks
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a domain application.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    DomainApplicationListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DomainApplication'
+          description: List of domain applications.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of domain applications.
+    DomainAppCallHandler:
+      type: string
+      enum:
+      - relay_topic
+      - relay_application
+      - laml_webhooks
+      - laml_application
+      - video_room
+      - relay_script
+      - dialogflow
+      - ai_agent
+      - call_flow
+      - relay_context
+      - relay_connector
+      - fabric_subscriber
+      - sip_gateway
+      - call_queue
+      description: All possible call handler types for domain applications. Includes types that can only be assigned via the Fabric API or UI.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    DomainApplication:
+      type: object
+      required:
+      - id
+      - type
+      - domain
+      - name
+      - identifier
+      - user
+      - ip_auth_enabled
+      - ip_auth
+      - call_handler
+      - calling_handler_resource_id
+      - call_relay_topic
+      - call_relay_topic_status_callback_url
+      - call_relay_context
+      - call_relay_context_status_callback_url
+      - call_request_url
+      - call_request_method
+      - call_fallback_url
+      - call_fallback_method
+      - call_status_callback_url
+      - call_status_callback_method
+      - call_laml_application_id
+      - call_video_room_id
+      - call_relay_script_url
+      - encryption
+      - codecs
+      - ciphers
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the domain application on SignalWire.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        type:
+          type: string
+          description: A string representation of the type of object this record is.
+          examples:
+          - domain_application
+        domain:
+          type: string
+          description: The unique domain for this application, combining your space subdomain and identifier.
+          examples:
+          - your-space-test_id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the friendly name for this domain application.
+          examples:
+          - Test App
+        identifier:
+          type: string
+          description: A string representing the identifier portion of the domain application.
+        user:
+          type: string
+          description: A string representing the user portion of the domain application.
+          examples:
+          - helpdesk
+        ip_auth_enabled:
+          type: boolean
+          description: Whether the domain application will enforce IP authentication for incoming requests.
+          examples:
+          - true
+        ip_auth:
+          type: array
+          items:
+            type: string
+          description: A list containing whitelisted IP addresses and IP blocks used if ip_auth_enabled is true.
+        call_handler:
+          anyOf:
+          - $ref: '#/components/schemas/DomainAppCallHandler'
+          - type: 'null'
+          description: Specify how the domain application will handle calls.
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the calling handler resource.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_topic:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the Relay topic to forward incoming calls to.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Deprecated. Use call_relay_application instead.
+          deprecated: true
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Deprecated. Use call_relay_topic_status_callback_url instead.
+          deprecated: true
+        call_request_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the LaML URL to access when a call is received.
+          examples:
+          - https://example.com/laml
+        call_request_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_request_url.
+        call_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the LaML URL to access when the call to call_request_url fails.
+          examples:
+          - https://example.com/fallback
+        call_fallback_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_fallback_url.
+        call_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://example.com/status
+        call_status_callback_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_status_callback_url.
+        call_laml_application_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the ID of the LaML application to forward incoming calls to.
+          examples:
+          - app-123456
+        call_video_room_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: A string representing the ID of the Video Room to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_script_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the URL of the Relay script to execute when a call is received.
+          examples:
+          - https://example.com/relay-script
+        encryption:
+          type: string
+          enum:
+          - optional
+          - required
+          - forbidden
+          description: A string representing whether connections to this domain application require encryption or if encryption is optional. Valid values are optional, required, and forbidden.
+          examples:
+          - required
+        codecs:
+          type: array
+          items:
+            type: string
+          description: 'A list of codecs this domain application will support. Currently supported values are: OPUS, G722, PCMU, PCMA, G729, VP8, and H264.'
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: 'A list of encryption ciphers this domain application will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, and AES_CM_128_HMAC_SHA1_32.'
+      unevaluatedProperties:
+        not: {}
+      description: Domain application model.
+    UpdateDomainApplicationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A string representing the friendly name for this domain application.
+          examples:
+          - Test App
+        identifier:
+          type: string
+          description: A string representing the identifier portion of the domain application.
+        user:
+          type: string
+          description: A string representing the user portion of the domain application.
+          examples:
+          - helpdesk
+        ip_auth_enabled:
+          type: boolean
+          description: Whether the domain application will enforce IP authentication for incoming requests.
+          examples:
+          - true
+        ip_auth:
+          type: array
+          items:
+            type: string
+          description: A list containing whitelisted IP addresses and IP blocks used if ip_auth_enabled is true.
+        encryption:
+          type: string
+          enum:
+          - optional
+          - required
+          - forbidden
+          description: Whether connections to this domain application require encryption or if encryption is optional.
+          examples:
+          - required
+        codecs:
+          type: array
+          items:
+            type: string
+          description: A list of codecs this domain application will support.
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: A list of encryption ciphers this domain application will support.
+        call_handler:
+          allOf:
+          - $ref: '#/components/schemas/DomainAppCallHandlerRequest'
+          description: Specify how the domain application will handle calls.
+        call_relay_topic:
+          type: string
+          description: A string representing the Relay topic to forward incoming calls to.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          type: string
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_application:
+          type: string
+          description: A string representing the Relay Application to forward incoming calls to.
+          examples:
+          - my-relay-app
+        call_request_url:
+          type: string
+          description: A string representing the LaML URL to access when a call is received.
+          examples:
+          - https://example.com/laml
+        call_request_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: A string representing the HTTP method to use with call_request_url.
+        call_fallback_url:
+          type: string
+          description: A string representing the LaML URL to access when the call to call_request_url fails.
+          examples:
+          - https://example.com/fallback
+        call_fallback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: A string representing the HTTP method to use with call_fallback_url.
+        call_status_callback_url:
+          type: string
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://example.com/status
+        call_status_callback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: A string representing the HTTP method to use with call_status_callback_url.
+        call_laml_application_id:
+          type: string
+          description: A string representing the ID of the LaML application to forward incoming calls to.
+          examples:
+          - app-123456
+        call_video_room_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the Video Room to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_script_url:
+          type: string
+          description: A string representing the URL of the Relay script to execute when a call is received.
+          examples:
+          - https://example.com/relay-script
+        call_dialogflow_agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the Dialogflow Agent to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_ai_agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the AI Agent to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_flow_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A string representing the ID of the Call Flow to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_flow_version:
+          type: string
+          enum:
+          - working_copy
+          - current_deployed
+          description: A string representing the version of your Call Flow you'd like to use.
+        call_relay_context:
+          type: string
+          description: This handler type is deprecated. Please use call_relay_application or call_relay_topic instead.
+          deprecated: true
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          type: string
+          description: This property is deprecated. Please use call_relay_topic_status_callback_url instead.
+          deprecated: true
+          examples:
+          - https://myapplication/handle_relay_callbacks
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a domain application.
+  parameters:
+    ListDomainApplicationsQuery.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when page_number > 0.
+      schema:
+        type: string
+      explode: false
+    DomainApplicationPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the domain application.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ListDomainApplicationsQuery.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: The number of items per page (1-1000).
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    ListDomainApplicationsQuery.filter_domain:
+      name: filter_domain
+      in: query
+      required: false
+      description: String representing the domain portion of the domain application. Will return all domain applications containing this value as a substring.
+      schema:
+        type: string
+      explode: false
+    ListDomainApplicationsQuery.filter_name:
+      name: filter_name
+      in: query
+      required: false
+      description: String representing the name portion of the domain application. Will return all domain applications containing this value as a substring.
+      schema:
+        type: string
+      explode: false
+    ListDomainApplicationsQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        default: 0
+      explode: false
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

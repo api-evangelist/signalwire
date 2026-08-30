@@ -1,0 +1,474 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Domain Applications API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Endpoints related to managing Domain Applications
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Domain Applications
+  description: Endpoints related to managing Domain Applications
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on Domain Application, Fabric API endpoints
+paths:
+  /api/fabric/resources/{id}/domain_applications:
+    post:
+      operationId: assign_resource_domain_application
+      summary: Assign domain application handler
+      description: 'This endpoint assigns a specific resource to a Domain Application, allowing inbound calls to be handled by the resource.
+
+        <Note>
+
+        Currently only supports `calling` as a handler and automatically defaults to it.
+
+        </Note>
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/DomainApplicationPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainApplicationResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainApplicationCreateStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Domain Applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainApplicationAssignRequest'
+components:
+  parameters:
+    DomainApplicationPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the domain application.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    DomainApplicationCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: name is required
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    DomainAppCallHandler:
+      type: string
+      enum:
+      - relay_topic
+      - relay_application
+      - laml_webhooks
+      - laml_application
+      - video_room
+      - relay_script
+      - dialogflow
+      - ai_agent
+      - call_flow
+      - relay_context
+      - relay_connector
+      - fabric_subscriber
+      - sip_gateway
+      - call_queue
+      description: All possible call handler types for domain applications. Includes types that can only be assigned via the Fabric API or UI.
+    DomainApplicationResponse:
+      type: object
+      required:
+      - id
+      - type
+      - domain
+      - name
+      - identifier
+      - user
+      - ip_auth_enabled
+      - ip_auth
+      - call_handler
+      - calling_handler_resource_id
+      - call_relay_topic
+      - call_relay_topic_status_callback_url
+      - call_relay_context
+      - call_relay_context_status_callback_url
+      - call_request_url
+      - call_request_method
+      - call_fallback_url
+      - call_fallback_method
+      - call_status_callback_url
+      - call_status_callback_method
+      - call_laml_application_id
+      - call_video_room_id
+      - call_relay_script_url
+      - encryption
+      - codecs
+      - ciphers
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the domain application on SignalWire.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        type:
+          type: string
+          description: A string representation of the type of object this record is.
+          examples:
+          - domain_application
+        domain:
+          type: string
+          description: The unique domain for this application, combining your space subdomain and identifier.
+          examples:
+          - your-space-test_id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the friendly name for this domain application.
+          examples:
+          - Test App
+        identifier:
+          type: string
+          description: A string representing the identifier portion of the domain application.
+        user:
+          type: string
+          description: A string representing the user portion of the domain application.
+          examples:
+          - helpdesk
+        ip_auth_enabled:
+          type: boolean
+          description: Whether the domain application will enforce IP authentication for incoming requests.
+          examples:
+          - true
+        ip_auth:
+          type: array
+          items:
+            type: string
+          description: A list containing whitelisted IP addresses and IP blocks used if ip_auth_enabled is true.
+        call_handler:
+          anyOf:
+          - $ref: '#/components/schemas/DomainAppCallHandler'
+          - type: 'null'
+          description: Specify how the domain application will handle calls.
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the calling handler resource.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_topic:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the Relay topic to forward incoming calls to.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Deprecated. Use call_relay_application instead.
+          deprecated: true
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Deprecated. Use call_relay_topic_status_callback_url instead.
+          deprecated: true
+        call_request_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the LaML URL to access when a call is received.
+          examples:
+          - https://example.com/laml
+        call_request_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_request_url.
+        call_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the LaML URL to access when the call to call_request_url fails.
+          examples:
+          - https://example.com/fallback
+        call_fallback_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_fallback_url.
+        call_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to.
+          examples:
+          - https://example.com/status
+        call_status_callback_method:
+          anyOf:
+          - type: string
+            enum:
+            - GET
+            - POST
+          - type: 'null'
+          description: A string representing the HTTP method to use with call_status_callback_url.
+        call_laml_application_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the ID of the LaML application to forward incoming calls to.
+          examples:
+          - app-123456
+        call_video_room_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: A string representing the ID of the Video Room to forward incoming calls to.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_relay_script_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the URL of the Relay script to execute when a call is received.
+          examples:
+          - https://example.com/relay-script
+        encryption:
+          type: string
+          enum:
+          - optional
+          - required
+          - forbidden
+          description: A string representing whether connections to this domain application require encryption or if encryption is optional. Valid values are optional, required, and forbidden.
+          examples:
+          - required
+        codecs:
+          type: array
+          items:
+            type: string
+          description: 'A list of codecs this domain application will support. Currently supported values are: OPUS, G722, PCMU, PCMA, G729, VP8, and H264.'
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: 'A list of encryption ciphers this domain application will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, and AES_CM_128_HMAC_SHA1_32.'
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single domain application.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    DomainApplicationAssignRequest:
+      type: object
+      required:
+      - domain_application_id
+      properties:
+        domain_application_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The id of the domain application you wish to assign a resource to.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

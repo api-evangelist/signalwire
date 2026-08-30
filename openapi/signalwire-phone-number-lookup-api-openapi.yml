@@ -1,0 +1,306 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Phone Number Lookup API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Look up information about phone numbers.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Phone Number Lookup
+  description: Look up information about phone numbers.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on SignalWire REST APIs
+paths:
+  /api/relay/rest/lookup/phone_number/{e164_number}:
+    get:
+      operationId: lookup_phone_number
+      summary: Look up phone number
+      description: 'This endpoint allows you to look up validity and formatting
+
+        information about a number. You can optionally lookup additional
+
+        information about the number such as carrier and caller ID data.
+
+
+        #### Permissions
+
+
+        No API token scope is required to make a successful request to this endpoint.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/E164NumberPath'
+      - name: include
+        in: query
+        required: false
+        description: 'Further number information to include in the response, some of which are billable. You can specify: carrier (Lookup full carrier information for the number), cnam (Lookup Caller ID information for the number). Separate multiple values with a comma: include=carrier,cnam.'
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberLookupResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Phone Number Lookup
+components:
+  parameters:
+    E164NumberPath:
+      name: e164_number
+      in: path
+      required: true
+      description: The phone number in E.164 format.
+      schema:
+        type: string
+  schemas:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    CarrierLookupInfo:
+      type: object
+      properties:
+        lrn:
+          type: string
+          description: The LRN associated with the number.
+          examples:
+          - '15551234567'
+        spid:
+          type: string
+          description: The Service Profile Identifier associated with the number.
+          examples:
+          - 683X
+        ocn:
+          type: string
+          description: The Operating Company Number associated with the number.
+          examples:
+          - '12345'
+        lata:
+          type: string
+          description: The Local Access and Transport Area number associated with the number.
+          examples:
+          - '99999'
+        city:
+          type: string
+          description: The City associated with the number.
+          examples:
+          - Aberdeen
+        state:
+          type: string
+          description: The State/Province/Region associated with the number.
+          examples:
+          - WA
+        jurisdiction:
+          type: string
+          description: The Jurisdiction associated with the number.
+          examples:
+          - indeterminate
+        lec:
+          type: string
+          description: The LEC or Carrier of the number.
+          examples:
+          - Verizon
+        linetype:
+          type: string
+          description: The type of line the number is. Generally either wireless or landline.
+          examples:
+          - landline
+      unevaluatedProperties:
+        not: {}
+      description: Carrier lookup information.
+    CnamInfo:
+      type: object
+      properties:
+        caller_id:
+          type: string
+          description: The caller ID associated with the number.
+          examples:
+          - John Smith
+      unevaluatedProperties:
+        not: {}
+      description: Caller ID (CNAM) information.
+    PhoneNumberLookupResponse:
+      type: object
+      properties:
+        country_code_number:
+          type: integer
+          format: int32
+          description: The Country code associated with the number.
+          examples:
+          - 1
+        national_number:
+          type: string
+          description: Number in the countries national format.
+          examples:
+          - '5551234567'
+        possible_number:
+          type: boolean
+          description: Whether the number supplied is a possible number.
+          examples:
+          - true
+        valid_number:
+          type: boolean
+          description: Whether the number supplied is a valid number.
+          examples:
+          - true
+        national_number_formatted:
+          type: string
+          description: The E164 number formatted in national format.
+          examples:
+          - (555) 123-4567
+        international_number_formatted:
+          type: string
+          description: The E164 number formatted in international format.
+          examples:
+          - +1 555-123-4567
+        e164:
+          type: string
+          description: The number in E164 format.
+          examples:
+          - '+15551234567'
+        location:
+          type: string
+          description: The location of the number based on its area code and NPA.
+          examples:
+          - Texas
+        country_code:
+          type: string
+          description: The ISO3166 alpha 2 country code associated with the number.
+          examples:
+          - US
+        timezones:
+          type: array
+          items:
+            type: string
+          description: The time zones associated with the number.
+        number_type:
+          type: string
+          description: The type of number based on its area code and NPA.
+          examples:
+          - Fixed Line or Mobile
+        carrier:
+          allOf:
+          - $ref: '#/components/schemas/CarrierLookupInfo'
+          description: Carrier information. Adding include=carrier to your request will do a live lookup to determine the current carrier information about this number.
+        cnam:
+          allOf:
+          - $ref: '#/components/schemas/CnamInfo'
+          description: Caller ID information. Adding include=cnam to your request will do a live lookup to determine the current caller ID information about this number.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing phone number lookup result.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

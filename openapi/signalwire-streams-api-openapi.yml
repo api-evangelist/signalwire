@@ -1,0 +1,1003 @@
+openapi: 3.2.0
+info:
+  title: Signalwire Streams API
+  version: 1.0.0
+  description: 'Operations tagged Streams across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Streams
+  description: Manage media streams for calls.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Calls/{CallSid}/Streams:
+    post:
+      operationId: create_stream
+      summary: Create a Stream
+      description: 'Create a stream.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CallsAccountSidPath'
+      - $ref: '#/components/parameters/CallSidPathForRecording'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallStreamResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '503':
+          description: The service is temporarily unavailable. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Streams
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateCallStreamRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /Accounts/{AccountSid}/Calls/{CallSid}/Streams/{Sid}:
+    post:
+      operationId: update_stream
+      summary: Stop a Stream
+      description: 'Stop a Stream.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/CallsAccountSidPath'
+      - $ref: '#/components/parameters/CallSidPathForRecording'
+      - $ref: '#/components/parameters/CallSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CallStreamResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '503':
+          description: The service is temporarily unavailable. Please try again later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Streams
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateCallStreamRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+      description: SignalWire Compatibility API
+      variables:
+        space_name:
+          default: YOUR_SPACE
+          description: Your SignalWire Space name
+  /api/video/conferences/{id}/streams:
+    get:
+      operationId: list_conference_streams
+      summary: List conference streams
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique id of a video conference
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.ListStreamsResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+    post:
+      operationId: create_conference_stream
+      summary: Create conference stream
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique id of a video conference
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Stream response object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.Stream'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video.CreateStreamRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+  /api/video/rooms/{id}/streams:
+    get:
+      operationId: list_room_streams
+      summary: List room streams
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/Video.RoomPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.ListStreamsResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+    post:
+      operationId: create_room_stream
+      summary: Create room stream
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/Video.RoomPathID'
+      responses:
+        '201':
+          description: Stream created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.Stream'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video.CreateStreamRequest'
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+  /api/video/streams/{id}:
+    get:
+      operationId: get_stream
+      summary: Get stream
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/Video.StreamPathID'
+      responses:
+        '200':
+          description: Stream response object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.Stream'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+    put:
+      operationId: update_stream
+      summary: Update stream
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/Video.StreamPathID'
+      responses:
+        '200':
+          description: Stream response object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.Stream'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '422':
+          description: The request contains invalid parameters. See errors for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video.VideoStatusCode422'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video.UpdateStreamRequest'
+    delete:
+      operationId: delete_stream
+      summary: Delete stream
+      description: '#### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/Video.StreamPathID'
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Streams
+    servers:
+    - url: https://{space_name}.signalwire.com
+      description: SignalWire API
+      variables:
+        space_name:
+          default: '{Your_Space_Name}'
+          description: Your SignalWire Space name
+components:
+  parameters:
+    CallSidPathForRecording:
+      name: CallSid
+      in: path
+      required: true
+      description: The unique identifier for the call.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the call.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.RoomPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the video room.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.StreamPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the stream.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    CallStreamResponse:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - call_sid
+      - name
+      - status
+      - date_updated
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the stream.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472st
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the call.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        name:
+          type: string
+          description: The name of the stream.
+          examples:
+          - my_first_stream
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StreamStatus'
+          description: The status of the stream.
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this stream was updated.
+          examples:
+          - Wed, 19 Sep 2018 21:00:00 +0000
+        uri:
+          type: string
+          description: The URI for the stream.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Calls/b3877c40-da60-4998-90ad-b792e98472ca/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single call stream.
+    StreamStatus:
+      type: string
+      enum:
+      - queued
+      - in-progress
+      - stopped
+      description: Stream status.
+    CreateCallStreamRequest:
+      type: object
+      required:
+      - Url
+      properties:
+        Name:
+          type: string
+          description: Unique name for the Stream, per Call. It is used to stop a Stream by name.
+          examples:
+          - my_first_stream
+        Track:
+          type: string
+          enum:
+          - inbound_track
+          - outbound_track
+          - both_tracks
+          description: This attribute can be one of inbound_track, outbound_track, both_tracks. Default is `both_tracks`.
+          examples:
+          - both_tracks
+          default: both_tracks
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `StatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - GET
+          default: POST
+        StatusCallback:
+          type: string
+          format: uri
+          description: The URL to request to when stream is available.
+          examples:
+          - https://your-api-endpoint.com/stream-status
+        Url:
+          type: string
+          format: uri
+          description: Absolute or relative URL. A WebSocket connection to the url will be established and audio will start flowing towards the Websocket server. The only supported protocol is wss. For security reasons ws is NOT supported.
+          examples:
+          - wss://your-application.com/audiostream
+        Parameter1.Name:
+          type: string
+          description: Custom parameter name to pass towards the WebSocket server. You can pass up to 99 custom parameters using `Parameter1.Name` through `Parameter99.Name`.
+          examples:
+          - FirstName
+        Parameter1.Value:
+          type: string
+          description: Custom parameter value to pass towards the WebSocket server. You can pass up to 99 custom parameters using `Parameter1.Value` through `Parameter99.Value`.
+          examples:
+          - Jane
+        Parameter2.Name:
+          type: string
+          description: Custom parameter name to pass towards the WebSocket server.
+          examples:
+          - LastName
+        Parameter2.Value:
+          type: string
+          description: Custom parameter value to pass towards the WebSocket server.
+          examples:
+          - Doe
+        AuthorizationBearerToken:
+          type: string
+          description: Bearer token for authorization with the WebSocket server.
+          examples:
+          - your-bearer-token
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a call stream.
+    UpdateCallStreamRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - stopped
+          description: The status of the stream. Only 'stopped' is allowed.
+          examples:
+          - stopped
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a call stream.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Video.Stream:
+      type: object
+      required:
+      - id
+      - url
+      - stream_type
+      - width
+      - height
+      - fps
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique identifier for the stream.
+          examples:
+          - c22d24f6-5a47-4597-9a23-c7d01e696b92
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          examples:
+          - rtmp://broadcaster
+        stream_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The type of stream.
+          examples:
+          - rtmp
+        width:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The stream's width in pixels.
+          examples:
+          - 1920
+        height:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The stream's height in pixels.
+          examples:
+          - 1080
+        fps:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The stream's frames per second.
+          examples:
+          - 20
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the stream was created.
+          examples:
+          - '2022-01-01T10:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the stream was last updated.
+          examples:
+          - '2022-01-01T11:00:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: A video stream object.
+    Video.PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=2
+        first:
+          type: string
+          description: Link to the first page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+        next:
+          type: string
+          description: Link to the next page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=3
+        prev:
+          type: string
+          description: Link to the previous page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Video.ListStreamsResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.Stream'
+          description: List of streams.
+      unevaluatedProperties:
+        not: {}
+      description: List streams response.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Video.UpdateStreamRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          examples:
+          - rtmp://broadcaster
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a stream.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Video.CreateStreamRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          examples:
+          - rtmp://broadcaster
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a stream.
+    Video.VideoStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'
+x-refined-from:
+- signalwire-compatibility-openapi.yml
+- signalwire-rest-openapi.yml

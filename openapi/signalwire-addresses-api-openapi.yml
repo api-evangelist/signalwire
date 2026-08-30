@@ -1,0 +1,471 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Addresses API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: Client-side endpoints for listing and retrieving resource addresses using [subscriber](/docs/platform/subscribers) access tokens (SAT). Intended for use with the Browser SDK to resolve addresses from the client.
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Addresses
+  description: Client-side endpoints for listing and retrieving resource addresses using [subscriber](/docs/platform/subscribers) access tokens (SAT). Intended for use with the Browser SDK to resolve addresses from the client.
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on Fabric Address, Fabric API endpoints
+paths:
+  /api/fabric/addresses:
+    get:
+      operationId: list_resource_addresses_client
+      summary: List Resource Addresses from a Client
+      description: 'Lists resource addresses visible to the authenticated [subscriber](/docs/platform/subscribers). This endpoint uses bearer token authentication with a SAT (Subscriber Access Token),
+
+        which can be generated using the [Create Subscriber Token endpoint](/docs/apis/rest/subscribers/tokens/create-subscriber-token).
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FabricAddressesResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Addresses
+      security:
+      - SignalWireBearerAuth: []
+  /api/fabric/addresses/{id}:
+    get:
+      operationId: get_resource_address_client
+      summary: Get Resource Address from a Client
+      description: 'Returns a resource address by ID. This endpoint uses bearer token authentication with a SAT ([Subscriber](/docs/platform/subscribers) Access Token),
+
+        which can be generated using the [Create Subscriber Token endpoint](/docs/apis/rest/subscribers/tokens/create-subscriber-token).
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/FabricAddressID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FabricAddress'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Addresses
+      security:
+      - SignalWireBearerAuth: []
+  /api/fabric/resources/{id}/addresses:
+    get:
+      operationId: list_resource_addresses
+      summary: List Resource Addresses
+      description: 'This endpoint is used to retrieve addresses associated with a specific Resource.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ResourceAddressPathID'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceAddressListResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode401'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode404'
+        '500':
+          description: An internal server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Types.StatusCodes.StatusCode500'
+      tags:
+      - Addresses
+components:
+  parameters:
+    ResourceAddressPathID:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the Resource.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FabricAddressID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a FabricAddress.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  schemas:
+    FabricAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=1&page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
+    DisplayTypes:
+      type: string
+      enum:
+      - app
+      - room
+      - call
+      - subscriber
+      description: DisplayTypes
+    FabricAddress:
+      type: object
+      required:
+      - id
+      - name
+      - display_name
+      - cover_url
+      - preview_url
+      - locked
+      - channels
+      - created_at
+      - type
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Fabric Address.
+          examples:
+          - 691af061-cd86-4893-a605-173f47afc4c2
+        name:
+          type: string
+          description: Name of the Fabric Address.
+          examples:
+          - justice-league
+        display_name:
+          type: string
+          description: Display name of the Fabric Address.
+          examples:
+          - Justice League
+        cover_url:
+          type: string
+          description: Cover url of the Fabric Address.
+          examples:
+          - https://coverurl.com
+        preview_url:
+          type: string
+          description: Preview url of the Fabric Address.
+          examples:
+          - https://previewurl.com
+        locked:
+          type: boolean
+          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
+          examples:
+          - true
+        channels:
+          allOf:
+          - $ref: '#/components/schemas/AddressChannel'
+          description: Channels of the Fabric Address.
+        created_at:
+          type: string
+          format: date-time
+          description: Fabric Address Creation Date.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          $ref: '#/components/schemas/DisplayTypes'
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    ResourceAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link to the current page of results
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link to the first page of results
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page of results
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page of results
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    ResourceAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddress'
+          description: An array opf objects that contain a list of Resource Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/ResourceAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    FabricAddressesResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddress'
+          description: An array of objects containing a list of Resource Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FabricAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'

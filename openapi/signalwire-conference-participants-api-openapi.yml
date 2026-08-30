@@ -1,0 +1,660 @@
+openapi: 3.2.0
+info:
+  title: Compatibility Conference Participants API
+  version: 1.0.0
+  description: Manage participants in conference calls.
+servers:
+- url: https://{space_name}.signalwire.com/api/laml/2010-04-01
+  description: SignalWire Compatibility API
+  variables:
+    space_name:
+      default: YOUR_SPACE
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Conference Participants
+  description: Manage participants in conference calls.
+  externalDocs:
+    url: https://signalwire.com/docs/compatibility-api/rest
+    description: Developer documentation on the Compatibility REST API
+paths:
+  /Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants:
+    get:
+      operationId: list_all_participants
+      summary: List all active Participants
+      description: 'The ability to read all of the active participants that are associated with this conference call. This will be returned as a list of participants.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ConferencesAccountSidPath'
+      - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
+      - name: Muted
+        in: query
+        required: false
+        description: Whether or not a participant is muted.
+        schema:
+          type: boolean
+        explode: false
+      - name: Hold
+        in: query
+        required: false
+        description: Whether or not a participant is on hold.
+        schema:
+          type: boolean
+        explode: false
+      - name: Page
+        in: query
+        required: false
+        description: The page number to retrieve. Page numbers are zero-indexed, so the first page is 0.
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+        explode: false
+      - name: PageSize
+        in: query
+        required: false
+        description: The number of results to return per page. The default is 50, and the maximum is 1000.
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 50
+        explode: false
+      - name: PageToken
+        in: query
+        required: false
+        description: A token used to retrieve a specific page of results. Must start with PA or PB.
+        schema:
+          type: string
+        explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceParticipantListResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Conference Participants
+  /Accounts/{AccountSid}/Conferences/{ConferenceSid}/Participants/{CallSid}:
+    get:
+      operationId: retrieve_participant
+      summary: Retrieve a Participant
+      description: 'Retrieve a single participant.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ConferencesAccountSidPath'
+      - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
+      - $ref: '#/components/parameters/ParticipantCallSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceParticipantResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Conference Participants
+    post:
+      operationId: update_participant
+      summary: Update a Participant
+      description: 'Update a participant.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ConferencesAccountSidPath'
+      - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
+      - $ref: '#/components/parameters/ParticipantCallSidPath'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceParticipantResponse'
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Conference Participants
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateConferenceParticipantRequest'
+    delete:
+      operationId: delete_participant
+      summary: Delete a Participant
+      description: 'Deleting a participant will take them out of a conference call.
+
+
+        #### Permissions
+
+
+        The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
+
+
+        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+      parameters:
+      - $ref: '#/components/parameters/ConferencesAccountSidPath'
+      - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
+      - $ref: '#/components/parameters/ParticipantCallSidPath'
+      responses:
+        '204':
+          description: 204 No Content response.
+        '400':
+          description: The request was invalid or cannot be processed. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '401':
+          description: Authentication failed. Please verify your credentials and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '404':
+          description: The requested resource was not found. Please verify the resource identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+        '422':
+          description: The request could not be processed due to validation errors. Check the error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatibilityErrorResponse'
+      tags:
+      - Conference Participants
+components:
+  schemas:
+    ConferenceParticipantListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - participants
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants?PageToken=PA1234
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants?Page=1&PageToken=PA5678
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConferenceParticipant'
+          description: List of participants.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of conference participants.
+    UpdateConferenceParticipantRequest:
+      type: object
+      properties:
+        AnnounceUrl:
+          type: string
+          format: uri
+          description: The URL to send conference announcements to.
+          examples:
+          - https://your-api-endpoint.com/announce
+        AnnounceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        Coaching:
+          type: boolean
+          description: Whether the participant is coaching another call. Requires `CallSidToCoach` to be set.
+          examples:
+          - false
+        CallSidToCoach:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the participant who is being coached. Required when `Coaching` is true.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472co
+        Hold:
+          type: boolean
+          description: Whether or not a participant is on hold.
+          examples:
+          - false
+        HoldMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `HoldUrl` is a `GET` or a `POST`. Default is `GET`.
+          examples:
+          - GET
+          default: GET
+        HoldUrl:
+          type: string
+          format: uri
+          description: The URL to send hold music to that will be played when participant is on hold.
+          examples:
+          - https://your-api-endpoint.com/hold-music
+        Muted:
+          type: boolean
+          description: Whether or not a participant is muted.
+          examples:
+          - false
+        WaitUrl:
+          type: string
+          format: uri
+          description: The URL for wait music to be played while a conference is not yet started.
+          examples:
+          - https://your-api-endpoint.com/wait-music
+        WaitMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `WaitUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference participant.
+    ParticipantStatus:
+      type: string
+      enum:
+      - completed
+      - in-progress
+      description: Conference participant status.
+    ConferenceParticipant:
+      type: object
+      required:
+      - account_sid
+      - call_sid
+      - call_sid_to_coach
+      - coaching
+      - conference_sid
+      - date_created
+      - status
+      - date_updated
+      - end_conference_on_exit
+      - muted
+      - hold
+      - start_conference_on_enter
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that created this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the Participant call connected to this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        call_sid_to_coach:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the participant who is being coached.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472co
+        coaching:
+          type: boolean
+          description: Whether the participant is coaching another call.
+          examples:
+          - false
+        conference_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the conference this participant is in.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this conference participant was created.
+          examples:
+          - Mon, 24 Sept 2018 21:00:00 +0000
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ParticipantStatus'
+          description: The status of the conference call.
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this conference participant was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        end_conference_on_exit:
+          type: boolean
+          description: Whether or not a conference ends when a participant leaves the conference call.
+          examples:
+          - false
+        muted:
+          type: boolean
+          description: Whether or not a participant is muted.
+          examples:
+          - false
+        hold:
+          type: boolean
+          description: Whether or not a participant is on hold.
+          examples:
+          - false
+        start_conference_on_enter:
+          type: boolean
+          description: Whether or not a conference will begin when this participant enters the conference call.
+          examples:
+          - true
+        uri:
+          type: string
+          description: The URI for this conference participant.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants/b3877c40-da60-4998-90ad-b792e98472ca.json
+      unevaluatedProperties:
+        not: {}
+      description: Conference participant model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    ConferenceParticipantResponse:
+      type: object
+      required:
+      - account_sid
+      - call_sid
+      - call_sid_to_coach
+      - coaching
+      - conference_sid
+      - date_created
+      - status
+      - date_updated
+      - end_conference_on_exit
+      - muted
+      - hold
+      - start_conference_on_enter
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that created this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the Participant call connected to this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        call_sid_to_coach:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the participant who is being coached.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472co
+        coaching:
+          type: boolean
+          description: Whether the participant is coaching another call.
+          examples:
+          - false
+        conference_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the conference this participant is in.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this conference participant was created.
+          examples:
+          - Mon, 24 Sept 2018 21:00:00 +0000
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ParticipantStatus'
+          description: The status of the conference call.
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this conference participant was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        end_conference_on_exit:
+          type: boolean
+          description: Whether or not a conference ends when a participant leaves the conference call.
+          examples:
+          - false
+        muted:
+          type: boolean
+          description: Whether or not a participant is muted.
+          examples:
+          - false
+        hold:
+          type: boolean
+          description: Whether or not a participant is on hold.
+          examples:
+          - false
+        start_conference_on_enter:
+          type: boolean
+          description: Whether or not a conference will begin when this participant enters the conference call.
+          examples:
+          - true
+        uri:
+          type: string
+          description: The URI for this conference participant.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants/b3877c40-da60-4998-90ad-b792e98472ca.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single conference participant.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+  parameters:
+    ConferenceSidPathForParticipant:
+      name: ConferenceSid
+      in: path
+      required: true
+      description: The unique identifier for the conference this participant is in.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferencesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that created this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ParticipantCallSidPath:
+      name: CallSid
+      in: path
+      required: true
+      description: The unique identifier for the Participant call connected to this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN

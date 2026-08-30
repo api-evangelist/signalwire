@@ -1,0 +1,513 @@
+openapi: 3.2.0
+info:
+  title: SignalWire REST Messaging Webhooks API
+  version: 1.0.0
+  contact:
+    name: SignalWire
+    url: https://support.signalwire.com/portal/en/newticket?departmentId=1029313000000006907&layoutId=1029313000000074011
+    email: support@signalwire.com
+  license:
+    name: MIT
+    url: https://github.com/signalwire/docs/blob/main/LICENSE
+  termsOfService: https://signalwire.com/legal/signalwire-cloud-agreement
+  description: 'Callbacks about a message: the SWML document request sent when a message arrives, delivery state for messages you send, and 10DLC registration state.'
+servers:
+- url: https://{space_name}.signalwire.com
+  description: SignalWire API
+  variables:
+    space_name:
+      default: '{Your_Space_Name}'
+      description: Your SignalWire Space name
+security:
+- SignalWireBasicAuth: []
+tags:
+- name: Messaging Webhooks
+  description: 'Callbacks about a message: the SWML document request sent when a message arrives, delivery state for messages you send, and 10DLC registration state.'
+  externalDocs:
+    url: https://signalwire.com/docs/apis
+    description: Developer documentation on messaging webhooks
+paths: {}
+webhooks:
+  inboundMessageWebhook:
+    post:
+      operationId: inbound_message_webhook
+      summary: SWML inbound message webhook
+      description: 'Payload sent by SignalWire to a SWML messaging webhook URL when an inbound SMS or MMS message arrives on a phone number configured with a SWML message handler. The same payload shape is also used when the SWML messaging `transfer` method targets an external URL — in that case, `params` carries the values supplied to the `transfer` step and `vars` carries the propagated runtime variables from the originating document.
+
+
+        The webhook URL is expected to respond with the SWML document to execute for the inbound message.'
+      parameters: []
+      responses:
+        '200':
+          description: Webhook received
+      tags:
+      - Messaging Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhooks.Messaging.InboundMessageWebhookPayload'
+      security:
+      - {}
+  messageStatusCallback:
+    post:
+      operationId: message_status_callback
+      summary: Message status callback
+      description: 'Payload sent by SignalWire to the `status_callback` URL each time a message transitions to a new state. The same payload shape is used for Relay SDK message callbacks, SWML `send_sms` status callbacks, and SWML messaging `reply.status_url` callbacks.
+
+
+        Configure `status_callback` when [sending a message](/docs/apis/rest/messages/create-message).
+
+
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+      parameters: []
+      responses:
+        '200':
+          description: Webhook received
+      tags:
+      - Messaging Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhooks.Messaging.MessageStatusCallbackPayload'
+      security:
+      - {}
+  tenDlcStatusCallback:
+    post:
+      operationId: ten_dlc_status_callback
+      summary: 10DLC status callback
+      description: 'Payload sent by SignalWire to your 10DLC Status Callback URL when the state of a 10DLC registration
+
+        object changes. Use this webhook to monitor the lifecycle of messaging brands, campaigns, number
+
+        assignment orders, and number assignments in real time.
+
+
+        Configure `status_callback_url` when
+
+        [creating a brand](/docs/apis/rest/campaign-registry/brands/create-brand),
+
+        [creating a campaign](/docs/apis/rest/campaign-registry/campaigns/create-campaign), or
+
+        [creating a number assignment order](/docs/apis/rest/campaign-registry/phone-number-assignments/create-order).
+
+
+        ### Brand event types
+
+
+        | State transition | Event type | Description |
+
+        |------------------|------------|-------------|
+
+        | `pending` → `completed` | `brand_activated` | The brand has been successfully verified and activated. |
+
+        | `pending` → `unverified` | `brand_unverified` | Brand verification failed or additional information is required. |
+
+        | `unverified` → `completed` | `brand_activated` | The brand was previously unverified but is now active. |
+
+
+        ### Campaign event types
+
+
+        | State transition | Event type | Description |
+
+        |------------------|------------|-------------|
+
+        | `pending` → `active` | `campaign_activated` | The campaign has been approved and is now active. |
+
+        | `active` → `inactive` | `campaign_deactivated` | The campaign has been deactivated and can no longer send. |
+
+
+        ### Number assignment order event types
+
+
+        | State transition | Event type | Description |
+
+        |------------------|------------|-------------|
+
+        | `pending` → `processed` | `number_assignment_order_processed` | The order has been processed and numbers assigned. |
+
+
+        ### Number assignment event types
+
+
+        | State transition | Event type | Description |
+
+        |------------------|------------|-------------|
+
+        | `pending` → `failed` | `number_assignment_failed` | The number was not assigned to the campaign. |
+
+        | `failed` → `pending` | `number_assignment_pending` | A failed assignment is being retried. |
+
+        | `pending` → `completed` | `number_assignment_activated` | The number has been successfully assigned to the campaign. |
+
+
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+      parameters: []
+      responses:
+        '200':
+          description: Webhook received
+      tags:
+      - Messaging Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Webhooks.Messaging.TenDlcStatusCallbackPayload'
+      security:
+      - {}
+components:
+  schemas:
+    Message.MessageStatus:
+      type: string
+      enum:
+      - queued
+      - initiated
+      - sent
+      - delivered
+      - undelivered
+      - failed
+      - read
+      description: Delivery state of a message.
+    Webhooks.Messaging.InboundMessageMediaItem:
+      type: object
+      required:
+      - url
+      - content_type
+      - size
+      properties:
+        url:
+          type: string
+          format: uri
+          description: URL to download the media file.
+          examples:
+          - https://example.com/media/abc123.jpg
+        content_type:
+          type: string
+          description: MIME type of the media file.
+          examples:
+          - image/jpeg
+        size:
+          type: integer
+          format: int32
+          description: File size in bytes.
+          examples:
+          - 48213
+      unevaluatedProperties:
+        not: {}
+      description: A single MMS media attachment included on an inbound message.
+      title: Inbound message media item
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Webhooks.Messaging.InboundMessageWebhookPayload:
+      type: object
+      required:
+      - message
+      - params
+      properties:
+        message:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.Messaging.InboundMessageContext'
+          description: The inbound message that triggered this fetch.
+        vars:
+          type: object
+          unevaluatedProperties: {}
+          description: Script-scope variables propagated from the SWML document that issued a `transfer` step. Absent on the initial inbound-message fetch; present (possibly empty) on fetches driven by a `transfer` step inside a full-mode SWML document. Common keys include `request_result`, `request_response`, `request_response_code`, `request_response_body`, `reply_result`, and `reply_message_id`.
+          examples:
+          - request_result: success
+            reply_result: queued
+        params:
+          type: object
+          unevaluatedProperties: {}
+          description: Parameters passed via a SWML messaging `transfer` step. An empty object on the initial document fetch.
+          examples:
+          - {}
+      unevaluatedProperties:
+        not: {}
+    Webhooks.Messaging.MessageStatusCallbackPayload:
+      type: object
+      required:
+      - id
+      - project_id
+      - status
+      - to
+      - from
+      - body
+      - number_of_segments
+      - timestamp
+      - error_code
+      - error_message
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique ID of the message segment.
+          examples:
+          - a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the project the message belongs to.
+          examples:
+          - b2c3d4e5-f6a7-8901-bcde-f12345678901
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Message.MessageStatus'
+          description: The current delivery state of the message.
+          examples:
+          - delivered
+        to:
+          type: string
+          description: The destination phone number.
+          examples:
+          - '+15551234567'
+        from:
+          type: string
+          description: The source phone number.
+          examples:
+          - '+15559876543'
+        body:
+          type: string
+          description: The message body text.
+          examples:
+          - Hello World!
+        number_of_segments:
+          type: integer
+          format: int32
+          description: Number of segments the message body was split into for delivery.
+          examples:
+          - 1
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the status transition.
+          examples:
+          - '2026-03-17T22:26:57Z'
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Provider-specific error code if delivery failed. Null when no error occurred.
+          examples:
+          - null
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Human-readable error message if delivery failed. Null when no error occurred.
+          examples:
+          - null
+        custom_variables:
+          type: object
+          unevaluatedProperties:
+            type: string
+          description: The same `custom_variables` key/value pairs you supplied when [sending the message](/docs/apis/rest/messages/create-message), echoed back so you can match this callback to a record in your own system. Included only when the message was sent with custom variables.
+          examples:
+          - id: '12345'
+            case_number: '54321'
+      unevaluatedProperties:
+        not: {}
+    Webhooks.Messaging.TenDlcStatusCallbackPayload:
+      type: object
+      required:
+      - project_id
+      - event_at
+      - event_category
+      - event_type
+      - state
+      - brand_id
+      properties:
+        project_id:
+          type: string
+          description: The unique ID of the project this object is associated with.
+        event_at:
+          type: string
+          description: The timestamp of when the event occurred, in ISO 8601 format.
+        event_category:
+          type: string
+          enum:
+          - brand
+          - campaign
+          - number_assignment_order
+          - number_assignment
+          description: The category of the event.
+        event_type:
+          type: string
+          enum:
+          - brand_activated
+          - brand_unverified
+          - campaign_activated
+          - campaign_deactivated
+          - number_assignment_order_processed
+          - number_assignment_failed
+          - number_assignment_pending
+          - number_assignment_activated
+          description: 'The specific type of event that occurred.
+
+            One of: `brand_activated`, `brand_unverified`, `campaign_activated`, `campaign_deactivated`,
+
+            `number_assignment_order_processed`, `number_assignment_failed`, `number_assignment_pending`,
+
+            `number_assignment_activated`.'
+        state:
+          type: string
+          description: The current state of the object after the event. Possible values depend on the object type.
+        brand_id:
+          type: string
+          description: The unique identifier for the brand. Present in all event types.
+        campaign_id:
+          type: string
+          description: The unique identifier for the campaign. Present in campaign, number assignment order, and number assignment events.
+        number_assignment_order_id:
+          type: string
+          description: The unique identifier for the number assignment order. Present in number assignment order and number assignment events.
+        number_assignment_id:
+          type: string
+          description: The unique identifier for the number assignment. Present only in number assignment events.
+        phone_number_id:
+          type: string
+          description: The unique identifier for the phone route itself. Present only in number assignment events.
+        phone_number:
+          type: string
+          description: The phone number in E.164 format. Present only in number assignment events.
+      unevaluatedProperties:
+        not: {}
+    Webhooks.Messaging.InboundMessageContext:
+      type: object
+      required:
+      - message_id
+      - project_id
+      - space_id
+      - direction
+      - type
+      - from
+      - to
+      - body
+      - media
+      - segments
+      - timestamp
+      properties:
+        message_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique identifier for the inbound message.
+          examples:
+          - c2d3e4f5-a6b7-8901-cdef-234567890abc
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The Project ID this message belongs to.
+          examples:
+          - b2c3d4e5-f6a7-8901-bcde-f12345678901
+        space_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The Space ID this message belongs to.
+          examples:
+          - d3e4f5a6-b7c8-9012-defa-345678901bcd
+        direction:
+          type: string
+          enum:
+          - inbound
+          description: Direction of the message. Always `inbound` for messages handled by an SWML messaging script.
+          examples:
+          - inbound
+        type:
+          type: string
+          enum:
+          - sms
+          - mms
+          description: The kind of message.
+          examples:
+          - sms
+        from:
+          type: string
+          description: Phone number that sent the message.
+          examples:
+          - '+15551231234'
+        to:
+          type: string
+          description: Phone number that received the message.
+          examples:
+          - '+15553214321'
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The text content of the message. Null on media-only MMS where the carrier did not include a text body.
+          examples:
+          - Hello, I need help
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhooks.Messaging.InboundMessageMediaItem'
+          description: MMS media attachments. Empty when the message has no attachments.
+          examples:
+          - []
+        segments:
+          type: integer
+          format: int32
+          description: Number of SMS segments the message body was split into.
+          examples:
+          - 1
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp in UTC (ISO 8601, seconds precision) of when the message was received.
+          examples:
+          - '2024-01-15T10:30:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: Information about the inbound message that triggered the SWML document fetch.
+      title: Inbound message
+  securitySchemes:
+    SignalWireBasicAuth:
+      type: http
+      scheme: Basic
+      description: 'SignalWire Basic Authentication using Project ID and API Token.
+
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Basic followed by a space and a base64-encoded string of project_id:token.
+
+        The project ID will be used as the username and the API token as the password.
+
+
+        Example:
+
+        ```
+
+        Authorization: Basic base64(project_id:token)
+
+        ```'
+      x-fern-basic:
+        username:
+          name: project_id
+          env: SIGNALWIRE_PROJECT_ID
+        password:
+          name: api_token
+          env: SIGNALWIRE_API_TOKEN
+    SignalWireBearerAuth:
+      type: http
+      scheme: Bearer
+      description: 'SignalWire Bearer Token Authentication for subscriber endpoints.
+
+        The client sends HTTP requests with the Authorization header containing
+
+        the word Bearer followed by a space and the subscriber token.
+
+
+        Example:
+
+        ```
+
+        Authorization: Bearer <subscriber_token>
+
+        ```'
