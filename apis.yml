@@ -53,6 +53,10 @@ apis:
   baseURL: https://{space_name}.signalwire.com/api/calling/rpc
   tags:
   - Voice
+  - Relay
+  - JSON-RPC
+  tags_raw:
+  - Voice
   - RELAY
   - JSON-RPC
   properties:
@@ -66,6 +70,8 @@ apis:
   humanURL: https://signalwire.com/docs/apis
   baseURL: https://{space_name}.signalwire.com
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -250,6 +256,8 @@ apis:
   humanURL: https://signalwire.com/docs/apis
   baseURL: https://{space_name}.signalwire.com
   tags:
+  - Application
+  tags_raw:
   - Applications
   properties:
   - type: OpenAPI
@@ -1182,6 +1190,8 @@ apis:
   humanURL: https://signalwire.com/docs/apis
   baseURL: https://{space_name}.signalwire.com
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -1456,6 +1466,8 @@ apis:
   humanURL: https://signalwire.com/docs/apis
   baseURL: https://{space_name}.signalwire.com
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
