@@ -100,7 +100,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -110,7 +110,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-addresses-api
   name: SignalWire Addresses API
   description: >-
@@ -132,7 +132,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -142,7 +142,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-ai-agents-custom-api
   name: 'SignalWire AI Agents: Custom API'
   description: Endpoints related to creating & managing SignalWire AI Agents
@@ -162,7 +162,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -172,7 +172,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-ai-agents-dialogflow-api
   name: 'SignalWire AI Agents: Dialogflow API'
   description: Endpoints related to creating & managing Dialogflow Agents
@@ -192,7 +192,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -202,7 +202,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-ai-chat-api
   name: SignalWire AI Chat API
   description: Endpoints related to holding a text conversation with an AI agent
@@ -222,7 +222,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -232,7 +232,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-ai-webhooks-api
   name: SignalWire AI Webhooks API
   description: >-
@@ -254,7 +254,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -264,7 +264,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-applications-api
   name: SignalWire Applications API
   description: Manage cXML applications for handling voice and messaging.
@@ -286,7 +286,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -296,7 +296,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-available-phone-numbers-api
   name: SignalWire Available Phone Numbers API
   description: Search for available phone numbers to purchase.
@@ -316,7 +316,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -326,7 +326,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-call-flows-api
   name: SignalWire Call Flows API
   description: Endpoints related to creating & managing Call Flows
@@ -346,7 +346,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -356,7 +356,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-calling-webhooks-api
   name: SignalWire Calling Webhooks API
   description: >-
@@ -378,7 +378,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -388,7 +388,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-calls-api
   name: SignalWire Calls API
   description: Manage voice calls and call recordings.
@@ -408,7 +408,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -418,7 +418,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-campaign-registry-brands-api
   name: 'SignalWire Campaign Registry: Brands API'
   description: Register and manage brands for 10DLC campaign registration.
@@ -438,7 +438,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -448,7 +448,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-campaign-registry-campaigns-api
   name: 'SignalWire Campaign Registry: Campaigns API'
   description: Create and manage 10DLC campaigns for A2P messaging compliance.
@@ -468,7 +468,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -478,7 +478,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-campaign-registry-phone-number-assignments-api
   name: 'SignalWire Campaign Registry: Phone Number Assignments API'
   description: Assign and manage phone numbers within 10DLC campaigns.
@@ -498,7 +498,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -508,7 +508,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-chat-tokens-api
   name: SignalWire Chat Tokens API
   description: Manage Chat tokens.
@@ -528,7 +528,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -538,7 +538,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-chunks-api
   name: SignalWire Chunks API
   description: Manage chunks within Datasphere documents.
@@ -558,7 +558,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -568,7 +568,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conference-logs-api
   name: SignalWire Conference Logs API
   description: Manage and query conference log data.
@@ -588,7 +588,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -598,7 +598,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conference-participants-api
   name: SignalWire Conference Participants API
   description: Manage participants in conference calls.
@@ -618,7 +618,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -628,7 +628,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conference-recordings-api
   name: SignalWire Conference Recordings API
   description: Manage recordings for conference calls.
@@ -648,7 +648,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -658,7 +658,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conference-rooms-api
   name: SignalWire Conference Rooms API
   description: Endpoints related to creating & managing Conference Rooms
@@ -678,7 +678,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -688,7 +688,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conference-streams-api
   name: SignalWire Conference Streams API
   description: Manage media streams for conferences.
@@ -708,7 +708,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -718,7 +718,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conference-tokens-api
   name: SignalWire Conference Tokens API
   description: Manage conference tokens
@@ -738,7 +738,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -748,7 +748,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-conferences-api
   name: SignalWire Conferences API
   description: Manage conference calls.
@@ -768,7 +768,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -778,7 +778,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-cxml-applications-api
   name: SignalWire cXML Applications API
   description: Endpoints related to creating & managing cXML Applications
@@ -798,7 +798,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -808,7 +808,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-cxml-scripts-api
   name: SignalWire CXML Scripts API
   description: Manage cXML scripts for storing XML instructions.
@@ -828,7 +828,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -838,7 +838,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-cxml-webhook-api
   name: SignalWire cXML Webhook API
   description: Endpoints related to creating & managing cXML Webhooks
@@ -858,7 +858,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -868,7 +868,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-documents-api
   name: SignalWire Documents API
   description: Manage Datasphere documents.
@@ -888,7 +888,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -898,7 +898,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-domain-applications-api
   name: SignalWire Domain Applications API
   description: Endpoints related to managing Domain Applications
@@ -918,7 +918,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -928,7 +928,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-e911-addresses-api
   name: SignalWire E911 Addresses API
   description: Manage E911 addresses for regulatory compliance and phone number provisioning.
@@ -948,7 +948,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -958,7 +958,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-fax-logs-api
   name: SignalWire Fax Logs API
   description: Endpoints related to accessing fax logs
@@ -978,7 +978,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -988,7 +988,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-fax-media-api
   name: SignalWire Fax Media API
   description: Manage fax media files.
@@ -1008,7 +1008,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1018,7 +1018,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-faxes-api
   name: SignalWire Faxes API
   description: Send and manage faxes.
@@ -1038,7 +1038,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1048,7 +1048,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-freeswitch-connector-api
   name: SignalWire FreeSWITCH Connector API
   description: Endpoints related to creating & managing FreeSWITCH Connectors
@@ -1068,7 +1068,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1078,7 +1078,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-imported-phone-numbers-api
   name: SignalWire Imported Phone Numbers API
   description: Import phone numbers hosted elsewhere into your SignalWire Space.
@@ -1098,7 +1098,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1108,7 +1108,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-incoming-phone-numbers-api
   name: SignalWire Incoming Phone Numbers API
   description: Manage phone numbers in your project.
@@ -1128,7 +1128,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1138,7 +1138,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-message-logs-api
   name: SignalWire Message Logs API
   description: Endpoints related to accessing message logs
@@ -1158,7 +1158,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1168,7 +1168,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-message-media-api
   name: SignalWire Message Media API
   description: Manage media files attached to messages.
@@ -1188,7 +1188,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1198,7 +1198,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-messages-api
   name: SignalWire Messages API
   description: Send and manage SMS/MMS messages.
@@ -1220,7 +1220,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1230,7 +1230,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-messaging-webhooks-api
   name: SignalWire Messaging Webhooks API
   description: >-
@@ -1252,7 +1252,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1262,7 +1262,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-multi-factor-authentication-api
   name: SignalWire Multi-Factor Authentication API
   description: >-
@@ -1284,7 +1284,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1294,7 +1294,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-number-group-membership-api
   name: SignalWire Number Group Membership API
   description: Manage phone number memberships within number groups.
@@ -1314,7 +1314,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1324,7 +1324,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-number-groups-api
   name: SignalWire Number Groups API
   description: Manage number groups for organizing phone numbers.
@@ -1344,7 +1344,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1354,7 +1354,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-phone-number-lookup-api
   name: SignalWire Phone Number Lookup API
   description: Look up information about phone numbers.
@@ -1374,7 +1374,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1384,7 +1384,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-phone-numbers-api
   name: SignalWire Phone Numbers API
   description: Manage phone numbers for your SignalWire project.
@@ -1404,7 +1404,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1414,7 +1414,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-phone-routes-api
   name: SignalWire Phone Routes API
   description: Endpoints related to managing Phone Routes
@@ -1434,7 +1434,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1444,7 +1444,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-project-tokens-api
   name: SignalWire Project Tokens API
   description: Manage API tokens for authentication.
@@ -1464,7 +1464,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1474,7 +1474,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-projects-api
   name: SignalWire Projects API
   description: Manage projects and subprojects under the authenticated root project.
@@ -1496,7 +1496,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1506,7 +1506,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-pubsub-tokens-api
   name: SignalWire PubSub Tokens API
   description: Endpoints related to creating & managing PubSub Tokens
@@ -1526,7 +1526,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1536,7 +1536,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-queue-members-api
   name: SignalWire Queue Members API
   description: Manage members in call queues.
@@ -1556,7 +1556,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1566,7 +1566,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-queues-api
   name: SignalWire Queues API
   description: Manage call queues.
@@ -1586,7 +1586,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1596,7 +1596,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-recording-transcriptions-api
   name: SignalWire Recording Transcriptions API
   description: Manage transcriptions of recordings.
@@ -1616,7 +1616,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1626,7 +1626,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-recordings-api
   name: SignalWire Recordings API
   description: Manage call recordings.
@@ -1646,7 +1646,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1656,7 +1656,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-relay-application-api
   name: SignalWire Relay Application API
   description: Endpoints related to creating & managing Relay Applications
@@ -1676,7 +1676,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1686,7 +1686,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-resources-api
   name: SignalWire Resources API
   description: Endpoints related to creating & managing Resources
@@ -1706,7 +1706,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1716,7 +1716,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-room-recordings-api
   name: SignalWire Room Recordings API
   description: Manage room recordings
@@ -1736,7 +1736,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1746,7 +1746,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-room-sessions-api
   name: SignalWire Room Sessions API
   description: Manage room sessions
@@ -1766,7 +1766,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1776,7 +1776,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-room-tokens-api
   name: SignalWire Room Tokens API
   description: Manage room tokens
@@ -1796,7 +1796,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1806,7 +1806,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-rooms-api
   name: SignalWire Rooms API
   description: Manage video rooms
@@ -1826,7 +1826,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1836,7 +1836,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-short-codes-api
   name: SignalWire Short Codes API
   description: Manage short codes for SMS and MMS messaging.
@@ -1856,7 +1856,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1866,7 +1866,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-sip-addresses-api
   name: SignalWire SIP Addresses API
   description: >-
@@ -1889,7 +1889,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1899,7 +1899,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-sip-credentials-api
   name: SignalWire SIP Credentials API
   description: Manage SIP credentials for authenticating SIP endpoints.
@@ -1919,7 +1919,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1929,7 +1929,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-sip-endpoints-legacy-api
   name: SignalWire SIP Endpoints (Legacy) API
   description: Manage SIP endpoints for voice communication. Use SIP Credentials for new integrations.
@@ -1949,7 +1949,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1959,7 +1959,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-sip-gateway-api
   name: SignalWire SIP Gateway API
   description: Endpoints related to creating & managing SIP Gateways
@@ -1979,7 +1979,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -1989,7 +1989,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-sip-profile-api
   name: SignalWire SIP Profile API
   description: Manage SIP profile settings.
@@ -2009,7 +2009,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2019,7 +2019,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-space-domain-applications-api
   name: SignalWire Space Domain Applications API
   description: Manage domain applications for call handling configuration.
@@ -2039,7 +2039,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2049,7 +2049,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-streams-api
   name: SignalWire Streams API
   description: Manage media streams for calls.
@@ -2069,7 +2069,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2079,7 +2079,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-subscriber-sip-credentials-api
   name: SignalWire Subscriber SIP Credentials API
   description: >-
@@ -2100,7 +2100,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2110,7 +2110,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-subscriber-tokens-api
   name: SignalWire Subscriber Tokens API
   description: >-
@@ -2131,7 +2131,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2141,7 +2141,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-subscribers-api
   name: SignalWire Subscribers API
   description: Endpoints related to creating & managing [Subscribers](/docs/platform/subscribers).
@@ -2161,7 +2161,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2171,7 +2171,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-swml-scripts-api
   name: SignalWire SWML Scripts API
   description: Endpoints related to creating & managing SWML Scripts
@@ -2191,7 +2191,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2201,7 +2201,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-swml-webhook-api
   name: SignalWire SWML Webhook API
   description: Endpoints related to creating & managing SWML Webhooks
@@ -2221,7 +2221,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2231,7 +2231,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-tokens-api
   name: SignalWire Tokens API
   description: Manage API tokens for authentication.
@@ -2251,7 +2251,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2261,7 +2261,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-verified-caller-id-api
   name: SignalWire Verified Caller ID API
   description: Manage verified caller IDs for phone numbers not purchased through SignalWire.
@@ -2281,7 +2281,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2291,7 +2291,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-video-conferences-api
   name: SignalWire Video Conferences API
   description: Manage video conferences
@@ -2311,7 +2311,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2321,7 +2321,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-video-logs-api
   name: SignalWire Video Logs API
   description: View video logs
@@ -2341,7 +2341,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2351,7 +2351,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-voice-logs-api
   name: SignalWire Voice Logs API
   description: Endpoints related to accessing voice logs
@@ -2371,7 +2371,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2381,7 +2381,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-whatsapp-businesses-api
   name: SignalWire WhatsApp Businesses API
   description: List the WhatsApp Business Accounts connected to your Space.
@@ -2401,7 +2401,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2411,7 +2411,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-whatsapp-numbers-api
   name: SignalWire WhatsApp Numbers API
   description: List and retrieve the WhatsApp numbers connected to your Space.
@@ -2431,7 +2431,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2441,7 +2441,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 - aid: signalwire:signalwire-whatsapp-templates-api
   name: SignalWire WhatsApp Templates API
   description: Create and manage the Meta-approved templates required to start WhatsApp conversations.
@@ -2461,7 +2461,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/apis/error-codes
   - type: Webhooks
-    url: openapi/signalwire-rest-openapi.yml
+    url: openapi/_original/signalwire-rest-openapi.yml
   - type: Documentation
     url: https://signalwire.com/docs/compatibility-api
   - type: APIReference
@@ -2471,7 +2471,7 @@ apis:
   - type: ErrorCatalog
     url: https://signalwire.com/docs/compatibility-api/rest/error-codes
   - type: Webhooks
-    url: openapi/signalwire-compatibility-openapi.yml
+    url: openapi/_original/signalwire-compatibility-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
