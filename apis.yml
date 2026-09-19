@@ -1633,6 +1633,8 @@ apis:
   humanURL: https://signalwire.com/docs/apis
   baseURL: https://{space_name}.signalwire.com
   tags:
+  - Recording
+  tags_raw:
   - Recordings
   properties:
   - type: OpenAPI
