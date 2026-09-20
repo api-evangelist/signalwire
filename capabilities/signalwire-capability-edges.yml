@@ -1,0 +1,127 @@
+slug: signalwire
+provider: SignalWire
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 10
+edges:
+- tag: Available Phone Numbers
+  spec_file: signalwire-available-phone-numbers-api-openapi.yml
+  capability_id: BC-2640.30
+  capability_id_l1: BC-2640
+  capability_name: Numbering Resource Management
+  confidence: 0.78
+  evidence: '"Search for available phone numbers to purchase." — "Search for available phone numbers that
+    match your criteria.", "Find toll-free numbers"'
+  reason: Searching the available local and toll-free number inventory by country prior to purchase is
+    stewardship and assignment of telephone numbering resources. Slight ambiguity only over whether it
+    is numbering stewardship or an ordering surface.
+- tag: E911 Addresses
+  spec_file: signalwire-e911-addresses-api-openapi.yml
+  capability_id: BC-2700.40
+  capability_id_l1: BC-2700
+  capability_name: Emergency Services Management
+  confidence: 0.78
+  evidence: '"Manage E911 addresses for regulatory compliance and phone number provisioning"; POST /api/relay/rest/addresses  create_address  Create
+    E911 address'
+  reason: E911 address registration and validation for phone numbers is precisely the regulator-mandated
+    emergency-call location delivery obligation described by Emergency Services Management; the description
+    names regulatory compliance explicitly. Slight uncertainty because the surface is also address master
+    data for number provisioning.
+- tag: Phone Numbers
+  spec_file: signalwire-phone-numbers-api-openapi.yml
+  capability_id: BC-2640.30
+  capability_id_l1: BC-2640
+  capability_name: Numbering Resource Management
+  confidence: 0.75
+  evidence: '"Manage phone numbers for your SignalWire project." — Purchase phone number, Search phone
+    numbers, Release phone number, Assign an E911 address to a phone number'
+  reason: Search, acquisition, assignment and release of telephone numbers is direct stewardship and assignment
+    of numbering resources. E911 address assignment touches emergency-services obligations (BC-2700.40)
+    but numbering is the dominant surface.
+- tag: Project Tokens
+  spec_file: signalwire-project-tokens-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.75
+  evidence: '"Manage API tokens for authentication." — POST /api/project/tokens  Create API token, schema
+    Project.TokenPermission'
+  reason: Issuance, update and revocation of API tokens with permissions for developers consuming the
+    platform's public API — developer credential management, not a telecom business capability.
+- tag: Subscribers
+  spec_file: signalwire-subscribers-api-openapi.yml
+  capability_id: BC-2640.10
+  capability_id_l1: BC-2640
+  capability_name: Subscriber Identity Management
+  confidence: 0.75
+  evidence: '"List Subscribers", "Create Subscriber", "List Subscriber Addresses", schemas "Subscriber",
+    "FabricAddressSubscriber", "AudioChannel", "MessagingChannel"'
+  reason: CRUD over subscriber records and their addressable communication channels on a voice/messaging
+    platform — lifecycle management of subscriber identifiers and profiles, matching Subscriber Identity
+    Management.
+- tag: Accounts
+  spec_file: signalwire-accounts-api-openapi.yml
+  capability_id: BC-4230.10
+  capability_id_l1: BC-4230
+  capability_name: Tenant Provisioning & Lifecycle
+  confidence: 0.7
+  evidence: '''Manage SignalWire projects and subprojects.'' — POST /Accounts ''Create Subprojects'',
+    UpdateAccountRequest, AccountStatus'
+  reason: Operations create and update accounts/subprojects on the multi-tenant SignalWire platform, which
+    is tenant provisioning and lifecycle. Moderate confidence because 'Account' here is a developer project
+    container rather than a full tenant onboarding process.
+  recovered_from: sweep-20260828T235257Z-edges.json
+- tag: Incoming Phone Numbers
+  spec_file: signalwire-incoming-phone-numbers-api-openapi.yml
+  capability_id: BC-2640.30
+  capability_id_l1: BC-2640
+  capability_name: Numbering Resource Management
+  confidence: 0.7
+  evidence: '"Manage phone numbers in your project." — Create an Incoming Phone Number, Delete an incoming
+    phone number; schema IncomingPhoneNumberCapabilities'
+  reason: Lifecycle management of telephone numbers assigned to services (capabilities, address requirements,
+    origin) matches assignment and stewardship of numbering resources. Some ambiguity as the surface is
+    subscriber-facing number inventory rather than regulator-granted range management.
+- tag: Multi-Factor Authentication
+  spec_file: signalwire-multi-factor-authentication-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: '"Multi-factor authentication adds security to your application by requesting a user to be
+    verified via voice or via text message... One Time Password flows (OTP)"; Request MFA token via SMS,
+    Verify MFA token'
+  reason: Operations issue and verify authentication factors for end users, which is identity and access
+    management functionality. Held at 0.7 because it is a delivery channel for OTP rather than a full
+    IAM estate, and could arguably be read as fraud-prevention authentication uplift.
+- tag: Short Codes
+  spec_file: signalwire-short-codes-api-openapi.yml
+  capability_id: BC-2640.30
+  capability_id_l1: BC-2640
+  capability_name: Numbering Resource Management
+  confidence: 0.7
+  evidence: 'openapi description: "Manage short codes for SMS and MMS messaging."; operations "List short
+    codes", "Update short code"; schemas ShortCodeCapability, ShortCodeMessageHandler'
+  reason: Short codes are carrier/regulator-granted messaging numbering resources; the operations inventory
+    them and bind them to message handlers, which is stewardship and assignment of numbering resources
+    to services. Slight discount because the surface is read/update only, without allocation from a regulator.
+- tag: cXML Webhook
+  spec_file: signalwire-cxml-webhook-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.7
+  evidence: '"Endpoints related to creating & managing cXML Webhooks" — Create cXML webhook / Update cXML
+    webhook'
+  reason: Operations manage webhook resources (URLs invoked for call/message handling) on a communications
+    platform — closest honest fit is webhook/event subscription lifecycle in the developer platform capability,
+    not a telecom business capability.
