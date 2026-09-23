@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Chat_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -77,38 +77,44 @@ paths:
               $ref: '#/components/schemas/Chat.NewChatToken'
 components:
   schemas:
-    Chat.ChatChannel:
-      type: object
-      unevaluatedProperties:
-        anyOf:
-        - $ref: '#/components/schemas/Chat.ChatPermissionWithRead'
-        - $ref: '#/components/schemas/Chat.ChatPermissionWithWrite'
-      description: 'User-defined channel names. Each channel is an object with `read` and/or `write` properties.
-
-        Max of 500 channels. Either `read`, `write`, or both are required inside each channel and default to `false`.
-
-        Each channel name can be up to 250 characters. Channel names cannot start with the reserved prefix `sw_`.
-
-        Must be valid JSON.'
-      examples:
-      - channel1:
-          read: true
-          write: true
-        channel2:
-          read: true
-          write: false
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
-      - error
+      - type
+      - code
+      - message
+      - url
       properties:
-        error:
+        type:
           type: string
-          enum:
-          - Unauthorized
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
+      description: Details about a specific error.
     Chat.ChatToken422Error:
       type: object
       required:
@@ -142,6 +148,75 @@ components:
           - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
       unevaluatedProperties:
         not: {}
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Chat.ChatChannel:
+      type: object
+      unevaluatedProperties:
+        anyOf:
+        - $ref: '#/components/schemas/Chat.ChatPermissionWithRead'
+        - $ref: '#/components/schemas/Chat.ChatPermissionWithWrite'
+      description: 'User-defined channel names. Each channel is an object with `read` and/or `write` properties.
+
+        Max of 500 channels. Either `read`, `write`, or both are required inside each channel and default to `false`.
+
+        Each channel name can be up to 250 characters. Channel names cannot start with the reserved prefix `sw_`.
+
+        Must be valid JSON.'
+      examples:
+      - channel1:
+          read: true
+          write: true
+        channel2:
+          read: true
+          write: false
+    Chat.ChatPermissionWithWrite:
+      type: object
+      required:
+      - write
+      properties:
+        read:
+          type: boolean
+          description: Gives the token read access to the channel.
+          examples:
+          - true
+        write:
+          type: boolean
+          description: Gives the token write access to the channel.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+      title: Write Permission
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Chat.ChatState:
+      type: object
+      unevaluatedProperties: {}
+      description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
+      examples:
+      - key: value
+        key2: value2
     Chat.NewChatToken:
       type: object
       required:
@@ -184,13 +259,6 @@ components:
           default: {}
       unevaluatedProperties:
         not: {}
-    Chat.ChatState:
-      type: object
-      unevaluatedProperties: {}
-      description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
-      examples:
-      - key: value
-        key2: value2
     Chat.ChatPermissionWithRead:
       type: object
       required:
@@ -209,74 +277,6 @@ components:
       unevaluatedProperties:
         not: {}
       title: Read Permission
-    Chat.ChatPermissionWithWrite:
-      type: object
-      required:
-      - write
-      properties:
-        read:
-          type: boolean
-          description: Gives the token read access to the channel.
-          examples:
-          - true
-        write:
-          type: boolean
-          description: Gives the token write access to the channel.
-          examples:
-          - false
-      unevaluatedProperties:
-        not: {}
-      title: Write Permission
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

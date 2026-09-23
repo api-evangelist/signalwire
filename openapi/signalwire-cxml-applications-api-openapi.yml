@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -82,7 +82,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlApplicationPathID'
       responses:
@@ -124,7 +124,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlApplicationPathID'
       responses:
@@ -178,7 +178,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlApplicationPathID'
       responses:
@@ -217,7 +217,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlApplicationAddressPathID'
       responses:
@@ -249,193 +249,6 @@ paths:
       - cXML Applications
 components:
   schemas:
-    CxmlApplicationPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Linmk to the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_number=0&page_size=50&type=cxml_application
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_size=50&type=cxml_application
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_application
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_application
-      unevaluatedProperties:
-        not: {}
-    CxmlApplicationUpdateRequest:
-      type: object
-      properties:
-        display_name:
-          type: string
-          description: Display name of the cXML Application
-          examples:
-          - Reception App
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Project ID for the cXML Application
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-        voice_url:
-          type: string
-          description: URL to handle incoming calls
-          examples:
-          - https://example.com/voice/incoming
-        voice_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method for voice URL
-          examples:
-          - POST
-        voice_fallback_url:
-          type: string
-          description: Fallback URL for voice errors
-          examples:
-          - https://example.com/voice/fallback
-        voice_fallback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method for voice fallback URL
-          examples:
-          - POST
-        status_callback:
-          type: string
-          description: URL to receive status callbacks
-          examples:
-          - https://example.com/voice/status
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method for status callbacks
-          examples:
-          - POST
-        sms_url:
-          type: string
-          description: URL to handle incoming messages
-          examples:
-          - https://example.com/message/incoming
-        sms_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method for SMS URL
-          examples:
-          - POST
-        sms_fallback_url:
-          type: string
-          description: Fallback URL for SMS errors
-          examples:
-          - https://example.com/message/fallback
-        sms_fallback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method for SMS fallback URL
-          examples:
-          - POST
-        sms_status_callback:
-          type: string
-          description: URL to receive SMS status callbacks
-          examples:
-          - https://example.com/message/status
-        sms_status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method for SMS status callbacks
-          examples:
-          - POST
-      unevaluatedProperties:
-        not: {}
-    CxmlApplicationAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddress'
-          description: An array of objects that contain a list of Cxml Application Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/CxmlApplicationAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    RequestUrlMethodType:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: The method type to use for the URL
-    CxmlApplicationUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter_value
-          message: voice_url must be a valid URL
-          attribute: voice_url
-          url: https://signalwire.com/docs/apis/error-codes
     FabricAddress:
       type: object
       required:
@@ -494,23 +307,7 @@ components:
           $ref: '#/components/schemas/DisplayTypes'
       unevaluatedProperties:
         not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -518,39 +315,101 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    CxmlApplicationListResponse:
+      description: Access is unauthorized.
+    CxmlApplicationResponse:
       type: object
       required:
-      - data
-      - links
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - cxml_application
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CxmlApplicationResponse'
-          description: An array of objects containing the list of cXML Application(s) data.
-        links:
+        id:
           allOf:
-          - $ref: '#/components/schemas/CxmlApplicationPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the cXML Application.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the cXML Application Fabric Resource
+          examples:
+          - Reception App
+        type:
           type: string
           enum:
-          - Internal Server Error
+          - cxml_application
+          description: Type of the Fabric Resource
+          examples:
+          - cxml_application
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        cxml_application:
+          allOf:
+          - $ref: '#/components/schemas/CxmlApplication'
+          description: cXML Application data.
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
     CxmlApplication:
       type: object
       required:
@@ -668,6 +527,69 @@ components:
           - GET
       unevaluatedProperties:
         not: {}
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    CxmlApplicationPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Linmk to the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_number=0&page_size=50&type=cxml_application
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_size=50&type=cxml_application
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_application
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_applications?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_application
+      unevaluatedProperties:
+        not: {}
+    DisplayTypes:
+      type: string
+      enum:
+      - app
+      - room
+      - call
+      - subscriber
+      description: DisplayTypes
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     MessagingChannel:
       type: object
       required:
@@ -680,105 +602,183 @@ components:
           - /external/resource_name?channel=messaging
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.RestApiErrorItem:
+    VideoChannel:
       type: object
       required:
-      - type
-      - code
-      - message
-      - url
+      - video
       properties:
-        type:
+        video:
           type: string
-          description: The category of error.
+          description: Video Channel of Fabric Address
           examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
+          - /external/resource_name?channel=video
       unevaluatedProperties:
         not: {}
-      description: Details about a specific error.
-    CxmlApplicationResponse:
+    CxmlApplicationAddressListResponse:
       type: object
       required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - cxml_application
+      - data
+      - links
       properties:
-        id:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddress'
+          description: An array of objects that contain a list of Cxml Application Addresses
+        links:
           allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the cXML Application.
+          - $ref: '#/components/schemas/CxmlApplicationAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
           examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    CxmlApplicationUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: voice_url must be a valid URL
+          attribute: voice_url
+          url: https://signalwire.com/docs/apis/error-codes
+    CxmlApplicationUpdateRequest:
+      type: object
+      properties:
         display_name:
           type: string
-          description: Display name of the cXML Application Fabric Resource
+          description: Display name of the cXML Application
           examples:
           - Reception App
-        type:
-          type: string
-          enum:
-          - cxml_application
-          description: Type of the Fabric Resource
-          examples:
-          - cxml_application
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        cxml_application:
+        account_sid:
           allOf:
-          - $ref: '#/components/schemas/CxmlApplication'
-          description: cXML Application data.
+          - $ref: '#/components/schemas/uuid'
+          description: Project ID for the cXML Application
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        voice_url:
+          type: string
+          description: URL to handle incoming calls
+          examples:
+          - https://example.com/voice/incoming
+        voice_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for voice URL
+          examples:
+          - POST
+        voice_fallback_url:
+          type: string
+          description: Fallback URL for voice errors
+          examples:
+          - https://example.com/voice/fallback
+        voice_fallback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for voice fallback URL
+          examples:
+          - POST
+        status_callback:
+          type: string
+          description: URL to receive status callbacks
+          examples:
+          - https://example.com/voice/status
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for status callbacks
+          examples:
+          - POST
+        sms_url:
+          type: string
+          description: URL to handle incoming messages
+          examples:
+          - https://example.com/message/incoming
+        sms_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for SMS URL
+          examples:
+          - POST
+        sms_fallback_url:
+          type: string
+          description: Fallback URL for SMS errors
+          examples:
+          - https://example.com/message/fallback
+        sms_fallback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for SMS fallback URL
+          examples:
+          - POST
+        sms_status_callback:
+          type: string
+          description: URL to receive SMS status callbacks
+          examples:
+          - https://example.com/message/status
+        sms_status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method for SMS status callbacks
+          examples:
+          - POST
       unevaluatedProperties:
         not: {}
-    DisplayTypes:
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    uuid:
       type: string
-      enum:
-      - app
-      - room
-      - call
-      - subscriber
-      description: DisplayTypes
+      format: uuid
+      description: Universal Unique Identifier.
+    CxmlApplicationListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CxmlApplicationResponse'
+          description: An array of objects containing the list of cXML Application(s) data.
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CxmlApplicationPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
     CxmlApplicationAddressPaginationResponse:
       type: object
       required:

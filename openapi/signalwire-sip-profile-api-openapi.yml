@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -75,7 +75,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -112,18 +112,37 @@ paths:
               $ref: '#/components/schemas/UpdateSipProfileRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - error
+      - detail
+      - status
+      - title
+      - code
       properties:
-        error:
+        detail:
           type: string
-          enum:
-          - Unauthorized
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
+      description: Details about a specific validation error.
     UpdateSipProfileRequest:
       type: object
       properties:
@@ -158,50 +177,30 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating the SIP profile.
-    Types.StatusCodes.ValidationError:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - errors
+      - error
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
+        error:
+          type: string
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.SpaceApiErrorItem:
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
-      - detail
-      - status
-      - title
-      - code
+      - error
       properties:
-        detail:
+        error:
           type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
+          enum:
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: Details about a specific validation error.
+      description: Access is unauthorized.
     SipProfileResponse:
       type: object
       properties:
@@ -241,18 +240,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing the SIP profile.
-    Types.StatusCodes.StatusCode500:
+    Types.StatusCodes.ValidationError:
       type: object
       required:
-      - error
+      - errors
       properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+      description: The request failed validation. See errors for details.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

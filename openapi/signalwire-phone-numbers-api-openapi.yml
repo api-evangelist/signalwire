@@ -46,7 +46,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ListPhoneNumbersQuery.filter_name'
       - $ref: '#/components/parameters/ListPhoneNumbersQuery.filter_number'
@@ -92,7 +92,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -146,7 +146,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - name: areacode
         in: query
@@ -239,7 +239,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/PhoneNumberPathID'
       responses:
@@ -287,7 +287,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/PhoneNumberPathID'
       responses:
@@ -341,7 +341,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/PhoneNumberPathID'
       responses:
@@ -389,7 +389,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/PhoneNumberPathID'
       responses:
@@ -443,7 +443,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/PhoneNumberPathID'
       responses:
@@ -481,49 +481,6 @@ paths:
       - Phone Numbers
 components:
   schemas:
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    PurchasePhoneNumberRequest:
-      type: object
-      required:
-      - number
-      properties:
-        number:
-          type: string
-          description: The phone number in E164 format.
-          examples:
-          - '+15558675309'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for purchasing a phone number.
-    PhoneNumberType:
-      type: string
-      enum:
-      - toll-free
-      - longcode
-      description: Phone number type.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
     AssignE911AddressRequest:
       type: object
       required:
@@ -538,32 +495,40 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for assigning an E911 address to a phone number.
-    HttpMethod:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: HTTP method type.
-    AvailablePhoneNumbersResponse:
+    AvailablePhoneNumber:
       type: object
+      required:
+      - number
       properties:
-        links:
+        number:
+          type: string
+          description: The phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        region:
+          type: string
+          description: The region of the phone number.
+          examples:
+          - CA
+        city:
+          type: string
+          description: The city of the phone number.
+          examples:
+          - Los Angeles
+        rate_center:
+          type: string
+          description: The rate center of the phone number.
+        lata:
+          type: string
+          description: The LATA of the phone number.
+        capabilities:
           allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailablePhoneNumber'
-          description: List of available phone numbers.
+          - $ref: '#/components/schemas/PhoneNumberCapabilities'
+          description: The capabilities of the phone number.
       unevaluatedProperties:
         not: {}
-      description: Response containing available phone numbers for purchase.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+      description: Available phone number for purchase.
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -571,10 +536,22 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+      description: Access is unauthorized.
+    PhoneNumberCapability:
+      type: string
+      enum:
+      - voice
+      - sms
+      - mms
+      - fax
+      description: Phone number capability.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     PhoneNumberMessageHandler:
       type: string
       enum:
@@ -584,18 +561,24 @@ components:
       - laml_webhooks
       - laml_application
       description: Message handler type for phone numbers.
-    Types.StatusCodes.StatusCode500:
+    PhoneNumberCapabilities:
       type: object
-      required:
-      - error
       properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
+        voice:
+          type: boolean
+          description: Whether the phone number can receive voice calls.
+        sms:
+          type: boolean
+          description: Whether the phone number can send/receive SMS.
+        mms:
+          type: boolean
+          description: Whether the phone number can send/receive MMS.
+        fax:
+          type: boolean
+          description: Whether the phone number can send/receive fax.
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+      description: Phone number capabilities.
     PhoneNumberListResponse:
       type: object
       required:
@@ -614,358 +597,30 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of phone numbers.
-    PaginationLinks:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
-      - self
-      - first
+      - error
       properties:
-        self:
+        error:
           type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
+          enum:
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
-    PhoneNumberE911Status:
-      type: string
-      enum:
-      - pending
-      - active
-      - failed
-      - pending_removal
-      - unregistered
-      description: E911 provisioning status of a phone number.
-    PhoneNumberResponse:
+      description: The request is invalid.
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
-      - id
-      - number
-      - name
-      - capabilities
-      - number_type
-      - e911_address_id
-      - e911_status
-      - created_at
-      - updated_at
-      - next_billed_at
-      - call_handler
-      - calling_handler_resource_id
-      - call_receive_mode
-      - call_request_url
-      - call_request_method
-      - call_fallback_url
-      - call_fallback_method
-      - call_status_callback_url
-      - call_status_callback_method
-      - call_laml_application_id
-      - call_dialogflow_agent_id
-      - call_relay_topic
-      - call_relay_topic_status_callback_url
-      - call_relay_script_url
-      - call_relay_context
-      - call_relay_context_status_callback_url
-      - call_relay_application
-      - call_relay_connector_id
-      - call_sip_endpoint_id
-      - call_verto_resource
-      - call_video_room_id
-      - message_handler
-      - messaging_handler_resource_id
-      - message_request_url
-      - message_request_method
-      - message_fallback_url
-      - message_fallback_method
-      - message_laml_application_id
-      - message_relay_topic
-      - message_relay_context
-      - country_code
+      - error
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the phone number.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        number:
+        error:
           type: string
-          description: The phone number in E.164 format.
-          examples:
-          - '+15558675309'
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name given to the phone number. Helps to distinguish different phone numbers within your project.
-          examples:
-          - Jenny
-        capabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhoneNumberCapability'
-          description: A list of communication methods this phone number supports.
-        number_type:
-          allOf:
-          - $ref: '#/components/schemas/PhoneNumberType'
-          description: The type of number this is defined as.
-          examples:
-          - toll-free
-        e911_address_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The E911 address ID associated with this phone number.
-        e911_status:
-          anyOf:
-          - $ref: '#/components/schemas/PhoneNumberE911Status'
-          - type: 'null'
-          description: 'The E911 provisioning status for this phone number. `null` when the number has never had an E911
-
-            address assigned. Once an address is assigned the value is `pending` while the carrier processes
-
-            the order, then `active` once the carrier confirms the registration, or `failed` if the carrier
-
-            does not confirm it. Removing the address sets `pending_removal`, and the value becomes
-
-            `unregistered` once the carrier confirms the removal.'
-          examples:
-          - active
-        created_at:
-          type: string
-          format: date-time
-          description: The date the number was added to your project.
-        updated_at:
-          type: string
-          format: date-time
-          description: The date the number was last updated.
-        next_billed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          description: The next date the number will be billed for.
-        call_handler:
-          anyOf:
-          - $ref: '#/components/schemas/PhoneNumberCallHandler'
-          - type: 'null'
-          description: What type of handler you want to run on inbound calls.
-          examples:
-          - relay_context
-        calling_handler_resource_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The unique identifier of the calling handler resource.
-          examples:
-          - fe4093d9-58c2-4931-b4b9-5679f82652c6
-        call_receive_mode:
-          allOf:
-          - $ref: '#/components/schemas/CallReceiveMode'
-          description: How do you want to receive the incoming call.
-          examples:
-          - voice
-        call_request_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to make a request to when using the laml_webhooks call handler.
-        call_request_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use when making a request to the call_request_url.
-          examples:
-          - POST
-        call_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The fallback URL to make a request to when using the laml_webhooks call handler and the call_request_url fails.
-        call_fallback_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use when making a request to the call_fallback_url.
-          examples:
-          - POST
-        call_status_callback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to make status callbacks to when using the laml_webhooks call handler.
-        call_status_callback_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use when making a request to the call_status_callback_url.
-          examples:
-          - POST
-        call_laml_application_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The ID of the LaML Application to use when using the laml_application call handler.
-        call_dialogflow_agent_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The ID of the Dialogflow Agent to start when using the dialogflow call handler.
-        call_relay_topic:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: A string representing the Relay topic to forward incoming calls to. This is only used (and required) when call_handler is set to relay_topic.
-          examples:
-          - office
-        call_relay_topic_status_callback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: A string representing a URL to send status change messages to. This is only used (and required) when call_handler is set to relay_topic.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_script_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to make a request to when using the relay_script call handler. The URL must respond with a valid SWML script.
-          examples:
-          - https://example.signalwire.com/relay-bins/60e2ba7b-366e-44de-84e3-0c76cfccf1cc
-        call_relay_context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the Relay Context to send this call to when using the relay_context call handler.
-          examples:
-          - my_relay_app
-        call_relay_context_status_callback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: A string representing a URL to send status change messages to. This is only used (and required) when call_handler is set to relay_context.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_application:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the Relay Application to send this call to when using the relay_application call handler.
-          examples:
-          - my_relay_app
-        call_relay_connector_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The ID of the Relay Connector to send this call to when using the relay_connector call handler.
-        call_sip_endpoint_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The ID of the Relay SIP Endpoint to send this call to when using the relay_sip_endpoint call handler.
-        call_verto_resource:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the Verto Relay Endpoint to send this call to when using the relay_verto_endpoint call handler.
-        call_video_room_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The ID of the Video Room to send this call to when using the video_room call handler.
-          examples:
-          - fe4093d9-58c2-4931-b4b9-5679f82652c6
-        message_handler:
-          anyOf:
-          - $ref: '#/components/schemas/PhoneNumberMessageHandler'
-          - type: 'null'
-          description: What type of handler you want to run on inbound messages.
-          examples:
-          - relay_application
-        messaging_handler_resource_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The unique identifier of the messaging handler resource.
-          examples:
-          - fe4093d9-58c2-4931-b4b9-5679f82652c6
-        message_request_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to make a request to when using the laml_webhooks message handler.
-        message_request_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use when making a request to the message_request_url.
-          examples:
-          - POST
-        message_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The fallback URL to make a request to when using the laml_webhooks message handler and the message_request_url fails.
-        message_fallback_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use when making a request to the message_fallback_url.
-          examples:
-          - POST
-        message_laml_application_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The ID of the LaML Application to use when using the laml_application message handler.
-        message_relay_topic:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the Relay Topic to send this message to when using the relay_topic message handler.
-        message_relay_context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the Relay Context to send this message to when using the relay_context message handler.
-          examples:
-          - my_relay_app
-        country_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The ISO 3166-1 alpha-2 country code of the phone number.
-          examples:
-          - US
+          enum:
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: Response containing a single phone number.
-    CallReceiveMode:
-      type: string
-      enum:
-      - voice
-      - fax
-      description: Call receive mode.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
+      description: The server cannot find the requested resource.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -997,190 +652,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    PhoneNumberCapabilities:
+    PurchasePhoneNumberRequest:
       type: object
+      required:
+      - number
       properties:
-        voice:
-          type: boolean
-          description: Whether the phone number can receive voice calls.
-        sms:
-          type: boolean
-          description: Whether the phone number can send/receive SMS.
-        mms:
-          type: boolean
-          description: Whether the phone number can send/receive MMS.
-        fax:
-          type: boolean
-          description: Whether the phone number can send/receive fax.
+        number:
+          type: string
+          description: The phone number in E164 format.
+          examples:
+          - '+15558675309'
       unevaluatedProperties:
         not: {}
-      description: Phone number capabilities.
-    PhoneNumberCallHandlerRequest:
-      type: string
-      enum:
-      - relay_context
-      - relay_topic
-      - relay_script
-      - relay_application
-      - relay_connector
-      - relay_sip_endpoint
-      - relay_verto_endpoint
-      - laml_webhooks
-      - laml_application
-      - dialogflow
-      - video_room
-      description: Call handler type for phone number update requests. Excludes handlers that can only be set via Fabric API.
-    PhoneNumberCallHandler:
-      type: string
-      enum:
-      - relay_context
-      - relay_topic
-      - relay_script
-      - relay_application
-      - relay_connector
-      - relay_sip_endpoint
-      - relay_verto_endpoint
-      - laml_webhooks
-      - laml_application
-      - dialogflow
-      - video_room
-      - call_flow
-      - ai_agent
-      - fabric_subscriber
-      - sip_gateway
-      - call_queue
-      description: Call handler type for phone numbers.
-    UpdatePhoneNumberRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The friendly name for the phone number.
-          examples:
-          - Main Office Line
-        call_handler:
-          allOf:
-          - $ref: '#/components/schemas/PhoneNumberCallHandlerRequest'
-          description: The call handler for the phone number.
-        call_receive_mode:
-          type: string
-          description: The call receive mode for the phone number.
-        call_request_url:
-          type: string
-          description: The call request URL for the phone number.
-        call_request_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The call request method for the phone number.
-        call_fallback_url:
-          type: string
-          description: The call fallback URL for the phone number.
-        call_fallback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The call fallback method for the phone number.
-        call_status_callback_url:
-          type: string
-          description: The call status callback URL for the phone number.
-        call_status_callback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The call status callback method for the phone number.
-        call_laml_application_id:
-          type: string
-          description: The ID of the LaML Application to use when using the laml_application call handler.
-        call_dialogflow_agent_id:
-          type: string
-          description: The ID of the Dialogflow Agent to start when using the dialogflow call handler.
-        call_relay_topic:
-          type: string
-          description: A string representing the Relay topic to forward incoming calls to.
-          examples:
-          - office
-        call_relay_topic_status_callback_url:
-          type: string
-          description: A string representing a URL to send status change messages to when call_handler is set to relay_topic.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_script_url:
-          type: string
-          description: The URL to make a request to when using the relay_script call handler.
-          examples:
-          - https://example.signalwire.com/relay-bins/60e2ba7b-366e-44de-84e3-0c76cfccf1cc
-        call_relay_context:
-          type: string
-          description: This handler type is deprecated. Please use call_relay_application or call_relay_topic instead.
-          deprecated: true
-          examples:
-          - my_relay_app
-        call_relay_context_status_callback_url:
-          type: string
-          description: This property is deprecated. Please use call_relay_topic_status_callback_url instead.
-          deprecated: true
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_application:
-          type: string
-          description: A string representing the Relay Application to forward incoming calls to.
-          examples:
-          - my-relay-app
-        call_relay_connector_id:
-          type: string
-          description: The ID of the Relay Connector to use when using the relay_connector call handler.
-        call_sip_endpoint_id:
-          type: string
-          description: The ID of the SIP Endpoint to use when using the relay_sip_endpoint call handler.
-        call_verto_resource:
-          type: string
-          description: The Verto resource to use when using the relay_verto_endpoint call handler.
-        call_video_room_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the Video Room to forward incoming calls to when using the video_room call handler.
-        message_handler:
-          allOf:
-          - $ref: '#/components/schemas/PhoneNumberMessageHandler'
-          description: The message handler for the phone number.
-        message_request_url:
-          type: string
-          description: The message request URL for the phone number.
-        message_request_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The message request method for the phone number.
-        message_fallback_url:
-          type: string
-          description: The message fallback URL for the phone number.
-        message_fallback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The message fallback method for the phone number.
-        message_laml_application_id:
-          type: string
-          description: The ID of the LaML Application to use for messages.
-        message_relay_topic:
-          type: string
-          description: A string representing the Relay topic to forward incoming messages to.
-        message_relay_context:
-          type: string
-          description: This handler type is deprecated. Please use message_relay_application or message_relay_topic instead.
-          deprecated: true
-        message_relay_application:
-          type: string
-          description: A string representing the Relay Application to forward incoming messages to.
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a phone number.
+      description: Request body for purchasing a phone number.
     PhoneNumber:
       type: object
       required:
@@ -1484,48 +968,574 @@ components:
       unevaluatedProperties:
         not: {}
       description: Phone number model.
-    AvailablePhoneNumber:
+    PhoneNumberCallHandlerRequest:
+      type: string
+      enum:
+      - relay_context
+      - relay_topic
+      - relay_script
+      - relay_application
+      - relay_connector
+      - relay_sip_endpoint
+      - relay_verto_endpoint
+      - laml_webhooks
+      - laml_application
+      - dialogflow
+      - video_room
+      description: Call handler type for phone number update requests. Excludes handlers that can only be set via Fabric API.
+    PhoneNumberCallHandler:
+      type: string
+      enum:
+      - relay_context
+      - relay_topic
+      - relay_script
+      - relay_application
+      - relay_connector
+      - relay_sip_endpoint
+      - relay_verto_endpoint
+      - laml_webhooks
+      - laml_application
+      - dialogflow
+      - video_room
+      - call_flow
+      - ai_agent
+      - fabric_subscriber
+      - sip_gateway
+      - call_queue
+      description: Call handler type for phone numbers.
+    PaginationLinks:
       type: object
       required:
-      - number
+      - self
+      - first
       properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    PhoneNumberResponse:
+      type: object
+      required:
+      - id
+      - number
+      - name
+      - capabilities
+      - number_type
+      - e911_address_id
+      - e911_status
+      - created_at
+      - updated_at
+      - next_billed_at
+      - call_handler
+      - calling_handler_resource_id
+      - call_receive_mode
+      - call_request_url
+      - call_request_method
+      - call_fallback_url
+      - call_fallback_method
+      - call_status_callback_url
+      - call_status_callback_method
+      - call_laml_application_id
+      - call_dialogflow_agent_id
+      - call_relay_topic
+      - call_relay_topic_status_callback_url
+      - call_relay_script_url
+      - call_relay_context
+      - call_relay_context_status_callback_url
+      - call_relay_application
+      - call_relay_connector_id
+      - call_sip_endpoint_id
+      - call_verto_resource
+      - call_video_room_id
+      - message_handler
+      - messaging_handler_resource_id
+      - message_request_url
+      - message_request_method
+      - message_fallback_url
+      - message_fallback_method
+      - message_laml_application_id
+      - message_relay_topic
+      - message_relay_context
+      - country_code
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the phone number.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
         number:
           type: string
           description: The phone number in E.164 format.
           examples:
-          - '+15551234567'
-        region:
-          type: string
-          description: The region of the phone number.
+          - '+15558675309'
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name given to the phone number. Helps to distinguish different phone numbers within your project.
           examples:
-          - CA
-        city:
-          type: string
-          description: The city of the phone number.
-          examples:
-          - Los Angeles
-        rate_center:
-          type: string
-          description: The rate center of the phone number.
-        lata:
-          type: string
-          description: The LATA of the phone number.
+          - Jenny
         capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumberCapability'
+          description: A list of communication methods this phone number supports.
+        number_type:
           allOf:
-          - $ref: '#/components/schemas/PhoneNumberCapabilities'
-          description: The capabilities of the phone number.
+          - $ref: '#/components/schemas/PhoneNumberType'
+          description: The type of number this is defined as.
+          examples:
+          - toll-free
+        e911_address_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The E911 address ID associated with this phone number.
+        e911_status:
+          anyOf:
+          - $ref: '#/components/schemas/PhoneNumberE911Status'
+          - type: 'null'
+          description: 'The E911 provisioning status for this phone number. `null` when the number has never had an E911
+
+            address assigned. Once an address is assigned the value is `pending` while the carrier processes
+
+            the order, then `active` once the carrier confirms the registration, or `failed` if the carrier
+
+            does not confirm it. Removing the address sets `pending_removal`, and the value becomes
+
+            `unregistered` once the carrier confirms the removal.'
+          examples:
+          - active
+        created_at:
+          type: string
+          format: date-time
+          description: The date the number was added to your project.
+        updated_at:
+          type: string
+          format: date-time
+          description: The date the number was last updated.
+        next_billed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: The next date the number will be billed for.
+        call_handler:
+          anyOf:
+          - $ref: '#/components/schemas/PhoneNumberCallHandler'
+          - type: 'null'
+          description: What type of handler you want to run on inbound calls.
+          examples:
+          - relay_context
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the calling handler resource.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        call_receive_mode:
+          allOf:
+          - $ref: '#/components/schemas/CallReceiveMode'
+          description: How do you want to receive the incoming call.
+          examples:
+          - voice
+        call_request_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to make a request to when using the laml_webhooks call handler.
+        call_request_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use when making a request to the call_request_url.
+          examples:
+          - POST
+        call_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The fallback URL to make a request to when using the laml_webhooks call handler and the call_request_url fails.
+        call_fallback_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use when making a request to the call_fallback_url.
+          examples:
+          - POST
+        call_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to make status callbacks to when using the laml_webhooks call handler.
+        call_status_callback_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use when making a request to the call_status_callback_url.
+          examples:
+          - POST
+        call_laml_application_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the LaML Application to use when using the laml_application call handler.
+        call_dialogflow_agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the Dialogflow Agent to start when using the dialogflow call handler.
+        call_relay_topic:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing the Relay topic to forward incoming calls to. This is only used (and required) when call_handler is set to relay_topic.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to. This is only used (and required) when call_handler is set to relay_topic.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_script_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to make a request to when using the relay_script call handler. The URL must respond with a valid SWML script.
+          examples:
+          - https://example.signalwire.com/relay-bins/60e2ba7b-366e-44de-84e3-0c76cfccf1cc
+        call_relay_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the Relay Context to send this call to when using the relay_context call handler.
+          examples:
+          - my_relay_app
+        call_relay_context_status_callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: A string representing a URL to send status change messages to. This is only used (and required) when call_handler is set to relay_context.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_application:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the Relay Application to send this call to when using the relay_application call handler.
+          examples:
+          - my_relay_app
+        call_relay_connector_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the Relay Connector to send this call to when using the relay_connector call handler.
+        call_sip_endpoint_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the Relay SIP Endpoint to send this call to when using the relay_sip_endpoint call handler.
+        call_verto_resource:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the Verto Relay Endpoint to send this call to when using the relay_verto_endpoint call handler.
+        call_video_room_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the Video Room to send this call to when using the video_room call handler.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        message_handler:
+          anyOf:
+          - $ref: '#/components/schemas/PhoneNumberMessageHandler'
+          - type: 'null'
+          description: What type of handler you want to run on inbound messages.
+          examples:
+          - relay_application
+        messaging_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the messaging handler resource.
+          examples:
+          - fe4093d9-58c2-4931-b4b9-5679f82652c6
+        message_request_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to make a request to when using the laml_webhooks message handler.
+        message_request_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use when making a request to the message_request_url.
+          examples:
+          - POST
+        message_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The fallback URL to make a request to when using the laml_webhooks message handler and the message_request_url fails.
+        message_fallback_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use when making a request to the message_fallback_url.
+          examples:
+          - POST
+        message_laml_application_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the LaML Application to use when using the laml_application message handler.
+        message_relay_topic:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the Relay Topic to send this message to when using the relay_topic message handler.
+        message_relay_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the Relay Context to send this message to when using the relay_context message handler.
+          examples:
+          - my_relay_app
+        country_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ISO 3166-1 alpha-2 country code of the phone number.
+          examples:
+          - US
       unevaluatedProperties:
         not: {}
-      description: Available phone number for purchase.
-    PhoneNumberCapability:
+      description: Response containing a single phone number.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    UpdatePhoneNumberRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The friendly name for the phone number.
+          examples:
+          - Main Office Line
+        call_handler:
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumberCallHandlerRequest'
+          description: The call handler for the phone number.
+        call_receive_mode:
+          type: string
+          description: The call receive mode for the phone number.
+        call_request_url:
+          type: string
+          description: The call request URL for the phone number.
+        call_request_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The call request method for the phone number.
+        call_fallback_url:
+          type: string
+          description: The call fallback URL for the phone number.
+        call_fallback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The call fallback method for the phone number.
+        call_status_callback_url:
+          type: string
+          description: The call status callback URL for the phone number.
+        call_status_callback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The call status callback method for the phone number.
+        call_laml_application_id:
+          type: string
+          description: The ID of the LaML Application to use when using the laml_application call handler.
+        call_dialogflow_agent_id:
+          type: string
+          description: The ID of the Dialogflow Agent to start when using the dialogflow call handler.
+        call_relay_topic:
+          type: string
+          description: A string representing the Relay topic to forward incoming calls to.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          type: string
+          description: A string representing a URL to send status change messages to when call_handler is set to relay_topic.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_script_url:
+          type: string
+          description: The URL to make a request to when using the relay_script call handler.
+          examples:
+          - https://example.signalwire.com/relay-bins/60e2ba7b-366e-44de-84e3-0c76cfccf1cc
+        call_relay_context:
+          type: string
+          description: This handler type is deprecated. Please use call_relay_application or call_relay_topic instead.
+          deprecated: true
+          examples:
+          - my_relay_app
+        call_relay_context_status_callback_url:
+          type: string
+          description: This property is deprecated. Please use call_relay_topic_status_callback_url instead.
+          deprecated: true
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_application:
+          type: string
+          description: A string representing the Relay Application to forward incoming calls to.
+          examples:
+          - my-relay-app
+        call_relay_connector_id:
+          type: string
+          description: The ID of the Relay Connector to use when using the relay_connector call handler.
+        call_sip_endpoint_id:
+          type: string
+          description: The ID of the SIP Endpoint to use when using the relay_sip_endpoint call handler.
+        call_verto_resource:
+          type: string
+          description: The Verto resource to use when using the relay_verto_endpoint call handler.
+        call_video_room_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the Video Room to forward incoming calls to when using the video_room call handler.
+        message_handler:
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumberMessageHandler'
+          description: The message handler for the phone number.
+        message_request_url:
+          type: string
+          description: The message request URL for the phone number.
+        message_request_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The message request method for the phone number.
+        message_fallback_url:
+          type: string
+          description: The message fallback URL for the phone number.
+        message_fallback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The message fallback method for the phone number.
+        message_laml_application_id:
+          type: string
+          description: The ID of the LaML Application to use for messages.
+        message_relay_topic:
+          type: string
+          description: A string representing the Relay topic to forward incoming messages to.
+        message_relay_context:
+          type: string
+          description: This handler type is deprecated. Please use message_relay_application or message_relay_topic instead.
+          deprecated: true
+        message_relay_application:
+          type: string
+          description: A string representing the Relay Application to forward incoming messages to.
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a phone number.
+    CallReceiveMode:
       type: string
       enum:
       - voice
-      - sms
-      - mms
       - fax
-      description: Phone number capability.
+      description: Call receive mode.
+    PhoneNumberE911Status:
+      type: string
+      enum:
+      - pending
+      - active
+      - failed
+      - pending_removal
+      - unregistered
+      description: E911 provisioning status of a phone number.
+    HttpMethod:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: HTTP method type.
+    PhoneNumberType:
+      type: string
+      enum:
+      - toll-free
+      - longcode
+      description: Phone number type.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    AvailablePhoneNumbersResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailablePhoneNumber'
+          description: List of available phone numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing available phone numbers for purchase.
   parameters:
+    ListPhoneNumbersQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        default: 0
+      explode: false
     ListPhoneNumbersQuery.filter_name:
       name: filter_name
       in: query
@@ -1541,18 +1551,6 @@ components:
       description: Unique ID of the phone number.
       schema:
         $ref: '#/components/schemas/uuid'
-    ListPhoneNumbersQuery.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: The number of items per page (1-1000).
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
     ListPhoneNumbersQuery.filter_number:
       name: filter_number
       in: query
@@ -1569,15 +1567,17 @@ components:
       schema:
         type: string
       explode: false
-    ListPhoneNumbersQuery.page_number:
-      name: page_number
+    ListPhoneNumbersQuery.page_size:
+      name: page_size
       in: query
       required: false
-      description: The page number to retrieve (0-indexed).
+      description: The number of items per page (1-1000).
       schema:
         type: integer
         format: int32
-        default: 0
+        minimum: 1
+        maximum: 1000
+        default: 50
       explode: false
   securitySchemes:
     SignalWireBasicAuth:

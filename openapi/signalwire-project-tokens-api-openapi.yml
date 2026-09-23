@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).
+        Learn more about API scopes.
 
 
         #### Token Permissions
@@ -97,7 +97,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).
+        Learn more about API scopes.
 
 
         #### Token Permissions
@@ -165,7 +165,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - name: token_id
         in: path
@@ -198,6 +198,109 @@ paths:
       - Project Tokens
 components:
   schemas:
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Project.UpdateTokenRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name representing the API token.
+          examples:
+          - John Doe's Token
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project.TokenPermission'
+          description: The permissions you would like to enable for this token. Valid permissions are calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video
+          examples:
+          - - calling
+            - fax
+            - messaging
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an API Token.
+    Project.TokenStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     Project.TokenResponse:
       type: object
       required:
@@ -264,75 +367,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a new API Token.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Project.TokenStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Name must be present
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
-    Project.UpdateTokenRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name representing the API token.
-          examples:
-          - John Doe's Token
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Project.TokenPermission'
-          description: The permissions you would like to enable for this token. Valid permissions are calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video
-          examples:
-          - - calling
-            - fax
-            - messaging
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating an API Token.
     Project.TokenPermission:
       type: string
       enum:
@@ -348,7 +386,7 @@ components:
       - tasking
       - video
       description: Valid permission types for API tokens.
-    Types.StatusCodes.StatusCode500:
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -356,48 +394,10 @@ components:
         error:
           type: string
           enum:
-          - Internal Server Error
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
+      description: The server cannot find the requested resource.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

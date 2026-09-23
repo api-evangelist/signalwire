@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Signalwire Recordings API
   version: 1.0.0
-  description: 'Operations tagged Recordings across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Recordings across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yaml, signalwire-rest-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
   description: SignalWire Compatibility API
@@ -38,7 +38,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallsAccountSidPath'
       - $ref: '#/components/parameters/CallSidPathForRecording'
@@ -107,7 +107,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallsAccountSidPath'
       - $ref: '#/components/parameters/CallSidPathForRecording'
@@ -177,7 +177,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RecordingsAccountSidPath'
       - name: DateCreated
@@ -347,7 +347,7 @@ paths:
         This permission is only required for authenticated requests to retrieve recording metadata (.json extension).
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RecordingsAccountSidPath'
       - $ref: '#/components/parameters/RecordingSidPath'
@@ -380,7 +380,7 @@ paths:
       - Recordings
     delete:
       operationId: delete_recording
-      summary: Delete a Recording.
+      summary: Delete a Recording
       description: 'Delete recording. If the delete is successful, a 204 response, with no body, will be returned.
 
 
@@ -390,7 +390,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RecordingsAccountSidPath'
       - $ref: '#/components/parameters/RecordingSidPath'
@@ -443,7 +443,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -498,7 +498,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RecordingPathID'
       responses:
@@ -550,7 +550,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RecordingPathID'
       responses:
@@ -606,13 +606,13 @@ webhooks:
 
         Configure `RecordingStatusCallback` when
 
-        [creating a call via the API](/docs/compatibility-api/rest/calls/create-a-call) or when using
+        creating a call via the API or when using
 
-        [Dial](/docs/compatibility-api/cxml/reference/voice/dial),
+        Dial,
 
-        [Conference](/docs/compatibility-api/cxml/reference/voice/conference), or
+        Conference, or
 
-        [Record](/docs/compatibility-api/cxml/reference/voice/record).
+        Record.
 
 
         Use `RecordingStatusCallbackEvent` to request callbacks for specific events. If omitted, only the
@@ -631,7 +631,7 @@ webhooks:
         | `absent` | The recording was too short or the call was silent — no audio was detected. |
 
 
-        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See Status callback reliability.'
       parameters: []
       responses:
         '200':
@@ -655,7 +655,57 @@ webhooks:
           description: Your SignalWire Space name
 components:
   schemas:
-    Recording:
+    RecordingSubresourceUris:
+      type: object
+      required:
+      - transcriptions
+      properties:
+        transcriptions:
+          type: string
+          description: The URI for transcriptions.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
+      unevaluatedProperties:
+        not: {}
+      description: Recording subresource URIs.
+    UpdateCallRecordingRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - paused
+          - in-progress
+          - stopped
+          description: The status of the recording.
+          examples:
+          - paused
+        PauseBehavior:
+          type: string
+          enum:
+          - skip
+          - silence
+          description: What to do while recording is paused. Default is `silence`.
+          examples:
+          - silence
+          default: silence
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a call recording.
+    RecordingSource:
+      type: string
+      enum:
+      - DialVerb
+      - Conference
+      - OutBoundApi
+      - Trunking
+      - RecordVerb
+      - StartCallRecordingApi
+      - StartConferenceRecording
+      description: Recording source.
+    CallRecordingResponse:
       type: object
       required:
       - sid
@@ -754,7 +804,6 @@ components:
         duration:
           type: integer
           format: int32
-          minimum: 0
           description: The length, in seconds, of the recording.
           examples:
           - 4
@@ -808,11 +857,18 @@ components:
           - do-not-trim
       unevaluatedProperties:
         not: {}
-      description: Recording model.
-    uuid:
+      description: Response containing a single call recording.
+    RecordingStatus:
       type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      enum:
+      - queued
+      - in-progress
+      - paused
+      - resumed
+      - completed
+      - absent
+      - stopped
+      description: Recording status.
     RecordingListResponse:
       type: object
       required:
@@ -868,151 +924,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of recordings.
-    RecordingSubresourceUris:
-      type: object
-      required:
-      - transcriptions
-      properties:
-        transcriptions:
-          type: string
-          description: The URI for transcriptions.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
-      unevaluatedProperties:
-        not: {}
-      description: Recording subresource URIs.
-    RecordingSource:
-      type: string
-      enum:
-      - DialVerb
-      - Conference
-      - OutBoundApi
-      - Trunking
-      - RecordVerb
-      - StartCallRecordingApi
-      - StartConferenceRecording
-      description: Recording source.
-    CreateCallRecordingRequest:
-      type: object
-      properties:
-        RecordingChannels:
-          type: string
-          enum:
-          - mono
-          - dual
-          description: The number of channels in the recording. Can be `mono` (both legs of call recorded under one channel into one recording file) or `dual` (each leg of call recorded in separate channels into one recording file). Default is `mono`.
-          examples:
-          - mono
-          default: mono
-        RecordingStatusCallback:
-          type: string
-          format: uri
-          description: The URL to request to when recording is available. See the [Recording status callback](/docs/compatibility-api/rest/recordings/webhooks/recording-status-callback) webhook for the payload your URL will receive.
-          examples:
-          - https://your-api-endpoint.com/recording-status
-        RecordingStatusCallbackEvent:
-          type: string
-          description: 'The different recording statuses. To specify multiple events, separate with a space. Valid values: completed, in-progress, absent. Default is `completed`.'
-          examples:
-          - completed
-          default: completed
-        RecordingStatusCallbackMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `RecordingStatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        RecordingTrack:
-          type: string
-          enum:
-          - inbound
-          - outbound
-          - both
-          description: Specifies whether to record the `inbound` audio to SignalWire from the called party or the `outbound` audio from SignalWire to the called party or `both` the inbound and outbound audio. Default is `both`.
-          examples:
-          - both
-          default: both
-        Trim:
-          type: string
-          enum:
-          - trim-silence
-          - do-not-trim
-          description: Whether leading and trailing silence is trimmed from a recording. Default is `do-not-trim`.
-          examples:
-          - do-not-trim
-          default: do-not-trim
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a call recording.
-    RecordingStatusCallbackPayload:
-      type: object
-      required:
-      - AccountSid
-      - CallSid
-      - RecordingSid
-      - RecordingUrl
-      - RecordingStatus
-      - RecordingDuration
-      - RecordingChannels
-      - RecordingSource
-      properties:
-        AccountSid:
-          type: string
-          description: The unique ID of the project this call is associated with.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        CallSid:
-          type: string
-          description: A unique identifier for the call. May be used to later retrieve this call from the REST API.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ca
-        RecordingSid:
-          type: string
-          description: The unique identifier for the recording.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e984re01
-        RecordingUrl:
-          type: string
-          description: The URL for the audio recording.
-          examples:
-          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Recordings/b3877c40-da60-4998-90ad-b792e984re01
-        RecordingStatus:
-          type: string
-          enum:
-          - in-progress
-          - completed
-          - absent
-          description: 'The status of the recording.
-
-            - `in-progress`: Recording has begun.
-
-            - `completed`: File is available.
-
-            - `absent`: Recording was too short or no audio was detected.'
-          examples:
-          - completed
-        RecordingDuration:
-          type: integer
-          format: int32
-          description: The duration, in seconds, of the recording.
-          examples:
-          - 94
-        RecordingChannels:
-          type: integer
-          format: int32
-          description: The number of channels in the recording.
-          examples:
-          - 1
-        RecordingSource:
-          type: string
-          description: The type of call that initiated the recording.
-          examples:
-          - RecordVerb
-      unevaluatedProperties:
-        not: {}
     RecordingResponse:
       type: object
       required:
@@ -1167,6 +1078,72 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single recording.
+    RecordingStatusCallbackPayload:
+      type: object
+      required:
+      - AccountSid
+      - CallSid
+      - RecordingSid
+      - RecordingUrl
+      - RecordingStatus
+      - RecordingDuration
+      - RecordingChannels
+      - RecordingSource
+      properties:
+        AccountSid:
+          type: string
+          description: The unique ID of the project this call is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        CallSid:
+          type: string
+          description: A unique identifier for the call. May be used to later retrieve this call from the REST API.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        RecordingSid:
+          type: string
+          description: The unique identifier for the recording.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e984re01
+        RecordingUrl:
+          type: string
+          description: The URL for the audio recording.
+          examples:
+          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Recordings/b3877c40-da60-4998-90ad-b792e984re01
+        RecordingStatus:
+          type: string
+          enum:
+          - in-progress
+          - completed
+          - absent
+          description: 'The status of the recording.
+
+            - `in-progress`: Recording has begun.
+
+            - `completed`: File is available.
+
+            - `absent`: Recording was too short or no audio was detected.'
+          examples:
+          - completed
+        RecordingDuration:
+          type: integer
+          format: int32
+          description: The duration, in seconds, of the recording.
+          examples:
+          - 94
+        RecordingChannels:
+          type: integer
+          format: int32
+          description: The number of channels in the recording.
+          examples:
+          - 1
+        RecordingSource:
+          type: string
+          description: The type of call that initiated the recording.
+          examples:
+          - RecordVerb
+      unevaluatedProperties:
+        not: {}
     CompatibilityErrorResponse:
       type: object
       required:
@@ -1200,7 +1177,11 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    CallRecordingResponse:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Recording:
       type: object
       required:
       - sid
@@ -1299,6 +1280,7 @@ components:
         duration:
           type: integer
           format: int32
+          minimum: 0
           description: The length, in seconds, of the recording.
           examples:
           - 4
@@ -1352,292 +1334,62 @@ components:
           - do-not-trim
       unevaluatedProperties:
         not: {}
-      description: Response containing a single call recording.
-    UpdateCallRecordingRequest:
+      description: Recording model.
+    CreateCallRecordingRequest:
       type: object
-      required:
-      - Status
       properties:
-        Status:
+        RecordingChannels:
           type: string
           enum:
-          - paused
-          - in-progress
-          - stopped
-          description: The status of the recording.
+          - mono
+          - dual
+          description: The number of channels in the recording. Can be `mono` (both legs of call recorded under one channel into one recording file) or `dual` (each leg of call recorded in separate channels into one recording file). Default is `mono`.
           examples:
-          - paused
-        PauseBehavior:
+          - mono
+          default: mono
+        RecordingStatusCallback:
           type: string
-          enum:
-          - skip
-          - silence
-          description: What to do while recording is paused. Default is `silence`.
+          format: uri
+          description: The URL to request to when recording is available. See the [Recording status callback](/docs/compatibility-api/rest/recordings/webhooks/recording-status-callback) webhook for the payload your URL will receive.
           examples:
-          - silence
-          default: silence
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a call recording.
-    RecordingStatus:
-      type: string
-      enum:
-      - queued
-      - in-progress
-      - paused
-      - resumed
-      - completed
-      - absent
-      - stopped
-      description: Recording status.
-    Recording_2:
-      anyOf:
-      - $ref: '#/components/schemas/PstnRecording'
-      - $ref: '#/components/schemas/SipRecording'
-      - $ref: '#/components/schemas/WebRtcRecording'
-      - $ref: '#/components/schemas/ConferenceRecording'
-      description: Recording model. A recording is associated with exactly one source type (PSTN, SIP, WebRTC, or Relay conference).
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          - https://your-api-endpoint.com/recording-status
+        RecordingStatusCallbackEvent:
           type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    PstnRecording:
-      type: object
-      required:
-      - id
-      - project_id
-      - created_at
-      - updated_at
-      - duration_in_seconds
-      - price
-      - price_unit
-      - status
-      - url
-      - stereo
-      - track
-      - relay_pstn_leg_id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the recording.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the project.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the recording was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the recording was last updated.
-        duration_in_seconds:
-          type: integer
-          format: int32
-          description: Duration of the recording in seconds.
-          examples:
-          - 2
-        error_code:
-          type: string
-          description: Error code if the recording failed.
-        price:
-          type: number
-          format: double
-          description: Price of the recording.
-          examples:
-          - 0.05
-        price_unit:
-          type: string
-          description: Currency unit for the price.
-          examples:
-          - USD
-        status:
-          type: string
-          description: Status of the recording.
+          description: 'The different recording statuses. To specify multiple events, separate with a space. Valid values: completed, in-progress, absent. Default is `completed`.'
           examples:
           - completed
-        url:
-          type: string
-          description: URL of the recording file.
-          examples:
-          - https://example.com/recording.mp3
-        stereo:
-          type: boolean
-          description: Indicates whether the recording is stereo.
-          examples:
-          - false
-        byte_size:
-          type: integer
-          format: int32
-          description: Size of the recording file in bytes.
-          examples:
-          - 10
-        track:
-          type: string
-          description: Audio track of the recording.
-          examples:
-          - inbound
-        relay_conference_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Relay conference the recording belongs to, if any.
-          examples:
-          - 0089cc48-4f98-4a6b-90d8-61f8a5d1b0e3
-        relay_pstn_leg_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: ID of the PSTN leg associated with the recording.
-      unevaluatedProperties:
-        not: {}
-      description: Recording from a PSTN call leg.
-    ConferenceRecording:
-      type: object
-      required:
-      - id
-      - project_id
-      - created_at
-      - updated_at
-      - duration_in_seconds
-      - price
-      - price_unit
-      - status
-      - url
-      - stereo
-      - track
-      - relay_conference_id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the recording.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the project.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the recording was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the recording was last updated.
-        duration_in_seconds:
-          type: integer
-          format: int32
-          description: Duration of the recording in seconds.
-          examples:
-          - 2
-        error_code:
-          type: string
-          description: Error code if the recording failed.
-        price:
-          type: number
-          format: double
-          description: Price of the recording.
-          examples:
-          - 0.05
-        price_unit:
-          type: string
-          description: Currency unit for the price.
-          examples:
-          - USD
-        status:
-          type: string
-          description: Status of the recording.
-          examples:
-          - completed
-        url:
-          type: string
-          description: URL of the recording file.
-          examples:
-          - https://example.com/recording.mp3
-        stereo:
-          type: boolean
-          description: Indicates whether the recording is stereo.
-          examples:
-          - false
-        byte_size:
-          type: integer
-          format: int32
-          description: Size of the recording file in bytes.
-          examples:
-          - 10
-        track:
-          type: string
-          description: Audio track of the recording.
-          examples:
-          - inbound
-        relay_conference_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Relay conference the recording belongs to.
-          examples:
-          - 0089cc48-4f98-4a6b-90d8-61f8a5d1b0e3
-      unevaluatedProperties:
-        not: {}
-      description: Recording from a Relay conference.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          default: completed
+        RecordingStatusCallbackMethod:
           type: string
           enum:
-          - Not Found
+          - GET
+          - POST
+          description: Whether the request to `RecordingStatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        RecordingTrack:
+          type: string
+          enum:
+          - inbound
+          - outbound
+          - both
+          description: Specifies whether to record the `inbound` audio to SignalWire from the called party or the `outbound` audio from SignalWire to the called party or `both` the inbound and outbound audio. Default is `both`.
+          examples:
+          - both
+          default: both
+        Trim:
+          type: string
+          enum:
+          - trim-silence
+          - do-not-trim
+          description: Whether leading and trailing silence is trimmed from a recording. Default is `do-not-trim`.
+          examples:
+          - do-not-trim
+          default: do-not-trim
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    RecordingListResponse_2:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Recording_2'
-          description: List of recordings.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of recordings.
+      description: Request body for creating a call recording.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -1669,113 +1421,27 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    Types.StatusCodes.StatusCode500:
+    PaginationLinks:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Internal Server Error
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    SipRecording:
-      type: object
-      required:
-      - id
-      - project_id
-      - created_at
-      - updated_at
-      - duration_in_seconds
-      - price
-      - price_unit
-      - status
-      - url
-      - stereo
-      - track
-      - relay_sip_leg_id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the recording.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the project.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the recording was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the recording was last updated.
-        duration_in_seconds:
-          type: integer
-          format: int32
-          description: Duration of the recording in seconds.
-          examples:
-          - 2
-        error_code:
-          type: string
-          description: Error code if the recording failed.
-        price:
-          type: number
-          format: double
-          description: Price of the recording.
-          examples:
-          - 0.05
-        price_unit:
-          type: string
-          description: Currency unit for the price.
-          examples:
-          - USD
-        status:
-          type: string
-          description: Status of the recording.
-          examples:
-          - completed
-        url:
-          type: string
-          description: URL of the recording file.
-          examples:
-          - https://example.com/recording.mp3
-        stereo:
-          type: boolean
-          description: Indicates whether the recording is stereo.
-          examples:
-          - false
-        byte_size:
-          type: integer
-          format: int32
-          description: Size of the recording file in bytes.
-          examples:
-          - 10
-        track:
-          type: string
-          description: Audio track of the recording.
-          examples:
-          - inbound
-        relay_conference_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Relay conference the recording belongs to, if any.
-          examples:
-          - 0089cc48-4f98-4a6b-90d8-61f8a5d1b0e3
-        relay_sip_leg_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: ID of the SIP leg associated with the recording.
-      unevaluatedProperties:
-        not: {}
-      description: Recording from a SIP call leg.
+      description: Pagination links for list responses.
     WebRtcRecording:
       type: object
       required:
@@ -1871,35 +1537,362 @@ components:
       unevaluatedProperties:
         not: {}
       description: Recording from a WebRTC call leg.
-    PaginationLinks:
+    ConferenceRecording:
       type: object
       required:
-      - self
-      - first
+      - id
+      - project_id
+      - created_at
+      - updated_at
+      - duration_in_seconds
+      - price
+      - price_unit
+      - status
+      - url
+      - stereo
+      - track
+      - relay_conference_id
       properties:
-        self:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the recording.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the project.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        created_at:
           type: string
-          description: Link to the current page.
-        first:
+          format: date-time
+          description: Date and time when the recording was created.
+        updated_at:
           type: string
-          description: Link to the first page.
-        next:
+          format: date-time
+          description: Date and time when the recording was last updated.
+        duration_in_seconds:
+          type: integer
+          format: int32
+          description: Duration of the recording in seconds.
+          examples:
+          - 2
+        error_code:
           type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
+          description: Error code if the recording failed.
+        price:
+          type: number
+          format: double
+          description: Price of the recording.
+          examples:
+          - 0.05
+        price_unit:
           type: string
-          description: Link to the previous page. Only present when not on the first page.
+          description: Currency unit for the price.
+          examples:
+          - USD
+        status:
+          type: string
+          description: Status of the recording.
+          examples:
+          - completed
+        url:
+          type: string
+          description: URL of the recording file.
+          examples:
+          - https://example.com/recording.mp3
+        stereo:
+          type: boolean
+          description: Indicates whether the recording is stereo.
+          examples:
+          - false
+        byte_size:
+          type: integer
+          format: int32
+          description: Size of the recording file in bytes.
+          examples:
+          - 10
+        track:
+          type: string
+          description: Audio track of the recording.
+          examples:
+          - inbound
+        relay_conference_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Relay conference the recording belongs to.
+          examples:
+          - 0089cc48-4f98-4a6b-90d8-61f8a5d1b0e3
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
+      description: Recording from a Relay conference.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    RecordingListResponse_2:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recording_2'
+          description: List of recordings.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of recordings.
+    PstnRecording:
+      type: object
+      required:
+      - id
+      - project_id
+      - created_at
+      - updated_at
+      - duration_in_seconds
+      - price
+      - price_unit
+      - status
+      - url
+      - stereo
+      - track
+      - relay_pstn_leg_id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the recording.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the project.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the recording was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the recording was last updated.
+        duration_in_seconds:
+          type: integer
+          format: int32
+          description: Duration of the recording in seconds.
+          examples:
+          - 2
+        error_code:
+          type: string
+          description: Error code if the recording failed.
+        price:
+          type: number
+          format: double
+          description: Price of the recording.
+          examples:
+          - 0.05
+        price_unit:
+          type: string
+          description: Currency unit for the price.
+          examples:
+          - USD
+        status:
+          type: string
+          description: Status of the recording.
+          examples:
+          - completed
+        url:
+          type: string
+          description: URL of the recording file.
+          examples:
+          - https://example.com/recording.mp3
+        stereo:
+          type: boolean
+          description: Indicates whether the recording is stereo.
+          examples:
+          - false
+        byte_size:
+          type: integer
+          format: int32
+          description: Size of the recording file in bytes.
+          examples:
+          - 10
+        track:
+          type: string
+          description: Audio track of the recording.
+          examples:
+          - inbound
+        relay_conference_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Relay conference the recording belongs to, if any.
+          examples:
+          - 0089cc48-4f98-4a6b-90d8-61f8a5d1b0e3
+        relay_pstn_leg_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: ID of the PSTN leg associated with the recording.
+      unevaluatedProperties:
+        not: {}
+      description: Recording from a PSTN call leg.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Recording_2:
+      anyOf:
+      - $ref: '#/components/schemas/PstnRecording'
+      - $ref: '#/components/schemas/SipRecording'
+      - $ref: '#/components/schemas/WebRtcRecording'
+      - $ref: '#/components/schemas/ConferenceRecording'
+      description: Recording model. A recording is associated with exactly one source type (PSTN, SIP, WebRTC, or Relay conference).
+    SipRecording:
+      type: object
+      required:
+      - id
+      - project_id
+      - created_at
+      - updated_at
+      - duration_in_seconds
+      - price
+      - price_unit
+      - status
+      - url
+      - stereo
+      - track
+      - relay_sip_leg_id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the recording.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the project.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the recording was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the recording was last updated.
+        duration_in_seconds:
+          type: integer
+          format: int32
+          description: Duration of the recording in seconds.
+          examples:
+          - 2
+        error_code:
+          type: string
+          description: Error code if the recording failed.
+        price:
+          type: number
+          format: double
+          description: Price of the recording.
+          examples:
+          - 0.05
+        price_unit:
+          type: string
+          description: Currency unit for the price.
+          examples:
+          - USD
+        status:
+          type: string
+          description: Status of the recording.
+          examples:
+          - completed
+        url:
+          type: string
+          description: URL of the recording file.
+          examples:
+          - https://example.com/recording.mp3
+        stereo:
+          type: boolean
+          description: Indicates whether the recording is stereo.
+          examples:
+          - false
+        byte_size:
+          type: integer
+          format: int32
+          description: Size of the recording file in bytes.
+          examples:
+          - 10
+        track:
+          type: string
+          description: Audio track of the recording.
+          examples:
+          - inbound
+        relay_conference_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Relay conference the recording belongs to, if any.
+          examples:
+          - 0089cc48-4f98-4a6b-90d8-61f8a5d1b0e3
+        relay_sip_leg_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: ID of the SIP leg associated with the recording.
+      unevaluatedProperties:
+        not: {}
+      description: Recording from a SIP call leg.
   parameters:
-    RecordingsAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account that is associated with this recording.
-      schema:
-        $ref: '#/components/schemas/uuid'
     CallSidPathForRecording:
       name: CallSid
       in: path
@@ -1907,11 +1900,11 @@ components:
       description: The unique identifier for the call.
       schema:
         $ref: '#/components/schemas/uuid'
-    CallsAccountSidPath:
-      name: AccountSid
+    CallSidPath:
+      name: Sid
       in: path
       required: true
-      description: The Project ID that uniquely identifies the Account.
+      description: The unique identifier for the call.
       schema:
         $ref: '#/components/schemas/uuid'
     RecordingSidPath:
@@ -1921,11 +1914,18 @@ components:
       description: The unique identifier for the recording.
       schema:
         $ref: '#/components/schemas/uuid'
-    CallSidPath:
-      name: Sid
+    RecordingsAccountSidPath:
+      name: AccountSid
       in: path
       required: true
-      description: The unique identifier for the call.
+      description: The unique identifier for the account that is associated with this recording.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account.
       schema:
         $ref: '#/components/schemas/uuid'
     RecordingPathID:
@@ -1981,5 +1981,5 @@ components:
 
         ```'
 x-refined-from:
-- signalwire-compatibility-openapi.yml
-- signalwire-rest-openapi.yml
+- signalwire-compatibility-openapi.yaml
+- signalwire-rest-openapi.yaml

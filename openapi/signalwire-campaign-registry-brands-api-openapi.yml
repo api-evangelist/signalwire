@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - name: filter_name
         in: query
@@ -89,7 +89,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -139,7 +139,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/BrandPathID'
       responses:
@@ -171,33 +171,37 @@ paths:
       - 'Campaign Registry: Brands'
 components:
   schemas:
-    CompanyVertical:
-      type: string
-      enum:
-      - AGRICULTURE
-      - COMMUNICATION
-      - CONSTRUCTION
-      - EDUCATION
-      - ENERGY
-      - ENTERTAINMENT
-      - FINANCIAL
-      - GAMBLING
-      - GOVERNMENT
-      - HEALTHCARE
-      - HOSPITALITY
-      - HUMAN_RESOURCES
-      - INSURANCE
-      - LEGAL
-      - MANUFACTURING
-      - NGO
-      - POLITICAL
-      - POSTAL
-      - PROFESSIONAL
-      - REAL_ESTATE
-      - RETAIL
-      - TECHNOLOGY
-      - TRANSPORTATION
-      description: Company vertical/industry classification.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
     PaginationLinks:
       type: object
       required:
@@ -309,55 +313,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single brand.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    LegalEntityType:
-      type: string
-      enum:
-      - PRIVATE_PROFIT
-      - PUBLIC_PROFIT
-      - NON_PROFIT
-      - GOVERNMENT
-      description: Legal entity type for brand registration.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
     CreateManagedBrandRequest:
       type: object
       required:
@@ -440,41 +395,42 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for registering a new managed brand for 10DLC registration.
-    CreateCspBrandRequest:
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
-      - csp_self_registered
-      - name
-      - csp_brand_reference
+      - error
       properties:
-        csp_self_registered:
-          type: boolean
+        error:
+          type: string
           enum:
-          - true
-          description: Set to true to indicate this is a self-registered CSP brand.
-          examples:
-          - true
-        name:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: Brand/Marketing/DBA name of the business.
-          examples:
-          - My Brand
-        csp_brand_reference:
-          type: string
-          description: The approved Brand ID from TCR. Required for CSP/self-registered brands.
-          examples:
-          - B123456
-        status_callback_url:
-          type: string
-          format: uri
-          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
-          examples:
-          - https://example.com/handle_callback
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: Request body for importing a self-registered CSP brand. Use this when you have already registered your brand directly with TCR.
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     BrandListResponse:
       type: object
       properties:
@@ -490,49 +446,33 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of brands.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
+    CompanyVertical:
+      type: string
+      enum:
+      - AGRICULTURE
+      - COMMUNICATION
+      - CONSTRUCTION
+      - EDUCATION
+      - ENERGY
+      - ENTERTAINMENT
+      - FINANCIAL
+      - GAMBLING
+      - GOVERNMENT
+      - HEALTHCARE
+      - HOSPITALITY
+      - HUMAN_RESOURCES
+      - INSURANCE
+      - LEGAL
+      - MANUFACTURING
+      - NGO
+      - POLITICAL
+      - POSTAL
+      - PROFESSIONAL
+      - REAL_ESTATE
+      - RETAIL
+      - TECHNOLOGY
+      - TRANSPORTATION
+      description: Company vertical/industry classification.
     Brand:
       type: object
       required:
@@ -623,6 +563,66 @@ components:
       unevaluatedProperties:
         not: {}
       description: Brand model for 10DLC registration.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    CreateCspBrandRequest:
+      type: object
+      required:
+      - csp_self_registered
+      - name
+      - csp_brand_reference
+      properties:
+        csp_self_registered:
+          type: boolean
+          enum:
+          - true
+          description: Set to true to indicate this is a self-registered CSP brand.
+          examples:
+          - true
+        name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: Brand/Marketing/DBA name of the business.
+          examples:
+          - My Brand
+        csp_brand_reference:
+          type: string
+          description: The approved Brand ID from TCR. Required for CSP/self-registered brands.
+          examples:
+          - B123456
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for importing a self-registered CSP brand. Use this when you have already registered your brand directly with TCR.
+    LegalEntityType:
+      type: string
+      enum:
+      - PRIVATE_PROFIT
+      - PUBLIC_PROFIT
+      - NON_PROFIT
+      - GOVERNMENT
+      description: Legal entity type for brand registration.
   parameters:
     BrandPathID:
       name: id

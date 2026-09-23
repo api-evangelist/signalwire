@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Signalwire Imported Phone Numbers API
   version: 1.0.0
-  description: 'Operations tagged Imported Phone Numbers across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Imported Phone Numbers across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yaml, signalwire-rest-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
   description: SignalWire Compatibility API
@@ -34,7 +34,7 @@ paths:
 
         **Note:** This is a **Partner API**. To enable it on your SignalWire Space, contact
 
-        [Sales](https://signalwire.com/company/contact?utm_campaign=devex_sent_em).
+        Sales.
 
 
         #### Permissions
@@ -43,7 +43,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ImportedPhoneNumbersAccountSidPath'
       responses:
@@ -93,7 +93,7 @@ paths:
       description: 'Import a phone number hosted elsewhere into your SignalWire Space.
 
 
-        **Note:** This is a **Partner API**. To enable it on your SignalWire Space, contact [Sales](https://signalwire.com/company/contact?utm_campaign=devex_sent_em).
+        **Note:** This is a **Partner API**. To enable it on your SignalWire Space, contact Sales.
 
 
         #### Permissions
@@ -102,7 +102,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -146,87 +146,6 @@ paths:
           description: Your SignalWire Space name
 components:
   schemas:
-    NumberType:
-      type: string
-      enum:
-      - longcode
-      - tollfree
-      description: The type of phone number being imported.
-    ImportPhoneNumberRequest:
-      type: object
-      required:
-      - number
-      - number_type
-      properties:
-        number:
-          type: string
-          minLength: 6
-          maxLength: 31
-          pattern: ^\+\d{5,30}$
-          description: The phone number to import in E.164 format. Must start with `+` followed by 5-30 digits.
-          examples:
-          - '+49152234333323'
-        number_type:
-          allOf:
-          - $ref: '#/components/schemas/NumberType'
-          description: The type of phone number being imported.
-          examples:
-          - longcode
-        capabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhoneNumberCapability'
-          minItems: 1
-          description: The capabilities to enable for this phone number. If not provided, defaults to all capabilities (`sms`, `voice`, `fax`, `mms`). If provided, must include at least one capability.
-          examples:
-          - - sms
-            - voice
-      unevaluatedProperties:
-        not: {}
-      description: Request body for importing a phone number.
-    IncomingPhoneNumberCapabilities:
-      type: object
-      required:
-      - voice
-      - sms
-      - mms
-      - fax
-      properties:
-        voice:
-          type: boolean
-          description: Whether or not voice is enabled.
-          examples:
-          - true
-        sms:
-          type: boolean
-          description: Whether or not SMS is enabled.
-          examples:
-          - true
-        mms:
-          type: boolean
-          description: Whether or not MMS is enabled.
-          examples:
-          - true
-        fax:
-          type: boolean
-          description: Whether or not fax is enabled.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Phone number capabilities.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    AddressRequirements:
-      type: string
-      enum:
-      - none
-      - any
-      - local
-      - foreign
-      description: Address requirements.
     CompatibilityImportedPhoneNumberError:
       type: object
       properties:
@@ -254,45 +173,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model with string code for ImportedPhoneNumbers.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-    PhoneNumberOrigin:
-      type: string
-      enum:
-      - signalwire
-      - hosted
-      description: Phone number origin.
     IncomingPhoneNumber:
       type: object
       required:
@@ -520,6 +400,70 @@ components:
       unevaluatedProperties:
         not: {}
       description: Incoming phone number model.
+    IncomingPhoneNumberCapabilities:
+      type: object
+      required:
+      - voice
+      - sms
+      - mms
+      - fax
+      properties:
+        voice:
+          type: boolean
+          description: Whether or not voice is enabled.
+          examples:
+          - true
+        sms:
+          type: boolean
+          description: Whether or not SMS is enabled.
+          examples:
+          - true
+        mms:
+          type: boolean
+          description: Whether or not MMS is enabled.
+          examples:
+          - true
+        fax:
+          type: boolean
+          description: Whether or not fax is enabled.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Phone number capabilities.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
     PhoneNumberCapability:
       type: string
       enum:
@@ -528,44 +472,21 @@ components:
       - fax
       - mms
       description: Phone number capabilities.
-    PhoneNumberE911Status:
+    AddressRequirements:
       type: string
       enum:
-      - pending
-      - active
-      - failed
-      - pending_removal
-      - unregistered
-      description: E911 provisioning status of a phone number.
-    PhoneNumberCapability_2:
+      - none
+      - any
+      - local
+      - foreign
+      description: Address requirements.
+    NumberType:
       type: string
       enum:
-      - voice
-      - sms
-      - mms
-      - fax
-      description: Phone number capability.
-    PhoneNumberCallHandler:
-      type: string
-      enum:
-      - relay_context
-      - relay_topic
-      - relay_script
-      - relay_application
-      - relay_connector
-      - relay_sip_endpoint
-      - relay_verto_endpoint
-      - laml_webhooks
-      - laml_application
-      - dialogflow
-      - video_room
-      - call_flow
-      - ai_agent
-      - fabric_subscriber
-      - sip_gateway
-      - call_queue
-      description: Call handler type for phone numbers.
-    ImportPhoneNumberRequest_2:
+      - longcode
+      - tollfree
+      description: The type of phone number being imported.
+    ImportPhoneNumberRequest:
       type: object
       required:
       - number
@@ -573,53 +494,80 @@ components:
       properties:
         number:
           type: string
-          minLength: 5
-          maxLength: 30
-          description: The phone number to import in E.164 format. Number must be between 5 and 30 characters with no special characters besides a leading +.
+          minLength: 6
+          maxLength: 31
+          pattern: ^\+\d{5,30}$
+          description: The phone number to import in E.164 format. Must start with `+` followed by 5-30 digits.
           examples:
           - '+49152234333323'
         number_type:
-          type: string
-          enum:
-          - longcode
-          - tollfree
+          allOf:
+          - $ref: '#/components/schemas/NumberType'
           description: The type of phone number being imported.
           examples:
           - longcode
         capabilities:
           type: array
           items:
-            type: string
-            enum:
-            - sms
-            - voice
-            - fax
-            - mms
-          description: The capabilities to enable for this phone number. Can include any combination of SMS, Voice, Fax, and MMS. If not provided, defaults to all capabilities.
+            $ref: '#/components/schemas/PhoneNumberCapability'
+          minItems: 1
+          description: The capabilities to enable for this phone number. If not provided, defaults to all capabilities (`sms`, `voice`, `fax`, `mms`). If provided, must include at least one capability.
           examples:
           - - sms
-            - fax
+            - voice
       unevaluatedProperties:
         not: {}
       description: Request body for importing a phone number.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    PhoneNumberType:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    PhoneNumberOrigin:
       type: string
       enum:
-      - toll-free
-      - longcode
-      description: Phone number type.
+      - signalwire
+      - hosted
+      description: Phone number origin.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    PhoneNumberMessageHandler:
+      type: string
+      enum:
+      - relay_context
+      - relay_topic
+      - relay_application
+      - laml_webhooks
+      - laml_application
+      description: Message handler type for phone numbers.
     PhoneNumberResponse:
       type: object
       required:
@@ -923,12 +871,102 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single phone number.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    PhoneNumberCapability_2:
+      type: string
+      enum:
+      - voice
+      - sms
+      - mms
+      - fax
+      description: Phone number capability.
     CallReceiveMode:
       type: string
       enum:
       - voice
       - fax
       description: Call receive mode.
+    HttpMethod:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: HTTP method type.
+    PhoneNumberE911Status:
+      type: string
+      enum:
+      - pending
+      - active
+      - failed
+      - pending_removal
+      - unregistered
+      description: E911 provisioning status of a phone number.
+    ImportPhoneNumberRequest_2:
+      type: object
+      required:
+      - number
+      - number_type
+      properties:
+        number:
+          type: string
+          minLength: 5
+          maxLength: 30
+          description: The phone number to import in E.164 format. Number must be between 5 and 30 characters with no special characters besides a leading +.
+          examples:
+          - '+49152234333323'
+        number_type:
+          type: string
+          enum:
+          - longcode
+          - tollfree
+          description: The type of phone number being imported.
+          examples:
+          - longcode
+        capabilities:
+          type: array
+          items:
+            type: string
+            enum:
+            - sms
+            - voice
+            - fax
+            - mms
+          description: The capabilities to enable for this phone number. Can include any combination of SMS, Voice, Fax, and MMS. If not provided, defaults to all capabilities.
+          examples:
+          - - sms
+            - fax
+      unevaluatedProperties:
+        not: {}
+      description: Request body for importing a phone number.
+    PhoneNumberType:
+      type: string
+      enum:
+      - toll-free
+      - longcode
+      description: Phone number type.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -942,64 +980,26 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    PhoneNumberMessageHandler:
+    PhoneNumberCallHandler:
       type: string
       enum:
       - relay_context
       - relay_topic
+      - relay_script
       - relay_application
+      - relay_connector
+      - relay_sip_endpoint
+      - relay_verto_endpoint
       - laml_webhooks
       - laml_application
-      description: Message handler type for phone numbers.
-    HttpMethod:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: HTTP method type.
+      - dialogflow
+      - video_room
+      - call_flow
+      - ai_agent
+      - fabric_subscriber
+      - sip_gateway
+      - call_queue
+      description: Call handler type for phone numbers.
   parameters:
     ImportedPhoneNumbersAccountSidPath:
       name: AccountSid
@@ -1054,5 +1054,5 @@ components:
 
         ```'
 x-refined-from:
-- signalwire-compatibility-openapi.yml
-- signalwire-rest-openapi.yml
+- signalwire-compatibility-openapi.yaml
+- signalwire-rest-openapi.yaml

@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ListAddressesQuery.filter_label'
       - $ref: '#/components/parameters/ListAddressesQuery.page_number'
@@ -88,7 +88,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -142,7 +142,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AddressPathID'
       responses:
@@ -193,7 +193,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AddressPathID'
       responses:
@@ -251,7 +251,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AddressPathID'
       responses:
@@ -285,30 +285,6 @@ paths:
       - E911 Addresses
 components:
   schemas:
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
     AddressCandidate:
       type: object
       required:
@@ -356,10 +332,66 @@ components:
       unevaluatedProperties:
         not: {}
       description: A carrier-suggested alternative to the submitted address.
-    uuid:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    AddressType:
       type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      enum:
+      - Apartment
+      - Basement
+      - Building
+      - Department
+      - Floor
+      - Office
+      - Penthouse
+      - Suite
+      - Trailer
+      - Unit
+      description: Address type for sub-addresses.
+    AddressValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressCandidate'
+          description: Alternative addresses suggested by the carrier. Omitted when the carrier returned no alternatives.
+      unevaluatedProperties:
+        not: {}
+      description: 'The request failed validation. See `errors` for details. When carrier validation rejected the address
+
+        and the carrier returned alternatives, a `candidates` array is included alongside `errors`; the key is
+
+        omitted when the carrier returned none.'
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -372,52 +404,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -449,116 +435,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    Address:
-      type: object
-      required:
-      - id
-      - label
-      - country
-      - first_name
-      - last_name
-      - street_number
-      - street_name
-      - address_type
-      - address_number
-      - city
-      - state
-      - postal_code
-      - zip_code
-      - emergency_enabled
-      - validated
-      - validated_at
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the Address on SignalWire.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        label:
-          type: string
-          description: A friendly name given to the address to help distinguish and search for different addresses within your project.
-          examples:
-          - My Address
-        country:
-          type: string
-          description: The ISO 3166 Alpha 2 country code.
-          examples:
-          - US
-        first_name:
-          type: string
-          description: First name of the occupant associated with this address.
-          examples:
-          - Emmett
-        last_name:
-          type: string
-          description: Last name of the occupant associated with this address.
-          examples:
-          - Brown
-        street_number:
-          type: string
-          description: The number portion of the street address.
-          examples:
-          - '1640'
-        street_name:
-          type: string
-          description: The name portion of the street address.
-          examples:
-          - Riverside Drive
-        address_type:
-          anyOf:
-          - $ref: '#/components/schemas/AddressType'
-          - type: 'null'
-          description: If the address is divided into multiple sub-addresses, this identifies how the address is divided.
-          examples:
-          - Apartment
-        address_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
-          examples:
-          - '42'
-        city:
-          type: string
-          description: The city portion of the street address.
-          examples:
-          - Alexandria
-        state:
-          type: string
-          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
-          examples:
-          - CA
-        postal_code:
-          type: string
-          description: The postal code of the street address.
-          examples:
-          - '91905'
-        zip_code:
-          type: string
-          description: The postal code of the street address. Alias for postal_code for backwards compatibility.
-          examples:
-          - '91905'
-        emergency_enabled:
-          type: boolean
-          description: Whether E911 emergency calling is enabled for this address (carrier-validated when created/updated with `emergency_enabled=true` for a US address).
-          examples:
-          - false
-        validated:
-          type: boolean
-          description: Whether the address was validated by the carrier (true when the carrier returned a valid or auto-corrected match).
-          examples:
-          - false
-        validated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The RFC 3339 / ISO 8601 timestamp of the last successful carrier validation, or null if never validated.
-          examples:
-          - null
-      unevaluatedProperties:
-        not: {}
-      description: Address model representing a physical address for regulatory compliance.
     AddressListResponse:
       type: object
       required:
@@ -687,125 +563,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single address.
-    UpdateAddressRequest:
-      type: object
-      required:
-      - label
-      - country
-      - first_name
-      - last_name
-      - street_number
-      - street_name
-      - city
-      - state
-      - postal_code
-      properties:
-        label:
-          type: string
-          maxLength: 250
-          description: A friendly name given to the address to help distinguish and search for different addresses within your project. When the address is assigned to a phone number for E911, this label is also sent to the carrier as the caller name. The emergency network limits that field to 32 characters, so longer labels are truncated to the first 32 characters before being sent. Truncation affects only the name shown to the dispatcher, never the address used to route the call.
-          examples:
-          - My Address
-        country:
-          type: string
-          description: The ISO 3166 Alpha 2 country code.
-          examples:
-          - US
-        first_name:
-          type: string
-          maxLength: 250
-          description: First name of the occupant associated with this address.
-          examples:
-          - Emmett
-        last_name:
-          type: string
-          maxLength: 250
-          description: Last name of the occupant associated with this address.
-          examples:
-          - Brown
-        street_number:
-          type: string
-          maxLength: 250
-          description: The number portion of the street address.
-          examples:
-          - '1640'
-        street_name:
-          type: string
-          maxLength: 250
-          description: The name portion of the street address.
-          examples:
-          - Riverside Drive
-        address_type:
-          allOf:
-          - $ref: '#/components/schemas/AddressType'
-          description: 'If the address is divided into multiple sub-addresses, this identifies how the address is divided. Possible values are: Apartment, Basement, Building, Department, Floor, Office, Penthouse, Suite, Trailer, Unit.'
-          examples:
-          - Apartment
-        address_number:
-          type: string
-          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
-          examples:
-          - '42'
-        city:
-          type: string
-          maxLength: 250
-          description: The city portion of the street address.
-          examples:
-          - Alexandria
-        state:
-          type: string
-          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
-          examples:
-          - CA
-        postal_code:
-          type: string
-          maxLength: 250
-          description: The postal code of the street address.
-          examples:
-          - '91905'
-        emergency_enabled:
-          type: boolean
-          description: 'Applies to US addresses only. When `true` and `country` is `US`, the address is validated against
-
-            the carrier before it is stored. For any other `country` the flag is ignored and the response
-
-            returns `emergency_enabled: false`. Defaults to `false`, which stores the address without carrier
-
-            validation.'
-          examples:
-          - true
-          default: false
-        auto_correct_address:
-          type: boolean
-          description: When the carrier suggests a corrected version of the address, `true` (the default) stores the corrected address; `false` rejects the request with the suggestion returned as candidates.
-          examples:
-          - true
-          default: true
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating an address.
-    AddressValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-        candidates:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressCandidate'
-          description: Alternative addresses suggested by the carrier. Omitted when the carrier returned no alternatives.
-      unevaluatedProperties:
-        not: {}
-      description: 'The request failed validation. See `errors` for details. When carrier validation rejected the address
-
-        and the carrier returned alternatives, a `candidates` array is included alongside `errors`; the key is
-
-        omitted when the carrier returned none.'
     CreateAddressRequest:
       type: object
       required:
@@ -903,29 +660,264 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating an address.
-    AddressType:
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Address:
+      type: object
+      required:
+      - id
+      - label
+      - country
+      - first_name
+      - last_name
+      - street_number
+      - street_name
+      - address_type
+      - address_number
+      - city
+      - state
+      - postal_code
+      - zip_code
+      - emergency_enabled
+      - validated
+      - validated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the Address on SignalWire.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        label:
+          type: string
+          description: A friendly name given to the address to help distinguish and search for different addresses within your project.
+          examples:
+          - My Address
+        country:
+          type: string
+          description: The ISO 3166 Alpha 2 country code.
+          examples:
+          - US
+        first_name:
+          type: string
+          description: First name of the occupant associated with this address.
+          examples:
+          - Emmett
+        last_name:
+          type: string
+          description: Last name of the occupant associated with this address.
+          examples:
+          - Brown
+        street_number:
+          type: string
+          description: The number portion of the street address.
+          examples:
+          - '1640'
+        street_name:
+          type: string
+          description: The name portion of the street address.
+          examples:
+          - Riverside Drive
+        address_type:
+          anyOf:
+          - $ref: '#/components/schemas/AddressType'
+          - type: 'null'
+          description: If the address is divided into multiple sub-addresses, this identifies how the address is divided.
+          examples:
+          - Apartment
+        address_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
+          examples:
+          - '42'
+        city:
+          type: string
+          description: The city portion of the street address.
+          examples:
+          - Alexandria
+        state:
+          type: string
+          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
+          examples:
+          - CA
+        postal_code:
+          type: string
+          description: The postal code of the street address.
+          examples:
+          - '91905'
+        zip_code:
+          type: string
+          description: The postal code of the street address. Alias for postal_code for backwards compatibility.
+          examples:
+          - '91905'
+        emergency_enabled:
+          type: boolean
+          description: Whether E911 emergency calling is enabled for this address (carrier-validated when created/updated with `emergency_enabled=true` for a US address).
+          examples:
+          - false
+        validated:
+          type: boolean
+          description: Whether the address was validated by the carrier (true when the carrier returned a valid or auto-corrected match).
+          examples:
+          - false
+        validated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The RFC 3339 / ISO 8601 timestamp of the last successful carrier validation, or null if never validated.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Address model representing a physical address for regulatory compliance.
+    UpdateAddressRequest:
+      type: object
+      required:
+      - label
+      - country
+      - first_name
+      - last_name
+      - street_number
+      - street_name
+      - city
+      - state
+      - postal_code
+      properties:
+        label:
+          type: string
+          maxLength: 250
+          description: A friendly name given to the address to help distinguish and search for different addresses within your project. When the address is assigned to a phone number for E911, this label is also sent to the carrier as the caller name. The emergency network limits that field to 32 characters, so longer labels are truncated to the first 32 characters before being sent. Truncation affects only the name shown to the dispatcher, never the address used to route the call.
+          examples:
+          - My Address
+        country:
+          type: string
+          description: The ISO 3166 Alpha 2 country code.
+          examples:
+          - US
+        first_name:
+          type: string
+          maxLength: 250
+          description: First name of the occupant associated with this address.
+          examples:
+          - Emmett
+        last_name:
+          type: string
+          maxLength: 250
+          description: Last name of the occupant associated with this address.
+          examples:
+          - Brown
+        street_number:
+          type: string
+          maxLength: 250
+          description: The number portion of the street address.
+          examples:
+          - '1640'
+        street_name:
+          type: string
+          maxLength: 250
+          description: The name portion of the street address.
+          examples:
+          - Riverside Drive
+        address_type:
+          allOf:
+          - $ref: '#/components/schemas/AddressType'
+          description: 'If the address is divided into multiple sub-addresses, this identifies how the address is divided. Possible values are: Apartment, Basement, Building, Department, Floor, Office, Penthouse, Suite, Trailer, Unit.'
+          examples:
+          - Apartment
+        address_number:
+          type: string
+          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
+          examples:
+          - '42'
+        city:
+          type: string
+          maxLength: 250
+          description: The city portion of the street address.
+          examples:
+          - Alexandria
+        state:
+          type: string
+          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
+          examples:
+          - CA
+        postal_code:
+          type: string
+          maxLength: 250
+          description: The postal code of the street address.
+          examples:
+          - '91905'
+        emergency_enabled:
+          type: boolean
+          description: 'Applies to US addresses only. When `true` and `country` is `US`, the address is validated against
+
+            the carrier before it is stored. For any other `country` the flag is ignored and the response
+
+            returns `emergency_enabled: false`. Defaults to `false`, which stores the address without carrier
+
+            validation.'
+          examples:
+          - true
+          default: false
+        auto_correct_address:
+          type: boolean
+          description: When the carrier suggests a corrected version of the address, `true` (the default) stores the corrected address; `false` rejects the request with the suggestion returned as candidates.
+          examples:
+          - true
+          default: true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an address.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    uuid:
       type: string
-      enum:
-      - Apartment
-      - Basement
-      - Building
-      - Department
-      - Floor
-      - Office
-      - Penthouse
-      - Suite
-      - Trailer
-      - Unit
-      description: Address type for sub-addresses.
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
   parameters:
-    ListAddressesQuery.filter_label:
-      name: filter_label
-      in: query
-      required: false
-      description: Filter addresses by label (partial match).
-      schema:
-        type: string
-      explode: false
     AddressPathID:
       name: id
       in: path
@@ -933,6 +925,16 @@ components:
       description: Unique ID of the address.
       schema:
         $ref: '#/components/schemas/uuid'
+    ListAddressesQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        default: 0
+      explode: false
     ListAddressesQuery.page_size:
       name: page_size
       in: query
@@ -953,15 +955,13 @@ components:
       schema:
         type: string
       explode: false
-    ListAddressesQuery.page_number:
-      name: page_number
+    ListAddressesQuery.filter_label:
+      name: filter_label
       in: query
       required: false
-      description: The page number to retrieve (0-indexed).
+      description: Filter addresses by label (partial match).
       schema:
-        type: integer
-        format: int32
-        default: 0
+        type: string
       explode: false
   securitySchemes:
     SignalWireBasicAuth:

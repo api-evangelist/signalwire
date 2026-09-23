@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
@@ -88,7 +88,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
@@ -134,6 +134,89 @@ paths:
               $ref: '#/components/schemas/UpdateConferenceStreamRequest'
 components:
   schemas:
+    ConferenceStreamResponse:
+      type: object
+      required:
+      - account_sid
+      - conference_sid
+      - date_updated
+      - name
+      - sid
+      - status
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        conference_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this stream was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the stream. May be null if not specified when creating the stream.
+          examples:
+          - my_conference_stream
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the stream.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472st
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceStreamStatus'
+          description: The status of the stream.
+        uri:
+          type: string
+          description: The URI for the stream.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single conference stream.
+    UpdateConferenceStreamRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - stopped
+          description: The status of the stream. Only 'stopped' is allowed.
+          examples:
+          - stopped
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference stream.
+    CompatibilityErrorStringArrayResponse:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation error messages.
+          examples:
+          - - Validation error message
+      unevaluatedProperties:
+        not: {}
+      description: Error response with errors array of strings format.
     CreateConferenceStreamRequest:
       type: object
       required:
@@ -226,93 +309,6 @@ components:
       - in-progress
       - stopped
       description: Conference stream status.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    ConferenceStreamResponse:
-      type: object
-      required:
-      - account_sid
-      - conference_sid
-      - date_updated
-      - name
-      - sid
-      - status
-      - uri
-      properties:
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        conference_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472cf
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 GMT format, this stream was updated.
-          examples:
-          - Tue, 25 Sept 2018 20:00:00 +0000
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the stream. May be null if not specified when creating the stream.
-          examples:
-          - my_conference_stream
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the stream.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472st
-        status:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceStreamStatus'
-          description: The status of the stream.
-        uri:
-          type: string
-          description: The URI for the stream.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single conference stream.
-    CompatibilityErrorStringArrayResponse:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation error messages.
-          examples:
-          - - Validation error message
-      unevaluatedProperties:
-        not: {}
-      description: Error response with errors array of strings format.
-    UpdateConferenceStreamRequest:
-      type: object
-      required:
-      - Status
-      properties:
-        Status:
-          type: string
-          enum:
-          - stopped
-          description: The status of the stream. Only 'stopped' is allowed.
-          examples:
-          - stopped
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a conference stream.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -346,19 +342,23 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    ConferenceStreamSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The unique identifier for the stream.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ConferenceSidPathForParticipant:
       name: ConferenceSid
       in: path
       required: true
       description: The unique identifier for the conference this participant is in.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferenceStreamSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the stream.
       schema:
         $ref: '#/components/schemas/uuid'
     ConferencesAccountSidPath:

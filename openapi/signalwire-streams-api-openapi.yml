@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Signalwire Streams API
   version: 1.0.0
-  description: 'Operations tagged Streams across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Streams across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yaml, signalwire-rest-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
   description: SignalWire Compatibility API
@@ -38,7 +38,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallsAccountSidPath'
       - $ref: '#/components/parameters/CallSidPathForRecording'
@@ -107,7 +107,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallsAccountSidPath'
       - $ref: '#/components/parameters/CallSidPathForRecording'
@@ -174,7 +174,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - name: id
         in: path
@@ -218,7 +218,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - name: id
         in: path
@@ -276,7 +276,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.RoomPathID'
       responses:
@@ -315,7 +315,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.RoomPathID'
       responses:
@@ -374,7 +374,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.StreamPathID'
       responses:
@@ -413,7 +413,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.StreamPathID'
       responses:
@@ -464,7 +464,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.StreamPathID'
       responses:
@@ -498,105 +498,7 @@ paths:
           default: '{Your_Space_Name}'
           description: Your SignalWire Space name
 components:
-  parameters:
-    CallSidPathForRecording:
-      name: CallSid
-      in: path
-      required: true
-      description: The unique identifier for the call.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    CallsAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The Project ID that uniquely identifies the Account.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    CallSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The unique identifier for the call.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.RoomPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the video room.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.StreamPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the stream.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    CallStreamResponse:
-      type: object
-      required:
-      - sid
-      - account_sid
-      - call_sid
-      - name
-      - status
-      - date_updated
-      - uri
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the stream.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472st
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        call_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the call.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ca
-        name:
-          type: string
-          description: The name of the stream.
-          examples:
-          - my_first_stream
-        status:
-          allOf:
-          - $ref: '#/components/schemas/StreamStatus'
-          description: The status of the stream.
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 GMT format, this stream was updated.
-          examples:
-          - Wed, 19 Sep 2018 21:00:00 +0000
-        uri:
-          type: string
-          description: The URI for the stream.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Calls/b3877c40-da60-4998-90ad-b792e98472ca/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single call stream.
-    StreamStatus:
-      type: string
-      enum:
-      - queued
-      - in-progress
-      - stopped
-      description: Stream status.
     CreateCallStreamRequest:
       type: object
       required:
@@ -666,6 +568,64 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a call stream.
+    CallStreamResponse:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - call_sid
+      - name
+      - status
+      - date_updated
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the stream.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472st
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the call.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        name:
+          type: string
+          description: The name of the stream.
+          examples:
+          - my_first_stream
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StreamStatus'
+          description: The status of the stream.
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this stream was updated.
+          examples:
+          - Wed, 19 Sep 2018 21:00:00 +0000
+        uri:
+          type: string
+          description: The URI for the stream.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Calls/b3877c40-da60-4998-90ad-b792e98472ca/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single call stream.
+    StreamStatus:
+      type: string
+      enum:
+      - queued
+      - in-progress
+      - stopped
+      description: Stream status.
     UpdateCallStreamRequest:
       type: object
       required:
@@ -714,18 +674,48 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    Types.StatusCodes.StatusCode401:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
-      - error
+      - type
+      - code
+      - message
+      - url
       properties:
-        error:
+        type:
           type: string
-          enum:
-          - Unauthorized
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
+      description: Details about a specific error.
     Video.Stream:
       type: object
       required:
@@ -838,6 +828,43 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Video.UpdateStreamRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          examples:
+          - rtmp://broadcaster
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a stream.
     Video.ListStreamsResponse:
       type: object
       required:
@@ -856,69 +883,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: List streams response.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Video.UpdateStreamRequest:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
-          examples:
-          - rtmp://broadcaster
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a stream.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     Video.CreateStreamRequest:
       type: object
       required:
@@ -953,6 +917,42 @@ components:
           message: Name must be present
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
+  parameters:
+    CallSidPathForRecording:
+      name: CallSid
+      in: path
+      required: true
+      description: The unique identifier for the call.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the call.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.StreamPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the stream.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.RoomPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the video room.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http
@@ -999,5 +999,5 @@ components:
 
         ```'
 x-refined-from:
-- signalwire-compatibility-openapi.yml
-- signalwire-rest-openapi.yml
+- signalwire-compatibility-openapi.yaml
+- signalwire-rest-openapi.yaml

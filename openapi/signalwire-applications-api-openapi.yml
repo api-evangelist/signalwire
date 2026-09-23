@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AccountSidPath'
       - name: FriendlyName
@@ -109,7 +109,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AccountSidPath'
       responses:
@@ -158,7 +158,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AccountSidPath'
       - $ref: '#/components/parameters/ApplicationPathSid'
@@ -201,7 +201,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AccountSidPath'
       - $ref: '#/components/parameters/ApplicationPathSid'
@@ -256,7 +256,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AccountSidPath'
       - $ref: '#/components/parameters/ApplicationPathSid'
@@ -284,6 +284,21 @@ paths:
       tags:
       - Applications
 components:
+  parameters:
+    ApplicationPathSid:
+      name: Sid
+      in: path
+      required: true
+      description: The Application ID that uniquely identifies the Application.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    AccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Account ID that has the Application.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
     UpdateApplicationRequest:
       type: object
@@ -389,6 +404,202 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating an application.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    ApplicationListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - applications
+      properties:
+        uri:
+          type: string
+          description: The URI for this resource.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI for the first page of results.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI for the next page of results. Null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=1&PageSize=50
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI for the previous page of results. Null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number. Zero-indexed.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of results per page.
+          examples:
+          - 50
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Application'
+          description: List of applications.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of applications.
+    CreateApplicationRequest:
+      type: object
+      required:
+      - FriendlyName
+      properties:
+        FriendlyName:
+          type: string
+          maxLength: 64
+          description: A named unique identifier for the resource.
+          examples:
+          - My Friendly Name
+        VoiceUrl:
+          type: string
+          format: uri
+          description: The URL to request when a phone number receives a call or fax.
+          examples:
+          - http://example.com
+        VoiceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `VoiceUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        VoiceFallbackUrl:
+          type: string
+          format: uri
+          description: The URL SignalWire will request if errors occur when fetching the `VoiceUrl`.
+          examples:
+          - http://example.com
+        VoiceFallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `VoiceFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        StatusCallback:
+          type: string
+          format: uri
+          description: The URL to pass status updates to the Application.
+          examples:
+          - http://example.com
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to the `StatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsUrl:
+          type: string
+          format: uri
+          description: The URL to request when an SMS is received.
+          examples:
+          - http://example.com
+        SmsMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `SmsUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsFallbackUrl:
+          type: string
+          format: uri
+          description: The URL SignalWire will request if errors occur when fetching the `SmsUrl`.
+          examples:
+          - http://www.example.com/sms-fallback
+        SmsFallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        SmsStatusCallback:
+          type: string
+          format: uri
+          description: The URL to receive status updates for messages sent via this Application.
+          examples:
+          - http://www.example.com/sms-status-callback
+        SmsStatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `SmsStatusCallback` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an application.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     ApplicationResponse:
       type: object
       required:
@@ -552,10 +763,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single application.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     Application:
       type: object
       required:
@@ -719,213 +926,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Application model representing a cXML application.
-    CreateApplicationRequest:
-      type: object
-      required:
-      - FriendlyName
-      properties:
-        FriendlyName:
-          type: string
-          maxLength: 64
-          description: A named unique identifier for the resource.
-          examples:
-          - My Friendly Name
-        VoiceUrl:
-          type: string
-          format: uri
-          description: The URL to request when a phone number receives a call or fax.
-          examples:
-          - http://example.com
-        VoiceMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `VoiceUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        VoiceFallbackUrl:
-          type: string
-          format: uri
-          description: The URL SignalWire will request if errors occur when fetching the `VoiceUrl`.
-          examples:
-          - http://example.com
-        VoiceFallbackMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `VoiceFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        StatusCallback:
-          type: string
-          format: uri
-          description: The URL to pass status updates to the Application.
-          examples:
-          - http://example.com
-        StatusCallbackMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to the `StatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        SmsUrl:
-          type: string
-          format: uri
-          description: The URL to request when an SMS is received.
-          examples:
-          - http://example.com
-        SmsMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `SmsUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        SmsFallbackUrl:
-          type: string
-          format: uri
-          description: The URL SignalWire will request if errors occur when fetching the `SmsUrl`.
-          examples:
-          - http://www.example.com/sms-fallback
-        SmsFallbackMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        SmsStatusCallback:
-          type: string
-          format: uri
-          description: The URL to receive status updates for messages sent via this Application.
-          examples:
-          - http://www.example.com/sms-status-callback
-        SmsStatusCallbackMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `SmsStatusCallback` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating an application.
-    ApplicationListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - applications
-      properties:
-        uri:
-          type: string
-          description: The URI for this resource.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI for the first page of results.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI for the next page of results. Null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=1&PageSize=50
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI for the previous page of results. Null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number. Zero-indexed.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of results per page.
-          examples:
-          - 50
-        applications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Application'
-          description: List of applications.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of applications.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-  parameters:
-    ApplicationPathSid:
-      name: Sid
-      in: path
-      required: true
-      description: The Application ID that uniquely identifies the Application.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    AccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The Account ID that has the Application.
-      schema:
-        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

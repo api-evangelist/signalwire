@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _DataSphere_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Datasphere.DocumentPathID'
       - $ref: '#/components/parameters/Datasphere.ChunkListQuery.page_number'
@@ -98,7 +98,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _DataSphere_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Datasphere.ChunkPathID.documentId'
       - $ref: '#/components/parameters/Datasphere.ChunkPathID.chunkId'
@@ -147,7 +147,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _DataSphere_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Datasphere.ChunkPathID.documentId'
       - $ref: '#/components/parameters/Datasphere.ChunkPathID.chunkId'
@@ -182,6 +182,73 @@ paths:
       - Chunks
 components:
   schemas:
+    Datasphere.ListStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Invalid page_token
+          attribute: page_token
+          url: https://signalwire.com/docs/apis/error-codes
+    Datasphere.ChunkStatus:
+      type: string
+      enum:
+      - submitted
+      - in_progress
+      - completed
+      - failed
+      description: The current Status of the Chunk.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
     Datasphere.ChunkPaginationResponse:
       type: object
       required:
@@ -214,45 +281,7 @@ components:
           - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
       unevaluatedProperties:
         not: {}
-    Datasphere.ListStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Invalid page_token
-          attribute: page_token
-          url: https://signalwire.com/docs/apis/error-codes
-    Datasphere.ChunkListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Datasphere.ChunkResponse'
-          description: A list of chunks.
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Datasphere.ChunkPaginationResponse'
-          description: Pagination links.
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
       - error
@@ -260,26 +289,10 @@ components:
         error:
           type: string
           enum:
-          - Unauthorized
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
+      description: The request is invalid.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -292,6 +305,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     Datasphere.ChunkResponse:
       type: object
       required:
@@ -356,53 +381,28 @@ components:
           - 2024-05-06T12:20-12Z
       unevaluatedProperties:
         not: {}
-    Datasphere.ChunkStatus:
-      type: string
-      enum:
-      - submitted
-      - in_progress
-      - completed
-      - failed
-      description: The current Status of the Chunk.
-    Types.StatusCodes.RestApiErrorItem:
+    Datasphere.ChunkListResponse:
       type: object
       required:
-      - type
-      - code
-      - message
-      - url
+      - data
+      - links
       properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Datasphere.ChunkResponse'
+          description: A list of chunks.
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Datasphere.ChunkPaginationResponse'
+          description: Pagination links.
       unevaluatedProperties:
         not: {}
-      description: Details about a specific error.
-    Types.StatusCodes.StatusCode400:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -410,22 +410,11 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
+      description: The server cannot find the requested resource.
   parameters:
-    Datasphere.ChunkListQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve (0-indexed).
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
     Datasphere.ChunkPathID.chunkId:
       name: chunkId
       in: path
@@ -433,11 +422,11 @@ components:
       description: Unique ID of a Chunk.
       schema:
         $ref: '#/components/schemas/uuid'
-    Datasphere.ChunkPathID.documentId:
+    Datasphere.DocumentPathID:
       name: documentId
       in: path
       required: true
-      description: Unique ID of the parent Document.
+      description: Unique ID of the Document.
       schema:
         $ref: '#/components/schemas/uuid'
     Datasphere.ChunkListQuery.page_size:
@@ -460,13 +449,24 @@ components:
       schema:
         type: string
       explode: false
-    Datasphere.DocumentPathID:
+    Datasphere.ChunkPathID.documentId:
       name: documentId
       in: path
       required: true
-      description: Unique ID of the Document.
+      description: Unique ID of the parent Document.
       schema:
         $ref: '#/components/schemas/uuid'
+    Datasphere.ChunkListQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
   securitySchemes:
     SignalWireBasicAuth:
       type: http

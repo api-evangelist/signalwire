@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Signalwire Queues API
   version: 1.0.0
-  description: 'Operations tagged Queues across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Queues across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yaml, signalwire-rest-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
   description: SignalWire Compatibility API
@@ -38,7 +38,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - name: Page
@@ -108,7 +108,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       responses:
@@ -164,7 +164,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - $ref: '#/components/parameters/QueueSidPath'
@@ -207,7 +207,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - $ref: '#/components/parameters/QueueSidPath'
@@ -262,7 +262,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - $ref: '#/components/parameters/QueueSidPath'
@@ -315,7 +315,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -356,7 +356,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -411,7 +411,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuePathID'
       responses:
@@ -459,7 +459,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuePathID'
       responses:
@@ -513,7 +513,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuePathID'
       responses:
@@ -553,62 +553,84 @@ paths:
           default: '{Your_Space_Name}'
           description: Your SignalWire Space name
 components:
+  parameters:
+    QueuesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account this Queue is associated with.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueueSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    QueuePathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
-    QueueListResponse:
+    UpdateQueueRequest:
       type: object
       required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - queues
+      - FriendlyName
       properties:
-        uri:
+        FriendlyName:
           type: string
-          description: The URI of the current page.
+          minLength: 1
+          pattern: ^\w+$
+          description: A unique name for the queue. Must contain only alphanumeric characters and underscores.
           examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page. Null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472qu
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page. Null if this is the first page.
-          examples:
-          - null
-        page:
+          - Queue1
+        MaxSize:
           type: integer
           format: int32
-          description: The current page number (zero-indexed).
+          description: The maximum number of calls that are allowed to wait in a queue. Must be a positive integer.
+          exclusiveMinimum: 0
           examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        queues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Queue'
-          description: List of queues.
+          - 100
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of queues.
+      description: Request body for updating a queue.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
     QueueResponse:
       type: object
       required:
@@ -685,6 +707,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single queue.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     CreateQueueRequest:
       type: object
       required:
@@ -707,32 +733,61 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a queue.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    UpdateQueueRequest:
+    QueueListResponse:
       type: object
       required:
-      - FriendlyName
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - queues
       properties:
-        FriendlyName:
+        uri:
           type: string
-          minLength: 1
-          pattern: ^\w+$
-          description: A unique name for the queue. Must contain only alphanumeric characters and underscores.
+          description: The URI of the current page.
           examples:
-          - Queue1
-        MaxSize:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page. Null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472qu
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page. Null if this is the first page.
+          examples:
+          - null
+        page:
           type: integer
           format: int32
-          description: The maximum number of calls that are allowed to wait in a queue. Must be a positive integer.
-          exclusiveMinimum: 0
+          description: The current page number (zero-indexed).
           examples:
-          - 100
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        queues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Queue'
+          description: List of queues.
       unevaluatedProperties:
         not: {}
-      description: Request body for updating a queue.
+      description: Response containing a list of queues.
     Queue:
       type: object
       required:
@@ -809,54 +864,140 @@ components:
       unevaluatedProperties:
         not: {}
       description: Queue model.
-    CompatibilityErrorResponse:
+    CreateQueueRequest_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the queue.
+          examples:
+          - Name 2
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 600
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a queue.
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - code
-      - message
-      - more_info
+      - detail
       - status
+      - title
+      - code
       properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
+        detail:
           type: string
-          description: Error message.
+          description: A description of what caused the error.
           examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
+          - Label can't be blank
         status:
-          type: integer
-          format: int32
-          description: HTTP status code.
+          type: string
+          description: The HTTP status code.
           examples:
-          - 401
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
       unevaluatedProperties:
         not: {}
-      description: Error response model.
-    QueueListResponse_2:
+      description: Details about a specific validation error.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    UpdateQueueRequest_2:
       type: object
       properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Queue_2'
-          description: List of queues.
+        name:
+          type: string
+          description: The name of the queue.
+          examples:
+          - Name 2
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 600
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of queues.
+      description: Request body for updating a queue.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     QueueResponse_2:
       type: object
       required:
@@ -915,47 +1056,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single queue.
-    CreateQueueRequest_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the queue.
-          examples:
-          - Name 2
-        max_size:
-          type: integer
-          format: int32
-          description: The maximum number of callers allowed in the queue.
-          examples:
-          - 600
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a queue.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -969,23 +1069,21 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    UpdateQueueRequest_2:
+    QueueListResponse_2:
       type: object
       properties:
-        name:
-          type: string
-          description: The name of the queue.
-          examples:
-          - Name 2
-        max_size:
-          type: integer
-          format: int32
-          description: The maximum number of callers allowed in the queue.
-          examples:
-          - 600
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Queue_2'
+          description: List of queues.
       unevaluatedProperties:
         not: {}
-      description: Request body for updating a queue.
+      description: Response containing a list of queues.
     Queue_2:
       type: object
       required:
@@ -1044,104 +1142,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Queue model.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-  parameters:
-    QueueSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The unique identifier for the queue.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    QueuesAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account this Queue is associated with.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    QueuePathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the queue.
-      schema:
-        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http
@@ -1188,5 +1188,5 @@ components:
 
         ```'
 x-refined-from:
-- signalwire-compatibility-openapi.yml
-- signalwire-rest-openapi.yml
+- signalwire-compatibility-openapi.yaml
+- signalwire-rest-openapi.yaml

@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - name: filter_name
         in: query
@@ -89,7 +89,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -137,7 +137,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/VerifiedCallerIDPathID'
       responses:
@@ -179,7 +179,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/VerifiedCallerIDPathID'
       responses:
@@ -233,7 +233,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/VerifiedCallerIDPathID'
       responses:
@@ -272,7 +272,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/VerifiedCallerIDPathID'
       responses:
@@ -314,7 +314,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/VerifiedCallerIDPathID'
       responses:
@@ -358,31 +358,37 @@ paths:
               $ref: '#/components/schemas/VerifyCallerIDRequest'
 components:
   schemas:
-    VerifyCallerIDRequest:
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - verification_code
+      - detail
+      - status
+      - title
+      - code
       properties:
-        verification_code:
+        detail:
           type: string
-          description: The verification code received via call or SMS.
+          description: A description of what caused the error.
           examples:
-          - '123456'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for verifying a caller ID.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          - Label can't be blank
+        status:
           type: string
-          enum:
-          - Unauthorized
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
+      description: Details about a specific validation error.
     VerifiedCallerID:
       type: object
       required:
@@ -436,35 +442,40 @@ components:
       unevaluatedProperties:
         not: {}
       description: Verified caller ID model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    PaginationLinks:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Not Found
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.ValidationError:
+      description: Pagination links for list responses.
+    VerifyCallerIDRequest:
       type: object
       required:
-      - errors
+      - verification_code
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
+        verification_code:
+          type: string
+          description: The verification code received via call or SMS.
+          examples:
+          - '123456'
       unevaluatedProperties:
         not: {}
-      description: The request failed validation. See errors for details.
+      description: Request body for verifying a caller ID.
     UpdateVerifiedCallerIDRequest:
       type: object
       required:
@@ -479,6 +490,98 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a verified caller ID.
+    CreateVerifiedCallerIDRequest:
+      type: object
+      required:
+      - number
+      properties:
+        number:
+          type: string
+          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in [E.164 format](https://en.wikipedia.org/wiki/E.164) that is able to receive a voice phone call for verification.
+          examples:
+          - '+15551234567'
+        name:
+          type: string
+          maxLength: 200
+          description: The name portion of the caller ID. If not provided, the default will be the formatted number.
+          examples:
+          - C-3P0
+        extension:
+          type: string
+          description: The extension of the phone number for the caller ID. This is only used when placing the verification call.
+          examples:
+          - '1234'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a verified caller ID.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    VerifiedCallerIDListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifiedCallerID'
+          description: List of verified caller IDs.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of verified caller IDs.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     VerifiedCallerIDResponse:
       type: object
       required:
@@ -532,109 +635,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single verified caller ID.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    CreateVerifiedCallerIDRequest:
-      type: object
-      required:
-      - number
-      properties:
-        number:
-          type: string
-          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in [E.164 format](https://en.wikipedia.org/wiki/E.164) that is able to receive a voice phone call for verification.
-          examples:
-          - '+15551234567'
-        name:
-          type: string
-          maxLength: 200
-          description: The name portion of the caller ID. If not provided, the default will be the formatted number.
-          examples:
-          - C-3P0
-        extension:
-          type: string
-          description: The extension of the phone number for the caller ID. This is only used when placing the verification call.
-          examples:
-          - '1234'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a verified caller ID.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    VerifiedCallerIDListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifiedCallerID'
-          description: List of verified caller IDs.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of verified caller IDs.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
   parameters:
     VerifiedCallerIDPathID:
       name: id

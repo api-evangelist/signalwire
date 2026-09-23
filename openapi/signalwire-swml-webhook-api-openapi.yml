@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -81,7 +81,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -135,7 +135,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/SWMLWebhookID'
       responses:
@@ -177,7 +177,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/SWMLWebhookID'
       responses:
@@ -231,7 +231,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/SWMLWebhookID'
       responses:
@@ -270,7 +270,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/SWMLWebhookIDPath'
       responses:
@@ -314,70 +314,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    RequestUrlMethodType:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: The method type to use for the URL
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    SWMLWebhookListResponse:
+    SWMLWebhookAddressListResponse:
       type: object
       required:
       - data
@@ -386,197 +323,14 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/SWMLWebhookResponse'
-          description: An array of objects that contain a list of SWML Webhook data
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects that contain a list of SWML Webhook Addresses
         links:
           allOf:
-          - $ref: '#/components/schemas/SWMLWebhookPaginationResponse'
+          - $ref: '#/components/schemas/SWMLWebhookAddressPaginationResponse'
           description: Object containing pagination links
       unevaluatedProperties:
         not: {}
-    SwmlWebhookCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: http_url_required
-          message: This value must be an HTTP or HTTPS URL.
-          attribute: status_callback_url
-          url: https://signalwire.com/docs/apis/error-codes
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    SWMLWebhookUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the SWML Webhook.
-          examples:
-          - My SWML Webhook
-        used_for:
-          type: string
-          enum:
-          - calling
-          - messaging
-          description: Indicates whether this SWML Webhook handles inbound calls or inbound messages. Determines the payload SignalWire POSTs to `primary_request_url`.
-          examples:
-          - calling
-          default: calling
-        primary_request_url:
-          type: string
-          format: uri
-          description: 'Primary URL SignalWire fetches the SWML document from when the webhook fires. The webhook payload depends on `used_for`: for `calling`, see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook); for `messaging`, see the [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook).'
-          examples:
-          - https://primary.com
-        primary_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Primary request method of the SWML Webhook.
-          examples:
-          - GET
-          default: POST
-        fallback_request_url:
-          type: string
-          format: uri
-          description: Fallback URL SignalWire fetches the SWML document from if the primary URL fails. Receives the same payload as `primary_request_url` — see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook) or [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook) depending on `used_for`.
-          examples:
-          - https://fallback.com
-        fallback_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Fallback request method of the SWML Webhook.
-          examples:
-          - GET
-          default: POST
-        status_callback_url:
-          type: string
-          format: uri
-          description: URL to receive message status callback events for outbound messages sent by this webhook (`reply` or `send_sms`). See the [Message status callback](/docs/apis/rest/webhooks/message-status-callback) webhook for the payload your URL will receive.
-          examples:
-          - https://callback.com
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Status callback method of the SWML Webhook.
-          examples:
-          - GET
-          default: POST
-      unevaluatedProperties:
-        not: {}
-    SwmlWebhookUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: http_url_required
-          message: This value must be an HTTP or HTTPS URL.
-          attribute: status_callback_url
-          url: https://signalwire.com/docs/apis/error-codes
-    SWMLWebhookAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      - next
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current paghe
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=swml_webhook
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=swml_webhook
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     FabricAddressApp:
       type: object
       required:
@@ -641,7 +395,292 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
-    SWMLWebhookAddressListResponse:
+    SWMLWebhookUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the SWML Webhook.
+          examples:
+          - My SWML Webhook
+        used_for:
+          type: string
+          enum:
+          - calling
+          - messaging
+          description: Indicates whether this SWML Webhook handles inbound calls or inbound messages. Determines the payload SignalWire POSTs to `primary_request_url`.
+          examples:
+          - calling
+          default: calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: 'Primary URL SignalWire fetches the SWML document from when the webhook fires. The webhook payload depends on `used_for`: for `calling`, see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook); for `messaging`, see the [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook).'
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the SWML Webhook.
+          examples:
+          - GET
+          default: POST
+        fallback_request_url:
+          type: string
+          format: uri
+          description: Fallback URL SignalWire fetches the SWML document from if the primary URL fails. Receives the same payload as `primary_request_url` — see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook) or [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook) depending on `used_for`.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the SWML Webhook.
+          examples:
+          - GET
+          default: POST
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL to receive message status callback events for outbound messages sent by this webhook (`reply` or `send_sms`). See the [Message status callback](/docs/apis/rest/webhooks/message-status-callback) webhook for the payload your URL will receive.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the SWML Webhook.
+          examples:
+          - GET
+          default: POST
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    SWMLWebhookCreateRequest:
+      type: object
+      required:
+      - primary_request_url
+      properties:
+        name:
+          type: string
+          description: Name of the SWML Webhook.
+          examples:
+          - My SWML Webhook
+        used_for:
+          type: string
+          enum:
+          - calling
+          - messaging
+          description: Indicates whether this SWML Webhook handles inbound calls or inbound messages. Determines the payload SignalWire POSTs to `primary_request_url`.
+          examples:
+          - calling
+          default: calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: 'Primary URL SignalWire fetches the SWML document from when the webhook fires. The webhook payload depends on `used_for`: for `calling`, see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook); for `messaging`, see the [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook).'
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the SWML Webhook.
+          examples:
+          - GET
+          default: POST
+        fallback_request_url:
+          type: string
+          format: uri
+          description: Fallback URL SignalWire fetches the SWML document from if the primary URL fails. Receives the same payload as `primary_request_url` — see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook) or [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook) depending on `used_for`.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the SWML Webhook.
+          examples:
+          - GET
+          default: POST
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL to receive message status callback events for outbound messages sent by this webhook (`reply` or `send_sms`). See the [Message status callback](/docs/apis/rest/webhooks/message-status-callback) webhook for the payload your URL will receive.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the SWML Webhook.
+          examples:
+          - GET
+          default: POST
+      unevaluatedProperties:
+        not: {}
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    SwmlWebhookUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: http_url_required
+          message: This value must be an HTTP or HTTPS URL.
+          attribute: status_callback_url
+          url: https://signalwire.com/docs/apis/error-codes
+    SWMLWebhookResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - swml_webhook
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the SWML Webhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 99151cf8-9548-4860-ba70-a8de824f3312
+        display_name:
+          type: string
+          description: Display name of the SWML Webhook Fabric Resource
+          examples:
+          - Booking Assistant
+        type:
+          type: string
+          enum:
+          - swml_webhook
+          description: Type of the Fabric Resource
+          examples:
+          - swml_webhook
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        swml_webhook:
+          allOf:
+          - $ref: '#/components/schemas/SWMLWebhook'
+          description: SWML Webhook data.
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    SWMLWebhookPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=0&page_size=50&type=swml_webhook
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=0&page_size=50&type=swml_webhook
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
+      unevaluatedProperties:
+        not: {}
+    SWMLWebhookListResponse:
       type: object
       required:
       - data
@@ -650,12 +689,24 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects that contain a list of SWML Webhook Addresses
+            $ref: '#/components/schemas/SWMLWebhookResponse'
+          description: An array of objects that contain a list of SWML Webhook data
         links:
           allOf:
-          - $ref: '#/components/schemas/SWMLWebhookAddressPaginationResponse'
+          - $ref: '#/components/schemas/SWMLWebhookPaginationResponse'
           description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
       unevaluatedProperties:
         not: {}
     SWMLWebhook:
@@ -732,151 +783,100 @@ components:
           - POST
       unevaluatedProperties:
         not: {}
-    SWMLWebhookCreateRequest:
+    VideoChannel:
       type: object
       required:
-      - primary_request_url
+      - video
       properties:
-        name:
+        video:
           type: string
-          description: Name of the SWML Webhook.
+          description: Video Channel of Fabric Address
           examples:
-          - My SWML Webhook
-        used_for:
-          type: string
-          enum:
-          - calling
-          - messaging
-          description: Indicates whether this SWML Webhook handles inbound calls or inbound messages. Determines the payload SignalWire POSTs to `primary_request_url`.
-          examples:
-          - calling
-          default: calling
-        primary_request_url:
-          type: string
-          format: uri
-          description: 'Primary URL SignalWire fetches the SWML document from when the webhook fires. The webhook payload depends on `used_for`: for `calling`, see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook); for `messaging`, see the [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook).'
-          examples:
-          - https://primary.com
-        primary_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Primary request method of the SWML Webhook.
-          examples:
-          - GET
-          default: POST
-        fallback_request_url:
-          type: string
-          format: uri
-          description: Fallback URL SignalWire fetches the SWML document from if the primary URL fails. Receives the same payload as `primary_request_url` — see the [SWML inbound call webhook](/docs/apis/rest/webhooks/inbound-call-webhook) or [SWML inbound message webhook](/docs/apis/rest/webhooks/inbound-message-webhook) depending on `used_for`.
-          examples:
-          - https://fallback.com
-        fallback_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Fallback request method of the SWML Webhook.
-          examples:
-          - GET
-          default: POST
-        status_callback_url:
-          type: string
-          format: uri
-          description: URL to receive message status callback events for outbound messages sent by this webhook (`reply` or `send_sms`). See the [Message status callback](/docs/apis/rest/webhooks/message-status-callback) webhook for the payload your URL will receive.
-          examples:
-          - https://callback.com
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Status callback method of the SWML Webhook.
-          examples:
-          - GET
-          default: POST
+          - /external/resource_name?channel=video
       unevaluatedProperties:
         not: {}
-    SWMLWebhookPaginationResponse:
+    SWMLWebhookAddressPaginationResponse:
       type: object
       required:
       - self
       - first
+      - next
       properties:
         self:
           type: string
           format: uri
-          description: Link of the current page
+          description: Link of the current paghe
           examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=0&page_size=50&type=swml_webhook
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=swml_webhook
         first:
           type: string
           format: uri
           description: Link to the first page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=0&page_size=50&type=swml_webhook
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=swml_webhook
         next:
           type: string
           format: uri
           description: Link to the next page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
         prev:
           type: string
           format: uri
           description: Link to the previous page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_webhooks?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
+          - https://example.signalwire.com/api/fabric/resources/swml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_webhook
       unevaluatedProperties:
         not: {}
-    SWMLWebhookResponse:
+    AudioChannel:
       type: object
       required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - swml_webhook
+      - audio
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the SWML Webhook.
-          examples:
-          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 99151cf8-9548-4860-ba70-a8de824f3312
-        display_name:
+        audio:
           type: string
-          description: Display name of the SWML Webhook Fabric Resource
+          description: Audio Channel of Fabric Address
           examples:
-          - Booking Assistant
-        type:
-          type: string
-          enum:
-          - swml_webhook
-          description: Type of the Fabric Resource
-          examples:
-          - swml_webhook
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        swml_webhook:
-          allOf:
-          - $ref: '#/components/schemas/SWMLWebhook'
-          description: SWML Webhook data.
+          - /external/resource_name?channel=audio
       unevaluatedProperties:
         not: {}
+    SwmlWebhookCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: http_url_required
+          message: This value must be an HTTP or HTTPS URL.
+          attribute: status_callback_url
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     SWMLWebhookIDPath:
       name: swml_webhook_id

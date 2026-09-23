@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Signalwire CXML Scripts API
   version: 1.0.0
-  description: 'Operations tagged CXML Scripts across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged CXML Scripts across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yaml, signalwire-rest-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
   description: SignalWire Compatibility API
@@ -38,7 +38,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlScriptsAccountSidPath'
       - name: Name
@@ -114,7 +114,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlScriptsAccountSidPath'
       responses:
@@ -170,7 +170,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlScriptsAccountSidPath'
       - $ref: '#/components/parameters/CxmlScriptSidPath'
@@ -213,7 +213,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlScriptsAccountSidPath'
       - $ref: '#/components/parameters/CxmlScriptSidPath'
@@ -268,7 +268,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_ or _Messaging_ or _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CxmlScriptsAccountSidPath'
       - $ref: '#/components/parameters/CxmlScriptSidPath'
@@ -321,7 +321,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -362,7 +362,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -423,7 +423,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CXMLScriptPathID'
       responses:
@@ -465,7 +465,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CXMLScriptPathID'
       responses:
@@ -519,7 +519,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CXMLScriptPathID'
       responses:
@@ -565,7 +565,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CXMLScriptAddressPathID'
       responses:
@@ -604,65 +604,6 @@ paths:
           description: Your SignalWire Space name
 components:
   schemas:
-    CxmlScriptListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - laml_bins
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins?Page=0&PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page, or null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins?Page=1&PageSize=50&PageToken=PAb3877c40da604998
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page, or null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        laml_bins:
-          type: array
-          items:
-            $ref: '#/components/schemas/CxmlScript'
-          description: List of cXML scripts.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of cXML scripts.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     CreateCxmlScriptRequest:
       type: object
       required:
@@ -682,25 +623,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a cXML script.
-    UpdateCxmlScriptRequest:
-      type: object
-      required:
-      - Name
-      properties:
-        Name:
-          type: string
-          minLength: 1
-          description: A friendly name given to the cXML script. Required.
-          examples:
-          - Death Star IVR
-        Contents:
-          type: string
-          description: The cXML contents of the script. Must be valid XML with proper Mustache syntax if templates are used.
-          examples:
-          - <Response><Say>Hello!</Say></Response>
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a cXML script.
     CxmlScriptResponse:
       type: object
       required:
@@ -780,6 +702,25 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single cXML script.
+    UpdateCxmlScriptRequest:
+      type: object
+      required:
+      - Name
+      properties:
+        Name:
+          type: string
+          minLength: 1
+          description: A friendly name given to the cXML script. Required.
+          examples:
+          - Death Star IVR
+        Contents:
+          type: string
+          description: The cXML contents of the script. Must be valid XML with proper Mustache syntax if templates are used.
+          examples:
+          - <Response><Say>Hello!</Say></Response>
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a cXML script.
     CxmlScript:
       type: object
       required:
@@ -892,187 +833,116 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    CXMLScriptListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CXMLScriptResponse'
-          description: An array of objects containing a list of cXML Script data
-        links:
-          allOf:
-          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    CXMLScriptUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter_value
-          message: contents must be valid cXML
-          attribute: contents
-          url: https://signalwire.com/docs/apis/error-codes
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    CXMLScriptAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects that contain a list of cXML Script Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    RequestUrlMethodType:
+    uuid:
       type: string
-      enum:
-      - GET
-      - POST
-      description: The method type to use for the URL
-    CXMLScriptCreateRequest:
+      format: uuid
+      description: Universal Unique Identifier.
+    CxmlScriptListResponse:
       type: object
       required:
-      - display_name
-      - contents
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - laml_bins
       properties:
-        display_name:
+        uri:
           type: string
-          description: Display name of the cXML Script
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins?Page=1&PageSize=50&PageToken=PAb3877c40da604998
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        laml_bins:
+          type: array
+          items:
+            $ref: '#/components/schemas/CxmlScript'
+          description: List of cXML scripts.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of cXML scripts.
+    CXMLScriptResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - name
+      - type
+      - created_at
+      - updated_at
+      - cxml_script
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the cXML Script.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        name:
+          type: string
+          description: Display name of the cXML Script Fabric Resource
           examples:
           - Reception Script
-        contents:
-          type: string
-          description: The cXML script contents
-          examples:
-          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
-        status_callback_url:
-          type: string
-          format: uri
-          description: URL to send status callbacks to
-          examples:
-          - https://example.com/status
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method to use for status callbacks
-          examples:
-          - GET
-      unevaluatedProperties:
-        not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+        type:
           type: string
           enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    CXMLScriptUpdateRequest:
-      type: object
-      properties:
-        display_name:
-          type: string
-          description: Display name of the cXML Script
+          - cxml_script
+          description: Type of the Fabric Resource
           examples:
-          - Reception Script
-        contents:
+          - cxml_script
+        created_at:
           type: string
-          description: The cXML script contents
+          format: date-time
+          description: Date and time when the resource was created.
           examples:
-          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
-        status_callback_url:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
           type: string
-          format: uri
-          description: URL to send status callbacks to
+          format: date-time
+          description: Date and time when the resource was updated.
           examples:
-          - https://example.com/status
-        status_callback_method:
+          - '2024-05-06T12:20:00Z'
+        cxml_script:
           allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method to use for status callbacks
-          examples:
-          - GET
+          - $ref: '#/components/schemas/CXMLScript'
+          description: cXML Script data.
       unevaluatedProperties:
         not: {}
     CXMLScript:
@@ -1146,92 +1016,18 @@ components:
           - POST
       unevaluatedProperties:
         not: {}
-    MessagingChannel:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
-      - messaging
+      - error
       properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    CXMLScriptResponse:
-      type: object
-      required:
-      - id
-      - project_id
-      - name
-      - type
-      - created_at
-      - updated_at
-      - cxml_script
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the cXML Script.
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-        name:
-          type: string
-          description: Display name of the cXML Script Fabric Resource
-          examples:
-          - Reception Script
-        type:
+        error:
           type: string
           enum:
-          - cxml_script
-          description: Type of the Fabric Resource
-          examples:
-          - cxml_script
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        cxml_script:
-          allOf:
-          - $ref: '#/components/schemas/CXMLScript'
-          description: cXML Script data.
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-    CXMLScriptCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: contents is required
-          attribute: contents
-          url: https://signalwire.com/docs/apis/error-codes
+      description: Access is unauthorized.
     CXMLScriptAddressPaginationResponse:
       type: object
       required:
@@ -1264,44 +1060,6 @@ components:
           - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=0&page_size=50&page_token=PA08cdad0c-e7e6-4a75-8244-902524f38d55&type=cxml_script
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     FabricAddressApp:
       type: object
       required:
@@ -1366,19 +1124,261 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    CXMLScriptUpdateRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          description: Display name of the cXML Script
+          examples:
+          - Reception Script
+        contents:
+          type: string
+          description: The cXML script contents
+          examples:
+          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL to send status callbacks to
+          examples:
+          - https://example.com/status
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method to use for status callbacks
+          examples:
+          - GET
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    CXMLScriptListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CXMLScriptResponse'
+          description: An array of objects containing a list of cXML Script data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    CXMLScriptCreateRequest:
+      type: object
+      required:
+      - display_name
+      - contents
+      properties:
+        display_name:
+          type: string
+          description: Display name of the cXML Script
+          examples:
+          - Reception Script
+        contents:
+          type: string
+          description: The cXML script contents
+          examples:
+          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL to send status callbacks to
+          examples:
+          - https://example.com/status
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method to use for status callbacks
+          examples:
+          - GET
+      unevaluatedProperties:
+        not: {}
+    CXMLScriptCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: contents is required
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
+    CXMLScriptAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects that contain a list of cXML Script Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CXMLScriptUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: contents must be valid cXML
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
   parameters:
-    CxmlScriptsAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account this script is associated with.
-      schema:
-        $ref: '#/components/schemas/uuid'
     CxmlScriptSidPath:
       name: Sid
       in: path
       required: true
       description: The unique identifier of the cXML script.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CxmlScriptsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account this script is associated with.
       schema:
         $ref: '#/components/schemas/uuid'
     CXMLScriptAddressPathID:
@@ -1441,5 +1441,5 @@ components:
 
         ```'
 x-refined-from:
-- signalwire-compatibility-openapi.yml
-- signalwire-rest-openapi.yml
+- signalwire-compatibility-openapi.yaml
+- signalwire-rest-openapi.yaml

@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
       responses:
@@ -69,7 +69,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
       - $ref: '#/components/parameters/IsoCountryPath'
@@ -97,7 +97,7 @@ paths:
   /Accounts/{AccountSid}/AvailablePhoneNumbers/{IsoCountry}/Local:
     get:
       operationId: search_local_available_phone_numbers
-      summary: Search for available phone numbers that match your criteria.
+      summary: Search for available phone numbers that match your criteria
       description: 'Search for Local AvailablePhoneNumbers.
 
 
@@ -107,7 +107,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
       - $ref: '#/components/parameters/IsoCountryPath'
@@ -235,7 +235,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AvailablePhoneNumbersAccountSidPath'
       - $ref: '#/components/parameters/IsoCountryPath'
@@ -351,22 +351,43 @@ paths:
       tags:
       - Available Phone Numbers
 components:
-  parameters:
-    IsoCountryPath:
-      name: IsoCountry
-      in: path
-      required: true
-      description: The ISO country code of the number.
-      schema:
-        type: string
-    AvailablePhoneNumbersAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The Project ID that uniquely identifies the Account to retrieve.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
+    AvailablePhoneNumberByCountryResponse:
+      type: object
+      required:
+      - country_code
+      - country
+      - uri
+      - beta
+      - subresource_uris
+      properties:
+        country_code:
+          type: string
+          description: The ISO country code of the number.
+          examples:
+          - US
+        country:
+          type: string
+          description: The country the number is from.
+          examples:
+          - United States
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US
+        beta:
+          type: boolean
+          description: New numbers on SignalWire are marked as `beta`.
+          examples:
+          - false
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/CountrySubresourceUris'
+          description: URIs for subresources.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing available phone number resources for a specific country.
     CountryResource:
       type: object
       required:
@@ -403,73 +424,25 @@ components:
       unevaluatedProperties:
         not: {}
       description: Country resource for available phone numbers.
-    CountrySubresourceUris:
-      type: object
-      required:
-      - local
-      - toll_free
-      properties:
-        local:
-          type: string
-          description: The URI for local numbers.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
-        toll_free:
-          type: string
-          description: The URI for toll-free numbers.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/TollFree
-      unevaluatedProperties:
-        not: {}
-      description: Country subresource URIs.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    AvailablePhoneNumberResourcesResponse:
+    AvailablePhoneNumberListResponse:
       type: object
       required:
       - uri
-      - countries
+      - available_phone_numbers
       properties:
         uri:
           type: string
           description: The URI for the API call.
           examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers
-        countries:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
+        available_phone_numbers:
           type: array
           items:
-            $ref: '#/components/schemas/CountryResource'
-          description: List of available countries.
+            $ref: '#/components/schemas/AvailablePhoneNumber'
+          description: List of available phone numbers.
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of available phone number resources (countries).
-    PhoneNumberCapabilities:
-      type: object
-      required:
-      - voice
-      - SMS
-      - MMS
-      properties:
-        voice:
-          type: boolean
-          description: Whether or not voice is enabled on the number.
-          examples:
-          - true
-        SMS:
-          type: boolean
-          description: Whether or not SMS is enabled on the number.
-          examples:
-          - true
-        MMS:
-          type: boolean
-          description: Whether or not MMS is enabled on the number.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Phone number capabilities.
+      description: Response containing a list of available phone numbers.
     AvailablePhoneNumber:
       type: object
       required:
@@ -562,61 +535,31 @@ components:
       unevaluatedProperties:
         not: {}
       description: Available phone number model.
-    AvailablePhoneNumberByCountryResponse:
+    PhoneNumberCapabilities:
       type: object
       required:
-      - country_code
-      - country
-      - uri
-      - beta
-      - subresource_uris
+      - voice
+      - SMS
+      - MMS
       properties:
-        country_code:
-          type: string
-          description: The ISO country code of the number.
-          examples:
-          - US
-        country:
-          type: string
-          description: The country the number is from.
-          examples:
-          - United States
-        uri:
-          type: string
-          description: The URI for the API call.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US
-        beta:
+        voice:
           type: boolean
-          description: New numbers on SignalWire are marked as `beta`.
+          description: Whether or not voice is enabled on the number.
           examples:
-          - false
-        subresource_uris:
-          allOf:
-          - $ref: '#/components/schemas/CountrySubresourceUris'
-          description: URIs for subresources.
+          - true
+        SMS:
+          type: boolean
+          description: Whether or not SMS is enabled on the number.
+          examples:
+          - true
+        MMS:
+          type: boolean
+          description: Whether or not MMS is enabled on the number.
+          examples:
+          - true
       unevaluatedProperties:
         not: {}
-      description: Response containing available phone number resources for a specific country.
-    AvailablePhoneNumberListResponse:
-      type: object
-      required:
-      - uri
-      - available_phone_numbers
-      properties:
-        uri:
-          type: string
-          description: The URI for the API call.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
-        available_phone_numbers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailablePhoneNumber'
-          description: List of available phone numbers.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of available phone numbers.
+      description: Phone number capabilities.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -650,6 +593,63 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    CountrySubresourceUris:
+      type: object
+      required:
+      - local
+      - toll_free
+      properties:
+        local:
+          type: string
+          description: The URI for local numbers.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
+        toll_free:
+          type: string
+          description: The URI for toll-free numbers.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/TollFree
+      unevaluatedProperties:
+        not: {}
+      description: Country subresource URIs.
+    AvailablePhoneNumberResourcesResponse:
+      type: object
+      required:
+      - uri
+      - countries
+      properties:
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryResource'
+          description: List of available countries.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of available phone number resources (countries).
+  parameters:
+    AvailablePhoneNumbersAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account to retrieve.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    IsoCountryPath:
+      name: IsoCountry
+      in: path
+      required: true
+      description: The ISO country code of the number.
+      schema:
+        type: string
   securitySchemes:
     SignalWireBasicAuth:
       type: http

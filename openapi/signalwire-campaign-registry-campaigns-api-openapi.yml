@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/BrandPathID'
       - name: filter_name
@@ -96,7 +96,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/BrandPathID'
       responses:
@@ -153,7 +153,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CampaignPathID'
       responses:
@@ -195,7 +195,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CampaignPathID'
       responses:
@@ -239,51 +239,7 @@ paths:
               $ref: '#/components/schemas/UpdateCampaignRequest'
 components:
   schemas:
-    UpdateCampaignRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: A name for the campaign.
-          examples:
-          - My Campaign
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a campaign.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    CampaignResponse:
+    Campaign:
       type: object
       required:
       - id
@@ -435,85 +391,7 @@ components:
           description: Timestamp when the campaign was last updated.
       unevaluatedProperties:
         not: {}
-      description: Response containing a single campaign.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    CampaignListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Campaign'
-          description: List of campaigns.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of campaigns.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    CreatePartnerCampaignRequest:
-      type: object
-      required:
-      - name
-      - brand_id
-      - csp_campaign_reference
-      properties:
-        name:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: A name for the campaign.
-          examples:
-          - My Campaign
-        brand_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the brand to associate with this campaign. Must be a CSP/partner brand.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        csp_campaign_reference:
-          type: string
-          description: The approved Campaign ID from TCR. Required for CSP/self-registered campaigns.
-          examples:
-          - C123456
-        status_callback_url:
-          type: string
-          format: uri
-          description: Specify a URL to receive webhook notifications when your campaign's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a partner/CSP campaign. Used when the brand is a CSP (self-registered) brand.
+      description: Campaign model for 10DLC registration.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -545,18 +423,53 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    Types.StatusCodes.StatusCode500:
+    CampaignListResponse:
       type: object
-      required:
-      - error
       properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+          description: List of campaigns.
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+      description: Response containing a list of campaigns.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    UpdateCampaignRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a campaign.
     CreateManagedCampaignRequest:
       type: object
       required:
@@ -724,7 +637,94 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a managed campaign. Used when the brand is a managed (non-CSP) brand.
-    Campaign:
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    CreatePartnerCampaignRequest:
+      type: object
+      required:
+      - name
+      - brand_id
+      - csp_campaign_reference
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+        brand_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the brand to associate with this campaign. Must be a CSP/partner brand.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        csp_campaign_reference:
+          type: string
+          description: The approved Campaign ID from TCR. Required for CSP/self-registered campaigns.
+          examples:
+          - C123456
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your campaign's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a partner/CSP campaign. Used when the brand is a CSP (self-registered) brand.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    CampaignResponse:
       type: object
       required:
       - id
@@ -876,20 +876,20 @@ components:
           description: Timestamp when the campaign was last updated.
       unevaluatedProperties:
         not: {}
-      description: Campaign model for 10DLC registration.
+      description: Response containing a single campaign.
   parameters:
-    CampaignPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the campaign.
-      schema:
-        $ref: '#/components/schemas/uuid'
     BrandPathID:
       name: id
       in: path
       required: true
       description: Unique ID of the brand.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

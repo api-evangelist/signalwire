@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -88,7 +88,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -136,7 +136,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/MfaRequestIdPath'
       responses:
@@ -174,6 +174,37 @@ paths:
               $ref: '#/components/schemas/MfaVerifyRequest'
 components:
   schemas:
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
     MfaVerifyRequest:
       type: object
       required:
@@ -187,7 +218,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA verification request model.
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -195,42 +226,10 @@ components:
         error:
           type: string
           enum:
-          - Unauthorized
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    MfaResponse:
-      type: object
-      required:
-      - id
-      - success
-      - to
-      - channel
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The MFA request ID. Save this for verification.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        success:
-          type: boolean
-          description: Whether the request was successfully queued.
-          examples:
-          - true
-        to:
-          type: string
-          description: The destination of the MFA request.
-          examples:
-          - '+15554422333'
-        channel:
-          type: string
-          description: Can be sms for a text message or call for a phone call.
-          examples:
-          - call
-      unevaluatedProperties:
-        not: {}
-      description: MFA response model.
+      description: An internal server error occurred.
     MfaRequest:
       type: object
       required:
@@ -282,6 +281,63 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA request model.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    MfaVerifyResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+          description: Whether the token was successfully verified by the API. When `max_attempts` are reached or the request is no longer valid, the endpoint will return a `404 Not Found`.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: MFA verification response model.
+    MfaResponse:
+      type: object
+      required:
+      - id
+      - success
+      - to
+      - channel
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The MFA request ID. Save this for verification.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        success:
+          type: boolean
+          description: Whether the request was successfully queued.
+          examples:
+          - true
+        to:
+          type: string
+          description: The destination of the MFA request.
+          examples:
+          - '+15554422333'
+        channel:
+          type: string
+          description: Can be sms for a text message or call for a phone call.
+          examples:
+          - call
+      unevaluatedProperties:
+        not: {}
+      description: MFA response model.
     uuid:
       type: string
       format: uuid
@@ -299,62 +355,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    MfaVerifyResponse:
-      type: object
-      required:
-      - success
-      properties:
-        success:
-          type: boolean
-          description: Whether the token was successfully verified by the API. When `max_attempts` are reached or the request is no longer valid, the endpoint will return a `404 Not Found`.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: MFA verification response model.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
   parameters:
     MfaRequestIdPath:
       name: mfa_request_id

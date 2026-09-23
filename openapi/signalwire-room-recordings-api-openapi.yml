@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.ListRoomRecordingsRequest.media_ttl'
       - $ref: '#/components/parameters/Video.ListRoomRecordingsRequest.page_number'
@@ -92,7 +92,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.RoomRecordingPathID'
       - name: media_ttl
@@ -155,7 +155,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.RoomRecordingPathID'
       responses:
@@ -206,7 +206,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Video.RoomRecordingPathID'
       - $ref: '#/components/parameters/Video.ListRoomRecordingEventsRequest.page_number'
@@ -246,19 +246,87 @@ paths:
       tags:
       - Room Recordings
 components:
+  parameters:
+    Video.ListRoomRecordingEventsRequest.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: Page number to return. Requires `page_token` for values greater than 0.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
+    Video.ListRoomRecordingsRequest.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Video.RoomRecordingPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the Room Recording.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.ListRoomRecordingsRequest.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: Page number to return. Requires `page_token` for values greater than 0.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
+    Video.ListRoomRecordingsRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
+      schema:
+        type: string
+      explode: false
+    Video.ListRoomRecordingEventsRequest.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Video.ListRoomRecordingsRequest.media_ttl:
+      name: media_ttl
+      in: query
+      required: false
+      description: Generated media links will be valid for this many seconds. Default is 900 (15 minutes).
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      explode: false
+    Video.ListRoomRecordingEventsRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
+      schema:
+        type: string
+      explode: false
   schemas:
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Video.RoomRecording:
       type: object
       required:
@@ -379,6 +447,56 @@ components:
       unevaluatedProperties:
         not: {}
       description: List room recordings response.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
     Types.StatusCodes.StatusCode400:
       type: object
       required:
@@ -391,10 +509,14 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request is invalid.
-    uuid:
+    Video.RoomRecordingStatus:
       type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      enum:
+      - recording
+      - paused
+      - processing
+      - completed
+      description: Status of a room recording.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -407,36 +529,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
-    Video.ListRoomRecordingEventsResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Video.PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Video.RoomSessionEvent'
-          description: List of room recording events.
-      unevaluatedProperties:
-        not: {}
-      description: List room recording events response.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     Video.RoomSessionEvent:
       type: object
       required:
@@ -508,6 +600,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: Room session event response object.
+    Video.ListRoomRecordingEventsResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.RoomSessionEvent'
+          description: List of room recording events.
+      unevaluatedProperties:
+        not: {}
+      description: List room recording events response.
     Video.PaginationLinks:
       type: object
       required:
@@ -537,44 +647,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Pagination links for list responses.
-    Types.StatusCodes.RestApiErrorItem:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - type
-      - code
-      - message
-      - url
+      - error
       properties:
-        type:
+        error:
           type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Details about a specific error.
+      description: An internal server error occurred.
     Video.VideoStatusCode422:
       type: object
       required:
@@ -596,94 +680,10 @@ components:
           message: Name must be present
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
-    Video.RoomRecordingStatus:
+    uuid:
       type: string
-      enum:
-      - recording
-      - paused
-      - processing
-      - completed
-      description: Status of a room recording.
-  parameters:
-    Video.ListRoomRecordingsRequest.media_ttl:
-      name: media_ttl
-      in: query
-      required: false
-      description: Generated media links will be valid for this many seconds. Default is 900 (15 minutes).
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-      explode: false
-    Video.ListRoomRecordingsRequest.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: Page number to return. Requires `page_token` for values greater than 0.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
-    Video.ListRoomRecordingEventsRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
-      schema:
-        type: string
-      explode: false
-    Video.ListRoomRecordingsRequest.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
-    Video.ListRoomRecordingsRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
-      schema:
-        type: string
-      explode: false
-    Video.RoomRecordingPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the Room Recording.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.ListRoomRecordingEventsRequest.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
-    Video.ListRoomRecordingEventsRequest.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: Page number to return. Requires `page_token` for values greater than 0.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
+      format: uuid
+      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

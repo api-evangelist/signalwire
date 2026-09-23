@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: 'SignalWire REST Campaign Registry: Phone Number Assignments API'
+  title: 'SignalWire REST Campaign Registry: Phone Number Assignments…'
   version: 1.0.0
   contact:
     name: SignalWire
@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CampaignPathID'
       - name: filter_state
@@ -90,7 +90,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CampaignPathID'
       - name: filter_state
@@ -139,7 +139,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CampaignPathID'
       responses:
@@ -194,7 +194,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/AssignedNumberPathID'
       responses:
@@ -233,7 +233,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_ and _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/OrderPathID'
       responses:
@@ -264,56 +264,84 @@ paths:
       tags:
       - 'Campaign Registry: Phone Number Assignments'
 components:
-  parameters:
-    AssignedNumberPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the assigned number.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    CampaignPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the campaign.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    OrderPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the order.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - error
+      - detail
+      - status
+      - title
+      - code
       properties:
-        error:
+        detail:
           type: string
-          enum:
-          - Unauthorized
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    AssignedNumberListResponse:
+      description: Details about a specific validation error.
+    AssignedPhoneNumber:
       type: object
       properties:
-        links:
+        id:
           allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssignedNumber'
-          description: List of assigned numbers.
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the phone number.
+        name:
+          type: string
+          description: The name of the phone number.
+          examples:
+          - Jenny
+        number:
+          type: string
+          description: The phone number in E.164 format.
+          examples:
+          - '+15558675309'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of assigned numbers.
+      description: Phone number details in an assignment.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
     OrderListResponse:
       type: object
       properties:
@@ -347,35 +375,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating an order.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
     AssignedNumber:
       type: object
       required:
@@ -413,6 +412,30 @@ components:
       unevaluatedProperties:
         not: {}
       description: Assigned number model for campaign registration.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     Order:
       type: object
       required:
@@ -449,62 +472,21 @@ components:
       unevaluatedProperties:
         not: {}
       description: Order model for campaign registry operations.
-    AssignedPhoneNumber:
+    AssignedNumberListResponse:
       type: object
       properties:
-        id:
+        links:
           allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the phone number.
-        name:
-          type: string
-          description: The name of the phone number.
-          examples:
-          - Jenny
-        number:
-          type: string
-          description: The phone number in E.164 format.
-          examples:
-          - '+15558675309'
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignedNumber'
+          description: List of assigned numbers.
       unevaluatedProperties:
         not: {}
-      description: Phone number details in an assignment.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
+      description: Response containing a list of assigned numbers.
     OrderResponse:
       type: object
       required:
@@ -541,7 +523,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single order.
-    Types.StatusCodes.StatusCode500:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -549,31 +548,32 @@ components:
         error:
           type: string
           enum:
-          - Internal Server Error
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
+      description: The server cannot find the requested resource.
+  parameters:
+    AssignedNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the assigned number.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    OrderPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the order.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

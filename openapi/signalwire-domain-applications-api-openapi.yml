@@ -33,11 +33,8 @@ paths:
       summary: Assign domain application handler
       description: 'This endpoint assigns a specific resource to a Domain Application, allowing inbound calls to be handled by the resource.
 
-        <Note>
 
         Currently only supports `calling` as a handler and automatically defaults to it.
-
-        </Note>
 
 
         #### Permissions
@@ -46,7 +43,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/DomainApplicationPathID'
       responses:
@@ -89,82 +86,7 @@ paths:
             schema:
               $ref: '#/components/schemas/DomainApplicationAssignRequest'
 components:
-  parameters:
-    DomainApplicationPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the domain application.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    DomainApplicationCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: name is required
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    DomainAppCallHandler:
-      type: string
-      enum:
-      - relay_topic
-      - relay_application
-      - laml_webhooks
-      - laml_application
-      - video_room
-      - relay_script
-      - dialogflow
-      - ai_agent
-      - call_flow
-      - relay_context
-      - relay_connector
-      - fabric_subscriber
-      - sip_gateway
-      - call_queue
-      description: All possible call handler types for domain applications. Includes types that can only be assigned via the Fabric API or UI.
     DomainApplicationResponse:
       type: object
       required:
@@ -364,31 +286,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single domain application.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    DomainApplicationAssignRequest:
-      type: object
-      required:
-      - domain_application_id
-      properties:
-        domain_application_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The id of the domain application you wish to assign a resource to.
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-      unevaluatedProperties:
-        not: {}
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -427,6 +324,106 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
+    DomainApplicationAssignRequest:
+      type: object
+      required:
+      - domain_application_id
+      properties:
+        domain_application_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The id of the domain application you wish to assign a resource to.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+      unevaluatedProperties:
+        not: {}
+    DomainApplicationCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: name is required
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    DomainAppCallHandler:
+      type: string
+      enum:
+      - relay_topic
+      - relay_application
+      - laml_webhooks
+      - laml_application
+      - video_room
+      - relay_script
+      - dialogflow
+      - ai_agent
+      - call_flow
+      - relay_context
+      - relay_connector
+      - fabric_subscriber
+      - sip_gateway
+      - call_queue
+      description: All possible call handler types for domain applications. Includes types that can only be assigned via the Fabric API or UI.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+  parameters:
+    DomainApplicationPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the domain application.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

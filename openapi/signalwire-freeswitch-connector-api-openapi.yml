@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -81,7 +81,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -135,7 +135,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FreeswitchConnectorPathID'
       responses:
@@ -177,7 +177,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FreeswitchConnectorPathID'
       responses:
@@ -231,7 +231,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FreeswitchConnectorPathID'
       responses:
@@ -270,7 +270,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FreeswitchConnectorAddressPathID'
       responses:
@@ -334,336 +334,6 @@ components:
           - '123456'
       unevaluatedProperties:
         not: {}
-    FreeswitchConnectorCreateRequest:
-      type: object
-      required:
-      - name
-      - token
-      properties:
-        name:
-          type: string
-          description: Name of the FreeSWITCH Connector
-          examples:
-          - Booking Assistant
-        token:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: FreeSWITCH token
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-      unevaluatedProperties:
-        not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    FreeswitchConnectorAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link to the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=freeswitch_connector
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=freeswitch_connector
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    FreeswitchConnectorListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/FreeswitchConectorPaginationResponse'
-          description: Object containing pagination links
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FreeswitchConnectorResponse'
-          description: An array of objects containing a list of FreeSWITCH connector data
-      unevaluatedProperties:
-        not: {}
-    FreeswitchConnectorResponse:
-      type: object
-      required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - freeswitch_connector
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the FreeSWITCH Connector.
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-        display_name:
-          type: string
-          description: Display name of the FreeSWITCH Connector Fabric Resource
-          examples:
-          - Main FreeSWITCH Server
-        type:
-          type: string
-          enum:
-          - freeswitch_connector
-          description: Type of the Fabric Resource
-          examples:
-          - freeswitch_connector
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        freeswitch_connector:
-          allOf:
-          - $ref: '#/components/schemas/FreeswitchConnector'
-          description: FreeSWITCH Connector data.
-      unevaluatedProperties:
-        not: {}
-    FreeswitchConnectorCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: host is required
-          attribute: host
-          url: https://signalwire.com/docs/apis/error-codes
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    FreeswitchConnector:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of a FreeSWITCH Connector.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        name:
-          type: string
-          description: Name of the FreeSWITCH Connector
-          examples:
-          - Booking Assistant
-        caller_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Caller ID for the connector
-          examples:
-          - '123456'
-        send_as:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Send as identifier
-          examples:
-          - '123456'
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    FreeswitchConnectorAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressCall'
-          description: An array of objects containing a list of FreeSWITCH Connector Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/FreeswitchConnectorAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    FreeswitchConectorPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: The link of the current page
-          examples:
-          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_number=0&page_size=50&type=freeswitch_connector
-        first:
-          type: string
-          format: uri
-          description: The link of the first page
-          examples:
-          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_size=50&type=freeswitch_connector
-        next:
-          type: string
-          format: uri
-          description: The link of the next page
-          examples:
-          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
-        prev:
-          type: string
-          format: uri
-          description: The link of the previous page
-          examples:
-          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     FabricAddressCall:
       type: object
       required:
@@ -728,6 +398,141 @@ components:
       unevaluatedProperties:
         not: {}
       title: Call Address
+    FreeswitchConnectorCreateRequest:
+      type: object
+      required:
+      - name
+      - token
+      properties:
+        name:
+          type: string
+          description: Name of the FreeSWITCH Connector
+          examples:
+          - Booking Assistant
+        token:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: FreeSWITCH token
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    FreeswitchConnector:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a FreeSWITCH Connector.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: Name of the FreeSWITCH Connector
+          examples:
+          - Booking Assistant
+        caller_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Caller ID for the connector
+          examples:
+          - '123456'
+        send_as:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Send as identifier
+          examples:
+          - '123456'
+      unevaluatedProperties:
+        not: {}
+    FreeswitchConnectorAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressCall'
+          description: An array of objects containing a list of FreeSWITCH Connector Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FreeswitchConnectorAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
     FreeswitchConnectorUpdateStatusCode422:
       type: object
       required:
@@ -749,19 +554,214 @@ components:
           message: port must be between 1 and 65535
           attribute: port
           url: https://signalwire.com/docs/apis/error-codes
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    FreeswitchConectorPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: The link of the current page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_number=0&page_size=50&type=freeswitch_connector
+        first:
+          type: string
+          format: uri
+          description: The link of the first page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_size=50&type=freeswitch_connector
+        next:
+          type: string
+          format: uri
+          description: The link of the next page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
+        prev:
+          type: string
+          format: uri
+          description: The link of the previous page
+          examples:
+          - https://devspace.signalwire.com/api/fabric/resources/freeswitch_connectors?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
+      unevaluatedProperties:
+        not: {}
+    FreeswitchConnectorCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: host is required
+          attribute: host
+          url: https://signalwire.com/docs/apis/error-codes
+    FreeswitchConnectorListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FreeswitchConectorPaginationResponse'
+          description: Object containing pagination links
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FreeswitchConnectorResponse'
+          description: An array of objects containing a list of FreeSWITCH connector data
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    FreeswitchConnectorResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - freeswitch_connector
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the FreeSWITCH Connector.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the FreeSWITCH Connector Fabric Resource
+          examples:
+          - Main FreeSWITCH Server
+        type:
+          type: string
+          enum:
+          - freeswitch_connector
+          description: Type of the Fabric Resource
+          examples:
+          - freeswitch_connector
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        freeswitch_connector:
+          allOf:
+          - $ref: '#/components/schemas/FreeswitchConnector'
+          description: FreeSWITCH Connector data.
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    FreeswitchConnectorAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link to the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=freeswitch_connector
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=freeswitch_connector
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/freeswitch_connectors/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=freeswitch_connector
+      unevaluatedProperties:
+        not: {}
   parameters:
-    FreeswitchConnectorAddressPathID:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the FreeSWITCH Connector.
-      schema:
-        $ref: '#/components/schemas/uuid'
     FreeswitchConnectorPathID:
       name: id
       in: path
       required: true
       description: Unique ID of a FreeSWITCH Connector.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FreeswitchConnectorAddressPathID:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the FreeSWITCH Connector.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/TranscriptionsAccountSidPath'
       - name: DateCreated
@@ -124,7 +124,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/TranscriptionsAccountSidPath'
       - $ref: '#/components/parameters/TranscriptionSidPath'
@@ -167,7 +167,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/TranscriptionsAccountSidPath'
       - $ref: '#/components/parameters/TranscriptionSidPath'
@@ -210,7 +210,7 @@ webhooks:
 
         Configure this callback by enabling transcription on a recording via the
 
-        [Record](/docs/compatibility-api/cxml/reference/voice/record) verb (`transcribe=true`) and setting `transcribeCallback`
+        Record verb (`transcribe=true`) and setting `transcribeCallback`
 
         to your webhook URL.
 
@@ -220,7 +220,7 @@ webhooks:
         your CRM, sending it via email, or forwarding the body via SignalWire SMS.
 
 
-        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See Status callback reliability.'
       parameters: []
       responses:
         '200':
@@ -376,10 +376,6 @@ components:
           - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Recordings/b3877c40-da60-4998-90ad-b792e984re01
       unevaluatedProperties:
         not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     TranscriptionResponse:
       type: object
       required:
@@ -474,6 +470,43 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single transcription.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     TranscriptionListResponse:
       type: object
       required:
@@ -529,39 +562,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of transcriptions.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
   parameters:
     TranscriptionSidPath:
       name: Sid

@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/MessagesAccountSidPath'
       - $ref: '#/components/parameters/MessageSidPathForMedia'
@@ -125,7 +125,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/MessagesAccountSidPath'
       - $ref: '#/components/parameters/MessageSidPathForMedia'
@@ -169,7 +169,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Messaging_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/MessagesAccountSidPath'
       - $ref: '#/components/parameters/MessageSidPathForMedia'
@@ -205,65 +205,6 @@ paths:
       - Message Media
 components:
   schemas:
-    MessageMediaListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - media_list
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media?Page=0&PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page, or null if there are no more pages.
-          examples:
-          - null
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page, or null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        media_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/MessageMedia'
-          description: List of media.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of message media.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     MessageMediaResponse:
       type: object
       required:
@@ -349,6 +290,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     MessageMedia:
       type: object
       required:
@@ -401,19 +346,74 @@ components:
       unevaluatedProperties:
         not: {}
       description: Message media model.
+    MessageMediaListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - media_list
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - null
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        media_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageMedia'
+          description: List of media.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of message media.
   parameters:
-    MessageSidPathForMedia:
-      name: MessageSid
-      in: path
-      required: true
-      description: A unique ID that identifies this specific message.
-      schema:
-        $ref: '#/components/schemas/uuid'
     MessagesAccountSidPath:
       name: AccountSid
       in: path
       required: true
       description: The unique identifier of the project that sent or received this message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    MessageSidPathForMedia:
+      name: MessageSid
+      in: path
+      required: true
+      description: A unique ID that identifies this specific message.
       schema:
         $ref: '#/components/schemas/uuid'
     MessageSidPath:

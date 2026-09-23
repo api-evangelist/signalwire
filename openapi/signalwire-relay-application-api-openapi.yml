@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -81,7 +81,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -135,7 +135,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RelayApplicationPathID'
       responses:
@@ -177,7 +177,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RelayApplicationPathID'
       responses:
@@ -231,7 +231,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RelayApplicationPathID'
       responses:
@@ -270,7 +270,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/RelayApplicationAddressPathID'
       responses:
@@ -302,18 +302,23 @@ paths:
       - Relay Application
 components:
   schemas:
-    Types.StatusCodes.StatusCode401:
+    RelayApplicationListResponse:
       type: object
       required:
-      - error
+      - data
+      - links
       properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelayApplicationResponse'
+          description: An array of objects that contain a list of Relay Application data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/RelayApplicationAddressPaginationResponse'
+          description: Object containing pagination links
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
     RelayApplicationAddressListResponse:
       type: object
       required:
@@ -331,61 +336,7 @@ components:
           description: Object containing pagination links
       unevaluatedProperties:
         not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    RelayApplicationCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: name is required
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -393,198 +344,10 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    RelayApplicationCreateRequest:
-      type: object
-      required:
-      - name
-      - topic
-      properties:
-        name:
-          type: string
-          description: Name of the Relay Application
-          examples:
-          - Booking Assistant
-        topic:
-          type: string
-          description: Topic of the Relay Application
-          examples:
-          - booking
-        call_status_callback_url:
-          type: string
-          description: Call status callback URL
-          examples:
-          - https://booking.com/callbacks
-      unevaluatedProperties:
-        not: {}
-    RelayApplicationAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Self link for the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=relay_application
-        first:
-          type: string
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=relay_application
-        next:
-          type: string
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=relay_application
-        prev:
-          type: string
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=relay_application
-      unevaluatedProperties:
-        not: {}
-    RelayApplication:
-      type: object
-      required:
-      - id
-      - name
-      - topic
-      - call_status_callback_url
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of a Relay Application.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        name:
-          type: string
-          description: Name of the Relay Application
-          examples:
-          - Booking Assistant
-        topic:
-          type: string
-          description: Topic of the Relay Application
-          examples:
-          - booking
-        call_status_callback_url:
-          anyOf:
-          - type: string
-            format: uri
-          - type: 'null'
-          description: Call status callback URL
-          examples:
-          - https://example.com/callbacks
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    RelayApplicationUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the Relay Application
-          examples:
-          - Booking Assistant
-        topic:
-          type: string
-          description: Topic of the Relay Application
-          examples:
-          - booking
-        call_status_callback_url:
-          type: string
-          description: Call status callback URL
-          examples:
-          - https://booking.com/callbacks
-      unevaluatedProperties:
-        not: {}
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    RelayApplicationUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter_value
-          message: webhook_url must be a valid URL
-          attribute: webhook_url
-          url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
+      description: Access is unauthorized.
     FabricAddressApp:
       type: object
       required:
@@ -649,21 +412,221 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
-    RelayApplicationListResponse:
+    Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
-      - data
-      - links
+      - type
+      - code
+      - message
+      - url
       properties:
-        data:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    RelayApplicationAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Self link for the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=relay_application
+        first:
+          type: string
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=relay_application
+        next:
+          type: string
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=relay_application
+        prev:
+          type: string
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/relay_applications/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=relay_application
+      unevaluatedProperties:
+        not: {}
+    RelayApplicationUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
           type: array
           items:
-            $ref: '#/components/schemas/RelayApplicationResponse'
-          description: An array of objects that contain a list of Relay Application data
-        links:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: webhook_url must be a valid URL
+          attribute: webhook_url
+          url: https://signalwire.com/docs/apis/error-codes
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    RelayApplication:
+      type: object
+      required:
+      - id
+      - name
+      - topic
+      - call_status_callback_url
+      properties:
+        id:
           allOf:
-          - $ref: '#/components/schemas/RelayApplicationAddressPaginationResponse'
-          description: Object containing pagination links
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of a Relay Application.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: Name of the Relay Application
+          examples:
+          - Booking Assistant
+        topic:
+          type: string
+          description: Topic of the Relay Application
+          examples:
+          - booking
+        call_status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Call status callback URL
+          examples:
+          - https://example.com/callbacks
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    RelayApplicationUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the Relay Application
+          examples:
+          - Booking Assistant
+        topic:
+          type: string
+          description: Topic of the Relay Application
+          examples:
+          - booking
+        call_status_callback_url:
+          type: string
+          description: Call status callback URL
+          examples:
+          - https://booking.com/callbacks
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    RelayApplicationCreateRequest:
+      type: object
+      required:
+      - name
+      - topic
+      properties:
+        name:
+          type: string
+          description: Name of the Relay Application
+          examples:
+          - Booking Assistant
+        topic:
+          type: string
+          description: Topic of the Relay Application
+          examples:
+          - booking
+        call_status_callback_url:
+          type: string
+          description: Call status callback URL
+          examples:
+          - https://booking.com/callbacks
       unevaluatedProperties:
         not: {}
     RelayApplicationResponse:
@@ -719,19 +682,56 @@ components:
           description: Relay Application data.
       unevaluatedProperties:
         not: {}
+    RelayApplicationCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: name is required
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    RelayApplicationPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of a Relay Application.
-      schema:
-        $ref: '#/components/schemas/uuid'
     RelayApplicationAddressPathID:
       name: id
       in: path
       required: true
       description: The unique identifier of the Relay Application.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    RelayApplicationPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a Relay Application.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

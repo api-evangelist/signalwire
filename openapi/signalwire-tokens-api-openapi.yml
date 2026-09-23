@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/TokensAccountSidPath'
       responses:
@@ -81,7 +81,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/TokensAccountSidPath'
       - $ref: '#/components/parameters/TokenIdPath'
@@ -136,7 +136,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Management_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/TokensAccountSidPath'
       - $ref: '#/components/parameters/TokenIdPath'
@@ -164,6 +164,21 @@ paths:
       tags:
       - Tokens
 components:
+  parameters:
+    TokenIdPath:
+      name: token_id
+      in: path
+      required: true
+      description: The unique identifier of the project API token.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    TokensAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the project you want to use to authenticate this request.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
     CreateTokenRequest:
       type: object
@@ -196,6 +211,28 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating an API token.
+    CompatibilityTokenValidationError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Error type.
+        code:
+          type: string
+          description: Error code.
+        message:
+          type: string
+          description: Error message.
+        attribute:
+          type: string
+          description: Request parameter associated with this error.
+        url:
+          type: string
+          format: uri
+          description: Link to developer resource for this error.
+      unevaluatedProperties:
+        not: {}
+      description: Token validation error response model.
     TokenResponse:
       type: object
       required:
@@ -233,53 +270,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single token.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    CompatibilityTokenValidationError:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Error type.
-        code:
-          type: string
-          description: Error code.
-        message:
-          type: string
-          description: Error message.
-        attribute:
-          type: string
-          description: Request parameter associated with this error.
-        url:
-          type: string
-          format: uri
-          description: Link to developer resource for this error.
-      unevaluatedProperties:
-        not: {}
-      description: Token validation error response model.
-    UpdateTokenRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          description: The name representing the project API token.
-          examples:
-          - John Doe's Token
-        permissions:
-          type: array
-          items:
-            type: string
-          description: 'The permissions you would like to enable for this project API token. If not provided, existing permissions are kept. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
-          examples:
-          - - calling
-            - fax
-            - messaging
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating an API token.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -313,21 +303,31 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-  parameters:
-    TokensAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the project you want to use to authenticate this request.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    TokenIdPath:
-      name: token_id
-      in: path
-      required: true
-      description: The unique identifier of the project API token.
-      schema:
-        $ref: '#/components/schemas/uuid'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    UpdateTokenRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The name representing the project API token.
+          examples:
+          - John Doe's Token
+        permissions:
+          type: array
+          items:
+            type: string
+          description: 'The permissions you would like to enable for this project API token. If not provided, existing permissions are kept. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
+          examples:
+          - - calling
+            - fax
+            - messaging
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an API token.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

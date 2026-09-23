@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Signalwire Queue Members API
   version: 1.0.0
-  description: 'Operations tagged Queue Members across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yml, signalwire-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Queue Members across 2 of this provider''s published API definitions: signalwire-compatibility-openapi.yaml, signalwire-rest-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://{space_name}.signalwire.com/api/laml/2010-04-01
   description: SignalWire Compatibility API
@@ -38,7 +38,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - $ref: '#/components/parameters/QueueSidPathForMembers'
@@ -123,7 +123,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - $ref: '#/components/parameters/QueueSidPathForMembers'
@@ -167,7 +167,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueuesAccountSidPath'
       - $ref: '#/components/parameters/QueueSidPathForMembers'
@@ -237,7 +237,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueueIdPath'
       responses:
@@ -287,7 +287,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueueIdPath'
       responses:
@@ -337,7 +337,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/QueueIdPath'
       - $ref: '#/components/parameters/QueueMemberPathID'
@@ -384,13 +384,6 @@ components:
       description: The unique identifier for the account this Queue is associated with.
       schema:
         $ref: '#/components/schemas/uuid'
-    QueueSidPathForMembers:
-      name: QueueSid
-      in: path
-      required: true
-      description: The unique identifier for the queue.
-      schema:
-        $ref: '#/components/schemas/uuid'
     QueueMemberCallSidPath:
       name: CallSid
       in: path
@@ -398,11 +391,11 @@ components:
       description: The unique identifier for the call, or the special value 'Front' to reference the member at the front of the queue.
       schema:
         type: string
-    QueueIdPath:
-      name: queue_id
+    QueueSidPathForMembers:
+      name: QueueSid
       in: path
       required: true
-      description: Unique ID of the queue.
+      description: The unique identifier for the queue.
       schema:
         $ref: '#/components/schemas/uuid'
     QueueMemberPathID:
@@ -412,7 +405,76 @@ components:
       description: The unique identifier (ID) of the queue member.
       schema:
         $ref: '#/components/schemas/uuid'
+    QueueIdPath:
+      name: queue_id
+      in: path
+      required: true
+      description: Unique ID of the queue.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
+    QueueMemberResponse:
+      type: object
+      required:
+      - call_sid
+      - account_sid
+      - queue_sid
+      - date_enqueued
+      - position
+      - wait_time
+      - member_type
+      - uri
+      properties:
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the call.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        queue_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the queue.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472qu
+        date_enqueued:
+          type: string
+          description: The date and time, in RFC 2822 format, when the member was enqueued.
+          examples:
+          - Wed, 26 Sep 2018 18:00:00 +0000
+        position:
+          type: integer
+          format: int32
+          minimum: 1
+          description: The position of the member in the queue (1-indexed).
+          examples:
+          - 1
+        wait_time:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The wait time, in seconds, since the member was enqueued.
+          examples:
+          - 30
+        member_type:
+          type: string
+          description: The type of the queue member.
+          examples:
+          - laml_call
+        uri:
+          type: string
+          description: The URI of this resource, relative to the API base URL.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members/b3877c40-da60-4998-90ad-b792e98472ca.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single queue member.
     UpdateQueueMemberRequest:
       type: object
       required:
@@ -436,10 +498,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for dequeuing a queue member.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     QueueMember:
       type: object
       required:
@@ -557,68 +615,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of queue members.
-    QueueMemberResponse:
-      type: object
-      required:
-      - call_sid
-      - account_sid
-      - queue_sid
-      - date_enqueued
-      - position
-      - wait_time
-      - member_type
-      - uri
-      properties:
-        call_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the call.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ca
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        queue_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the queue.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472qu
-        date_enqueued:
-          type: string
-          description: The date and time, in RFC 2822 format, when the member was enqueued.
-          examples:
-          - Wed, 26 Sep 2018 18:00:00 +0000
-        position:
-          type: integer
-          format: int32
-          minimum: 1
-          description: The position of the member in the queue (1-indexed).
-          examples:
-          - 1
-        wait_time:
-          type: integer
-          format: int32
-          minimum: 0
-          description: The wait time, in seconds, since the member was enqueued.
-          examples:
-          - 30
-        member_type:
-          type: string
-          description: The type of the queue member.
-          examples:
-          - laml_call
-        uri:
-          type: string
-          description: The URI of this resource, relative to the API base URL.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu/Members/b3877c40-da60-4998-90ad-b792e98472ca.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single queue member.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -652,79 +648,31 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    Types.StatusCodes.StatusCode401:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    PaginationLinks:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Unauthorized
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    QueueMember_2:
-      type: object
-      required:
-      - call_id
-      - project_id
-      - queue_id
-      - position
-      - uri
-      properties:
-        call_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The call ID of the queue member.
-          examples:
-          - 596e2dea-a269-4765-a0b4-01b82d11c120
-        project_id:
-          type: string
-          description: The ID of the project associated with this queue member.
-          examples:
-          - d421473b-d696-449a-a1a1-4ddd83d2d0e5
-        queue_id:
-          type: string
-          description: The ID of the queue associated with this queue member.
-          examples:
-          - 596e2dea-a269-4765-a0b4-01b82d11c120
-        position:
-          type: integer
-          format: int32
-          description: Queue member position in the queue.
-          examples:
-          - 2
-        uri:
-          type: string
-          description: The URL of this queue member.
-          examples:
-          - /api/relay/rest/queues/596e2dea-a269-4765-a0b4-01b82d11c120/members/596e2dea-a269-4765-a0b4-01b82d11c120
-        wait_time:
-          type: integer
-          format: int32
-          description: Wait time in seconds since the member was enqueued. If not yet enqueued, it will be null.
-          examples:
-          - 172975
-        date_enqueued:
-          type: string
-          format: date-time
-          description: When the queue member was last enqueued.
-      unevaluatedProperties:
-        not: {}
-      description: Queue member model.
+      description: Pagination links for list responses.
     QueueMemberResponse_2:
       type: object
       required:
@@ -786,6 +734,67 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    QueueMember_2:
+      type: object
+      required:
+      - call_id
+      - project_id
+      - queue_id
+      - position
+      - uri
+      properties:
+        call_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The call ID of the queue member.
+          examples:
+          - 596e2dea-a269-4765-a0b4-01b82d11c120
+        project_id:
+          type: string
+          description: The ID of the project associated with this queue member.
+          examples:
+          - d421473b-d696-449a-a1a1-4ddd83d2d0e5
+        queue_id:
+          type: string
+          description: The ID of the queue associated with this queue member.
+          examples:
+          - 596e2dea-a269-4765-a0b4-01b82d11c120
+        position:
+          type: integer
+          format: int32
+          description: Queue member position in the queue.
+          examples:
+          - 2
+        uri:
+          type: string
+          description: The URL of this queue member.
+          examples:
+          - /api/relay/rest/queues/596e2dea-a269-4765-a0b4-01b82d11c120/members/596e2dea-a269-4765-a0b4-01b82d11c120
+        wait_time:
+          type: integer
+          format: int32
+          description: Wait time in seconds since the member was enqueued. If not yet enqueued, it will be null.
+          examples:
+          - 172975
+        date_enqueued:
+          type: string
+          format: date-time
+          description: When the queue member was last enqueued.
+      unevaluatedProperties:
+        not: {}
+      description: Queue member model.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     QueueMemberListResponse_2:
       type: object
       properties:
@@ -801,27 +810,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of queue members.
-    PaginationLinks:
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
-      - self
-      - first
+      - error
       properties:
-        self:
+        error:
           type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
+          enum:
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
+      description: The server cannot find the requested resource.
   securitySchemes:
     SignalWireBasicAuth:
       type: http
@@ -868,5 +868,5 @@ components:
 
         ```'
 x-refined-from:
-- signalwire-compatibility-openapi.yml
-- signalwire-rest-openapi.yml
+- signalwire-compatibility-openapi.yaml
+- signalwire-rest-openapi.yaml

@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _PubSub_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -83,18 +83,6 @@ paths:
               $ref: '#/components/schemas/PubSub.NewPubSubToken'
 components:
   schemas:
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -133,39 +121,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    PubSub.PubSubToken422Error:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: not_a_valid_json
-          message: Permissions must be valid JSON
-          attribute: permissions
-          url: https://signalwire.com/docs/apis/error-codes
-    PubSub.PubSubToken:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: A PubSub Token to be used to authenticate clients to the PubSub Service.
-          examples:
-          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
-      unevaluatedProperties:
-        not: {}
     PubSub.PubSubPermissionWithWrite:
       type: object
       required:
@@ -184,24 +139,18 @@ components:
       unevaluatedProperties:
         not: {}
       title: Write Permission
-    PubSub.PubSubPermissionWithRead:
+    PubSub.PubSubToken:
       type: object
       required:
-      - read
+      - token
       properties:
-        read:
-          type: boolean
-          description: Gives the token read access to the channel.
+        token:
+          type: string
+          description: A PubSub Token to be used to authenticate clients to the PubSub Service.
           examples:
-          - true
-        write:
-          type: boolean
-          description: Gives the token write access to the channel.
-          examples:
-          - false
+          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
       unevaluatedProperties:
         not: {}
-      title: Read Permission
     PubSub.NewPubSubToken:
       type: object
       required:
@@ -250,18 +199,6 @@ components:
           default: {}
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     PubSub.PubSubChannels:
       type: object
       unevaluatedProperties:
@@ -291,6 +228,69 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request is invalid.
+    PubSub.PubSubPermissionWithRead:
+      type: object
+      required:
+      - read
+      properties:
+        read:
+          type: boolean
+          description: Gives the token read access to the channel.
+          examples:
+          - true
+        write:
+          type: boolean
+          description: Gives the token write access to the channel.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+      title: Read Permission
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    PubSub.PubSubToken422Error:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: not_a_valid_json
+          message: Permissions must be valid JSON
+          attribute: permissions
+          url: https://signalwire.com/docs/apis/error-codes
     PubSub.PubSubState:
       type: object
       unevaluatedProperties: {}

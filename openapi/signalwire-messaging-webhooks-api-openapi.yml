@@ -57,10 +57,10 @@ webhooks:
       description: 'Payload sent by SignalWire to the `status_callback` URL each time a message transitions to a new state. The same payload shape is used for Relay SDK message callbacks, SWML `send_sms` status callbacks, and SWML messaging `reply.status_url` callbacks.
 
 
-        Configure `status_callback` when [sending a message](/docs/apis/rest/messages/create-message).
+        Configure `status_callback` when sending a message.
 
 
-        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See Status callback reliability.'
       parameters: []
       responses:
         '200':
@@ -88,11 +88,11 @@ webhooks:
 
         Configure `status_callback_url` when
 
-        [creating a brand](/docs/apis/rest/campaign-registry/brands/create-brand),
+        creating a brand,
 
-        [creating a campaign](/docs/apis/rest/campaign-registry/campaigns/create-campaign), or
+        creating a campaign, or
 
-        [creating a number assignment order](/docs/apis/rest/campaign-registry/phone-number-assignments/create-order).
+        creating a number assignment order.
 
 
         ### Brand event types
@@ -145,7 +145,7 @@ webhooks:
         | `pending` → `completed` | `number_assignment_activated` | The number has been successfully assigned to the campaign. |
 
 
-        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See [Status callback reliability](/docs/platform/webhooks#status-callback-reliability).'
+        Status callbacks are advisory, best-effort notifications — delivery can be delayed or fail silently, so don''t gate time-critical actions on receiving one. See Status callback reliability.'
       parameters: []
       responses:
         '200':
@@ -173,6 +173,71 @@ components:
       - failed
       - read
       description: Delivery state of a message.
+    Webhooks.Messaging.TenDlcStatusCallbackPayload:
+      type: object
+      required:
+      - project_id
+      - event_at
+      - event_category
+      - event_type
+      - state
+      - brand_id
+      properties:
+        project_id:
+          type: string
+          description: The unique ID of the project this object is associated with.
+        event_at:
+          type: string
+          description: The timestamp of when the event occurred, in ISO 8601 format.
+        event_category:
+          type: string
+          enum:
+          - brand
+          - campaign
+          - number_assignment_order
+          - number_assignment
+          description: The category of the event.
+        event_type:
+          type: string
+          enum:
+          - brand_activated
+          - brand_unverified
+          - campaign_activated
+          - campaign_deactivated
+          - number_assignment_order_processed
+          - number_assignment_failed
+          - number_assignment_pending
+          - number_assignment_activated
+          description: 'The specific type of event that occurred.
+
+            One of: `brand_activated`, `brand_unverified`, `campaign_activated`, `campaign_deactivated`,
+
+            `number_assignment_order_processed`, `number_assignment_failed`, `number_assignment_pending`,
+
+            `number_assignment_activated`.'
+        state:
+          type: string
+          description: The current state of the object after the event. Possible values depend on the object type.
+        brand_id:
+          type: string
+          description: The unique identifier for the brand. Present in all event types.
+        campaign_id:
+          type: string
+          description: The unique identifier for the campaign. Present in campaign, number assignment order, and number assignment events.
+        number_assignment_order_id:
+          type: string
+          description: The unique identifier for the number assignment order. Present in number assignment order and number assignment events.
+        number_assignment_id:
+          type: string
+          description: The unique identifier for the number assignment. Present only in number assignment events.
+        phone_number_id:
+          type: string
+          description: The unique identifier for the phone route itself. Present only in number assignment events.
+        phone_number:
+          type: string
+          description: The phone number in E.164 format. Present only in number assignment events.
+      unevaluatedProperties:
+        not: {}
     Webhooks.Messaging.InboundMessageMediaItem:
       type: object
       required:
@@ -201,10 +266,6 @@ components:
         not: {}
       description: A single MMS media attachment included on an inbound message.
       title: Inbound message media item
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     Webhooks.Messaging.InboundMessageWebhookPayload:
       type: object
       required:
@@ -313,71 +374,10 @@ components:
             case_number: '54321'
       unevaluatedProperties:
         not: {}
-    Webhooks.Messaging.TenDlcStatusCallbackPayload:
-      type: object
-      required:
-      - project_id
-      - event_at
-      - event_category
-      - event_type
-      - state
-      - brand_id
-      properties:
-        project_id:
-          type: string
-          description: The unique ID of the project this object is associated with.
-        event_at:
-          type: string
-          description: The timestamp of when the event occurred, in ISO 8601 format.
-        event_category:
-          type: string
-          enum:
-          - brand
-          - campaign
-          - number_assignment_order
-          - number_assignment
-          description: The category of the event.
-        event_type:
-          type: string
-          enum:
-          - brand_activated
-          - brand_unverified
-          - campaign_activated
-          - campaign_deactivated
-          - number_assignment_order_processed
-          - number_assignment_failed
-          - number_assignment_pending
-          - number_assignment_activated
-          description: 'The specific type of event that occurred.
-
-            One of: `brand_activated`, `brand_unverified`, `campaign_activated`, `campaign_deactivated`,
-
-            `number_assignment_order_processed`, `number_assignment_failed`, `number_assignment_pending`,
-
-            `number_assignment_activated`.'
-        state:
-          type: string
-          description: The current state of the object after the event. Possible values depend on the object type.
-        brand_id:
-          type: string
-          description: The unique identifier for the brand. Present in all event types.
-        campaign_id:
-          type: string
-          description: The unique identifier for the campaign. Present in campaign, number assignment order, and number assignment events.
-        number_assignment_order_id:
-          type: string
-          description: The unique identifier for the number assignment order. Present in number assignment order and number assignment events.
-        number_assignment_id:
-          type: string
-          description: The unique identifier for the number assignment. Present only in number assignment events.
-        phone_number_id:
-          type: string
-          description: The unique identifier for the phone route itself. Present only in number assignment events.
-        phone_number:
-          type: string
-          description: The phone number in E.164 format. Present only in number assignment events.
-      unevaluatedProperties:
-        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     Webhooks.Messaging.InboundMessageContext:
       type: object
       required:

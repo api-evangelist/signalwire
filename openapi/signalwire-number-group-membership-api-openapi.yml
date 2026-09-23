@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/NumberGroupMembershipPathID'
       responses:
@@ -88,7 +88,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/NumberGroupMembershipPathID'
       responses:
@@ -133,7 +133,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/NumberGroupIdPath'
       - $ref: '#/components/parameters/ListNumberGroupMembershipsQuery.page_number'
@@ -184,7 +184,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/NumberGroupIdPath'
       responses:
@@ -228,6 +228,58 @@ paths:
               $ref: '#/components/schemas/AddNumberGroupMembershipRequest'
 components:
   schemas:
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
     NumberGroupMembershipListResponse:
       type: object
       required:
@@ -246,6 +298,32 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of number group memberships.
+    AddNumberGroupMembershipRequest:
+      type: object
+      required:
+      - phone_number_id
+      properties:
+        phone_number_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The phone number ID to add to the group.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      unevaluatedProperties:
+        not: {}
+      description: Request body for adding a phone number to a number group.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
     MembershipPhoneNumber:
       type: object
       properties:
@@ -276,6 +354,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Phone number representation within a membership.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -288,20 +378,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    AddNumberGroupMembershipRequest:
-      type: object
-      required:
-      - phone_number_id
-      properties:
-        phone_number_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The phone number ID to add to the group.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-      unevaluatedProperties:
-        not: {}
-      description: Request body for adding a phone number to a number group.
     NumberGroupMembershipResponse:
       type: object
       required:
@@ -340,78 +416,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single number group membership.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     NumberGroupMembership:
       type: object
       required:
@@ -450,7 +454,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: Number group membership model.
-    Types.StatusCodes.StatusCode400:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -458,58 +479,11 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
+      description: The server cannot find the requested resource.
   parameters:
-    NumberGroupIdPath:
-      name: NumberGroupId
-      in: path
-      required: true
-      description: Unique ID of the number group.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    ListNumberGroupMembershipsQuery.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: The number of results per page.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
-    NumberGroupMembershipPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the number group membership.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ListNumberGroupMembershipsQuery.page_token:
       name: page_token
       in: query
@@ -527,6 +501,32 @@ components:
         type: integer
         format: int32
         default: 0
+      explode: false
+    NumberGroupIdPath:
+      name: NumberGroupId
+      in: path
+      required: true
+      description: Unique ID of the number group.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    NumberGroupMembershipPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the number group membership.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ListNumberGroupMembershipsQuery.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: The number of results per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
       explode: false
   securitySchemes:
     SignalWireBasicAuth:

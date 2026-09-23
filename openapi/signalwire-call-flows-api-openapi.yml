@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallFlowAddressPathID'
       responses:
@@ -83,7 +83,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallFlowVersionPathID'
       responses:
@@ -146,7 +146,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallFlowVersionPathID'
       responses:
@@ -223,7 +223,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -290,7 +290,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -379,7 +379,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallFlowPathID'
       responses:
@@ -443,7 +443,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallFlowPathID'
       responses:
@@ -533,7 +533,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_, _Messaging_, _Fax_, or _Video_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/CallFlowPathID'
       responses:
@@ -561,6 +561,20 @@ paths:
       - Call Flows
 components:
   schemas:
+    CallFlowVersionDeployByVersionId:
+      type: object
+      required:
+      - call_flow_version_id
+      properties:
+        call_flow_version_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Any call flow version ID for this call flow.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+      unevaluatedProperties:
+        not: {}
+      title: Deploy by version ID
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -573,260 +587,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    CallFlowVersionsPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      - next
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=0&page_size=50&type=call_flow
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=0&page_size=50&type=call_flow
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=call_flow
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=call_flow
-      unevaluatedProperties:
-        not: {}
-    CallFlowCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: title is required
-          attribute: title
-          url: https://signalwire.com/docs/apis/error-codes
-    CallFlowAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&type=call_flow
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&type=call_flow
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=1&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad&type=call_flow
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad&type=call_flow
-      unevaluatedProperties:
-        not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    CallFlowListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/CallFlowAddressPaginationResponse'
-          description: Object containing pagination links
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CallFlowResponse'
-          description: An array of objects containing the CallFlow listing response
-      unevaluatedProperties:
-        not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    CallFlowCreateRequest:
-      type: object
-      required:
-      - title
-      properties:
-        title:
-          type: string
-          description: The name of the Call Flow
-          examples:
-          - Booking Assistant
-        flow_data:
-          type: object
-          unevaluatedProperties: {}
-          description: Call Flow Builder state, stored as an opaque JSON object. Optional but must be paired with `relayml` — provide both fields together or omit both. When both are omitted, SignalWire creates a starter Call Flow.
-          examples:
-          - {}
-        relayml:
-          type: object
-          unevaluatedProperties: {}
-          description: The calling SWML document this Call Flow should execute. Uses [calling SWML methods](/docs/swml/reference/calling). Optional but must be paired with `flow_data` — provide both fields together or omit both. When both are omitted, SignalWire creates a starter SWML document.
-          examples:
-          - version: 1.0.0
-            sections:
-              main:
-              - play:
-                  url: https://cdn.signalwire.com/swml/audio.mp3
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-    CallFlowResponse:
-      type: object
-      required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - call_flow
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Call Flow.
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-        display_name:
-          type: string
-          description: Display name of the Call Flow Fabric Resource
-          examples:
-          - Booking Assistant
-        type:
-          type: string
-          enum:
-          - call_flow
-          description: Type of the Fabric Resource
-          examples:
-          - call_flow
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        call_flow:
-          allOf:
-          - $ref: '#/components/schemas/CallFlow'
-          description: Call Flow data.
-      unevaluatedProperties:
-        not: {}
     CallFlowVersionListResponse:
       type: object
       required:
@@ -842,146 +602,6 @@ components:
           $ref: '#/components/schemas/CallFlowVersionsPaginationResponse'
       unevaluatedProperties:
         not: {}
-    CallFlowVersionDeployByDocumentVersion:
-      type: object
-      required:
-      - document_version
-      properties:
-        document_version:
-          type: integer
-          format: int32
-          description: The current revision of the call flow.
-          examples:
-          - 2
-      unevaluatedProperties:
-        not: {}
-      title: Deploy by document version
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    CallFlow:
-      type: object
-      required:
-      - id
-      - title
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of a Call Flow.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        title:
-          type: string
-          description: The name of the Call Flow
-          examples:
-          - Booking Assistant
-        flow_data:
-          type: object
-          unevaluatedProperties: {}
-          description: Call Flow Builder state, stored as an opaque JSON object. Produced and consumed by the SignalWire Call Flow Builder UI; not used by SWML execution.
-          examples:
-          - {}
-        relayml:
-          type: object
-          unevaluatedProperties: {}
-          description: The calling SWML document this Call Flow executes. Uses [calling SWML methods](/docs/swml/reference/calling).
-          examples:
-          - version: 1.0.0
-            sections:
-              main:
-              - play:
-                  url: https://cdn.signalwire.com/swml/audio.mp3
-        document_version:
-          type: integer
-          format: int32
-          description: The current revision of the call flow. Every update must increase this number.
-          examples:
-          - 1
-      unevaluatedProperties:
-        not: {}
-    CallFlowAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects containing a list of Call Flow Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/CallFlowAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    CallFlowVersionDeployByVersionId:
-      type: object
-      required:
-      - call_flow_version_id
-      properties:
-        call_flow_version_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Any call flow version ID for this call flow.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-      unevaluatedProperties:
-        not: {}
-      title: Deploy by version ID
-    CallFlowVersionDeployRequest:
-      oneOf:
-      - $ref: '#/components/schemas/CallFlowVersionDeployByDocumentVersion'
-      - $ref: '#/components/schemas/CallFlowVersionDeployByVersionId'
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     FabricAddressApp:
       type: object
       required:
@@ -1046,34 +666,39 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
-    CallFlowUpdateRequest:
+    Types.StatusCodes.StatusCode422:
       type: object
       required:
-      - document_version
-      - flow_data
-      - relayml
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+    CallFlowCreateRequest:
+      type: object
+      required:
+      - title
       properties:
         title:
           type: string
           description: The name of the Call Flow
           examples:
           - Booking Assistant
-        document_version:
-          type: integer
-          format: int32
-          description: The current revision of the call flow. Must equal the call flow's existing `document_version + 1`.
-          examples:
-          - 2
         flow_data:
           type: object
           unevaluatedProperties: {}
-          description: Call Flow Builder state, stored as an opaque JSON object.
+          description: Call Flow Builder state, stored as an opaque JSON object. Optional but must be paired with `relayml` — provide both fields together or omit both. When both are omitted, SignalWire creates a starter Call Flow.
           examples:
           - {}
         relayml:
           type: object
           unevaluatedProperties: {}
-          description: The calling SWML document this Call Flow should execute. Uses [calling SWML methods](/docs/swml/reference/calling).
+          description: The calling SWML document this Call Flow should execute. Uses [calling SWML methods](/docs/swml/reference/calling). Optional but must be paired with `flow_data` — provide both fields together or omit both. When both are omitted, SignalWire creates a starter SWML document.
           examples:
           - version: 1.0.0
             sections:
@@ -1082,7 +707,45 @@ components:
                   url: https://cdn.signalwire.com/swml/audio.mp3
       unevaluatedProperties:
         not: {}
-    CallFlowUpdateStatusCode422:
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    CallFlowCreateStatusCode422:
       type: object
       required:
       - errors
@@ -1099,10 +762,124 @@ components:
       - statusCode: 422
         errors:
         - type: validation_error
-          code: invalid_parameter_value
-          message: document_version must be greater than current version
-          attribute: document_version
+          code: missing_required_parameter
+          message: title is required
+          attribute: title
           url: https://signalwire.com/docs/apis/error-codes
+    CallFlowVersionDeployByDocumentVersion:
+      type: object
+      required:
+      - document_version
+      properties:
+        document_version:
+          type: integer
+          format: int32
+          description: The current revision of the call flow.
+          examples:
+          - 2
+      unevaluatedProperties:
+        not: {}
+      title: Deploy by document version
+    CallFlowVersion:
+      type: object
+      required:
+      - id
+      - version
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the version.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        version:
+          type: string
+          description: The version number.
+          examples:
+          - 1.0.0
+        created_at:
+          type: string
+          description: The creation timestamp.
+          examples:
+          - '2023-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          description: The last update timestamp.
+          examples:
+          - '2023-01-01T12:00:00Z'
+        flow_data:
+          type: object
+          unevaluatedProperties: {}
+          description: Call Flow Builder state, stored as an opaque JSON object.
+          examples:
+          - {}
+        relayml:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document this version snapshots. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+      unevaluatedProperties:
+        not: {}
+    CallFlowResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - call_flow
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Call Flow.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the Call Flow Fabric Resource
+          examples:
+          - Booking Assistant
+        type:
+          type: string
+          enum:
+          - call_flow
+          description: Type of the Fabric Resource
+          examples:
+          - call_flow
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        call_flow:
+          allOf:
+          - $ref: '#/components/schemas/CallFlow'
+          description: Call Flow data.
+      unevaluatedProperties:
+        not: {}
     CallFlowVersionDeployResponse:
       type: object
       required:
@@ -1151,35 +928,250 @@ components:
                   url: https://cdn.signalwire.com/swml/audio.mp3
       unevaluatedProperties:
         not: {}
-    CallFlowVersion:
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    CallFlowVersionsPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      - next
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=0&page_size=50&type=call_flow
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=0&page_size=50&type=call_flow
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=call_flow
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/call_flows/versions?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=call_flow
+      unevaluatedProperties:
+        not: {}
+    CallFlowAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&type=call_flow
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&type=call_flow
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=1&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad&type=call_flow
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad&type=call_flow
+      unevaluatedProperties:
+        not: {}
+    CallFlow:
       type: object
       required:
       - id
-      - version
-      - created_at
-      - updated_at
+      - title
       properties:
         id:
           allOf:
           - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the version.
+          description: Unique ID of a Call Flow.
           examples:
           - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        version:
+        title:
           type: string
-          description: The version number.
+          description: The name of the Call Flow
           examples:
-          - 1.0.0
-        created_at:
+          - Booking Assistant
+        flow_data:
+          type: object
+          unevaluatedProperties: {}
+          description: Call Flow Builder state, stored as an opaque JSON object. Produced and consumed by the SignalWire Call Flow Builder UI; not used by SWML execution.
+          examples:
+          - {}
+        relayml:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document this Call Flow executes. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        document_version:
+          type: integer
+          format: int32
+          description: The current revision of the call flow. Every update must increase this number.
+          examples:
+          - 1
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
           type: string
-          description: The creation timestamp.
+          description: Audio Channel of Fabric Address
           examples:
-          - '2023-01-01T12:00:00Z'
-        updated_at:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    CallFlowUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: document_version must be greater than current version
+          attribute: document_version
+          url: https://signalwire.com/docs/apis/error-codes
+    CallFlowAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects containing a list of Call Flow Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CallFlowAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    CallFlowListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CallFlowAddressPaginationResponse'
+          description: Object containing pagination links
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CallFlowResponse'
+          description: An array of objects containing the CallFlow listing response
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
           type: string
-          description: The last update timestamp.
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CallFlowUpdateRequest:
+      type: object
+      required:
+      - document_version
+      - flow_data
+      - relayml
+      properties:
+        title:
+          type: string
+          description: The name of the Call Flow
           examples:
-          - '2023-01-01T12:00:00Z'
+          - Booking Assistant
+        document_version:
+          type: integer
+          format: int32
+          description: The current revision of the call flow. Must equal the call flow's existing `document_version + 1`.
+          examples:
+          - 2
         flow_data:
           type: object
           unevaluatedProperties: {}
@@ -1189,7 +1181,7 @@ components:
         relayml:
           type: object
           unevaluatedProperties: {}
-          description: The calling SWML document this version snapshots. Uses [calling SWML methods](/docs/swml/reference/calling).
+          description: The calling SWML document this Call Flow should execute. Uses [calling SWML methods](/docs/swml/reference/calling).
           examples:
           - version: 1.0.0
             sections:
@@ -1198,12 +1190,20 @@ components:
                   url: https://cdn.signalwire.com/swml/audio.mp3
       unevaluatedProperties:
         not: {}
+    CallFlowVersionDeployRequest:
+      oneOf:
+      - $ref: '#/components/schemas/CallFlowVersionDeployByDocumentVersion'
+      - $ref: '#/components/schemas/CallFlowVersionDeployByVersionId'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    CallFlowAddressPathID:
+    CallFlowPathID:
       name: id
       in: path
       required: true
-      description: The unique identifier of the Call Flow.
+      description: Unique ID of a Call Flow.
       schema:
         $ref: '#/components/schemas/uuid'
     CallFlowVersionPathID:
@@ -1213,11 +1213,11 @@ components:
       description: The unique identifier of the Call Flow.
       schema:
         type: string
-    CallFlowPathID:
+    CallFlowAddressPathID:
       name: id
       in: path
       required: true
-      description: Unique ID of a Call Flow.
+      description: The unique identifier of the Call Flow.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

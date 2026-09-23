@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ListWhatsAppTemplatesQuery.whatsapp_business_id'
       - $ref: '#/components/parameters/ListWhatsAppTemplatesQuery.status'
@@ -83,7 +83,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '201':
@@ -137,7 +137,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/WhatsAppTemplatePathID'
       responses:
@@ -179,7 +179,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/WhatsAppTemplatePathID'
       responses:
@@ -239,7 +239,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/WhatsAppTemplatePathID'
       responses:
@@ -271,6 +271,140 @@ paths:
       - WhatsApp Templates
 components:
   schemas:
+    UpdateWhatsAppTemplateRequest:
+      type: object
+      properties:
+        category:
+          allOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateCategory'
+          description: The updated template category. Required if `components` is omitted.
+          examples:
+          - marketing
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppTemplateComponent'
+          description: The updated components. Required if `category` is omitted.
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a template. Provide `category`, `components`, or both. A template can only be updated while it is not yet approved.
+    WhatsAppTemplateListResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppTemplate'
+          description: List of message templates.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of message templates.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    WhatsAppTemplateStatus:
+      type: string
+      enum:
+      - approved
+      - archived
+      - deleted
+      - disabled
+      - flagged
+      - in_appeal
+      - limit_exceeded
+      - locked
+      - paused
+      - pending
+      - reinstated
+      - pending_deletion
+      - rejected
+      description: The Meta approval status of a template. A template must be `approved` before it can be used to send messages.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     WhatsAppTemplateCategory:
       type: string
       enum:
@@ -361,24 +495,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single message template.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    WhatsAppTemplateParameterFormat:
-      type: string
-      enum:
-      - named
-      - positional
-      description: How a template's variable placeholders are referenced.
     WhatsAppTemplateComponent:
       type: object
       required:
@@ -391,20 +507,21 @@ components:
           - BODY
       unevaluatedProperties: {}
       description: A template component. The `type` is one of `HEADER`, `BODY`, `FOOTER`, or `BUTTONS`. Additional fields depend on the component type — for example, a `BODY` carries `text`, while `BUTTONS` carries a `buttons` array. See the create example for the full shape.
-    WhatsAppTemplateListResponse:
+    WhatsAppTemplateDeleteResponse:
       type: object
       required:
-      - data
+      - success
+      - errors
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WhatsAppTemplate'
-          description: List of message templates.
+        success:
+          type: boolean
+          description: Whether the template was deleted successfully at Meta.
+        errors:
+          description: Empty array when the deletion succeeds; otherwise the error details returned by Meta.
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of message templates.
-    Types.StatusCodes.StatusCode400:
+      description: Response returned when a template has been deleted.
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -412,60 +529,80 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
-    UpdateWhatsAppTemplateRequest:
+      description: An internal server error occurred.
+    CreateWhatsAppTemplateRequest:
       type: object
+      required:
+      - whatsapp_business_id
+      - name
+      - language
+      - category
+      - parameter_format
+      - components
       properties:
+        whatsapp_business_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The WhatsApp Business Account the template belongs to. List your accounts at `GET /api/messaging/whatsapp/businesses`.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          maxLength: 512
+          pattern: ^[a-z0-9_]*$
+          description: The template name. Maximum 512 characters; lowercase letters, numbers, and underscores only.
+          examples:
+          - order_update
+        language:
+          type: string
+          description: The template language code.
+          examples:
+          - en_US
         category:
           allOf:
           - $ref: '#/components/schemas/WhatsAppTemplateCategory'
-          description: The updated template category. Required if `components` is omitted.
+          description: The template category.
           examples:
-          - marketing
+          - utility
+        parameter_format:
+          allOf:
+          - $ref: '#/components/schemas/WhatsAppTemplateParameterFormat'
+          description: How the template's variable placeholders are referenced.
+          examples:
+          - positional
         components:
           type: array
           items:
             $ref: '#/components/schemas/WhatsAppTemplateComponent'
-          description: The updated components. Required if `category` is omitted.
+          description: The template's components. Must include a `BODY` component. Each component is an object whose fields depend on its `type` — see the request example.
+          examples:
+          - - type: HEADER
+              format: TEXT
+              text: Order Update for {{1}}
+              example:
+                header_text:
+                - Jane Smith
+            - type: BODY
+              text: Your order {{1}} is currently {{2}}.
+              example:
+                body_text:
+                - - ORD-9821
+                  - out for delivery
+            - type: FOOTER
+              text: Thank you for shopping with us.
+            - type: BUTTONS
+              buttons:
+              - type: QUICK_REPLY
+                text: Track Order
+              - type: URL
+                text: Contact Support
+                url: https://example.com/support
       unevaluatedProperties:
         not: {}
-      description: Request body for updating a template. Provide `category`, `components`, or both. A template can only be updated while it is not yet approved.
-    WhatsAppTemplateStatus:
-      type: string
-      enum:
-      - approved
-      - archived
-      - deleted
-      - disabled
-      - flagged
-      - in_appeal
-      - limit_exceeded
-      - locked
-      - paused
-      - pending
-      - reinstated
-      - pending_deletion
-      - rejected
-      description: The Meta approval status of a template. A template must be `approved` before it can be used to send messages.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
+      description: Request body for creating a message template.
     WhatsAppTemplate:
       type: object
       required:
@@ -549,153 +686,16 @@ components:
       unevaluatedProperties:
         not: {}
       description: A WhatsApp message template.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-    CreateWhatsAppTemplateRequest:
-      type: object
-      required:
-      - whatsapp_business_id
-      - name
-      - language
-      - category
-      - parameter_format
-      - components
-      properties:
-        whatsapp_business_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The WhatsApp Business Account the template belongs to. List your accounts at `GET /api/messaging/whatsapp/businesses`.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        name:
-          type: string
-          maxLength: 512
-          pattern: ^[a-z0-9_]*$
-          description: The template name. Maximum 512 characters; lowercase letters, numbers, and underscores only.
-          examples:
-          - order_update
-        language:
-          type: string
-          description: The template language code.
-          examples:
-          - en_US
-        category:
-          allOf:
-          - $ref: '#/components/schemas/WhatsAppTemplateCategory'
-          description: The template category.
-          examples:
-          - utility
-        parameter_format:
-          allOf:
-          - $ref: '#/components/schemas/WhatsAppTemplateParameterFormat'
-          description: How the template's variable placeholders are referenced.
-          examples:
-          - positional
-        components:
-          type: array
-          items:
-            $ref: '#/components/schemas/WhatsAppTemplateComponent'
-          description: The template's components. Must include a `BODY` component. Each component is an object whose fields depend on its `type` — see the request example.
-          examples:
-          - - type: HEADER
-              format: TEXT
-              text: Order Update for {{1}}
-              example:
-                header_text:
-                - Jane Smith
-            - type: BODY
-              text: Your order {{1}} is currently {{2}}.
-              example:
-                body_text:
-                - - ORD-9821
-                  - out for delivery
-            - type: FOOTER
-              text: Thank you for shopping with us.
-            - type: BUTTONS
-              buttons:
-              - type: QUICK_REPLY
-                text: Track Order
-              - type: URL
-                text: Contact Support
-                url: https://example.com/support
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a message template.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    WhatsAppTemplateDeleteResponse:
-      type: object
-      required:
-      - success
-      - errors
-      properties:
-        success:
-          type: boolean
-          description: Whether the template was deleted successfully at Meta.
-        errors:
-          description: Empty array when the deletion succeeds; otherwise the error details returned by Meta.
-      unevaluatedProperties:
-        not: {}
-      description: Response returned when a template has been deleted.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    WhatsAppTemplateParameterFormat:
+      type: string
+      enum:
+      - named
+      - positional
+      description: How a template's variable placeholders are referenced.
   parameters:
     ListWhatsAppTemplatesQuery.whatsapp_business_id:
       name: whatsapp_business_id

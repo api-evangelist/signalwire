@@ -44,7 +44,7 @@ paths:
         No API token scope is required to make a successful request to this endpoint.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/E164NumberPath'
       - name: include
@@ -82,90 +82,7 @@ paths:
       tags:
       - Phone Number Lookup
 components:
-  parameters:
-    E164NumberPath:
-      name: e164_number
-      in: path
-      required: true
-      description: The phone number in E.164 format.
-      schema:
-        type: string
   schemas:
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    CarrierLookupInfo:
-      type: object
-      properties:
-        lrn:
-          type: string
-          description: The LRN associated with the number.
-          examples:
-          - '15551234567'
-        spid:
-          type: string
-          description: The Service Profile Identifier associated with the number.
-          examples:
-          - 683X
-        ocn:
-          type: string
-          description: The Operating Company Number associated with the number.
-          examples:
-          - '12345'
-        lata:
-          type: string
-          description: The Local Access and Transport Area number associated with the number.
-          examples:
-          - '99999'
-        city:
-          type: string
-          description: The City associated with the number.
-          examples:
-          - Aberdeen
-        state:
-          type: string
-          description: The State/Province/Region associated with the number.
-          examples:
-          - WA
-        jurisdiction:
-          type: string
-          description: The Jurisdiction associated with the number.
-          examples:
-          - indeterminate
-        lec:
-          type: string
-          description: The LEC or Carrier of the number.
-          examples:
-          - Verizon
-        linetype:
-          type: string
-          description: The type of line the number is. Generally either wireless or landline.
-          examples:
-          - landline
-      unevaluatedProperties:
-        not: {}
-      description: Carrier lookup information.
     CnamInfo:
       type: object
       properties:
@@ -259,6 +176,89 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    CarrierLookupInfo:
+      type: object
+      properties:
+        lrn:
+          type: string
+          description: The LRN associated with the number.
+          examples:
+          - '15551234567'
+        spid:
+          type: string
+          description: The Service Profile Identifier associated with the number.
+          examples:
+          - 683X
+        ocn:
+          type: string
+          description: The Operating Company Number associated with the number.
+          examples:
+          - '12345'
+        lata:
+          type: string
+          description: The Local Access and Transport Area number associated with the number.
+          examples:
+          - '99999'
+        city:
+          type: string
+          description: The City associated with the number.
+          examples:
+          - Aberdeen
+        state:
+          type: string
+          description: The State/Province/Region associated with the number.
+          examples:
+          - WA
+        jurisdiction:
+          type: string
+          description: The Jurisdiction associated with the number.
+          examples:
+          - indeterminate
+        lec:
+          type: string
+          description: The LEC or Carrier of the number.
+          examples:
+          - Verizon
+        linetype:
+          type: string
+          description: The type of line the number is. Generally either wireless or landline.
+          examples:
+          - landline
+      unevaluatedProperties:
+        not: {}
+      description: Carrier lookup information.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+  parameters:
+    E164NumberPath:
+      name: e164_number
+      in: path
+      required: true
+      description: The phone number in E.164 format.
+      schema:
+        type: string
   securitySchemes:
     SignalWireBasicAuth:
       type: http

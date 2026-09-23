@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Fax.LogListRequest.include_deleted'
       - $ref: '#/components/parameters/Fax.LogListRequest.created_before'
@@ -95,7 +95,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/Fax.LogPathID'
       responses:
@@ -138,28 +138,79 @@ paths:
       tags:
       - Fax Logs
 components:
+  parameters:
+    Fax.LogListRequest.include_deleted:
+      name: include_deleted
+      in: query
+      required: false
+      description: Include logs for deleted activity.
+      schema:
+        type: boolean
+        default: false
+      explode: false
+    Fax.LogListRequest.created_before:
+      name: created_before
+      in: query
+      required: false
+      description: Return logs for activity prior to this date.
+      schema:
+        type: string
+      explode: false
+    Fax.LogListRequest.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Fax.LogListRequest.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: Page number to retrieve. Requires `page_token` when greater than `0`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
+    Fax.LogListRequest.created_on:
+      name: created_on
+      in: query
+      required: false
+      description: Return logs for activity on this date.
+      schema:
+        type: string
+      explode: false
+    Fax.LogListRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` is greater than `0`. The token is returned in pagination links.
+      schema:
+        type: string
+      explode: false
+    Fax.LogListRequest.created_after:
+      name: created_after
+      in: query
+      required: false
+      description: Return logs for activity after this date.
+      schema:
+        type: string
+      explode: false
+    Fax.LogPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the log
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
-    Fax.FaxLogsListStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: account_error
-          code: exceeds_history_logs_limit
-          message: The value exceeds the 2025-02-09 date limit.
-          attribute: created_before
-          url: https://signalwire.com/docs/rest/overview/error-codes/#exceeds_history_logs_limit
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -172,84 +223,189 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    Fax.FaxLogShowStatusCode422:
+    Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
-      - errors
+      - type
+      - code
+      - message
+      - url
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
       unevaluatedProperties:
         not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: account_error
-          code: exceeds_history_logs_limit
-          message: The value exceeds the 2025-02-09 date limit.
-          attribute: created_at
-          url: https://signalwire.com/docs/rest/overview/error-codes/#exceeds_history_logs_limit
-    Types.StatusCodes.StatusCode400:
+      description: Details about a specific error.
+    Fax.LogResponse:
       type: object
       required:
-      - error
+      - id
+      - from
+      - to
+      - status
+      - direction
+      - source
+      - type
+      - url
+      - remote_station
+      - charge
+      - number_of_pages
+      - quality
+      - charge_details
+      - created_at
+      - error_code
+      - error_message
       properties:
-        error:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A unique identifier for the log
+          examples:
+          - b7182dc2-00f3-40e4-a5ce-20f164b329df
+        from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The origin phone number in E.164 format.
+          examples:
+          - '+12065551212'
+        to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The destination phone number in E.164 format.
+          examples:
+          - '+12065553434'
+        status:
           type: string
           enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    Fax.ChargeDetail:
-      type: object
-      required:
-      - description
-      - charge
-      properties:
-        description:
-          type: string
-          description: Description for this charge.
+          - queued
+          - initiated
+          - ringing
+          - in-progress
+          - busy
+          - failed
+          - no-answer
+          - canceled
+          - completed
+          description: The status of this fax call.
           examples:
-          - Outbound Fax Minutes
+          - completed
+        direction:
+          anyOf:
+          - type: string
+            enum:
+            - inbound
+            - outbound-api
+            - outbound-dial
+          - type: 'null'
+          description: The direction of this fax call.
+          examples:
+          - inbound
+        source:
+          type: string
+          enum:
+          - laml
+          description: Source of this log entry.
+          examples:
+          - laml
+        type:
+          type: string
+          enum:
+          - laml_call
+          description: Type of this log entry.
+          examples:
+          - laml_call
+        url:
+          type: string
+          format: uri
+          description: URL for the associated fax resource with this log entry.
+          examples:
+          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b7182dc2-00f3-40e4-a5ce-20f164b329df/Faxes/c9a1d3e4-56f7-89ab-cdef-0123456789ab
+        remote_station:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Represents a customer hosted Fax server.
+          examples:
+          - null
         charge:
           type: number
           format: double
-          description: Charged amount.
+          description: The amount charged for this fax request.
           examples:
           - 0.01
-      unevaluatedProperties:
-        not: {}
-    Fax.LogPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: URL for the current page of results.
+        number_of_pages:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The number of pages the fax document contained.
           examples:
-          - https://example.signalwire.com/api/fax/logs?page_number=0&page_size=50
-        first:
-          type: string
-          description: URL for the first page of results.
+          - 2
+        quality:
+          anyOf:
+          - type: string
+            enum:
+            - fine
+            - standard
+            - superfine
+          - type: 'null'
+          description: The quality that was set when the fax document was sent.
           examples:
-          - https://example.signalwire.com/api/fax/logs?page_size=50
-        next:
-          type: string
-          description: URL for the next page of results. Only present when more results are available.
+          - fine
+        charge_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fax.ChargeDetail'
+          description: Details on charges associated with this log.
           examples:
-          - https://example.signalwire.com/api/fax/logs?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
+          - []
+        created_at:
           type: string
-          description: URL for the previous page of results. Only present when on page 1 or later.
+          format: date-time
+          description: Date and time when the fax was created.
           examples:
-          - https://example.signalwire.com/api/fax/logs?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
+          - '2024-05-06T12:20:00Z'
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error code for this resource (if available).
+          examples:
+          - '34004'
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The description of this error (if available).
+          examples:
+          - The call dropped prematurely
       unevaluatedProperties:
         not: {}
     Fax.FaxLog:
@@ -399,11 +555,7 @@ components:
           - The call dropped prematurely
       unevaluatedProperties:
         not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
       - error
@@ -411,22 +563,10 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
+      description: The request is invalid.
     Fax.LogListResponse:
       type: object
       required:
@@ -444,263 +584,123 @@ components:
           description: Array of log data
       unevaluatedProperties:
         not: {}
-    Fax.LogResponse:
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
-      - id
-      - from
-      - to
-      - status
-      - direction
-      - source
-      - type
-      - url
-      - remote_station
-      - charge
-      - number_of_pages
-      - quality
-      - charge_details
-      - created_at
-      - error_code
-      - error_message
+      - error
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: A unique identifier for the log
-          examples:
-          - b7182dc2-00f3-40e4-a5ce-20f164b329df
-        from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The origin phone number in E.164 format.
-          examples:
-          - '+12065551212'
-        to:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The destination phone number in E.164 format.
-          examples:
-          - '+12065553434'
-        status:
+        error:
           type: string
           enum:
-          - queued
-          - initiated
-          - ringing
-          - in-progress
-          - busy
-          - failed
-          - no-answer
-          - canceled
-          - completed
-          description: The status of this fax call.
-          examples:
-          - completed
-        direction:
-          anyOf:
-          - type: string
-            enum:
-            - inbound
-            - outbound-api
-            - outbound-dial
-          - type: 'null'
-          description: The direction of this fax call.
-          examples:
-          - inbound
-        source:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Fax.ChargeDetail:
+      type: object
+      required:
+      - description
+      - charge
+      properties:
+        description:
           type: string
-          enum:
-          - laml
-          description: Source of this log entry.
+          description: Description for this charge.
           examples:
-          - laml
-        type:
-          type: string
-          enum:
-          - laml_call
-          description: Type of this log entry.
-          examples:
-          - laml_call
-        url:
-          type: string
-          format: uri
-          description: URL for the associated fax resource with this log entry.
-          examples:
-          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b7182dc2-00f3-40e4-a5ce-20f164b329df/Faxes/c9a1d3e4-56f7-89ab-cdef-0123456789ab
-        remote_station:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Represents a customer hosted Fax server.
-          examples:
-          - null
+          - Outbound Fax Minutes
         charge:
           type: number
           format: double
-          description: The amount charged for this fax request.
+          description: Charged amount.
           examples:
           - 0.01
-        number_of_pages:
-          anyOf:
-          - type: integer
-            format: int32
-          - type: 'null'
-          description: The number of pages the fax document contained.
-          examples:
-          - 2
-        quality:
-          anyOf:
-          - type: string
-            enum:
-            - fine
-            - standard
-            - superfine
-          - type: 'null'
-          description: The quality that was set when the fax document was sent.
-          examples:
-          - fine
-        charge_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/Fax.ChargeDetail'
-          description: Details on charges associated with this log.
-          examples:
-          - []
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the fax was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        error_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Error code for this resource (if available).
-          examples:
-          - '34004'
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The description of this error (if available).
-          examples:
-          - The call dropped prematurely
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.RestApiErrorItem:
+    Fax.FaxLogsListStatusCode422:
       type: object
       required:
-      - type
-      - code
-      - message
-      - url
+      - errors
       properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
       unevaluatedProperties:
         not: {}
-      description: Details about a specific error.
-  parameters:
-    Fax.LogListRequest.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: Page number to retrieve. Requires `page_token` when greater than `0`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
-    Fax.LogListRequest.created_before:
-      name: created_before
-      in: query
-      required: false
-      description: Return logs for activity prior to this date.
-      schema:
-        type: string
-      explode: false
-    Fax.LogListRequest.created_after:
-      name: created_after
-      in: query
-      required: false
-      description: Return logs for activity after this date.
-      schema:
-        type: string
-      explode: false
-    Fax.LogListRequest.created_on:
-      name: created_on
-      in: query
-      required: false
-      description: Return logs for activity on this date.
-      schema:
-        type: string
-      explode: false
-    Fax.LogListRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` is greater than `0`. The token is returned in pagination links.
-      schema:
-        type: string
-      explode: false
-    Fax.LogPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the log
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Fax.LogListRequest.include_deleted:
-      name: include_deleted
-      in: query
-      required: false
-      description: Include logs for deleted activity.
-      schema:
-        type: boolean
-        default: false
-      explode: false
-    Fax.LogListRequest.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: account_error
+          code: exceeds_history_logs_limit
+          message: The value exceeds the 2025-02-09 date limit.
+          attribute: created_before
+          url: https://signalwire.com/docs/rest/overview/error-codes/#exceeds_history_logs_limit
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Fax.FaxLogShowStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: account_error
+          code: exceeds_history_logs_limit
+          message: The value exceeds the 2025-02-09 date limit.
+          attribute: created_at
+          url: https://signalwire.com/docs/rest/overview/error-codes/#exceeds_history_logs_limit
+    Fax.LogPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: URL for the current page of results.
+          examples:
+          - https://example.signalwire.com/api/fax/logs?page_number=0&page_size=50
+        first:
+          type: string
+          description: URL for the first page of results.
+          examples:
+          - https://example.signalwire.com/api/fax/logs?page_size=50
+        next:
+          type: string
+          description: URL for the next page of results. Only present when more results are available.
+          examples:
+          - https://example.signalwire.com/api/fax/logs?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          description: URL for the previous page of results. Only present when on page 1 or later.
+          examples:
+          - https://example.signalwire.com/api/fax/logs?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
   securitySchemes:
     SignalWireBasicAuth:
       type: http

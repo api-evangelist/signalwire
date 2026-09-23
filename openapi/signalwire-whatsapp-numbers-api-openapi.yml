@@ -31,7 +31,7 @@ paths:
     get:
       operationId: list_whatsapp_numbers
       summary: List WhatsApp numbers
-      description: 'Returns the WhatsApp numbers connected to your Space. Each record includes its association with a WhatsApp Business Account, voice-capability flags, and the resource IDs used for routing calls or messages. Use `phone_number` (prefixed with `whatsapp:`) as the `from` address when [sending messages](/docs/platform/messaging/whatsapp/send-messages).
+      description: 'Returns the WhatsApp numbers connected to your Space. Each record includes its association with a WhatsApp Business Account, voice-capability flags, and the resource IDs used for routing calls or messages. Use `phone_number` (prefixed with `whatsapp:`) as the `from` address when sending messages.
 
 
         #### Permissions
@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -76,7 +76,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/WhatsAppNumberPathID'
       responses:
@@ -107,14 +107,6 @@ paths:
       tags:
       - WhatsApp Numbers
 components:
-  parameters:
-    WhatsAppNumberPathID:
-      name: id
-      in: path
-      required: true
-      description: The SignalWire identifier of the WhatsApp number.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
     WhatsAppNumberListResponse:
       type: object
@@ -129,6 +121,105 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of WhatsApp numbers.
+    WhatsAppNumberResponse:
+      type: object
+      required:
+      - id
+      - business_phone_number_id
+      - phone_number
+      - calling_handler_resource_id
+      - messaging_handler_resource_id
+      - business_name
+      - waba_id
+      - whatsapp_business_id
+      - voice_enabled
+      - voice_capable
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SignalWire identifier of the WhatsApp number.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        business_phone_number_id:
+          type: string
+          description: The Meta phone number ID for this WhatsApp number.
+          examples:
+          - '102290129340398'
+        phone_number:
+          type: string
+          description: The WhatsApp number, prefixed with `whatsapp:`. Use this value as the `from` address when sending messages.
+          examples:
+          - whatsapp:+15557654321
+        calling_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the resource (Call Flow, AI Agent, SWML script, etc.) that handles inbound calls to this number. Null if no calling handler is configured.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        messaging_handler_resource_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the resource that handles inbound messages to this number. Null if no messaging handler is configured.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        business_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The business name as registered with Meta.
+          examples:
+          - Acme, Inc.
+        waba_id:
+          type: string
+          description: The WhatsApp Business Account ID (WABA ID) assigned by Meta.
+          examples:
+          - '109876543210987'
+        whatsapp_business_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The SignalWire identifier of the WhatsApp Business Account this number belongs to.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        voice_enabled:
+          type: boolean
+          description: Whether SIP calling is enabled for this number.
+          examples:
+          - false
+        voice_capable:
+          type: boolean
+          description: Whether this number can place and receive calls — true when a calling handler is configured and voice is enabled.
+          examples:
+          - false
+        created_at:
+          type: string
+          description: The date and time when the record was created.
+          examples:
+          - '2024-01-15T10:30:00Z'
+        updated_at:
+          type: string
+          description: The date and time when the record was last updated.
+          examples:
+          - '2024-01-15T10:30:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single WhatsApp number.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -244,105 +335,14 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
-    WhatsAppNumberResponse:
-      type: object
-      required:
-      - id
-      - business_phone_number_id
-      - phone_number
-      - calling_handler_resource_id
-      - messaging_handler_resource_id
-      - business_name
-      - waba_id
-      - whatsapp_business_id
-      - voice_enabled
-      - voice_capable
-      - created_at
-      - updated_at
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The SignalWire identifier of the WhatsApp number.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        business_phone_number_id:
-          type: string
-          description: The Meta phone number ID for this WhatsApp number.
-          examples:
-          - '102290129340398'
-        phone_number:
-          type: string
-          description: The WhatsApp number, prefixed with `whatsapp:`. Use this value as the `from` address when sending messages.
-          examples:
-          - whatsapp:+15557654321
-        calling_handler_resource_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The ID of the resource (Call Flow, AI Agent, SWML script, etc.) that handles inbound calls to this number. Null if no calling handler is configured.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        messaging_handler_resource_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The ID of the resource that handles inbound messages to this number. Null if no messaging handler is configured.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        business_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The business name as registered with Meta.
-          examples:
-          - Acme, Inc.
-        waba_id:
-          type: string
-          description: The WhatsApp Business Account ID (WABA ID) assigned by Meta.
-          examples:
-          - '109876543210987'
-        whatsapp_business_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The SignalWire identifier of the WhatsApp Business Account this number belongs to.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        voice_enabled:
-          type: boolean
-          description: Whether SIP calling is enabled for this number.
-          examples:
-          - false
-        voice_capable:
-          type: boolean
-          description: Whether this number can place and receive calls — true when a calling handler is configured and voice is enabled.
-          examples:
-          - false
-        created_at:
-          type: string
-          description: The date and time when the record was created.
-          examples:
-          - '2024-01-15T10:30:00Z'
-        updated_at:
-          type: string
-          description: The date and time when the record was last updated.
-          examples:
-          - '2024-01-15T10:30:00Z'
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single WhatsApp number.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
+  parameters:
+    WhatsAppNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: The SignalWire identifier of the WhatsApp number.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

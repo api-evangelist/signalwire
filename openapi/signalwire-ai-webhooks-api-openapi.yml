@@ -75,9 +75,9 @@ webhooks:
     post:
       operationId: ai_post_prompt_callback
       summary: AI post-prompt callback
-      description: 'Sent to your [`ai.post_prompt_url`](/docs/swml/reference/calling/ai) when the AI session ends. It
+      description: 'Sent to your `ai.post_prompt_url` when the AI session ends. It
 
-        carries the agent''s answer to your [`post_prompt`](/docs/swml/reference/calling/ai)
+        carries the agent''s answer to your `post_prompt`
 
         alongside the full record of the call: the conversation, the tool calls, the timings, and the
 
@@ -90,7 +90,7 @@ webhooks:
 
         URL also receives `fetch_conversation` when the agent starts with a stored conversation
 
-        ([`save_conversation`](/docs/swml/reference/calling/ai/params#paramssave_conversation) with a
+        (`save_conversation` with a
 
         `conversation_id`), asking your endpoint to return that conversation; that request carries the
 
@@ -106,11 +106,11 @@ webhooks:
         survives. `call_timeline` is a flat stream of typed events aligned to `raw_call_log`.
 
 
-        [`amazon_bedrock`](/docs/swml/reference/calling/amazon-bedrock) agents send a different report.
+        `amazon_bedrock` agents send a different report.
 
         Write your handler against the
 
-        [Bedrock post-prompt callback](#tag/calls/webhook/bedrockPostPromptCallback) instead.'
+        Bedrock post-prompt callback instead.'
       parameters: []
       responses:
         '200':
@@ -142,7 +142,7 @@ webhooks:
 
         (such as `insight.raw`, `turn.transcript_delta`, or `final.summary`), see the
 
-        [SWML ai_sidecar reference](/docs/swml/reference/calling/ai-sidecar#callback-types).'
+        SWML ai_sidecar reference.'
       parameters: []
       responses:
         '200':
@@ -161,7 +161,35 @@ webhooks:
     post:
       operationId: ai_sidecar_swaig_tool_webhook
       summary: AI sidecar SWAIG tool webhook
-      description: "Sent to a sidecar tool's `web_hook_url` (or the SWAIG `defaults.web_hook_url`) when the sidecar\ncalls one of your functions.\n\nYour endpoint runs the function and replies with a JSON object. Both fields are optional, so `{}`\nis a valid reply:\n\n- `response` — the result the model reads next. A plain string only; the\n  `{tool_result, tool_prompt}` object form that [`ai`](/docs/swml/reference/calling/ai) agents\n  accept is not read. Omit it and the model reads a default result.\n- `action` — a single action object or an array of them. See\n  [Supported SWAIG actions](/docs/swml/reference/calling/ai-sidecar#supported-swaig-actions) for\n  what you can return.\n\nThere is no `post_process` on a sidecar reply.\n\nThe sidecar only listens to the call and never speaks on it, so a `say` action is reported back to\nyou as a callback rather than being spoken aloud."
+      description: 'Sent to a sidecar tool''s `web_hook_url` (or the SWAIG `defaults.web_hook_url`) when the sidecar
+
+        calls one of your functions.
+
+
+        Your endpoint runs the function and replies with a JSON object. Both fields are optional, so `{}`
+
+        is a valid reply:
+
+
+        - `response` — the result the model reads next. A plain string only; the
+
+        `{tool_result, tool_prompt}` object form that `ai` agents
+
+        accept is not read. Omit it and the model reads a default result.
+
+        - `action` — a single action object or an array of them. See
+
+        Supported SWAIG actions for
+
+        what you can return.
+
+
+        There is no `post_process` on a sidecar reply.
+
+
+        The sidecar only listens to the call and never speaks on it, so a `say` action is reported back to
+
+        you as a callback rather than being spoken aloud.'
       parameters: []
       responses:
         '200':
@@ -180,7 +208,29 @@ webhooks:
     post:
       operationId: ai_swaig_tool_webhook
       summary: AI SWAIG tool webhook
-      description: "Sent to a tool's `web_hook_url` (or the SWAIG `defaults.web_hook_url`) when an\n[`ai`](/docs/swml/reference/calling/ai) agent calls one of your functions.\n\nYour endpoint runs the function and replies with a JSON object — the same shape a `data_map`\noutput produces, because the platform reads both the same way. Every field is optional, so `{}` is\na valid reply and a handler that only steers the call can return `action` alone:\n\n- `response` — the result the agent reads next, written to the AI rather than spoken to the\n  caller. A plain string becomes the tool message as-is; the object form\n  `{tool_result, tool_prompt}` splits the data half from the steering half. Omit it and the agent\n  reads a default result.\n- `action` — a single action object or an array of them, executed on the live call.\n- `post_process` — hold the actions until after the agent has spoken. **Default:** `false`."
+      description: 'Sent to a tool''s `web_hook_url` (or the SWAIG `defaults.web_hook_url`) when an
+
+        `ai` agent calls one of your functions.
+
+
+        Your endpoint runs the function and replies with a JSON object — the same shape a `data_map`
+
+        output produces, because the platform reads both the same way. Every field is optional, so `{}` is
+
+        a valid reply and a handler that only steers the call can return `action` alone:
+
+
+        - `response` — the result the agent reads next, written to the AI rather than spoken to the
+
+        caller. A plain string becomes the tool message as-is; the object form
+
+        `{tool_result, tool_prompt}` splits the data half from the steering half. Omit it and the agent
+
+        reads a default result.
+
+        - `action` — a single action object or an array of them, executed on the live call.
+
+        - `post_process` — hold the actions until after the agent has spoken. **Default:** `false`.'
       parameters: []
       responses:
         '200':
@@ -199,14 +249,14 @@ webhooks:
     post:
       operationId: bedrock_post_prompt_callback
       summary: Amazon Bedrock post-prompt callback
-      description: 'Sent to your [`amazon_bedrock.post_prompt_url`](/docs/swml/reference/calling/amazon-bedrock) when
+      description: 'Sent to your `amazon_bedrock.post_prompt_url` when
 
         the agent''s session ends, carrying its answer to your `post_prompt` alongside the record of the
 
         call. Nothing you return in the response is read.
 
 
-        Bedrock agents send a different report from [`ai`](/docs/swml/reference/calling/ai) agents. There
+        Bedrock agents send a different report from `ai` agents. There
 
         is no `call_timeline`, `previous_contexts`, `hard_timeout`, `call_ended_by`, or `ai_id_tag`;
 
@@ -218,7 +268,7 @@ webhooks:
 
         them in the URL as `username:password@url`. Write your handler against this payload, not the
 
-        [AI post-prompt callback](#tag/calls/webhook/aiPostPromptCallback).'
+        AI post-prompt callback.'
       parameters: []
       responses:
         '200':
@@ -237,7 +287,36 @@ webhooks:
     post:
       operationId: bedrock_swaig_tool_webhook
       summary: Amazon Bedrock SWAIG tool webhook
-      description: "Sent to a tool's `web_hook_url` (or the SWAIG `defaults.web_hook_url`) when an\n[`amazon_bedrock`](/docs/swml/reference/calling/amazon-bedrock) agent calls one of your functions.\nYour endpoint runs the function and replies with a JSON object. Both fields are optional, so `{}`\nis a valid reply:\n\n- `response` — the result the agent reads next. A plain string only here; the\n  `{tool_result, tool_prompt}` object form that [`ai`](/docs/swml/reference/calling/ai) agents\n  accept is not read. Omit it and the agent reads a default result.\n- `action` — a single action object or an array of them, executed on the live call.\n\nThere is no `post_process`: a Bedrock agent always defers actions until after it has spoken.\n\nBedrock agents send a different payload from [`ai`](/docs/swml/reference/calling/ai) agents. Notably\n`content_type` is `text/json` rather than `text/swaig`, `argument` carries no `substituted` value,\nthere is no `version`, `description`, or `argument_desc`, and the call's timing and caller fields\nare named differently. Write your handler against this payload, not the\n[AI SWAIG tool webhook](#tag/calls/webhook/aiSwaigToolWebhook)."
+      description: 'Sent to a tool''s `web_hook_url` (or the SWAIG `defaults.web_hook_url`) when an
+
+        `amazon_bedrock` agent calls one of your functions.
+
+        Your endpoint runs the function and replies with a JSON object. Both fields are optional, so `{}`
+
+        is a valid reply:
+
+
+        - `response` — the result the agent reads next. A plain string only here; the
+
+        `{tool_result, tool_prompt}` object form that `ai` agents
+
+        accept is not read. Omit it and the agent reads a default result.
+
+        - `action` — a single action object or an array of them, executed on the live call.
+
+
+        There is no `post_process`: a Bedrock agent always defers actions until after it has spoken.
+
+
+        Bedrock agents send a different payload from `ai` agents. Notably
+
+        `content_type` is `text/json` rather than `text/swaig`, `argument` carries no `substituted` value,
+
+        there is no `version`, `description`, or `argument_desc`, and the call''s timing and caller fields
+
+        are named differently. Write your handler against this payload, not the
+
+        AI SWAIG tool webhook.'
       parameters: []
       responses:
         '200':
@@ -256,7 +335,43 @@ webhooks:
     post:
       operationId: swaig_signature_request
       summary: SWAIG function signature request
-      description: "Sent once per [`SWAIG.includes`](/docs/swml/reference/calling/ai/swaig/includes) entry when an AI\nagent loads, to discover the functions your server hosts. Every way of building an agent sends it —\nSWML you write yourself, SWML a Server SDK generates, or an agent you configure in your Dashboard —\nbecause they all resolve `includes` the same way.\n\nReply with the function definitions you host, each shaped like an entry in\n[`SWAIG.functions`](/docs/swml/reference/calling/ai/swaig/functions#properties) — `function`,\n`description`, and `parameters`. Three forms are accepted:\n\n- an array of definitions, the usual one;\n- a single definition on its own;\n- an object `{functions, defaults}`, where `defaults` sets SWAIG defaults across the definitions\n  it carries — useful when they share a `web_hook_url` or auth.\n\nEvery definition you return is registered, whether or not it was named in the request's\n`functions` list.\n\nThis is not the payload a function call sends. It goes to the `includes` entry's `url`, using\n`auth_user` and `auth_password` when set. Your endpoint can also receive it outside of a call, as a\ncheck that it answers, so answer it the same way. When your project has a signing key, the request\ncarries an `X-SignalWire-Signature` header you can verify."
+      description: 'Sent once per `SWAIG.includes` entry when an AI
+
+        agent loads, to discover the functions your server hosts. Every way of building an agent sends it —
+
+        SWML you write yourself, SWML a Server SDK generates, or an agent you configure in your Dashboard —
+
+        because they all resolve `includes` the same way.
+
+
+        Reply with the function definitions you host, each shaped like an entry in
+
+        `SWAIG.functions` — `function`,
+
+        `description`, and `parameters`. Three forms are accepted:
+
+
+        - an array of definitions, the usual one;
+
+        - a single definition on its own;
+
+        - an object `{functions, defaults}`, where `defaults` sets SWAIG defaults across the definitions
+
+        it carries — useful when they share a `web_hook_url` or auth.
+
+
+        Every definition you return is registered, whether or not it was named in the request''s
+
+        `functions` list.
+
+
+        This is not the payload a function call sends. It goes to the `includes` entry''s `url`, using
+
+        `auth_user` and `auth_password` when set. Your endpoint can also receive it outside of a call, as a
+
+        check that it answers, so answer it the same way. When your project has a signing key, the request
+
+        carries an `X-SignalWire-Signature` header you can verify.'
       parameters: []
       responses:
         '200':
@@ -273,25 +388,375 @@ webhooks:
       - {}
 components:
   schemas:
-    Webhooks.AI.AICallTimelineEntry:
+    Webhooks.AI.AISidecarCallbackPayload:
       type: object
       required:
-      - type
+      - call_info
+      - sidecar_event
       properties:
-        type:
+        call_info:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.AI.AICallInfo'
+          description: Envelope describing the call. `project_id` and `space_id` are included when available.
+        sidecar_event:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.AI.AISidecarEvent'
+          description: The sidecar callback.
+      unevaluatedProperties:
+        not: {}
+    Webhooks.AI.AISidecarSwaigToolWebhookPayload:
+      type: object
+      required:
+      - function
+      - argument
+      - channel_data
+      properties:
+        function:
           type: string
-          description: 'What happened. `user_input`, `ai_response`, and `tool_result` cover the conversation; `pronounce`
+          description: The name of the function the model is calling.
+          examples:
+          - lookup_competitor
+        argument:
+          type: object
+          properties:
+            parsed:
+              type: array
+              items:
+                type: object
+                unevaluatedProperties: {}
+              description: The arguments parsed into objects. Usually a single-element array.
+              examples:
+              - - competitor: ACME
+            raw:
+              type: string
+              description: The raw argument string, exactly as the model produced it.
+              examples:
+              - '{"competitor":"ACME"}'
+            substituted:
+              type: string
+              description: 'Any text that surrounded the JSON, with the JSON itself removed. Omitted when the whole
 
-            and `text_normalize` record text rewrites; anything else is the name of a logged action.'
+                argument was JSON, which is the usual case.'
+              examples:
+              - ''
+          required:
+          - parsed
+          - raw
+          unevaluatedProperties:
+            not: {}
+          description: The arguments the model passed to your function.
+        call_id:
+          type: string
+          description: The ID of the call the sidecar is attached to.
           examples:
-          - ai_response
-        ts:
-          type: number
-          description: When it happened, as a Unix timestamp in microseconds. Omitted when the source entry had no timestamp.
+          - 2e1e66e5-5d07-413d-9668-55542992eec0
+        global_data:
+          type: object
+          unevaluatedProperties: {}
+          description: The sidecar's current `global_data`. Present when the sidecar has any.
+        channel_data:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.AI.AISidecarChannelData'
+          description: Identifies the call the sidecar is attached to.
+      unevaluatedProperties:
+        not: {}
+    Webhooks.AI.AiSwaigToolWebhookPayload:
+      type: object
+      required:
+      - function
+      - argument
+      - argument_desc
+      - description
+      - call_id
+      - ai_session_id
+      - app_name
+      - meta_data_token
+      - meta_data
+      - channel_active
+      - channel_offhook
+      - channel_ready
+      - content_type
+      - version
+      - content_disposition
+      - conversation_type
+      properties:
+        function:
+          type: string
+          description: The name of the function the AI is calling.
           examples:
-          - 1694541297950440
-      unevaluatedProperties: {}
-      description: One event on the call, in order. Beyond `type`, an entry carries the fields belonging to that type.
+          - get_weather
+        argument:
+          type: object
+          properties:
+            parsed:
+              type: array
+              items:
+                type: object
+                unevaluatedProperties: {}
+              description: The arguments parsed into objects. Usually a single-element array.
+              examples:
+              - - city: San Francisco
+            raw:
+              type: string
+              description: The raw argument string, exactly as the AI produced it.
+              examples:
+              - '{"city":"San Francisco"}'
+            substituted:
+              type: string
+              description: 'Any text that surrounded the JSON, with the JSON itself removed. Omitted when the whole
+
+                argument was JSON, which is the usual case.'
+              examples:
+              - ''
+          required:
+          - parsed
+          - raw
+          unevaluatedProperties:
+            not: {}
+          description: The arguments the AI passed to your function.
+        argument_desc:
+          type: object
+          unevaluatedProperties: {}
+          description: The function's parameter definition, as you declared it in `parameters`.
+          examples:
+          - type: object
+            properties:
+              city:
+                type: string
+                description: Name of the city
+            required:
+            - city
+        description:
+          type: string
+          description: 'The description you gave the function in
+
+            [`SWAIG.functions`](/docs/swml/reference/calling/ai/swaig/functions#properties).'
+          examples:
+          - Look up the current weather for a city.
+        call_id:
+          type: string
+          description: The ID of the call. On a chat conversation this carries the conversation id instead.
+          examples:
+          - 2e1e66e5-5d07-413d-9668-55542992eec0
+        ai_session_id:
+          type: string
+          description: The ID of the AI session on the call.
+          examples:
+          - a0d4e6e5-5d07-413d-9668-55542992eec0
+        conversation_id:
+          type: string
+          description: 'The conversation ID, when the AI session has one. A text conversation held over the
+
+            [AI chat endpoint](/docs/apis/rest/ai-chat/chat-methods) always has one, and it matches
+
+            `call_id`.'
+        app_name:
+          type: string
+          description: The name of your AI application.
+          examples:
+          - ai
+        global_data:
+          type: object
+          unevaluatedProperties: {}
+          description: The AI session's current `global_data`, when it has any.
+          examples:
+          - customer_tier: premium
+            pickup_address: 123 Main St, Springfield
+        meta_data_token:
+          type: string
+          description: 'The token that scopes `meta_data`. This is the `meta_data_token` you set on the function, or a
+
+            value derived from the function''s `web_hook_url` and credentials when you did not set one.'
+          examples:
+          - my-token
+        meta_data:
+          type: object
+          unevaluatedProperties: {}
+          description: Metadata scoped to `meta_data_token`. An empty object when the function has none yet.
+          examples:
+          - order_number: '12345'
+        caller_id_name:
+          type: string
+          description: The caller's name, when available.
+          examples:
+          - Jane Doe
+        caller_id_num:
+          type: string
+          description: The caller's number, when available.
+          examples:
+          - '+15555550100'
+        channel_active:
+          type: boolean
+          description: Whether the call is still up.
+          examples:
+          - true
+        channel_offhook:
+          type: boolean
+          description: Whether the call is answered.
+          examples:
+          - true
+        channel_ready:
+          type: boolean
+          description: Whether the AI session is ready to take actions.
+          examples:
+          - true
+        content_type:
+          type: string
+          description: The content type of the request body. Always `text/swaig`.
+          examples:
+          - text/swaig
+        version:
+          type: string
+          description: The SWAIG protocol version.
+          examples:
+          - '2.0'
+        content_disposition:
+          type: string
+          description: How the body is delivered. Always `SWAIG Function`.
+          examples:
+          - SWAIG Function
+        conversation_type:
+          type: string
+          enum:
+          - voice
+          - chat
+          description: 'The kind of conversation the agent is running: a call, or a text conversation held over the
+
+            [AI chat endpoint](/docs/apis/rest/ai-chat/chat-methods).'
+          examples:
+          - voice
+        project_id:
+          type: string
+          description: Your project ID, when available.
+          examples:
+          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
+        space_id:
+          type: string
+          description: Your Space ID, when available.
+          examples:
+          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
+        fatal_error:
+          type: boolean
+          description: '`true` when the AI session has hit an unrecoverable error. Included only in that case.'
+        error_reason:
+          type: string
+          description: A description of the error. Included only when `fatal_error` is set.
+        SWMLVars:
+          type: object
+          unevaluatedProperties: {}
+          description: SWML variables for the call. Included when you enable `swaig_post_swml_vars`.
+        SWMLCall:
+          type: object
+          unevaluatedProperties: {}
+          description: SWML call state. Included when you enable `swaig_post_swml_vars`.
+        call_log:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhooks.AI.AICallLogEntry'
+          description: The conversation so far, with sensitive values redacted. Included when you enable `swaig_post_conversation`.
+        raw_call_log:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhooks.AI.AICallLogEntry'
+          description: The full, unredacted conversation so far. Included when you enable `swaig_post_conversation`.
+      unevaluatedProperties:
+        not: {}
+    Webhooks.AI.AISwaigLogEntry:
+      type: object
+      required:
+      - command_name
+      - command_arg
+      - epoch_time
+      properties:
+        command_name:
+          type: string
+          description: The name of the function the agent called.
+          examples:
+          - get_weather
+        command_arg:
+          type: string
+          description: The arguments it passed, as the raw string the model produced.
+          examples:
+          - '{"city":"San Francisco"}'
+        epoch_time:
+          type: integer
+          description: When the call was made, as a Unix timestamp in seconds.
+          examples:
+          - 1694541334
+        native:
+          type: boolean
+          description: Always `true` when present, meaning the function ran inside the platform rather than on your server.
+          examples:
+          - true
+        active_count:
+          anyOf:
+          - type: integer
+          - type: string
+          description: 'How many times the function may still be called, or `endless` when it has no limit. Present only
+
+            on a function you limited.'
+          examples:
+          - 2
+        url:
+          type: string
+          description: The URL the function was served from. Present when the call reached your server.
+          examples:
+          - https://example.com/tools/get_weather
+        post_data:
+          type: object
+          unevaluatedProperties: {}
+          description: The body sent to your server. Present when the call reached it.
+        post_response:
+          type: object
+          unevaluatedProperties: {}
+          description: The response your server returned. Present when the call reached it and got a reply.
+        delayed_post_response:
+          type: object
+          unevaluatedProperties: {}
+          description: A response that arrived after the agent had already moved on. Present only when that happened.
+        mcp_url:
+          type: string
+          description: The MCP server the tool was served from. Present only for an MCP-backed tool.
+        mcp_tool:
+          type: string
+          description: The tool name on that MCP server. Present only for an MCP-backed tool.
+        mcp_response:
+          type: string
+          description: What the MCP server returned. Present only for an MCP-backed tool.
+        mcp_error:
+          type: boolean
+          description: Always `true` when present, meaning the MCP call failed.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: One tool call the agent made, in the order it was made.
+    Webhooks.AI.AISidecarChannelData:
+      type: object
+      properties:
+        call_id:
+          type: string
+          description: ID of the call the sidecar is attached to.
+          examples:
+          - 2e1e66e5-5d07-413d-9668-55542992eec0
+        caller_id_name:
+          type: string
+          description: The caller's name.
+          examples:
+          - Jane Doe
+        caller_id_number:
+          type: string
+          description: The caller's number.
+          examples:
+          - '+15555550100'
+        destination_number:
+          type: string
+          description: The number that was called.
+          examples:
+          - '+15555550199'
+      unevaluatedProperties:
+        not: {}
+      description: Identifies the call a sidecar callback came from. Each field is included when the call has it.
     Webhooks.AI.BedrockPostPromptCallbackPayload:
       type: object
       required:
@@ -789,291 +1254,26 @@ components:
           - Caller booked a ride from 123 Main St to the airport for 6pm.
       unevaluatedProperties:
         not: {}
-    Webhooks.AI.AIPostPromptData:
-      type: object
-      required:
-      - parsed
-      - raw
-      properties:
-        parsed:
-          type: array
-          items:
-            type: object
-            unevaluatedProperties: {}
-          description: 'Every JSON object found in the answer, parsed. An empty array when the agent answered in prose.
-
-            Ask the post-prompt for named JSON keys when you want to count outcomes.'
-          examples:
-          - - intent: book_ride
-              resolved: true
-        raw:
-          type: string
-          description: The answer exactly as the agent produced it.
-          examples:
-          - '{"intent":"book_ride","resolved":true}'
-        substituted:
-          type: string
-          description: 'The answer with the JSON removed, leaving only the surrounding prose. Omitted when the answer was
-
-            JSON and nothing followed it.'
-          examples:
-          - Caller booked a ride to the airport.
-      unevaluatedProperties:
-        not: {}
-      description: 'The answer an AI agent gave to your
-
-        [`post_prompt`](/docs/swml/reference/calling/ai), in three forms.'
-    Webhooks.AI.AISidecarEvent:
+    Webhooks.AI.AICallTimelineEntry:
       type: object
       required:
       - type
-      - ts
-      - tick_id
-      - channel_data
       properties:
         type:
-          allOf:
-          - $ref: '#/components/schemas/Webhooks.AI.AISidecarCallbackType'
-          description: The callback type.
+          type: string
+          description: 'What happened. `user_input`, `ai_response`, and `tool_result` cover the conversation; `pronounce`
+
+            and `text_normalize` record text rewrites; anything else is the name of a logged action.'
           examples:
-          - insight
+          - ai_response
         ts:
-          type: integer
-          format: int64
-          description: When the event was produced, as a Unix timestamp in microseconds.
+          type: number
+          description: When it happened, as a Unix timestamp in microseconds. Omitted when the source entry had no timestamp.
           examples:
-          - 1745870400123456
-        tick_id:
-          type: integer
-          format: int64
-          description: Identifies the evaluation this callback came from. Callbacks produced in the same evaluation share a `tick_id`.
-          examples:
-          - 7
-        channel_data:
-          allOf:
-          - $ref: '#/components/schemas/Webhooks.AI.AISidecarChannelData'
-          description: Identifies the call the event came from.
+          - 1694541297950440
       unevaluatedProperties: {}
-      description: 'One sidecar callback. Every event carries the four fields below; `type` decides what else comes
-
-        with it, so read `type` first and expect properties beyond these.'
-    Webhooks.AI.AICallInfo:
-      type: object
-      required:
-      - call_id
-      - content_type
-      - content_disposition
-      - conversation_type
-      properties:
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Your project ID.
-          examples:
-          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
-        space_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Your Space ID.
-          examples:
-          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
-        call_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: ID of the call.
-          examples:
-          - 2e1e66e5-5d07-413d-9668-55542992eec0
-        content_type:
-          type: string
-          description: The content type of the POST body. Always `text/json`.
-          examples:
-          - text/json
-        content_disposition:
-          type: string
-          description: How the body is delivered. Always `post_data`.
-          examples:
-          - post_data
-        conversation_type:
-          type: string
-          description: The conversation type. Always `voice`.
-          examples:
-          - voice
-      unevaluatedProperties:
-        not: {}
-      description: 'Identifies the call an AI callback came from. `project_id` and `space_id` are included when
-
-        available.'
-    Webhooks.AI.BedrockSwaigToolWebhookPayload:
-      type: object
-      required:
-      - function
-      - argument
-      - call_id
-      - ai_session_id
-      - app_name
-      - caller_id
-      - global_data
-      - content_type
-      - content_disposition
-      - conversation_type
-      - action
-      - meta_data_token
-      - meta_data
-      properties:
-        function:
-          type: string
-          description: The name of the function the agent is calling.
-          examples:
-          - get_weather
-        argument:
-          type: object
-          properties:
-            parsed:
-              type: array
-              items:
-                type: object
-                unevaluatedProperties: {}
-              description: The arguments parsed into objects. Usually a single-element array.
-              examples:
-              - - city: San Francisco
-            raw:
-              type: string
-              description: The raw argument string, exactly as the agent produced it.
-              examples:
-              - '{"city":"San Francisco"}'
-          required:
-          - parsed
-          - raw
-          unevaluatedProperties:
-            not: {}
-          description: The arguments the agent passed to your function.
-        call_id:
-          type: string
-          description: The ID of the call.
-          examples:
-          - 2e1e66e5-5d07-413d-9668-55542992eec0
-        ai_session_id:
-          type: string
-          description: The ID of the AI session on the call. Matches `call_id` for Bedrock agents.
-          examples:
-          - 2e1e66e5-5d07-413d-9668-55542992eec0
-        app_name:
-          type: string
-          description: The name of your Bedrock application. Defaults to `bedrock`.
-          examples:
-          - bedrock
-        caller_id:
-          type: string
-          description: The caller's number. An empty string when the call has none.
-          examples:
-          - '+15555550100'
-        global_data:
-          type: object
-          unevaluatedProperties: {}
-          description: 'The agent''s current `global_data`. Alongside anything you seeded, the session adds
-
-            `caller_id_name` and `caller_id_number` when the call carries them.'
-          examples:
-          - customer_tier: premium
-            pickup_address: 123 Main St, Springfield
-        content_type:
-          type: string
-          description: The content type of the request body. Always `text/json`.
-          examples:
-          - text/json
-        content_disposition:
-          type: string
-          description: How the body is delivered. Always `agent.function` for a function call.
-          examples:
-          - agent.function
-        conversation_type:
-          type: string
-          description: The kind of conversation the agent is running. Always `voice`.
-          examples:
-          - voice
-        action:
-          type: string
-          description: 'What the request is asking of you. Always `fetch_conversation` for a function call; the
-
-            end-of-call conversation report sends `post_conversation` instead.'
-          examples:
-          - fetch_conversation
-        project_id:
-          type: string
-          description: Your project ID, when available.
-          examples:
-          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
-        space_id:
-          type: string
-          description: Your Space ID, when available.
-          examples:
-          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
-        conversation_id:
-          type: string
-          description: The conversation ID, when the agent was configured with one.
-        caller_id_name:
-          type: string
-          description: The caller's name, when available.
-          examples:
-          - Jane Doe
-        caller_id_number:
-          type: string
-          description: The caller's number, when available.
-          examples:
-          - '+15555550100'
-        call_start_date:
-          type: integer
-          format: int64
-          description: When the call was created, as a Unix timestamp in microseconds.
-        call_answer_date:
-          type: integer
-          format: int64
-          description: When the call was answered, as a Unix timestamp in microseconds. `0` when it never was.
-        call_end_date:
-          type: integer
-          format: int64
-          description: When the call ended, as a Unix timestamp in microseconds. `0` while the call is still up.
-        ai_start_date:
-          type: integer
-          format: int64
-          description: When the agent started, as a Unix timestamp in microseconds.
-        ai_end_date:
-          type: integer
-          format: int64
-          description: When the agent stopped, as a Unix timestamp in microseconds. Omitted while it is still running.
-        times:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhooks.AI.AIResponseTiming'
-          description: Per-response performance metrics for the session so far. Included once the agent has any.
-        SWMLVars:
-          type: object
-          unevaluatedProperties: {}
-          description: SWML variables for the call. Included when the call carries SWML state.
-        SWMLCall:
-          type: object
-          unevaluatedProperties: {}
-          description: SWML call state. Included when the call carries SWML state.
-        meta_data_token:
-          type: string
-          description: 'The token that scopes `meta_data`. This is the `meta_data_token` you set on the function, or an
-
-            MD5 of the function''s name when you did not set one.'
-          examples:
-          - d742c5d1d969d9fdbbd9bd1c52499f2d
-        meta_data:
-          type: object
-          unevaluatedProperties: {}
-          description: Metadata scoped to `meta_data_token`. An empty object when the function has none yet.
-          examples:
-          - order_number: '12345'
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Webhooks.AI.AICallLogEntry:
+      description: One event on the call, in order. Beyond `type`, an entry carries the fields belonging to that type.
+    Webhooks.AI.AIDebugConversationAdd:
       type: object
       required:
       - role
@@ -1081,32 +1281,43 @@ components:
       properties:
         role:
           type: string
-          description: 'Who produced the entry. Common roles include `system`, `user`, `assistant`, and `tool`. Other
-
-            roles may appear, so filter to the roles your application uses rather than assuming a fixed set.'
+          description: 'Who produced the message: `system`, `user`, `assistant`, or `tool`.'
           examples:
           - assistant
         content:
           type: string
-          description: The text of the entry.
+          description: The message text. Redacted when you enable `redact_prompt`.
           examples:
           - Your ride is booked for 6pm.
+        lang:
+          type: string
+          description: The language the message was in. Omitted on tool messages.
+          examples:
+          - en-US
+        tokens:
+          type: integer
+          description: Tokens the message consumed. Omitted on tool messages.
+          examples:
+          - 53
         timestamp:
           type: integer
           format: int64
-          description: When the entry was added, as a Unix timestamp in microseconds. Omitted on entries without one.
+          description: When the message was added, as a Unix timestamp in microseconds.
           examples:
           - 1694541297950440
-        tool_calls:
-          type: array
-          items:
-            type: object
-            unevaluatedProperties: {}
-          description: The tool calls the agent made on this turn. Present only on a turn that made any.
-      unevaluatedProperties: {}
-      description: 'One entry in the conversation. Beyond `role` and `content`, an entry carries whatever per-turn
+        tool_call_id:
+          type: string
+          description: Links a tool result back to the call that produced it. Present on tool messages.
+        metadata:
+          type: object
+          unevaluatedProperties: {}
+          description: 'Per-turn detail. On a caller turn this carries `confidence`, `content_type`, and the
 
-        detail applies to it, such as recognition confidence on a caller turn or timings on a reply.'
+            speaking-to-final timings. Omitted on turns that have none.'
+      unevaluatedProperties: {}
+      description: 'One message as it is added to the conversation. The exact fields depend on which role produced it,
+
+        so unlisted keys can appear.'
     Webhooks.AI.AISidecarCallbackType:
       type: string
       enum:
@@ -2286,219 +2497,6 @@ components:
 
             Speech-to-speech sessions only.'
       unevaluatedProperties: {}
-    Webhooks.AI.AISidecarSwaigToolWebhookPayload:
-      type: object
-      required:
-      - function
-      - argument
-      - channel_data
-      properties:
-        function:
-          type: string
-          description: The name of the function the model is calling.
-          examples:
-          - lookup_competitor
-        argument:
-          type: object
-          properties:
-            parsed:
-              type: array
-              items:
-                type: object
-                unevaluatedProperties: {}
-              description: The arguments parsed into objects. Usually a single-element array.
-              examples:
-              - - competitor: ACME
-            raw:
-              type: string
-              description: The raw argument string, exactly as the model produced it.
-              examples:
-              - '{"competitor":"ACME"}'
-            substituted:
-              type: string
-              description: 'Any text that surrounded the JSON, with the JSON itself removed. Omitted when the whole
-
-                argument was JSON, which is the usual case.'
-              examples:
-              - ''
-          required:
-          - parsed
-          - raw
-          unevaluatedProperties:
-            not: {}
-          description: The arguments the model passed to your function.
-        call_id:
-          type: string
-          description: The ID of the call the sidecar is attached to.
-          examples:
-          - 2e1e66e5-5d07-413d-9668-55542992eec0
-        global_data:
-          type: object
-          unevaluatedProperties: {}
-          description: The sidecar's current `global_data`. Present when the sidecar has any.
-        channel_data:
-          allOf:
-          - $ref: '#/components/schemas/Webhooks.AI.AISidecarChannelData'
-          description: Identifies the call the sidecar is attached to.
-      unevaluatedProperties:
-        not: {}
-    Webhooks.AI.AIDebugConversationAdd:
-      type: object
-      required:
-      - role
-      - content
-      properties:
-        role:
-          type: string
-          description: 'Who produced the message: `system`, `user`, `assistant`, or `tool`.'
-          examples:
-          - assistant
-        content:
-          type: string
-          description: The message text. Redacted when you enable `redact_prompt`.
-          examples:
-          - Your ride is booked for 6pm.
-        lang:
-          type: string
-          description: The language the message was in. Omitted on tool messages.
-          examples:
-          - en-US
-        tokens:
-          type: integer
-          description: Tokens the message consumed. Omitted on tool messages.
-          examples:
-          - 53
-        timestamp:
-          type: integer
-          format: int64
-          description: When the message was added, as a Unix timestamp in microseconds.
-          examples:
-          - 1694541297950440
-        tool_call_id:
-          type: string
-          description: Links a tool result back to the call that produced it. Present on tool messages.
-        metadata:
-          type: object
-          unevaluatedProperties: {}
-          description: 'Per-turn detail. On a caller turn this carries `confidence`, `content_type`, and the
-
-            speaking-to-final timings. Omitted on turns that have none.'
-      unevaluatedProperties: {}
-      description: 'One message as it is added to the conversation. The exact fields depend on which role produced it,
-
-        so unlisted keys can appear.'
-    Webhooks.AI.AISwaigLogEntry:
-      type: object
-      required:
-      - command_name
-      - command_arg
-      - epoch_time
-      properties:
-        command_name:
-          type: string
-          description: The name of the function the agent called.
-          examples:
-          - get_weather
-        command_arg:
-          type: string
-          description: The arguments it passed, as the raw string the model produced.
-          examples:
-          - '{"city":"San Francisco"}'
-        epoch_time:
-          type: integer
-          description: When the call was made, as a Unix timestamp in seconds.
-          examples:
-          - 1694541334
-        native:
-          type: boolean
-          description: Always `true` when present, meaning the function ran inside the platform rather than on your server.
-          examples:
-          - true
-        active_count:
-          anyOf:
-          - type: integer
-          - type: string
-          description: 'How many times the function may still be called, or `endless` when it has no limit. Present only
-
-            on a function you limited.'
-          examples:
-          - 2
-        url:
-          type: string
-          description: The URL the function was served from. Present when the call reached your server.
-          examples:
-          - https://example.com/tools/get_weather
-        post_data:
-          type: object
-          unevaluatedProperties: {}
-          description: The body sent to your server. Present when the call reached it.
-        post_response:
-          type: object
-          unevaluatedProperties: {}
-          description: The response your server returned. Present when the call reached it and got a reply.
-        delayed_post_response:
-          type: object
-          unevaluatedProperties: {}
-          description: A response that arrived after the agent had already moved on. Present only when that happened.
-        mcp_url:
-          type: string
-          description: The MCP server the tool was served from. Present only for an MCP-backed tool.
-        mcp_tool:
-          type: string
-          description: The tool name on that MCP server. Present only for an MCP-backed tool.
-        mcp_response:
-          type: string
-          description: What the MCP server returned. Present only for an MCP-backed tool.
-        mcp_error:
-          type: boolean
-          description: Always `true` when present, meaning the MCP call failed.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: One tool call the agent made, in the order it was made.
-    Webhooks.AI.AISidecarCallbackPayload:
-      type: object
-      required:
-      - call_info
-      - sidecar_event
-      properties:
-        call_info:
-          allOf:
-          - $ref: '#/components/schemas/Webhooks.AI.AICallInfo'
-          description: Envelope describing the call. `project_id` and `space_id` are included when available.
-        sidecar_event:
-          allOf:
-          - $ref: '#/components/schemas/Webhooks.AI.AISidecarEvent'
-          description: The sidecar callback.
-      unevaluatedProperties:
-        not: {}
-    Webhooks.AI.AISidecarChannelData:
-      type: object
-      properties:
-        call_id:
-          type: string
-          description: ID of the call the sidecar is attached to.
-          examples:
-          - 2e1e66e5-5d07-413d-9668-55542992eec0
-        caller_id_name:
-          type: string
-          description: The caller's name.
-          examples:
-          - Jane Doe
-        caller_id_number:
-          type: string
-          description: The caller's number.
-          examples:
-          - '+15555550100'
-        destination_number:
-          type: string
-          description: The number that was called.
-          examples:
-          - '+15555550199'
-      unevaluatedProperties:
-        not: {}
-      description: Identifies the call a sidecar callback came from. Each field is included when the call has it.
     Webhooks.AI.AIResponseTiming:
       type: object
       required:
@@ -2554,270 +2552,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Timing and token counts for one generated reply.
-    Webhooks.AI.AiSwaigToolWebhookPayload:
-      type: object
-      required:
-      - function
-      - argument
-      - argument_desc
-      - description
-      - call_id
-      - ai_session_id
-      - app_name
-      - meta_data_token
-      - meta_data
-      - channel_active
-      - channel_offhook
-      - channel_ready
-      - content_type
-      - version
-      - content_disposition
-      - conversation_type
-      properties:
-        function:
-          type: string
-          description: The name of the function the AI is calling.
-          examples:
-          - get_weather
-        argument:
-          type: object
-          properties:
-            parsed:
-              type: array
-              items:
-                type: object
-                unevaluatedProperties: {}
-              description: The arguments parsed into objects. Usually a single-element array.
-              examples:
-              - - city: San Francisco
-            raw:
-              type: string
-              description: The raw argument string, exactly as the AI produced it.
-              examples:
-              - '{"city":"San Francisco"}'
-            substituted:
-              type: string
-              description: 'Any text that surrounded the JSON, with the JSON itself removed. Omitted when the whole
-
-                argument was JSON, which is the usual case.'
-              examples:
-              - ''
-          required:
-          - parsed
-          - raw
-          unevaluatedProperties:
-            not: {}
-          description: The arguments the AI passed to your function.
-        argument_desc:
-          type: object
-          unevaluatedProperties: {}
-          description: The function's parameter definition, as you declared it in `parameters`.
-          examples:
-          - type: object
-            properties:
-              city:
-                type: string
-                description: Name of the city
-            required:
-            - city
-        description:
-          type: string
-          description: 'The description you gave the function in
-
-            [`SWAIG.functions`](/docs/swml/reference/calling/ai/swaig/functions#properties).'
-          examples:
-          - Look up the current weather for a city.
-        call_id:
-          type: string
-          description: The ID of the call. On a chat conversation this carries the conversation id instead.
-          examples:
-          - 2e1e66e5-5d07-413d-9668-55542992eec0
-        ai_session_id:
-          type: string
-          description: The ID of the AI session on the call.
-          examples:
-          - a0d4e6e5-5d07-413d-9668-55542992eec0
-        conversation_id:
-          type: string
-          description: 'The conversation ID, when the AI session has one. A text conversation held over the
-
-            [AI chat endpoint](/docs/apis/rest/ai-chat/chat-methods) always has one, and it matches
-
-            `call_id`.'
-        app_name:
-          type: string
-          description: The name of your AI application.
-          examples:
-          - ai
-        global_data:
-          type: object
-          unevaluatedProperties: {}
-          description: The AI session's current `global_data`, when it has any.
-          examples:
-          - customer_tier: premium
-            pickup_address: 123 Main St, Springfield
-        meta_data_token:
-          type: string
-          description: 'The token that scopes `meta_data`. This is the `meta_data_token` you set on the function, or a
-
-            value derived from the function''s `web_hook_url` and credentials when you did not set one.'
-          examples:
-          - my-token
-        meta_data:
-          type: object
-          unevaluatedProperties: {}
-          description: Metadata scoped to `meta_data_token`. An empty object when the function has none yet.
-          examples:
-          - order_number: '12345'
-        caller_id_name:
-          type: string
-          description: The caller's name, when available.
-          examples:
-          - Jane Doe
-        caller_id_num:
-          type: string
-          description: The caller's number, when available.
-          examples:
-          - '+15555550100'
-        channel_active:
-          type: boolean
-          description: Whether the call is still up.
-          examples:
-          - true
-        channel_offhook:
-          type: boolean
-          description: Whether the call is answered.
-          examples:
-          - true
-        channel_ready:
-          type: boolean
-          description: Whether the AI session is ready to take actions.
-          examples:
-          - true
-        content_type:
-          type: string
-          description: The content type of the request body. Always `text/swaig`.
-          examples:
-          - text/swaig
-        version:
-          type: string
-          description: The SWAIG protocol version.
-          examples:
-          - '2.0'
-        content_disposition:
-          type: string
-          description: How the body is delivered. Always `SWAIG Function`.
-          examples:
-          - SWAIG Function
-        conversation_type:
-          type: string
-          enum:
-          - voice
-          - chat
-          description: 'The kind of conversation the agent is running: a call, or a text conversation held over the
-
-            [AI chat endpoint](/docs/apis/rest/ai-chat/chat-methods).'
-          examples:
-          - voice
-        project_id:
-          type: string
-          description: Your project ID, when available.
-          examples:
-          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
-        space_id:
-          type: string
-          description: Your Space ID, when available.
-          examples:
-          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
-        fatal_error:
-          type: boolean
-          description: '`true` when the AI session has hit an unrecoverable error. Included only in that case.'
-        error_reason:
-          type: string
-          description: A description of the error. Included only when `fatal_error` is set.
-        SWMLVars:
-          type: object
-          unevaluatedProperties: {}
-          description: SWML variables for the call. Included when you enable `swaig_post_swml_vars`.
-        SWMLCall:
-          type: object
-          unevaluatedProperties: {}
-          description: SWML call state. Included when you enable `swaig_post_swml_vars`.
-        call_log:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhooks.AI.AICallLogEntry'
-          description: The conversation so far, with sensitive values redacted. Included when you enable `swaig_post_conversation`.
-        raw_call_log:
-          type: array
-          items:
-            $ref: '#/components/schemas/Webhooks.AI.AICallLogEntry'
-          description: The full, unredacted conversation so far. Included when you enable `swaig_post_conversation`.
-      unevaluatedProperties:
-        not: {}
-    Webhooks.AI.SwaigSignatureRequestPayload:
-      type: object
-      required:
-      - action
-      - functions
-      - content_type
-      - content_disposition
-      - version
-      properties:
-        action:
-          type: string
-          description: What the request is asking of you. Always `get_signature`.
-          examples:
-          - get_signature
-        functions:
-          type: array
-          items:
-            type: string
-          description: 'The function names the `includes` entry asked for. This list can be empty, and it does not limit
-
-            your reply: every definition you return is registered, whether or not it is named here.'
-          examples:
-          - - get_weather
-        meta_data:
-          type: object
-          unevaluatedProperties: {}
-          description: The `meta_data` you set on the `includes` entry. Omitted when you set none.
-          examples:
-          - store_id: sf-01
-        meta_data_token:
-          type: string
-          description: 'The token scoping `meta_data`. Present on the check your endpoint can receive outside of a call,
-
-            where it is a fixed value with nothing to interpret, and absent during a call.'
-          examples:
-          - my-token
-        content_type:
-          type: string
-          description: The content type of the request body. Always `text/swaig`.
-          examples:
-          - text/swaig
-        content_disposition:
-          type: string
-          description: How the body is delivered. Always `function signature request`.
-          examples:
-          - function signature request
-        version:
-          type: string
-          description: The SWAIG protocol version.
-          examples:
-          - '2.0'
-        project_id:
-          type: string
-          description: Your project ID, when available.
-          examples:
-          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
-        space_id:
-          type: string
-          description: Your Space ID, when available.
-          examples:
-          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
-      unevaluatedProperties:
-        not: {}
     Webhooks.AI.AIDebugWebhookFail:
       type: object
       required:
@@ -2883,6 +2617,387 @@ components:
       description: 'Reports a tool webhook that could not be reached or did not answer usefully. Carries whatever
 
         detail the attempt produced, so unlisted keys can appear.'
+    Webhooks.AI.AISidecarEvent:
+      type: object
+      required:
+      - type
+      - ts
+      - tick_id
+      - channel_data
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.AI.AISidecarCallbackType'
+          description: The callback type.
+          examples:
+          - insight
+        ts:
+          type: integer
+          format: int64
+          description: When the event was produced, as a Unix timestamp in microseconds.
+          examples:
+          - 1745870400123456
+        tick_id:
+          type: integer
+          format: int64
+          description: Identifies the evaluation this callback came from. Callbacks produced in the same evaluation share a `tick_id`.
+          examples:
+          - 7
+        channel_data:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.AI.AISidecarChannelData'
+          description: Identifies the call the event came from.
+      unevaluatedProperties: {}
+      description: 'One sidecar callback. Every event carries the four fields below; `type` decides what else comes
+
+        with it, so read `type` first and expect properties beyond these.'
+    Webhooks.AI.BedrockSwaigToolWebhookPayload:
+      type: object
+      required:
+      - function
+      - argument
+      - call_id
+      - ai_session_id
+      - app_name
+      - caller_id
+      - global_data
+      - content_type
+      - content_disposition
+      - conversation_type
+      - action
+      - meta_data_token
+      - meta_data
+      properties:
+        function:
+          type: string
+          description: The name of the function the agent is calling.
+          examples:
+          - get_weather
+        argument:
+          type: object
+          properties:
+            parsed:
+              type: array
+              items:
+                type: object
+                unevaluatedProperties: {}
+              description: The arguments parsed into objects. Usually a single-element array.
+              examples:
+              - - city: San Francisco
+            raw:
+              type: string
+              description: The raw argument string, exactly as the agent produced it.
+              examples:
+              - '{"city":"San Francisco"}'
+          required:
+          - parsed
+          - raw
+          unevaluatedProperties:
+            not: {}
+          description: The arguments the agent passed to your function.
+        call_id:
+          type: string
+          description: The ID of the call.
+          examples:
+          - 2e1e66e5-5d07-413d-9668-55542992eec0
+        ai_session_id:
+          type: string
+          description: The ID of the AI session on the call. Matches `call_id` for Bedrock agents.
+          examples:
+          - 2e1e66e5-5d07-413d-9668-55542992eec0
+        app_name:
+          type: string
+          description: The name of your Bedrock application. Defaults to `bedrock`.
+          examples:
+          - bedrock
+        caller_id:
+          type: string
+          description: The caller's number. An empty string when the call has none.
+          examples:
+          - '+15555550100'
+        global_data:
+          type: object
+          unevaluatedProperties: {}
+          description: 'The agent''s current `global_data`. Alongside anything you seeded, the session adds
+
+            `caller_id_name` and `caller_id_number` when the call carries them.'
+          examples:
+          - customer_tier: premium
+            pickup_address: 123 Main St, Springfield
+        content_type:
+          type: string
+          description: The content type of the request body. Always `text/json`.
+          examples:
+          - text/json
+        content_disposition:
+          type: string
+          description: How the body is delivered. Always `agent.function` for a function call.
+          examples:
+          - agent.function
+        conversation_type:
+          type: string
+          description: The kind of conversation the agent is running. Always `voice`.
+          examples:
+          - voice
+        action:
+          type: string
+          description: 'What the request is asking of you. Always `fetch_conversation` for a function call; the
+
+            end-of-call conversation report sends `post_conversation` instead.'
+          examples:
+          - fetch_conversation
+        project_id:
+          type: string
+          description: Your project ID, when available.
+          examples:
+          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
+        space_id:
+          type: string
+          description: Your Space ID, when available.
+          examples:
+          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
+        conversation_id:
+          type: string
+          description: The conversation ID, when the agent was configured with one.
+        caller_id_name:
+          type: string
+          description: The caller's name, when available.
+          examples:
+          - Jane Doe
+        caller_id_number:
+          type: string
+          description: The caller's number, when available.
+          examples:
+          - '+15555550100'
+        call_start_date:
+          type: integer
+          format: int64
+          description: When the call was created, as a Unix timestamp in microseconds.
+        call_answer_date:
+          type: integer
+          format: int64
+          description: When the call was answered, as a Unix timestamp in microseconds. `0` when it never was.
+        call_end_date:
+          type: integer
+          format: int64
+          description: When the call ended, as a Unix timestamp in microseconds. `0` while the call is still up.
+        ai_start_date:
+          type: integer
+          format: int64
+          description: When the agent started, as a Unix timestamp in microseconds.
+        ai_end_date:
+          type: integer
+          format: int64
+          description: When the agent stopped, as a Unix timestamp in microseconds. Omitted while it is still running.
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhooks.AI.AIResponseTiming'
+          description: Per-response performance metrics for the session so far. Included once the agent has any.
+        SWMLVars:
+          type: object
+          unevaluatedProperties: {}
+          description: SWML variables for the call. Included when the call carries SWML state.
+        SWMLCall:
+          type: object
+          unevaluatedProperties: {}
+          description: SWML call state. Included when the call carries SWML state.
+        meta_data_token:
+          type: string
+          description: 'The token that scopes `meta_data`. This is the `meta_data_token` you set on the function, or an
+
+            MD5 of the function''s name when you did not set one.'
+          examples:
+          - d742c5d1d969d9fdbbd9bd1c52499f2d
+        meta_data:
+          type: object
+          unevaluatedProperties: {}
+          description: Metadata scoped to `meta_data_token`. An empty object when the function has none yet.
+          examples:
+          - order_number: '12345'
+      unevaluatedProperties:
+        not: {}
+    Webhooks.AI.SwaigSignatureRequestPayload:
+      type: object
+      required:
+      - action
+      - functions
+      - content_type
+      - content_disposition
+      - version
+      properties:
+        action:
+          type: string
+          description: What the request is asking of you. Always `get_signature`.
+          examples:
+          - get_signature
+        functions:
+          type: array
+          items:
+            type: string
+          description: 'The function names the `includes` entry asked for. This list can be empty, and it does not limit
+
+            your reply: every definition you return is registered, whether or not it is named here.'
+          examples:
+          - - get_weather
+        meta_data:
+          type: object
+          unevaluatedProperties: {}
+          description: The `meta_data` you set on the `includes` entry. Omitted when you set none.
+          examples:
+          - store_id: sf-01
+        meta_data_token:
+          type: string
+          description: 'The token scoping `meta_data`. Present on the check your endpoint can receive outside of a call,
+
+            where it is a fixed value with nothing to interpret, and absent during a call.'
+          examples:
+          - my-token
+        content_type:
+          type: string
+          description: The content type of the request body. Always `text/swaig`.
+          examples:
+          - text/swaig
+        content_disposition:
+          type: string
+          description: How the body is delivered. Always `function signature request`.
+          examples:
+          - function signature request
+        version:
+          type: string
+          description: The SWAIG protocol version.
+          examples:
+          - '2.0'
+        project_id:
+          type: string
+          description: Your project ID, when available.
+          examples:
+          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
+        space_id:
+          type: string
+          description: Your Space ID, when available.
+          examples:
+          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
+      unevaluatedProperties:
+        not: {}
+    Webhooks.AI.AICallInfo:
+      type: object
+      required:
+      - call_id
+      - content_type
+      - content_disposition
+      - conversation_type
+      properties:
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Your project ID.
+          examples:
+          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
+        space_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Your Space ID.
+          examples:
+          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
+        call_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: ID of the call.
+          examples:
+          - 2e1e66e5-5d07-413d-9668-55542992eec0
+        content_type:
+          type: string
+          description: The content type of the POST body. Always `text/json`.
+          examples:
+          - text/json
+        content_disposition:
+          type: string
+          description: How the body is delivered. Always `post_data`.
+          examples:
+          - post_data
+        conversation_type:
+          type: string
+          description: The conversation type. Always `voice`.
+          examples:
+          - voice
+      unevaluatedProperties:
+        not: {}
+      description: 'Identifies the call an AI callback came from. `project_id` and `space_id` are included when
+
+        available.'
+    Webhooks.AI.AIPostPromptData:
+      type: object
+      required:
+      - parsed
+      - raw
+      properties:
+        parsed:
+          type: array
+          items:
+            type: object
+            unevaluatedProperties: {}
+          description: 'Every JSON object found in the answer, parsed. An empty array when the agent answered in prose.
+
+            Ask the post-prompt for named JSON keys when you want to count outcomes.'
+          examples:
+          - - intent: book_ride
+              resolved: true
+        raw:
+          type: string
+          description: The answer exactly as the agent produced it.
+          examples:
+          - '{"intent":"book_ride","resolved":true}'
+        substituted:
+          type: string
+          description: 'The answer with the JSON removed, leaving only the surrounding prose. Omitted when the answer was
+
+            JSON and nothing followed it.'
+          examples:
+          - Caller booked a ride to the airport.
+      unevaluatedProperties:
+        not: {}
+      description: 'The answer an AI agent gave to your
+
+        [`post_prompt`](/docs/swml/reference/calling/ai), in three forms.'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Webhooks.AI.AICallLogEntry:
+      type: object
+      required:
+      - role
+      - content
+      properties:
+        role:
+          type: string
+          description: 'Who produced the entry. Common roles include `system`, `user`, `assistant`, and `tool`. Other
+
+            roles may appear, so filter to the roles your application uses rather than assuming a fixed set.'
+          examples:
+          - assistant
+        content:
+          type: string
+          description: The text of the entry.
+          examples:
+          - Your ride is booked for 6pm.
+        timestamp:
+          type: integer
+          format: int64
+          description: When the entry was added, as a Unix timestamp in microseconds. Omitted on entries without one.
+          examples:
+          - 1694541297950440
+        tool_calls:
+          type: array
+          items:
+            type: object
+            unevaluatedProperties: {}
+          description: The tool calls the agent made on this turn. Present only on a turn that made any.
+      unevaluatedProperties: {}
+      description: 'One entry in the conversation. Beyond `role` and `content`, an entry carries whatever per-turn
+
+        detail applies to it, such as recognition confidence on a caller turn or timings on a reply.'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

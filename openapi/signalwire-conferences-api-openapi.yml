@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - name: DateCreated
@@ -160,7 +160,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPath'
@@ -203,7 +203,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPath'
@@ -261,10 +261,80 @@ components:
       - in-progress
       - completed
       description: Conference status.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+    ConferenceListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - conferences
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?PageToken=PA1234
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?Page=1&PageToken=PA5678
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        conferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conference'
+          description: List of conferences.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of conferences.
+    ConferenceSubresourceUris:
+      type: object
+      required:
+      - participants
+      - recordings
+      properties:
+        participants:
+          type: string
+          description: Links to the participants.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants.json
+        recordings:
+          type: string
+          description: Links to the recordings.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Recordings.json
+      unevaluatedProperties:
+        not: {}
+      description: Conference subresource URIs.
     ConferenceResponse:
       type: object
       required:
@@ -399,25 +469,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Conference model.
-    ConferenceSubresourceUris:
-      type: object
-      required:
-      - participants
-      - recordings
-      properties:
-        participants:
-          type: string
-          description: Links to the participants.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants.json
-        recordings:
-          type: string
-          description: Links to the recordings.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Recordings.json
-      unevaluatedProperties:
-        not: {}
-      description: Conference subresource URIs.
     UpdateConferenceRequest:
       type: object
       properties:
@@ -446,61 +497,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a conference.
-    ConferenceListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - conferences
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?PageToken=PA1234
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?Page=1&PageToken=PA5678
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        conferences:
-          type: array
-          items:
-            $ref: '#/components/schemas/Conference'
-          description: List of conferences.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of conferences.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -534,6 +530,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     ConferenceSidPath:
       name: Sid

@@ -31,7 +31,7 @@ paths:
     get:
       operationId: list_whatsapp_businesses
       summary: List WhatsApp Business Accounts
-      description: 'Returns the WhatsApp Business Accounts (WABAs) connected to your SignalWire Space. Each account can have its own set of phone numbers and message templates. Use a `whatsapp_business_id` from this list when creating or filtering [message templates](/docs/platform/messaging/whatsapp/message-templates).
+      description: 'Returns the WhatsApp Business Accounts (WABAs) connected to your SignalWire Space. Each account can have its own set of phone numbers and message templates. Use a `whatsapp_business_id` from this list when creating or filtering message templates.
 
 
         #### Permissions
@@ -40,7 +40,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Numbers_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters: []
       responses:
         '200':
@@ -78,6 +78,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of WhatsApp Business Accounts.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -94,18 +106,6 @@ components:
       type: string
       format: uuid
       description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     WhatsAppBusiness:
       type: object
       required:

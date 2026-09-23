@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
@@ -124,7 +124,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
@@ -168,7 +168,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
@@ -224,7 +224,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Voice_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/ConferencesAccountSidPath'
       - $ref: '#/components/parameters/ConferenceSidPathForParticipant'
@@ -260,61 +260,6 @@ paths:
       - Conference Participants
 components:
   schemas:
-    ConferenceParticipantListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - participants
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants?PageToken=PA1234
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants?Page=1&PageToken=PA5678
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        participants:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConferenceParticipant'
-          description: List of participants.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of conference participants.
     UpdateConferenceParticipantRequest:
       type: object
       properties:
@@ -387,12 +332,61 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a conference participant.
-    ParticipantStatus:
-      type: string
-      enum:
-      - completed
-      - in-progress
-      description: Conference participant status.
+    ConferenceParticipantListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - participants
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants?PageToken=PA1234
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants?Page=1&PageToken=PA5678
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConferenceParticipant'
+          description: List of participants.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of conference participants.
     ConferenceParticipant:
       type: object
       required:
@@ -482,10 +476,12 @@ components:
       unevaluatedProperties:
         not: {}
       description: Conference participant model.
-    uuid:
+    ParticipantStatus:
       type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      enum:
+      - completed
+      - in-progress
+      description: Conference participant status.
     ConferenceParticipantResponse:
       type: object
       required:
@@ -608,6 +604,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     ConferenceSidPathForParticipant:
       name: ConferenceSid
@@ -616,18 +616,18 @@ components:
       description: The unique identifier for the conference this participant is in.
       schema:
         $ref: '#/components/schemas/uuid'
-    ConferencesAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account that created this conference.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ParticipantCallSidPath:
       name: CallSid
       in: path
       required: true
       description: The unique identifier for the Participant call connected to this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferencesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that created this conference.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

@@ -32,7 +32,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FaxesAccountSidPath'
       - name: Page
@@ -130,7 +130,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FaxesAccountSidPath'
       responses:
@@ -179,7 +179,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FaxesAccountSidPath'
       - $ref: '#/components/parameters/FaxSidPath'
@@ -222,7 +222,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FaxesAccountSidPath'
       - $ref: '#/components/parameters/FaxSidPath'
@@ -277,7 +277,7 @@ paths:
         The API token used to authenticate must have the following scope(s) enabled to make a successful request: _Fax_.
 
 
-        [Learn more about API scopes](/docs/platform/your-signalwire-api-space).'
+        Learn more about API scopes.'
       parameters:
       - $ref: '#/components/parameters/FaxesAccountSidPath'
       - $ref: '#/components/parameters/FaxSidPath'
@@ -312,6 +312,20 @@ paths:
       - Faxes
 components:
   schemas:
+    FaxStatus:
+      type: string
+      enum:
+      - queued
+      - processing
+      - sending
+      - delivered
+      - receiving
+      - received
+      - no-answer
+      - busy
+      - failed
+      - canceled
+      description: Fax status.
     Fax:
       type: object
       required:
@@ -446,16 +460,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Fax model.
-    FaxDirection:
-      type: string
-      enum:
-      - inbound
-      - outbound
-      description: Fax direction.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     UpdateFaxRequest:
       type: object
       required:
@@ -471,6 +475,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating (canceling) a fax.
+    FaxLinks:
+      type: object
+      required:
+      - media
+      properties:
+        media:
+          type: string
+          description: Media associated with this fax.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media
+      unevaluatedProperties:
+        not: {}
+      description: Fax links.
     FaxQuality:
       type: string
       enum:
@@ -478,6 +495,90 @@ components:
       - fine
       - superfine
       description: Fax quality.
+    SendFaxRequest:
+      type: object
+      required:
+      - MediaUrl
+      - To
+      - From
+      properties:
+        MediaUrl:
+          type: string
+          description: The URL hosting the fax media to send.
+          examples:
+          - https://example.com/fax.pdf
+        To:
+          type: string
+          description: The phone number, in E.164 format, or SIP URI the fax will be sent to.
+          examples:
+          - '+13104456789'
+        From:
+          type: string
+          description: The phone number, in E.164 format, or client identifier the fax will be sent from.
+          examples:
+          - '+13103383454'
+        Quality:
+          type: string
+          enum:
+          - standard
+          - fine
+          - superfine
+          description: The quality of the fax. Default is 'fine'.
+          examples:
+          - fine
+          default: fine
+        StatusCallback:
+          type: string
+          description: The URL to send status callback requests to when the fax status changes.
+          examples:
+          - https://your-api-endpoint.com/fax-status
+        StatusCallbackMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use for status callback requests. Default is 'POST'.
+          examples:
+          - POST
+          default: POST
+        StatusCallbackEvent:
+          type: array
+          items:
+            type: string
+          description: 'The events that trigger status callback requests. Valid values: ''initiated'', ''ringing'', ''answered'', ''completed'', ''ringing_forwarded'', ''ringing_queued''. Default is [''completed''].'
+          examples:
+          - - completed
+        StoreMedia:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          description: Whether to store the fax media. Default is 'true'.
+          examples:
+          - 'true'
+          default: 'true'
+        Ttl:
+          type: integer
+          format: int32
+          minimum: 5
+          maximum: 300
+          description: Time to live in minutes for the fax. Must be between 5 and 300. Default is 60.
+          examples:
+          - 60
+          default: 60
+        SipAuthUsername:
+          type: string
+          description: The username for SIP authentication.
+          examples:
+          - user123
+        SipAuthPassword:
+          type: string
+          description: The password for SIP authentication.
+          examples:
+          - password123
+      unevaluatedProperties:
+        not: {}
+      description: Request body for sending a fax.
     FaxListResponse:
       type: object
       required:
@@ -667,117 +768,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single fax.
-    FaxStatus:
-      type: string
-      enum:
-      - queued
-      - processing
-      - sending
-      - delivered
-      - receiving
-      - received
-      - no-answer
-      - busy
-      - failed
-      - canceled
-      description: Fax status.
-    FaxLinks:
-      type: object
-      required:
-      - media
-      properties:
-        media:
-          type: string
-          description: Media associated with this fax.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media
-      unevaluatedProperties:
-        not: {}
-      description: Fax links.
-    SendFaxRequest:
-      type: object
-      required:
-      - MediaUrl
-      - To
-      - From
-      properties:
-        MediaUrl:
-          type: string
-          description: The URL hosting the fax media to send.
-          examples:
-          - https://example.com/fax.pdf
-        To:
-          type: string
-          description: The phone number, in E.164 format, or SIP URI the fax will be sent to.
-          examples:
-          - '+13104456789'
-        From:
-          type: string
-          description: The phone number, in E.164 format, or client identifier the fax will be sent from.
-          examples:
-          - '+13103383454'
-        Quality:
-          type: string
-          enum:
-          - standard
-          - fine
-          - superfine
-          description: The quality of the fax. Default is 'fine'.
-          examples:
-          - fine
-          default: fine
-        StatusCallback:
-          type: string
-          description: The URL to send status callback requests to when the fax status changes.
-          examples:
-          - https://your-api-endpoint.com/fax-status
-        StatusCallbackMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use for status callback requests. Default is 'POST'.
-          examples:
-          - POST
-          default: POST
-        StatusCallbackEvent:
-          type: array
-          items:
-            type: string
-          description: 'The events that trigger status callback requests. Valid values: ''initiated'', ''ringing'', ''answered'', ''completed'', ''ringing_forwarded'', ''ringing_queued''. Default is [''completed''].'
-          examples:
-          - - completed
-        StoreMedia:
-          type: string
-          enum:
-          - 'true'
-          - 'false'
-          description: Whether to store the fax media. Default is 'true'.
-          examples:
-          - 'true'
-          default: 'true'
-        Ttl:
-          type: integer
-          format: int32
-          minimum: 5
-          maximum: 300
-          description: Time to live in minutes for the fax. Must be between 5 and 300. Default is 60.
-          examples:
-          - 60
-          default: 60
-        SipAuthUsername:
-          type: string
-          description: The username for SIP authentication.
-          examples:
-          - user123
-        SipAuthPassword:
-          type: string
-          description: The password for SIP authentication.
-          examples:
-          - password123
-      unevaluatedProperties:
-        not: {}
-      description: Request body for sending a fax.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -811,19 +801,29 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    FaxDirection:
+      type: string
+      enum:
+      - inbound
+      - outbound
+      description: Fax direction.
   parameters:
-    FaxSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The Fax ID that uniquely identifies the Fax.
-      schema:
-        $ref: '#/components/schemas/uuid'
     FaxesAccountSidPath:
       name: AccountSid
       in: path
       required: true
       description: The Project ID that uniquely identifies the Account.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FaxSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The Fax ID that uniquely identifies the Fax.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:
