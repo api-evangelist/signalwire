@@ -228,91 +228,7 @@ paths:
               $ref: '#/components/schemas/AddNumberGroupMembershipRequest'
 components:
   schemas:
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    NumberGroupMembershipListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/NumberGroupMembership'
-          description: List of number group memberships.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of number group memberships.
-    AddNumberGroupMembershipRequest:
-      type: object
-      required:
-      - phone_number_id
-      properties:
-        phone_number_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The phone number ID to add to the group.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-      unevaluatedProperties:
-        not: {}
-      description: Request body for adding a phone number to a number group.
-    Types.StatusCodes.StatusCode400:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -320,10 +236,10 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
+      description: An internal server error occurred.
     MembershipPhoneNumber:
       type: object
       properties:
@@ -354,18 +270,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Phone number representation within a membership.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -378,6 +282,22 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     NumberGroupMembershipResponse:
       type: object
       required:
@@ -416,6 +336,94 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single number group membership.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    NumberGroupMembershipListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NumberGroupMembership'
+          description: List of number group memberships.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of number group memberships.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    AddNumberGroupMembershipRequest:
+      type: object
+      required:
+      - phone_number_id
+      properties:
+        phone_number_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The phone number ID to add to the group.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      unevaluatedProperties:
+        not: {}
+      description: Request body for adding a phone number to a number group.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
     NumberGroupMembership:
       type: object
       required:
@@ -454,54 +462,28 @@ components:
       unevaluatedProperties:
         not: {}
       description: Number group membership model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.ValidationError:
+    PaginationLinks:
       type: object
       required:
-      - errors
+      - self
+      - first
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+        self:
           type: string
-          enum:
-          - Not Found
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+      description: Pagination links for list responses.
   parameters:
-    ListNumberGroupMembershipsQuery.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination.
-      schema:
-        type: string
-      explode: false
-    ListNumberGroupMembershipsQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve.
-      schema:
-        type: integer
-        format: int32
-        default: 0
-      explode: false
     NumberGroupIdPath:
       name: NumberGroupId
       in: path
@@ -516,6 +498,14 @@ components:
       description: Unique ID of the number group membership.
       schema:
         $ref: '#/components/schemas/uuid'
+    ListNumberGroupMembershipsQuery.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination.
+      schema:
+        type: string
+      explode: false
     ListNumberGroupMembershipsQuery.page_size:
       name: page_size
       in: query
@@ -527,6 +517,16 @@ components:
         minimum: 1
         maximum: 1000
         default: 50
+      explode: false
+    ListNumberGroupMembershipsQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve.
+      schema:
+        type: integer
+        format: int32
+        default: 0
       explode: false
   securitySchemes:
     SignalWireBasicAuth:

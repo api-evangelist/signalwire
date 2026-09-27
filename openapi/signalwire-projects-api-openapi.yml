@@ -345,64 +345,6 @@ paths:
       - Projects
 components:
   schemas:
-    Projects.DeleteProjectStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: 'The request could not be processed. Deleting a root/parent project returns
-
-        `only_subprojects_can_be_deleted`, and deleting a project that still has phone numbers
-
-        assigned returns `phone_numbers_must_be_removed`.'
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: phone_numbers_must_be_removed
-          message: All phone numbers must be removed from the project before it can be deleted.
-          attribute: null
-          url: https://signalwire.com/docs/apis/error-codes#phone_numbers_must_be_removed
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Projects.UpdateProjectStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation, for example a blank or overly long `name`.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Name must be present
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes#invalid_parameter
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -441,63 +383,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    Projects.UpdateProjectRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 250
-          description: The name of the project.
-          examples:
-          - Acme Staging (EU)
-        protect_recordings:
-          type: boolean
-          description: When enabled, recordings created within the project require authentication to access.
-          examples:
-          - true
-        protect_message_media:
-          type: boolean
-          description: When enabled, message media created within the project requires authentication to access.
-          examples:
-          - true
-        protect_fax_media:
-          type: boolean
-          description: When enabled, fax media created within the project requires authentication to access.
-          examples:
-          - false
-        force_https_requests:
-          type: boolean
-          description: When enabled, requests made to the project's webhooks and callbacks must use HTTPS.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a project's name and settings.
-    Projects.CreateProjectStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: 'The request could not be processed. When creating a project while authenticated as a
-
-        subproject, the response includes the `nested_subprojects_not_allowed` code. A blank or
-
-        overly long `name` returns a standard validation error.'
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: nested_subprojects_not_allowed
-          message: Subprojects can only be created under a top-level project.
-          attribute: null
-          url: https://signalwire.com/docs/apis/error-codes#nested_subprojects_not_allowed
     Projects.Project:
       type: object
       required:
@@ -577,7 +462,7 @@ components:
         not: {}
       description: A project or subproject within the caller's project tree.
       title: Project
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -585,43 +470,10 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    Projects.ProjectPaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: The link to the current page.
-          examples:
-          - https://example-space.signalwire.com/api/projects?page_size=50
-        first:
-          type: string
-          format: uri
-          description: The link to the first page.
-          examples:
-          - https://example-space.signalwire.com/api/projects?page_size=50
-        next:
-          type: string
-          format: uri
-          description: The link to the next page. Only present when more results exist.
-          examples:
-          - https://example-space.signalwire.com/api/projects?page_size=50&page_number=1&page_token=PA8f14e45f
-        prev:
-          type: string
-          format: uri
-          description: The link to the previous page. Only present when a previous page exists.
-          examples:
-          - https://example-space.signalwire.com/api/projects?page_size=50&page_number=0&page_token=PA8f14e45f
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for a list of projects.
+      description: An internal server error occurred.
     Projects.ProjectWithSigningKey:
       type: object
       required:
@@ -748,7 +600,68 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a subproject.
-    Types.StatusCodes.StatusCode500:
+    Projects.CreateProjectStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: 'The request could not be processed. When creating a project while authenticated as a
+
+        subproject, the response includes the `nested_subprojects_not_allowed` code. A blank or
+
+        overly long `name` returns a standard validation error.'
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: nested_subprojects_not_allowed
+          message: Subprojects can only be created under a top-level project.
+          attribute: null
+          url: https://signalwire.com/docs/apis/error-codes#nested_subprojects_not_allowed
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Projects.UpdateProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+          description: The name of the project.
+          examples:
+          - Acme Staging (EU)
+        protect_recordings:
+          type: boolean
+          description: When enabled, recordings created within the project require authentication to access.
+          examples:
+          - true
+        protect_message_media:
+          type: boolean
+          description: When enabled, message media created within the project requires authentication to access.
+          examples:
+          - true
+        protect_fax_media:
+          type: boolean
+          description: When enabled, fax media created within the project requires authentication to access.
+          examples:
+          - false
+        force_https_requests:
+          type: boolean
+          description: When enabled, requests made to the project's webhooks and callbacks must use HTTPS.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a project's name and settings.
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -756,14 +669,43 @@ components:
         error:
           type: string
           enum:
-          - Internal Server Error
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      description: The server cannot find the requested resource.
+    Projects.UpdateProjectStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation, for example a blank or overly long `name`.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes#invalid_parameter
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     Projects.ProjectListResponse:
       type: object
       required:
@@ -782,7 +724,85 @@ components:
       unevaluatedProperties:
         not: {}
       description: A page of projects.
+    Projects.ProjectPaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: The link to the current page.
+          examples:
+          - https://example-space.signalwire.com/api/projects?page_size=50
+        first:
+          type: string
+          format: uri
+          description: The link to the first page.
+          examples:
+          - https://example-space.signalwire.com/api/projects?page_size=50
+        next:
+          type: string
+          format: uri
+          description: The link to the next page. Only present when more results exist.
+          examples:
+          - https://example-space.signalwire.com/api/projects?page_size=50&page_number=1&page_token=PA8f14e45f
+        prev:
+          type: string
+          format: uri
+          description: The link to the previous page. Only present when a previous page exists.
+          examples:
+          - https://example-space.signalwire.com/api/projects?page_size=50&page_number=0&page_token=PA8f14e45f
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for a list of projects.
+    Projects.DeleteProjectStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: 'The request could not be processed. Deleting a root/parent project returns
+
+        `only_subprojects_can_be_deleted`, and deleting a project that still has phone numbers
+
+        assigned returns `phone_numbers_must_be_removed`.'
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: phone_numbers_must_be_removed
+          message: All phone numbers must be removed from the project before it can be deleted.
+          attribute: null
+          url: https://signalwire.com/docs/apis/error-codes#phone_numbers_must_be_removed
   parameters:
+    Projects.ListProjectsQuery.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: The number of results per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Projects.ListProjectsQuery.name:
+      name: name
+      in: query
+      required: false
+      description: Filter projects by name.
+      schema:
+        type: string
+      explode: false
     Projects.ListProjectsQuery.page_number:
       name: page_number
       in: query
@@ -801,31 +821,11 @@ components:
       description: The unique identifier of the project or subproject.
       schema:
         $ref: '#/components/schemas/uuid'
-    Projects.ListProjectsQuery.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: The number of results per page.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
     Projects.ListProjectsQuery.page_token:
       name: page_token
       in: query
       required: false
       description: Cursor token for paging, taken from the `links` in a previous response.
-      schema:
-        type: string
-      explode: false
-    Projects.ListProjectsQuery.name:
-      name: name
-      in: query
-      required: false
-      description: Filter projects by name.
       schema:
         type: string
       explode: false

@@ -521,319 +521,6 @@ components:
           - '4.5'
       unevaluatedProperties:
         not: {}
-    IncomingPhoneNumberListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - incoming_phone_numbers
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=0&PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page, or null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=1&PageSize=50&PageToken=PAb3877c40da604998
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page, or null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        incoming_phone_numbers:
-          type: array
-          items:
-            $ref: '#/components/schemas/IncomingPhoneNumber'
-          description: List of incoming phone numbers.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of incoming phone numbers.
-    IncomingPhoneNumber:
-      type: object
-      required:
-      - account_id
-      - account_sid
-      - address_requirements
-      - address_sid
-      - api_version
-      - beta
-      - capabilities
-      - country_code
-      - date_created
-      - date_updated
-      - emergency_address_sid
-      - emergency_status
-      - friendly_name
-      - identity_sid
-      - origin
-      - phone_number
-      - sid
-      - sms_application_sid
-      - sms_fallback_method
-      - sms_fallback_url
-      - sms_method
-      - sms_url
-      - status_callback
-      - status_callback_method
-      - trunk_sid
-      - uri
-      - voice_application_sid
-      - voice_caller_id_lookup
-      - voice_fallback_method
-      - voice_fallback_url
-      - voice_method
-      - voice_url
-      properties:
-        account_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account that is associated with this phone number.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ac
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account that is associated with this phone number.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ac
-        address_requirements:
-          allOf:
-          - $ref: '#/components/schemas/AddressRequirements'
-          description: Whether or not a registered address with SignalWire is required. Always 'none'.
-        address_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier for the address associated with this phone number. Always null.
-          examples:
-          - null
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        beta:
-          type: boolean
-          description: New numbers on SignalWire are marked as beta. Always false.
-          examples:
-          - false
-        capabilities:
-          allOf:
-          - $ref: '#/components/schemas/IncomingPhoneNumberCapabilities'
-          description: Whether or not a number can receive calls and messages.
-        country_code:
-          type: string
-          description: The ISO 3166-1 alpha-2 country code for this phone number.
-          examples:
-          - US
-        date_created:
-          type: string
-          description: The date, in RFC 2822 format, this phone number was created.
-          examples:
-          - Tue, 25 Sept 2018 23:00:00 +0000
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 format, this phone number was updated.
-          examples:
-          - Wed, 26 Sept 2018 22:00:00 +0000
-        emergency_address_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier of the address associated with E911 for this phone number, or null if not set.
-          examples:
-          - null
-        emergency_status:
-          type: string
-          description: Whether the phone route has an active E911 address associated. 'Active' or 'Inactive'.
-          examples:
-          - Inactive
-        friendly_name:
-          type: string
-          description: A formatted version of the number.
-          examples:
-          - (310) 338-6745
-        identity_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier for the identity associated with this phone number. Always null.
-          examples:
-          - null
-        origin:
-          allOf:
-          - $ref: '#/components/schemas/PhoneNumberOrigin'
-          description: The origin of the phone number.
-        phone_number:
-          type: string
-          description: The incoming number in E.164 format.
-          examples:
-          - '+13103386745'
-        sid:
-          type: string
-          description: The unique identifier for this phone number.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472pn
-        sms_application_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier for the application associated with SMS handling on this phone number, or null if not set.
-          examples:
-          - null
-        sms_fallback_method:
-          type: string
-          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`.
-          examples:
-          - POST
-        sms_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to request if errors occur when fetching SmsUrl, or null if not set.
-          examples:
-          - null
-        sms_method:
-          type: string
-          description: Whether the request to SmsUrl is a `GET` or a `POST`.
-          examples:
-          - POST
-        sms_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to request when an incoming SMS is received, or null if not set.
-          examples:
-          - null
-        status_callback:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to request to pass status updates to, or null if not set.
-          examples:
-          - null
-        status_callback_method:
-          type: string
-          description: Whether the request to StatusCallback is a `GET` or a `POST`.
-          examples:
-          - POST
-        trunk_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier for the Trunk associated with this phone number. Always null.
-          examples:
-          - null
-        uri:
-          type: string
-          description: The URI for this number.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/IncomingPhoneNumbers/b3877c40-da60-4998-90ad-b792e98472pn.json
-        verification_status:
-          type: string
-          description: The verification status for toll-free numbers. Only present for toll-free numbers.
-          examples:
-          - Unverified
-        voice_application_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier for the application associated with call handling on this phone number, or null if not set.
-          examples:
-          - null
-        voice_caller_id_lookup:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: Whether or not to look up a caller's name in the database. Always null.
-          examples:
-          - null
-        voice_fallback_method:
-          type: string
-          description: Whether the request to VoiceFallbackUrl is a `GET` or a `POST`.
-          examples:
-          - POST
-        voice_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to request if errors occur when fetching `Url`, or null if not set.
-          examples:
-          - null
-        voice_method:
-          type: string
-          description: Whether the request to Url is a `GET` or a `POST`.
-          examples:
-          - POST
-        voice_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to request when an incoming call is received, or null if not set.
-          examples:
-          - null
-      unevaluatedProperties:
-        not: {}
-      description: Incoming phone number model.
-    IncomingPhoneNumberCapabilities:
-      type: object
-      required:
-      - voice
-      - sms
-      - mms
-      - fax
-      properties:
-        voice:
-          type: boolean
-          description: Whether or not voice is enabled.
-          examples:
-          - true
-        sms:
-          type: boolean
-          description: Whether or not SMS is enabled.
-          examples:
-          - true
-        mms:
-          type: boolean
-          description: Whether or not MMS is enabled.
-          examples:
-          - true
-        fax:
-          type: boolean
-          description: Whether or not fax is enabled.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Phone number capabilities.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -867,6 +554,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    AddressRequirements:
+      type: string
+      enum:
+      - none
+      - any
+      - local
+      - foreign
+      description: Address requirements.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     CreateIncomingPhoneNumberRequest:
       type: object
       required:
@@ -984,14 +683,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating an incoming phone number.
-    AddressRequirements:
-      type: string
-      enum:
-      - none
-      - any
-      - local
-      - foreign
-      description: Address requirements.
     IncomingPhoneNumberResponse:
       type: object
       required:
@@ -1219,16 +910,325 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single incoming phone number.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+    IncomingPhoneNumberCapabilities:
+      type: object
+      required:
+      - voice
+      - sms
+      - mms
+      - fax
+      properties:
+        voice:
+          type: boolean
+          description: Whether or not voice is enabled.
+          examples:
+          - true
+        sms:
+          type: boolean
+          description: Whether or not SMS is enabled.
+          examples:
+          - true
+        mms:
+          type: boolean
+          description: Whether or not MMS is enabled.
+          examples:
+          - true
+        fax:
+          type: boolean
+          description: Whether or not fax is enabled.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Phone number capabilities.
     PhoneNumberOrigin:
       type: string
       enum:
       - signalwire
       - hosted
       description: Phone number origin.
+    IncomingPhoneNumber:
+      type: object
+      required:
+      - account_id
+      - account_sid
+      - address_requirements
+      - address_sid
+      - api_version
+      - beta
+      - capabilities
+      - country_code
+      - date_created
+      - date_updated
+      - emergency_address_sid
+      - emergency_status
+      - friendly_name
+      - identity_sid
+      - origin
+      - phone_number
+      - sid
+      - sms_application_sid
+      - sms_fallback_method
+      - sms_fallback_url
+      - sms_method
+      - sms_url
+      - status_callback
+      - status_callback_method
+      - trunk_sid
+      - uri
+      - voice_application_sid
+      - voice_caller_id_lookup
+      - voice_fallback_method
+      - voice_fallback_url
+      - voice_method
+      - voice_url
+      properties:
+        account_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        address_requirements:
+          allOf:
+          - $ref: '#/components/schemas/AddressRequirements'
+          description: Whether or not a registered address with SignalWire is required. Always 'none'.
+        address_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the address associated with this phone number. Always null.
+          examples:
+          - null
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        beta:
+          type: boolean
+          description: New numbers on SignalWire are marked as beta. Always false.
+          examples:
+          - false
+        capabilities:
+          allOf:
+          - $ref: '#/components/schemas/IncomingPhoneNumberCapabilities'
+          description: Whether or not a number can receive calls and messages.
+        country_code:
+          type: string
+          description: The ISO 3166-1 alpha-2 country code for this phone number.
+          examples:
+          - US
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this phone number was created.
+          examples:
+          - Tue, 25 Sept 2018 23:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this phone number was updated.
+          examples:
+          - Wed, 26 Sept 2018 22:00:00 +0000
+        emergency_address_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier of the address associated with E911 for this phone number, or null if not set.
+          examples:
+          - null
+        emergency_status:
+          type: string
+          description: Whether the phone route has an active E911 address associated. 'Active' or 'Inactive'.
+          examples:
+          - Inactive
+        friendly_name:
+          type: string
+          description: A formatted version of the number.
+          examples:
+          - (310) 338-6745
+        identity_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the identity associated with this phone number. Always null.
+          examples:
+          - null
+        origin:
+          allOf:
+          - $ref: '#/components/schemas/PhoneNumberOrigin'
+          description: The origin of the phone number.
+        phone_number:
+          type: string
+          description: The incoming number in E.164 format.
+          examples:
+          - '+13103386745'
+        sid:
+          type: string
+          description: The unique identifier for this phone number.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472pn
+        sms_application_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the application associated with SMS handling on this phone number, or null if not set.
+          examples:
+          - null
+        sms_fallback_method:
+          type: string
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`.
+          examples:
+          - POST
+        sms_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request if errors occur when fetching SmsUrl, or null if not set.
+          examples:
+          - null
+        sms_method:
+          type: string
+          description: Whether the request to SmsUrl is a `GET` or a `POST`.
+          examples:
+          - POST
+        sms_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an incoming SMS is received, or null if not set.
+          examples:
+          - null
+        status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request to pass status updates to, or null if not set.
+          examples:
+          - null
+        status_callback_method:
+          type: string
+          description: Whether the request to StatusCallback is a `GET` or a `POST`.
+          examples:
+          - POST
+        trunk_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the Trunk associated with this phone number. Always null.
+          examples:
+          - null
+        uri:
+          type: string
+          description: The URI for this number.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/IncomingPhoneNumbers/b3877c40-da60-4998-90ad-b792e98472pn.json
+        verification_status:
+          type: string
+          description: The verification status for toll-free numbers. Only present for toll-free numbers.
+          examples:
+          - Unverified
+        voice_application_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the application associated with call handling on this phone number, or null if not set.
+          examples:
+          - null
+        voice_caller_id_lookup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether or not to look up a caller's name in the database. Always null.
+          examples:
+          - null
+        voice_fallback_method:
+          type: string
+          description: Whether the request to VoiceFallbackUrl is a `GET` or a `POST`.
+          examples:
+          - POST
+        voice_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request if errors occur when fetching `Url`, or null if not set.
+          examples:
+          - null
+        voice_method:
+          type: string
+          description: Whether the request to Url is a `GET` or a `POST`.
+          examples:
+          - POST
+        voice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an incoming call is received, or null if not set.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Incoming phone number model.
+    IncomingPhoneNumberListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - incoming_phone_numbers
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/IncomingPhoneNumbers?Page=1&PageSize=50&PageToken=PAb3877c40da604998
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        incoming_phone_numbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncomingPhoneNumber'
+          description: List of incoming phone numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of incoming phone numbers.
   parameters:
     IncomingPhoneNumberSidPath:
       name: Sid

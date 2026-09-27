@@ -249,99 +249,27 @@ paths:
       - 'AI Agents: Dialogflow'
 components:
   schemas:
-    DialogflowAgentAddressListResponse:
+    DialogflowAgentUpdateStatusCode422:
       type: object
       required:
-      - data
-      - links
+      - errors
       properties:
-        data:
+        errors:
           type: array
           items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects that contain a list of Dialogflow Agent Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/DialogflowAgentAddressPaginationResponse'
-          description: Object containing pagination links
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    FabricAddressApp:
-      type: object
-      required:
-      - id
-      - name
-      - display_name
-      - cover_url
-      - preview_url
-      - locked
-      - channels
-      - created_at
-      - type
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Fabric Address.
-          examples:
-          - 691af061-cd86-4893-a605-173f47afc4c2
-        name:
-          type: string
-          description: Name of the Fabric Address.
-          examples:
-          - justice-league
-        display_name:
-          type: string
-          description: Display name of the Fabric Address.
-          examples:
-          - Justice League
-        cover_url:
-          type: string
-          description: Cover url of the Fabric Address.
-          examples:
-          - https://coverurl.com
-        preview_url:
-          type: string
-          description: Preview url of the Fabric Address.
-          examples:
-          - https://previewurl.com
-        locked:
-          type: boolean
-          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
-          examples:
-          - true
-        channels:
-          allOf:
-          - $ref: '#/components/schemas/AddressChannel'
-          description: Channels of the Fabric Address.
-        created_at:
-          type: string
-          format: date-time
-          description: Fabric Address Creation Date.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        type:
-          type: string
-          enum:
-          - app
-          description: The display type of a fabric address pointing to an application.
-          examples:
-          - app
-      unevaluatedProperties:
-        not: {}
-      title: Application Address
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: language_code must be a valid language code
+          attribute: language_code
+          url: https://signalwire.com/docs/apis/error-codes
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -412,6 +340,118 @@ components:
           - https://example.signalwire.com/api/fabric/resources/dialogflow_agents/3fa85f64-5717-4562-b3fc-2c963f66afa6/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=dialogflow_agent
       unevaluatedProperties:
         not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    FabricAddressApp:
+      type: object
+      required:
+      - id
+      - name
+      - display_name
+      - cover_url
+      - preview_url
+      - locked
+      - channels
+      - created_at
+      - type
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Fabric Address.
+          examples:
+          - 691af061-cd86-4893-a605-173f47afc4c2
+        name:
+          type: string
+          description: Name of the Fabric Address.
+          examples:
+          - justice-league
+        display_name:
+          type: string
+          description: Display name of the Fabric Address.
+          examples:
+          - Justice League
+        cover_url:
+          type: string
+          description: Cover url of the Fabric Address.
+          examples:
+          - https://coverurl.com
+        preview_url:
+          type: string
+          description: Preview url of the Fabric Address.
+          examples:
+          - https://previewurl.com
+        locked:
+          type: boolean
+          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
+          examples:
+          - true
+        channels:
+          allOf:
+          - $ref: '#/components/schemas/AddressChannel'
+          description: Channels of the Fabric Address.
+        created_at:
+          type: string
+          format: date-time
+          description: Fabric Address Creation Date.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - app
+          description: The display type of a fabric address pointing to an application.
+          examples:
+          - app
+      unevaluatedProperties:
+        not: {}
+      title: Application Address
     DialogflowAgentResponse:
       type: object
       required:
@@ -470,71 +510,6 @@ components:
       - $ref: '#/components/schemas/AudioChannel'
       - $ref: '#/components/schemas/MessagingChannel'
       - $ref: '#/components/schemas/VideoChannel'
-    DialogflowAgentListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DialogflowAgentResponse'
-          description: An array of objects that contain a list of Dialogflow Agent data
-        links:
-          allOf:
-          - $ref: '#/components/schemas/DialogFlowPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
     DialogFlowPaginationResponse:
       type: object
       required:
@@ -567,64 +542,6 @@ components:
           - https://devspace.signalwire.com/api/fabric/resources/dialogflow_agents?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=dialogflow_agent
       unevaluatedProperties:
         not: {}
-    DialogflowAgentUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the Dialogflow Agent
-          examples:
-          - Booking Assistant
-        say_enabled:
-          type: boolean
-          description: Whether to enable the 'say' feature
-          examples:
-          - true
-        say:
-          type: string
-          description: Default message to say
-          examples:
-          - Welcome to the Booking Assistant
-        voice:
-          type: string
-          description: Voice to use for speech
-          examples:
-          - en-US-Wavenet-D
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    DialogflowAgentUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter_value
-          message: language_code must be a valid language code
-          attribute: language_code
-          url: https://signalwire.com/docs/apis/error-codes
     DialogflowAgent:
       type: object
       required:
@@ -673,6 +590,89 @@ components:
       type: string
       format: uuid
       description: Universal Unique Identifier.
+    DialogflowAgentUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the Dialogflow Agent
+          examples:
+          - Booking Assistant
+        say_enabled:
+          type: boolean
+          description: Whether to enable the 'say' feature
+          examples:
+          - true
+        say:
+          type: string
+          description: Default message to say
+          examples:
+          - Welcome to the Booking Assistant
+        voice:
+          type: string
+          description: Voice to use for speech
+          examples:
+          - en-US-Wavenet-D
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    DialogflowAgentAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects that contain a list of Dialogflow Agent Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/DialogflowAgentAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    DialogflowAgentListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DialogflowAgentResponse'
+          description: An array of objects that contain a list of Dialogflow Agent data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/DialogFlowPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
   parameters:
     DialogflowAgentAddressPathID:
       name: id

@@ -312,182 +312,94 @@ paths:
       - Faxes
 components:
   schemas:
-    FaxStatus:
-      type: string
-      enum:
-      - queued
-      - processing
-      - sending
-      - delivered
-      - receiving
-      - received
-      - no-answer
-      - busy
-      - failed
-      - canceled
-      description: Fax status.
-    Fax:
+    FaxListResponse:
       type: object
       required:
-      - account_sid
-      - api_version
-      - date_created
-      - date_updated
-      - direction
-      - from
-      - media_url
-      - media_sid
-      - num_pages
-      - price
-      - price_unit
-      - quality
-      - sid
-      - status
-      - to
-      - duration
-      - links
-      - url
-      - error_code
-      - error_message
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - faxes
       properties:
-        account_sid:
+        uri:
           type: string
-          description: The unique identifier for the account this fax is associated with.
+          description: The URI of the current page.
           examples:
-          - b3877c40-da60-4998-90ad-b792e98472ac
-        api_version:
+          - /fax/v1/Faxes?Page=0&PageSize=50
+        first_page_uri:
           type: string
-          description: The version of the SignalWire API.
+          description: The URI of the first page.
           examples:
-          - v1
-        date_created:
-          type: string
-          description: The date and time, in ISO 8601 format, the fax was created.
-          examples:
-          - '2018-11-26T20:00:00Z'
-        date_updated:
-          type: string
-          description: The date and time, in ISO 8601 format, the fax was updated.
-          examples:
-          - '2018-11-27T20:00:00Z'
-        direction:
-          allOf:
-          - $ref: '#/components/schemas/FaxDirection'
-          description: The direction of the fax.
-        from:
-          type: string
-          description: The phone number, in E.164 format, the fax was sent from.
-          examples:
-          - '+13103383454'
-        media_url:
+          - /fax/v1/Faxes?PageSize=50
+        next_page_uri:
           anyOf:
           - type: string
           - type: 'null'
-          description: The URL hosting the received media, or null if not available.
+          description: The URI of the next page, or null if there are no more pages.
           examples:
-          - https://example.com/fax.pdf
-        media_sid:
-          type: string
-          description: The unique identifier for the media instance associated with the fax instance.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472me
-        num_pages:
+          - /fax/v1/Faxes?Page=1&PageSize=50&PageToken=PAb3877c40da604998
+        previous_page_uri:
           anyOf:
           - type: string
           - type: 'null'
-          description: The number of pages in the fax document, or null if not yet determined.
+          description: The URI of the previous page, or null if this is the first page.
           examples:
-          - '3'
-        price:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The cost of the fax, or null if not yet calculated.
-          examples:
-          - '-0.005'
-        price_unit:
-          type: string
-          description: The currency, in ISO 4217 format, of the price.
-          examples:
-          - USD
-        quality:
-          allOf:
-          - $ref: '#/components/schemas/FaxQuality'
-          description: The quality of the fax.
-        sid:
-          type: string
-          description: The unique identifier of the fax.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472fx
-        status:
-          allOf:
-          - $ref: '#/components/schemas/FaxStatus'
-          description: The status of the fax.
-        to:
-          type: string
-          description: The phone number, in E.164 format, the fax was sent to.
-          examples:
-          - '+13104456789'
-        duration:
+          - null
+        page:
           type: integer
           format: int32
-          description: The time, in seconds, it took to deliver a fax.
+          description: The current page number.
           examples:
-          - 5000
-        links:
-          allOf:
-          - $ref: '#/components/schemas/FaxLinks'
-          description: The URL links for resources associated with the fax.
-        url:
-          type: string
-          description: The URL of this resource.
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
           examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx
-        error_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Error code for this resource, or null if no error.
-          examples:
-          - null
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The description of this error, or null if no error.
-          examples:
-          - null
+          - 50
+        faxes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fax'
+          description: List of faxes.
       unevaluatedProperties:
         not: {}
-      description: Fax model.
-    UpdateFaxRequest:
+      description: Response containing a list of faxes.
+    CompatibilityErrorResponse:
       type: object
       required:
-      - Status
+      - code
+      - message
+      - more_info
+      - status
       properties:
-        Status:
-          type: string
-          enum:
-          - canceled
-          description: The status to set. Only 'canceled' is allowed. The fax must be in 'queued' status to be canceled.
+        code:
+          type: integer
+          format: int32
+          description: Error code.
           examples:
-          - canceled
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
       unevaluatedProperties:
         not: {}
-      description: Request body for updating (canceling) a fax.
-    FaxLinks:
-      type: object
-      required:
-      - media
-      properties:
-        media:
-          type: string
-          description: Media associated with this fax.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media
-      unevaluatedProperties:
-        not: {}
-      description: Fax links.
+      description: Error response model.
     FaxQuality:
       type: string
       enum:
@@ -579,61 +491,26 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for sending a fax.
-    FaxListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - faxes
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /fax/v1/Faxes?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /fax/v1/Faxes?PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page, or null if there are no more pages.
-          examples:
-          - /fax/v1/Faxes?Page=1&PageSize=50&PageToken=PAb3877c40da604998
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page, or null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        faxes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Fax'
-          description: List of faxes.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of faxes.
+    FaxStatus:
+      type: string
+      enum:
+      - queued
+      - processing
+      - sending
+      - delivered
+      - receiving
+      - received
+      - no-answer
+      - busy
+      - failed
+      - canceled
+      description: Fax status.
+    FaxDirection:
+      type: string
+      enum:
+      - inbound
+      - outbound
+      description: Fax direction.
     FaxResponse:
       type: object
       required:
@@ -768,49 +645,172 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single fax.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
-    FaxDirection:
-      type: string
-      enum:
-      - inbound
-      - outbound
-      description: Fax direction.
+    FaxLinks:
+      type: object
+      required:
+      - media
+      properties:
+        media:
+          type: string
+          description: Media associated with this fax.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media
+      unevaluatedProperties:
+        not: {}
+      description: Fax links.
+    UpdateFaxRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - canceled
+          description: The status to set. Only 'canceled' is allowed. The fax must be in 'queued' status to be canceled.
+          examples:
+          - canceled
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating (canceling) a fax.
+    Fax:
+      type: object
+      required:
+      - account_sid
+      - api_version
+      - date_created
+      - date_updated
+      - direction
+      - from
+      - media_url
+      - media_sid
+      - num_pages
+      - price
+      - price_unit
+      - quality
+      - sid
+      - status
+      - to
+      - duration
+      - links
+      - url
+      - error_code
+      - error_message
+      properties:
+        account_sid:
+          type: string
+          description: The unique identifier for the account this fax is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - v1
+        date_created:
+          type: string
+          description: The date and time, in ISO 8601 format, the fax was created.
+          examples:
+          - '2018-11-26T20:00:00Z'
+        date_updated:
+          type: string
+          description: The date and time, in ISO 8601 format, the fax was updated.
+          examples:
+          - '2018-11-27T20:00:00Z'
+        direction:
+          allOf:
+          - $ref: '#/components/schemas/FaxDirection'
+          description: The direction of the fax.
+        from:
+          type: string
+          description: The phone number, in E.164 format, the fax was sent from.
+          examples:
+          - '+13103383454'
+        media_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL hosting the received media, or null if not available.
+          examples:
+          - https://example.com/fax.pdf
+        media_sid:
+          type: string
+          description: The unique identifier for the media instance associated with the fax instance.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        num_pages:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The number of pages in the fax document, or null if not yet determined.
+          examples:
+          - '3'
+        price:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The cost of the fax, or null if not yet calculated.
+          examples:
+          - '-0.005'
+        price_unit:
+          type: string
+          description: The currency, in ISO 4217 format, of the price.
+          examples:
+          - USD
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/FaxQuality'
+          description: The quality of the fax.
+        sid:
+          type: string
+          description: The unique identifier of the fax.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472fx
+        status:
+          allOf:
+          - $ref: '#/components/schemas/FaxStatus'
+          description: The status of the fax.
+        to:
+          type: string
+          description: The phone number, in E.164 format, the fax was sent to.
+          examples:
+          - '+13104456789'
+        duration:
+          type: integer
+          format: int32
+          description: The time, in seconds, it took to deliver a fax.
+          examples:
+          - 5000
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FaxLinks'
+          description: The URL links for resources associated with the fax.
+        url:
+          type: string
+          description: The URL of this resource.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error code for this resource, or null if no error.
+          examples:
+          - null
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The description of this error, or null if no error.
+          examples:
+          - null
+      unevaluatedProperties:
+        not: {}
+      description: Fax model.
   parameters:
     FaxesAccountSidPath:
       name: AccountSid

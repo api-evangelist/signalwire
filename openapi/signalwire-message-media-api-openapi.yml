@@ -204,7 +204,66 @@ paths:
       tags:
       - Message Media
 components:
+  parameters:
+    MessageSidPathForMedia:
+      name: MessageSid
+      in: path
+      required: true
+      description: A unique ID that identifies this specific message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    MessageSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: A unique ID that identifies this specific message.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    MessagesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier of the project that sent or received this message.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     MessageMediaResponse:
       type: object
       required:
@@ -257,95 +316,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single message media.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    MessageMedia:
-      type: object
-      required:
-      - account_sid
-      - content_type
-      - date_created
-      - date_updated
-      - parent_sid
-      - sid
-      - uri
-      properties:
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account.
-          examples:
-          - ea108133-d6b3-407c-9536-9fad8a929a6a
-        content_type:
-          type: string
-          description: The content type of the media.
-          examples:
-          - image/jpeg
-        date_created:
-          type: string
-          description: The date, in RFC 2822 GMT format, this media was created.
-          examples:
-          - Mon, 13 Aug 2018 21:38:46 +0000
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 GMT format, this media was updated.
-          examples:
-          - Mon, 13 Aug 2018 21:38:46 +0000
-        parent_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the message.
-          examples:
-          - 0a059168-ead0-41af-9d1f-343dae832527
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the media.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472me
-        uri:
-          type: string
-          description: The URI for the media.
-          examples:
-          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media/b3877c40-da60-4998-90ad-b792e98472me.json
-      unevaluatedProperties:
-        not: {}
-      description: Message media model.
     MessageMediaListResponse:
       type: object
       required:
@@ -401,28 +371,58 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of message media.
-  parameters:
-    MessagesAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier of the project that sent or received this message.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    MessageSidPathForMedia:
-      name: MessageSid
-      in: path
-      required: true
-      description: A unique ID that identifies this specific message.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    MessageSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: A unique ID that identifies this specific message.
-      schema:
-        $ref: '#/components/schemas/uuid'
+    MessageMedia:
+      type: object
+      required:
+      - account_sid
+      - content_type
+      - date_created
+      - date_updated
+      - parent_sid
+      - sid
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - ea108133-d6b3-407c-9536-9fad8a929a6a
+        content_type:
+          type: string
+          description: The content type of the media.
+          examples:
+          - image/jpeg
+        date_created:
+          type: string
+          description: The date, in RFC 2822 GMT format, this media was created.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this media was updated.
+          examples:
+          - Mon, 13 Aug 2018 21:38:46 +0000
+        parent_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the message.
+          examples:
+          - 0a059168-ead0-41af-9d1f-343dae832527
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the media.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        uri:
+          type: string
+          description: The URI for the media.
+          examples:
+          - /api/laml/2010-04-01/Accounts/ea108133-d6b3-407c-9536-9fad8a929a6a/Messages/0a059168-ead0-41af-9d1f-343dae832527/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+      unevaluatedProperties:
+        not: {}
+      description: Message media model.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

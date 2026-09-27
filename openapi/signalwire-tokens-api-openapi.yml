@@ -164,75 +164,40 @@ paths:
       tags:
       - Tokens
 components:
-  parameters:
-    TokenIdPath:
-      name: token_id
-      in: path
-      required: true
-      description: The unique identifier of the project API token.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    TokensAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the project you want to use to authenticate this request.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    CreateTokenRequest:
+    CompatibilityErrorResponse:
       type: object
       required:
-      - name
-      - permissions
+      - code
+      - message
+      - more_info
+      - status
       properties:
-        name:
-          type: string
-          minLength: 1
-          description: The name representing the project API token.
-          examples:
-          - John Doe's Token
-        permissions:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: 'The permissions you would like to enable for this project API token. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
-          examples:
-          - - calling
-            - fax
-            - messaging
-        subproject_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the subproject you would like to create a token for. Must belong to the parent project.
-          examples:
-          - 9a7fc048-984f-11ee-b9d1-0242ac120002
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating an API token.
-    CompatibilityTokenValidationError:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Error type.
         code:
-          type: string
+          type: integer
+          format: int32
           description: Error code.
+          examples:
+          - 20003
         message:
           type: string
           description: Error message.
-        attribute:
+          examples:
+          - Authentication failed
+        more_info:
           type: string
-          description: Request parameter associated with this error.
-        url:
-          type: string
-          format: uri
-          description: Link to developer resource for this error.
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
       unevaluatedProperties:
         not: {}
-      description: Token validation error response model.
+      description: Error response model.
     TokenResponse:
       type: object
       required:
@@ -270,43 +235,41 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single token.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
+    CreateTokenRequest:
+      type: object
+      required:
+      - name
+      - permissions
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The name representing the project API token.
+          examples:
+          - John Doe's Token
+        permissions:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: 'The permissions you would like to enable for this project API token. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
+          examples:
+          - - calling
+            - fax
+            - messaging
+        subproject_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the subproject you would like to create a token for. Must belong to the parent project.
+          examples:
+          - 9a7fc048-984f-11ee-b9d1-0242ac120002
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an API token.
     UpdateTokenRequest:
       type: object
       properties:
@@ -328,6 +291,43 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating an API token.
+    CompatibilityTokenValidationError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Error type.
+        code:
+          type: string
+          description: Error code.
+        message:
+          type: string
+          description: Error message.
+        attribute:
+          type: string
+          description: Request parameter associated with this error.
+        url:
+          type: string
+          format: uri
+          description: Link to developer resource for this error.
+      unevaluatedProperties:
+        not: {}
+      description: Token validation error response model.
+  parameters:
+    TokenIdPath:
+      name: token_id
+      in: path
+      required: true
+      description: The unique identifier of the project API token.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    TokensAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the project you want to use to authenticate this request.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

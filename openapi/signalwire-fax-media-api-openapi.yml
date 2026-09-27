@@ -189,145 +189,7 @@ paths:
       tags:
       - Fax Media
 components:
-  parameters:
-    FaxesAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The Project ID that uniquely identifies the Account.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    FaxSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The Fax ID that uniquely identifies the Fax.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    FaxSidPathForMedia:
-      name: FaxSid
-      in: path
-      required: true
-      description: The Fax ID that uniquely identifies the Fax.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    FaxMediaListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - media
-      - fax_media
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media?PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page, or null if there are no more pages.
-          examples:
-          - null
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page, or null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        media:
-          type: array
-          items:
-            $ref: '#/components/schemas/FaxMedia'
-          description: List of media.
-        fax_media:
-          type: array
-          items:
-            $ref: '#/components/schemas/FaxMedia'
-          description: List of fax media (alias for media).
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of fax media.
-    FaxMediaResponse:
-      type: object
-      required:
-      - account_sid
-      - content_type
-      - date_created
-      - date_updated
-      - fax_sid
-      - sid
-      - uri
-      - url
-      properties:
-        account_sid:
-          type: string
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ac
-        content_type:
-          type: string
-          description: The content type of the media.
-          examples:
-          - application/pdf
-        date_created:
-          type: string
-          description: The date, in ISO 8601 format, this media was created.
-          examples:
-          - '2018-11-26T20:00:00Z'
-        date_updated:
-          type: string
-          description: The date, in ISO 8601 format, this media was updated.
-          examples:
-          - '2018-11-27T20:00:00Z'
-        fax_sid:
-          type: string
-          description: The unique identifier for the fax.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472fx
-        sid:
-          type: string
-          description: The unique identifier for the media.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472me
-        uri:
-          type: string
-          description: The URI for the media.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
-        url:
-          type: string
-          description: The URL for the media.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single fax media.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -420,6 +282,144 @@ components:
       unevaluatedProperties:
         not: {}
       description: Fax media model.
+    FaxMediaResponse:
+      type: object
+      required:
+      - account_sid
+      - content_type
+      - date_created
+      - date_updated
+      - fax_sid
+      - sid
+      - uri
+      - url
+      properties:
+        account_sid:
+          type: string
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        content_type:
+          type: string
+          description: The content type of the media.
+          examples:
+          - application/pdf
+        date_created:
+          type: string
+          description: The date, in ISO 8601 format, this media was created.
+          examples:
+          - '2018-11-26T20:00:00Z'
+        date_updated:
+          type: string
+          description: The date, in ISO 8601 format, this media was updated.
+          examples:
+          - '2018-11-27T20:00:00Z'
+        fax_sid:
+          type: string
+          description: The unique identifier for the fax.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472fx
+        sid:
+          type: string
+          description: The unique identifier for the media.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        uri:
+          type: string
+          description: The URI for the media.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+        url:
+          type: string
+          description: The URL for the media.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single fax media.
+    FaxMediaListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - media
+      - fax_media
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media?PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page, or null if there are no more pages.
+          examples:
+          - null
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page, or null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/FaxMedia'
+          description: List of media.
+        fax_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/FaxMedia'
+          description: List of fax media (alias for media).
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of fax media.
+  parameters:
+    FaxSidPathForMedia:
+      name: FaxSid
+      in: path
+      required: true
+      description: The Fax ID that uniquely identifies the Fax.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FaxesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FaxSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The Fax ID that uniquely identifies the Fax.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

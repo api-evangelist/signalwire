@@ -83,63 +83,18 @@ paths:
               $ref: '#/components/schemas/Video.CreateRoomTokenRequest'
 components:
   schemas:
-    Video.JoinAsType:
-      type: string
-      enum:
-      - audience
-      - member
-      description: Join as type for room tokens.
-    Types.StatusCodes.RestApiErrorItem:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - type
-      - code
-      - message
-      - url
+      - error
       properties:
-        type:
+        error:
           type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Details about a specific error.
-    Video.RoomTokenResponse:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: A Room Token to be used by clients to connect to the Room.
-          examples:
-          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsImp0aSI6ImRmMzFjYTQ4LWRiZGMtNGJjZi1hYWU2LTQ1NWEwOGM5NDg2YSIsInN1YiI6IjBjOTdmNjM1LTFjMTMtNGZjMS04NmY3LWJiMmJlODU5ZDhiOSIsInUiOiJKb2huIERvZSIsInIiOiJteV9zdXBlcl9hd2Vzb21lX3Jvb20iLCJzIjpbInJvb20uc2VsZi5hdWRpb191bm11dGUiXSwiYWNyIjp0cnVlLCJqZiI6MTYyMDg5NjQwMCwianUiOjE2MjA5MDU5NjgsInJhdCI6MTYyMDkwMDAwMCwicnNlIjo5MDB9.5mu_H2PjQLtNBbMsBlS0c91EgsDjJzvZUFgj5-tP4VA0VoHZPIGgV_DLRGKt-BqG-DqC5LhpsdMWEFjhVkTBpQ
-      unevaluatedProperties:
-        not: {}
-      description: Room token response object.
+      description: An internal server error occurred.
     Video.RoomTokenPermission:
       type: string
       enum:
@@ -188,25 +143,6 @@ components:
       - room.self.screenshare
       - room.self.additional_source
       description: Valid permission scopes for room tokens.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    Video.MediaAllowedType:
-      type: string
-      enum:
-      - all
-      - video-only
-      - audio-only
-      description: Media allowed type for room tokens.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -219,7 +155,51 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    Types.StatusCodes.StatusCode500:
+    Video.JoinAsType:
+      type: string
+      enum:
+      - audience
+      - member
+      description: Join as type for room tokens.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
       - error
@@ -227,10 +207,10 @@ components:
         error:
           type: string
           enum:
-          - Internal Server Error
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+      description: The request is invalid.
     Video.VideoStatusCode422:
       type: object
       required:
@@ -252,6 +232,13 @@ components:
           message: Name must be present
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
+    Video.MediaAllowedType:
+      type: string
+      enum:
+      - all
+      - video-only
+      - audio-only
+      description: Media allowed type for room tokens.
     Video.CreateRoomTokenRequest:
       type: object
       required:
@@ -394,6 +381,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a room token.
+    Video.RoomTokenResponse:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: A Room Token to be used by clients to connect to the Room.
+          examples:
+          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsImp0aSI6ImRmMzFjYTQ4LWRiZGMtNGJjZi1hYWU2LTQ1NWEwOGM5NDg2YSIsInN1YiI6IjBjOTdmNjM1LTFjMTMtNGZjMS04NmY3LWJiMmJlODU5ZDhiOSIsInUiOiJKb2huIERvZSIsInIiOiJteV9zdXBlcl9hd2Vzb21lX3Jvb20iLCJzIjpbInJvb20uc2VsZi5hdWRpb191bm11dGUiXSwiYWNyIjp0cnVlLCJqZiI6MTYyMDg5NjQwMCwianUiOjE2MjA5MDU5NjgsInJhdCI6MTYyMDkwMDAwMCwicnNlIjo5MDB9.5mu_H2PjQLtNBbMsBlS0c91EgsDjJzvZUFgj5-tP4VA0VoHZPIGgV_DLRGKt-BqG-DqC5LhpsdMWEFjhVkTBpQ
+      unevaluatedProperties:
+        not: {}
+      description: Room token response object.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

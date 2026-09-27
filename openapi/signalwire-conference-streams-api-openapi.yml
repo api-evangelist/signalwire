@@ -134,59 +134,6 @@ paths:
               $ref: '#/components/schemas/UpdateConferenceStreamRequest'
 components:
   schemas:
-    ConferenceStreamResponse:
-      type: object
-      required:
-      - account_sid
-      - conference_sid
-      - date_updated
-      - name
-      - sid
-      - status
-      - uri
-      properties:
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        conference_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472cf
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 GMT format, this stream was updated.
-          examples:
-          - Tue, 25 Sept 2018 20:00:00 +0000
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the stream. May be null if not specified when creating the stream.
-          examples:
-          - my_conference_stream
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the stream.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472st
-        status:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceStreamStatus'
-          description: The status of the stream.
-        uri:
-          type: string
-          description: The URI for the stream.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single conference stream.
     UpdateConferenceStreamRequest:
       type: object
       required:
@@ -217,6 +164,39 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response with errors array of strings format.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
     CreateConferenceStreamRequest:
       type: object
       required:
@@ -302,6 +282,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a conference stream.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     ConferenceStreamStatus:
       type: string
       enum:
@@ -309,51 +293,60 @@ components:
       - in-progress
       - stopped
       description: Conference stream status.
-    CompatibilityErrorResponse:
+    ConferenceStreamResponse:
       type: object
       required:
-      - code
-      - message
-      - more_info
+      - account_sid
+      - conference_sid
+      - date_updated
+      - name
+      - sid
       - status
+      - uri
       properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
           examples:
-          - 20003
-        message:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        conference_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        date_updated:
           type: string
-          description: Error message.
+          description: The date, in RFC 2822 GMT format, this stream was updated.
           examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the stream. May be null if not specified when creating the stream.
           examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
+          - my_conference_stream
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the stream.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472st
         status:
-          type: integer
-          format: int32
-          description: HTTP status code.
+          allOf:
+          - $ref: '#/components/schemas/ConferenceStreamStatus'
+          description: The status of the stream.
+        uri:
+          type: string
+          description: The URI for the stream.
           examples:
-          - 401
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
       unevaluatedProperties:
         not: {}
-      description: Error response model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      description: Response containing a single conference stream.
   parameters:
-    ConferenceSidPathForParticipant:
-      name: ConferenceSid
-      in: path
-      required: true
-      description: The unique identifier for the conference this participant is in.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ConferenceStreamSidPath:
       name: Sid
       in: path
@@ -366,6 +359,13 @@ components:
       in: path
       required: true
       description: The unique identifier for the account that created this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferenceSidPathForParticipant:
+      name: ConferenceSid
+      in: path
+      required: true
+      description: The unique identifier for the conference this participant is in.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

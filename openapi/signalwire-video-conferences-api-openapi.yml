@@ -302,13 +302,13 @@ paths:
       - Video Conferences
 components:
   parameters:
-    Video.ListConferencesRequest.ends_before:
-      name: ends_before
+    Video.ListConferencesRequest.include_active_session:
+      name: include_active_session
       in: query
       required: false
-      description: Return conferences with a `join_until` time on or before this timestamp. Accepts RFC 3339 datetime or Unix timestamp.
+      description: Specifies whether to include information about the conference's active session (if any).
       schema:
-        type: string
+        type: boolean
       explode: false
     Video.ConferencePathID:
       name: id
@@ -317,6 +317,22 @@ components:
       description: Unique ID of the video conference.
       schema:
         $ref: '#/components/schemas/uuid'
+    Video.ListConferencesRequest.starts_after:
+      name: starts_after
+      in: query
+      required: false
+      description: Return conferences with a `join_from` time on or after this timestamp. Accepts RFC 3339 datetime or Unix timestamp.
+      schema:
+        type: string
+      explode: false
+    Video.ListConferencesRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
+      schema:
+        type: string
+      explode: false
     Video.ListConferencesRequest.page_number:
       name: page_number
       in: query
@@ -327,6 +343,14 @@ components:
         format: int32
         minimum: 0
         default: 0
+      explode: false
+    Video.ListConferencesRequest.ends_before:
+      name: ends_before
+      in: query
+      required: false
+      description: Return conferences with a `join_until` time on or before this timestamp. Accepts RFC 3339 datetime or Unix timestamp.
+      schema:
+        type: string
       explode: false
     Video.ListConferencesRequest.page_size:
       name: page_size
@@ -340,189 +364,7 @@ components:
         maximum: 1000
         default: 50
       explode: false
-    Video.ListConferencesRequest.starts_after:
-      name: starts_after
-      in: query
-      required: false
-      description: Return conferences with a `join_from` time on or after this timestamp. Accepts RFC 3339 datetime or Unix timestamp.
-      schema:
-        type: string
-      explode: false
-    Video.ListConferencesRequest.include_active_session:
-      name: include_active_session
-      in: query
-      required: false
-      description: Specifies whether to include information about the conference's active session (if any).
-      schema:
-        type: boolean
-      explode: false
-    Video.ListConferencesRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
-      schema:
-        type: string
-      explode: false
   schemas:
-    Video.CreateConferenceRequest:
-      type: object
-      required:
-      - display_name
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          pattern: ^[A-Za-z0-9_-]+$
-          description: 'A named unique identifier for the conference. Allowed characters: `A-Za-z0-9_-`. Maximum of 100 characters.'
-          examples:
-          - my_conference
-        display_name:
-          type: string
-          maxLength: 200
-          description: Display name of the video conference. Maximum of 200 characters.
-          examples:
-          - My Conference's Name
-        description:
-          type: string
-          maxLength: 3000
-          description: Description of the conference. Maximum of 3000 characters.
-          examples:
-          - This conference will be used for full company all hands meetings
-        join_from:
-          type: string
-          format: date-time
-          description: 'Conference does not accept new participants before this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
-          examples:
-          - '2022-01-01T00:00:00Z'
-        join_until:
-          type: string
-          format: date-time
-          description: 'Conference stops accepting new participants at this time, but keeps running until all participants leave. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
-          examples:
-          - '2022-12-31T23:59:59Z'
-        quality:
-          allOf:
-          - $ref: '#/components/schemas/Video.VideoQuality'
-          description: The conference's resolution.
-          examples:
-          - 720p
-          default: 720p
-        layout:
-          allOf:
-          - $ref: '#/components/schemas/Video.VideoLayout'
-          description: The conference's initial layout.
-          examples:
-          - grid-responsive
-          default: grid-responsive
-        size:
-          allOf:
-          - $ref: '#/components/schemas/Video.ConferenceSize'
-          description: The size of the video conference.
-          examples:
-          - medium
-          default: medium
-        record_on_start:
-          type: boolean
-          description: Whether to start recording when a conference session begins.
-          examples:
-          - true
-        enable_room_previews:
-          type: boolean
-          description: Whether a preview video of the conference content is generated.
-          examples:
-          - true
-        enable_chat:
-          type: boolean
-          description: Whether group chat is enabled for conference participants.
-          examples:
-          - true
-          default: true
-        dark_primary:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: CTA buttons and selected items color (dark theme).
-          examples:
-          - '#044EF4'
-          default: '#044EF4'
-        dark_background:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Main background color (dark theme).
-          examples:
-          - '#FFFFFF'
-          default: '#FFFFFF'
-        dark_foreground:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Main foreground color (dark theme).
-          examples:
-          - '#1D2127'
-          default: '#1D2127'
-        dark_success:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Success indication color (dark theme).
-          examples:
-          - '#17BB58'
-          default: '#17BB58'
-        dark_negative:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Error indication color (dark theme).
-          examples:
-          - '#F42C50'
-          default: '#F42C50'
-        light_primary:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: CTA buttons and selected items color (light theme).
-          examples:
-          - '#044EF4'
-          default: '#044EF4'
-        light_background:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Main background color (light theme).
-          examples:
-          - '#FFFFFF'
-          default: '#FFFFFF'
-        light_foreground:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Main foreground color (light theme).
-          examples:
-          - '#1D2127'
-          default: '#1D2127'
-        light_success:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Success indication color (light theme).
-          examples:
-          - '#17BB58'
-          default: '#17BB58'
-        light_negative:
-          type: string
-          pattern: ^#[0-9a-fA-F]{6}$
-          description: Error indication color (light theme).
-          examples:
-          - '#F42C50'
-          default: '#F42C50'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a conference.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -561,50 +403,46 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    Video.ListConferencesResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Video.PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Video.Conference'
-          description: List of conferences.
-      unevaluatedProperties:
-        not: {}
-      description: List conferences response.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
+    Video.VideoFps:
+      type: number
+      enum:
+      - 20
+      - 30
+      description: Video frames per second.
     Video.VideoQuality:
       type: string
       enum:
       - 720p
       - 1080p
       description: Video quality resolution.
-    Video.ConferenceSize:
+    Video.VideoStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    Video.RoomSessionStatus:
       type: string
       enum:
-      - small
-      - medium
-      - large
-      description: Conference size options.
-    Types.StatusCodes.StatusCode404:
+      - in-progress
+      - completed
+      description: Status of a room session.
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -612,16 +450,10 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    Video.RoomSessionStatus:
-      type: string
-      enum:
-      - in-progress
-      - completed
-      description: Status of a room session.
+      description: An internal server error occurred.
     Video.Conference:
       type: object
       required:
@@ -843,6 +675,164 @@ components:
       unevaluatedProperties:
         not: {}
       description: Video conference response object.
+    Video.ConferenceSize:
+      type: string
+      enum:
+      - small
+      - medium
+      - large
+      description: Conference size options.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Video.ActiveSession:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the session.
+          examples:
+          - c22d24f6-5a47-4597-9a23-c7d01e696b92
+        room_id:
+          type: string
+          description: Unique ID of the Room if the Session was created from a Room and was not an auto-created Session.
+          examples:
+          - a1b2c3d4-5e6f-7890-abcd-ef1234567890
+        name:
+          type: string
+          description: The named identifier of room session.
+          examples:
+          - my_example_room
+        display_name:
+          type: string
+          description: Display name of room, no character limitations. Maximum of 200 characters. Defaults to the value of name.
+          examples:
+          - My Room's Name
+        join_from:
+          type: string
+          format: date-time
+          description: Room Session does not accept new Members before this time.
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: Room Session stops accepting new Members at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          type: string
+          format: date-time
+          description: Remove Members from the Room Session at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          type: integer
+          format: int32
+          description: Remove Members after they are in the Room Session for N seconds.
+          examples:
+          - 120
+        layout:
+          type: string
+          description: The Room Session's initial layout. See documentation for a full list of supported layouts.
+          examples:
+          - grid-responsive
+        max_members:
+          type: integer
+          format: int32
+          description: The maximum number of members allowed in the room at a time.
+          examples:
+          - 20
+        fps:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoFps'
+          description: The Room Session's frames per second.
+          examples:
+          - 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The Room Session's resolution.
+          examples:
+          - 720p
+        start_time:
+          type: string
+          format: date-time
+          description: Start time of the session.
+          examples:
+          - '2022-01-01T10:00:00Z'
+        end_time:
+          type: string
+          format: date-time
+          description: End time of the session.
+          examples:
+          - '2022-01-01T11:00:00Z'
+        duration:
+          type: integer
+          format: int32
+          description: How long, in seconds, the Room Session lasted.
+          examples:
+          - 120
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomSessionStatus'
+          description: Status of the session.
+          examples:
+          - completed
+        record_on_start:
+          type: boolean
+          description: Whether a recording was automatically started when this Room Session began.
+          examples:
+          - true
+        enable_room_previews:
+          type: boolean
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - true
+        preview_url:
+          type: string
+          description: If room previews are enabled and the room session is in progress, this is the URL of the preview video.
+          examples:
+          - https://example.signalwire.com/api/video/room_sessions/c22d24f6-5a47-4597-9a23-c7d01e696b92/preview
+        audio_video_sync:
+          type: boolean
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Active session information for a room.
+    Video.ListConferencesResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.Conference'
+          description: List of conferences.
+      unevaluatedProperties:
+        not: {}
+      description: List conferences response.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     Video.VideoLayout:
       type: string
       enum:
@@ -860,6 +850,18 @@ components:
       - 8x8
       - 10x10
       description: Video room layout options.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     Video.UpdateConferenceRequest:
       type: object
       required:
@@ -1003,12 +1005,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a conference.
-    Video.VideoFps:
-      type: number
-      enum:
-      - 20
-      - 30
-      description: Video frames per second.
     Video.PaginationLinks:
       type: object
       required:
@@ -1038,124 +1034,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: Pagination links for list responses.
-    Video.ActiveSession:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique ID of the session.
-          examples:
-          - c22d24f6-5a47-4597-9a23-c7d01e696b92
-        room_id:
-          type: string
-          description: Unique ID of the Room if the Session was created from a Room and was not an auto-created Session.
-          examples:
-          - a1b2c3d4-5e6f-7890-abcd-ef1234567890
-        name:
-          type: string
-          description: The named identifier of room session.
-          examples:
-          - my_example_room
-        display_name:
-          type: string
-          description: Display name of room, no character limitations. Maximum of 200 characters. Defaults to the value of name.
-          examples:
-          - My Room's Name
-        join_from:
-          type: string
-          format: date-time
-          description: Room Session does not accept new Members before this time.
-          examples:
-          - '2022-01-01T00:00:00Z'
-        join_until:
-          type: string
-          format: date-time
-          description: Room Session stops accepting new Members at this time.
-          examples:
-          - '2022-12-31T23:59:59Z'
-        remove_at:
-          type: string
-          format: date-time
-          description: Remove Members from the Room Session at this time.
-          examples:
-          - '2022-12-31T23:59:59Z'
-        remove_after_seconds_elapsed:
-          type: integer
-          format: int32
-          description: Remove Members after they are in the Room Session for N seconds.
-          examples:
-          - 120
-        layout:
-          type: string
-          description: The Room Session's initial layout. See documentation for a full list of supported layouts.
-          examples:
-          - grid-responsive
-        max_members:
-          type: integer
-          format: int32
-          description: The maximum number of members allowed in the room at a time.
-          examples:
-          - 20
-        fps:
-          allOf:
-          - $ref: '#/components/schemas/Video.VideoFps'
-          description: The Room Session's frames per second.
-          examples:
-          - 20
-        quality:
-          allOf:
-          - $ref: '#/components/schemas/Video.VideoQuality'
-          description: The Room Session's resolution.
-          examples:
-          - 720p
-        start_time:
-          type: string
-          format: date-time
-          description: Start time of the session.
-          examples:
-          - '2022-01-01T10:00:00Z'
-        end_time:
-          type: string
-          format: date-time
-          description: End time of the session.
-          examples:
-          - '2022-01-01T11:00:00Z'
-        duration:
-          type: integer
-          format: int32
-          description: How long, in seconds, the Room Session lasted.
-          examples:
-          - 120
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Video.RoomSessionStatus'
-          description: Status of the session.
-          examples:
-          - completed
-        record_on_start:
-          type: boolean
-          description: Whether a recording was automatically started when this Room Session began.
-          examples:
-          - true
-        enable_room_previews:
-          type: boolean
-          description: Whether a video with a preview of the content of the room is to be generated.
-          examples:
-          - true
-        preview_url:
-          type: string
-          description: If room previews are enabled and the room session is in progress, this is the URL of the preview video.
-          examples:
-          - https://example.signalwire.com/api/video/room_sessions/c22d24f6-5a47-4597-9a23-c7d01e696b92/preview
-        audio_video_sync:
-          type: boolean
-          description: Enable/disable jitter buffer audio-video sync.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Active session information for a room.
-    Types.StatusCodes.StatusCode500:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -1163,35 +1042,156 @@ components:
         error:
           type: string
           enum:
-          - Internal Server Error
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Video.VideoStatusCode422:
+      description: Access is unauthorized.
+    Video.CreateConferenceRequest:
       type: object
       required:
-      - errors
+      - display_name
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
+        name:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9_-]+$
+          description: 'A named unique identifier for the conference. Allowed characters: `A-Za-z0-9_-`. Maximum of 100 characters.'
+          examples:
+          - my_conference
+        display_name:
+          type: string
+          maxLength: 200
+          description: Display name of the video conference. Maximum of 200 characters.
+          examples:
+          - My Conference's Name
+        description:
+          type: string
+          maxLength: 3000
+          description: Description of the conference. Maximum of 3000 characters.
+          examples:
+          - This conference will be used for full company all hands meetings
+        join_from:
+          type: string
+          format: date-time
+          description: 'Conference does not accept new participants before this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: 'Conference stops accepting new participants at this time, but keeps running until all participants leave. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The conference's resolution.
+          examples:
+          - 720p
+          default: 720p
+        layout:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoLayout'
+          description: The conference's initial layout.
+          examples:
+          - grid-responsive
+          default: grid-responsive
+        size:
+          allOf:
+          - $ref: '#/components/schemas/Video.ConferenceSize'
+          description: The size of the video conference.
+          examples:
+          - medium
+          default: medium
+        record_on_start:
+          type: boolean
+          description: Whether to start recording when a conference session begins.
+          examples:
+          - true
+        enable_room_previews:
+          type: boolean
+          description: Whether a preview video of the conference content is generated.
+          examples:
+          - true
+        enable_chat:
+          type: boolean
+          description: Whether group chat is enabled for conference participants.
+          examples:
+          - true
+          default: true
+        dark_primary:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: CTA buttons and selected items color (dark theme).
+          examples:
+          - '#044EF4'
+          default: '#044EF4'
+        dark_background:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Main background color (dark theme).
+          examples:
+          - '#FFFFFF'
+          default: '#FFFFFF'
+        dark_foreground:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Main foreground color (dark theme).
+          examples:
+          - '#1D2127'
+          default: '#1D2127'
+        dark_success:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Success indication color (dark theme).
+          examples:
+          - '#17BB58'
+          default: '#17BB58'
+        dark_negative:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Error indication color (dark theme).
+          examples:
+          - '#F42C50'
+          default: '#F42C50'
+        light_primary:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: CTA buttons and selected items color (light theme).
+          examples:
+          - '#044EF4'
+          default: '#044EF4'
+        light_background:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Main background color (light theme).
+          examples:
+          - '#FFFFFF'
+          default: '#FFFFFF'
+        light_foreground:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Main foreground color (light theme).
+          examples:
+          - '#1D2127'
+          default: '#1D2127'
+        light_success:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Success indication color (light theme).
+          examples:
+          - '#17BB58'
+          default: '#17BB58'
+        light_negative:
+          type: string
+          pattern: ^#[0-9a-fA-F]{6}$
+          description: Error indication color (light theme).
+          examples:
+          - '#F42C50'
+          default: '#F42C50'
       unevaluatedProperties:
         not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Name must be present
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
+      description: Request body for creating a conference.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

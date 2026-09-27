@@ -164,6 +164,100 @@ paths:
       - Addresses
 components:
   schemas:
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    FabricAddressesResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddress'
+          description: An array of objects containing a list of Resource Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/FabricAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    ResourceAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddress'
+          description: An array opf objects that contain a list of Resource Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/ResourceAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    DisplayTypes:
+      type: string
+      enum:
+      - app
+      - room
+      - call
+      - subscriber
+      description: DisplayTypes
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     FabricAddress:
       type: object
       required:
@@ -222,50 +316,11 @@ components:
           $ref: '#/components/schemas/DisplayTypes'
       unevaluatedProperties:
         not: {}
-    FabricAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/addresses?page_number=1&page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
     ResourceAddressPaginationResponse:
       type: object
       required:
@@ -298,26 +353,18 @@ components:
           - https://example.signalwire.com/api/fabric/resources/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
       unevaluatedProperties:
         not: {}
-    DisplayTypes:
-      type: string
-      enum:
-      - app
-      - room
-      - call
-      - subscriber
-      description: DisplayTypes
-    Types.StatusCodes.StatusCode500:
+    VideoChannel:
       type: object
       required:
-      - error
+      - video
       properties:
-        error:
+        video:
           type: string
-          enum:
-          - Internal Server Error
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
     AudioChannel:
       type: object
       required:
@@ -330,98 +377,51 @@ components:
           - /external/resource_name?channel=audio
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.StatusCode401:
+    FabricAddressPaginationResponse:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    FabricAddressesResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddress'
-          description: An array of objects containing a list of Resource Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/FabricAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
+          format: uri
+          description: Link of the current page
           examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50
+        first:
           type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    ResourceAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddress'
-          description: An array opf objects that contain a list of Resource Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/ResourceAddressPaginationResponse'
-          description: Object containing pagination links
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=1&page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
       unevaluatedProperties:
         not: {}
   parameters:
-    FabricAddressID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of a FabricAddress.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ResourceAddressPathID:
       name: id
       in: path
       required: true
       description: The unique identifier of the Resource.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    FabricAddressID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a FabricAddress.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

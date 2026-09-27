@@ -358,37 +358,87 @@ paths:
               $ref: '#/components/schemas/VerifyCallerIDRequest'
 components:
   schemas:
-    Types.StatusCodes.SpaceApiErrorItem:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - detail
-      - status
-      - title
-      - code
+      - error
       properties:
-        detail:
+        error:
           type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Details about a specific validation error.
+      description: An internal server error occurred.
+    UpdateVerifiedCallerIDRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          description: The name portion of the caller ID.
+          examples:
+          - C-3P0
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a verified caller ID.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    VerifiedCallerIDListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifiedCallerID'
+          description: List of verified caller IDs.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of verified caller IDs.
+    CreateVerifiedCallerIDRequest:
+      type: object
+      required:
+      - number
+      properties:
+        number:
+          type: string
+          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in [E.164 format](https://en.wikipedia.org/wiki/E.164) that is able to receive a voice phone call for verification.
+          examples:
+          - '+15551234567'
+        name:
+          type: string
+          maxLength: 200
+          description: The name portion of the caller ID. If not provided, the default will be the formatted number.
+          examples:
+          - C-3P0
+        extension:
+          type: string
+          description: The extension of the phone number for the caller ID. This is only used when placing the verification call.
+          examples:
+          - '1234'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a verified caller ID.
     VerifiedCallerID:
       type: object
       required:
@@ -442,121 +492,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Verified caller ID model.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    VerifyCallerIDRequest:
-      type: object
-      required:
-      - verification_code
-      properties:
-        verification_code:
-          type: string
-          description: The verification code received via call or SMS.
-          examples:
-          - '123456'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for verifying a caller ID.
-    UpdateVerifiedCallerIDRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          maxLength: 200
-          description: The name portion of the caller ID.
-          examples:
-          - C-3P0
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a verified caller ID.
-    CreateVerifiedCallerIDRequest:
-      type: object
-      required:
-      - number
-      properties:
-        number:
-          type: string
-          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in [E.164 format](https://en.wikipedia.org/wiki/E.164) that is able to receive a voice phone call for verification.
-          examples:
-          - '+15551234567'
-        name:
-          type: string
-          maxLength: 200
-          description: The name portion of the caller ID. If not provided, the default will be the formatted number.
-          examples:
-          - C-3P0
-        extension:
-          type: string
-          description: The extension of the phone number for the caller ID. This is only used when placing the verification call.
-          examples:
-          - '1234'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a verified caller ID.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    VerifiedCallerIDListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifiedCallerID'
-          description: List of verified caller IDs.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of verified caller IDs.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -582,6 +517,50 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
+    VerifyCallerIDRequest:
+      type: object
+      required:
+      - verification_code
+      properties:
+        verification_code:
+          type: string
+          description: The verification code received via call or SMS.
+          examples:
+          - '123456'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for verifying a caller ID.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
     VerifiedCallerIDResponse:
       type: object
       required:
@@ -635,6 +614,27 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single verified caller ID.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
   parameters:
     VerifiedCallerIDPathID:
       name: id

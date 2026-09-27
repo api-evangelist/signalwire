@@ -285,6 +285,273 @@ paths:
       - E911 Addresses
 components:
   schemas:
+    AddressValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressCandidate'
+          description: Alternative addresses suggested by the carrier. Omitted when the carrier returned no alternatives.
+      unevaluatedProperties:
+        not: {}
+      description: 'The request failed validation. See `errors` for details. When carrier validation rejected the address
+
+        and the carrier returned alternatives, a `candidates` array is included alongside `errors`; the key is
+
+        omitted when the carrier returned none.'
+    CreateAddressRequest:
+      type: object
+      required:
+      - label
+      - country
+      - first_name
+      - last_name
+      - street_number
+      - street_name
+      - city
+      - state
+      - postal_code
+      properties:
+        label:
+          type: string
+          maxLength: 250
+          description: A friendly name given to the address to help distinguish and search for different addresses within your project. When the address is assigned to a phone number for E911, this label is also sent to the carrier as the caller name. The emergency network limits that field to 32 characters, so longer labels are truncated to the first 32 characters before being sent. Truncation affects only the name shown to the dispatcher, never the address used to route the call.
+          examples:
+          - My Address
+        country:
+          type: string
+          description: The ISO 3166 Alpha 2 country code.
+          examples:
+          - US
+        first_name:
+          type: string
+          maxLength: 250
+          description: First name of the occupant associated with this address.
+          examples:
+          - Emmett
+        last_name:
+          type: string
+          maxLength: 250
+          description: Last name of the occupant associated with this address.
+          examples:
+          - Brown
+        street_number:
+          type: string
+          maxLength: 250
+          description: The number portion of the street address.
+          examples:
+          - '1640'
+        street_name:
+          type: string
+          maxLength: 250
+          description: The name portion of the street address.
+          examples:
+          - Riverside Drive
+        address_type:
+          allOf:
+          - $ref: '#/components/schemas/AddressType'
+          description: 'If the address is divided into multiple sub-addresses, this identifies how the address is divided. Possible values are: Apartment, Basement, Building, Department, Floor, Office, Penthouse, Suite, Trailer, Unit.'
+          examples:
+          - Apartment
+        address_number:
+          type: string
+          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
+          examples:
+          - '42'
+        city:
+          type: string
+          maxLength: 250
+          description: The city portion of the street address.
+          examples:
+          - Alexandria
+        state:
+          type: string
+          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
+          examples:
+          - CA
+        postal_code:
+          type: string
+          maxLength: 250
+          description: The postal code of the street address.
+          examples:
+          - '91905'
+        emergency_enabled:
+          type: boolean
+          description: 'Applies to US addresses only. When `true` and `country` is `US`, the address is validated against
+
+            the carrier before it is stored. For any other `country` the flag is ignored and the response
+
+            returns `emergency_enabled: false`. Defaults to `false`, which stores the address without carrier
+
+            validation.'
+          examples:
+          - true
+          default: false
+        auto_correct_address:
+          type: boolean
+          description: When the carrier suggests a corrected version of the address, `true` (the default) stores the corrected address; `false` rejects the request with the suggestion returned as candidates.
+          examples:
+          - true
+          default: true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an address.
+    AddressType:
+      type: string
+      enum:
+      - Apartment
+      - Basement
+      - Building
+      - Department
+      - Floor
+      - Office
+      - Penthouse
+      - Suite
+      - Trailer
+      - Unit
+      description: Address type for sub-addresses.
+    UpdateAddressRequest:
+      type: object
+      required:
+      - label
+      - country
+      - first_name
+      - last_name
+      - street_number
+      - street_name
+      - city
+      - state
+      - postal_code
+      properties:
+        label:
+          type: string
+          maxLength: 250
+          description: A friendly name given to the address to help distinguish and search for different addresses within your project. When the address is assigned to a phone number for E911, this label is also sent to the carrier as the caller name. The emergency network limits that field to 32 characters, so longer labels are truncated to the first 32 characters before being sent. Truncation affects only the name shown to the dispatcher, never the address used to route the call.
+          examples:
+          - My Address
+        country:
+          type: string
+          description: The ISO 3166 Alpha 2 country code.
+          examples:
+          - US
+        first_name:
+          type: string
+          maxLength: 250
+          description: First name of the occupant associated with this address.
+          examples:
+          - Emmett
+        last_name:
+          type: string
+          maxLength: 250
+          description: Last name of the occupant associated with this address.
+          examples:
+          - Brown
+        street_number:
+          type: string
+          maxLength: 250
+          description: The number portion of the street address.
+          examples:
+          - '1640'
+        street_name:
+          type: string
+          maxLength: 250
+          description: The name portion of the street address.
+          examples:
+          - Riverside Drive
+        address_type:
+          allOf:
+          - $ref: '#/components/schemas/AddressType'
+          description: 'If the address is divided into multiple sub-addresses, this identifies how the address is divided. Possible values are: Apartment, Basement, Building, Department, Floor, Office, Penthouse, Suite, Trailer, Unit.'
+          examples:
+          - Apartment
+        address_number:
+          type: string
+          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
+          examples:
+          - '42'
+        city:
+          type: string
+          maxLength: 250
+          description: The city portion of the street address.
+          examples:
+          - Alexandria
+        state:
+          type: string
+          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
+          examples:
+          - CA
+        postal_code:
+          type: string
+          maxLength: 250
+          description: The postal code of the street address.
+          examples:
+          - '91905'
+        emergency_enabled:
+          type: boolean
+          description: 'Applies to US addresses only. When `true` and `country` is `US`, the address is validated against
+
+            the carrier before it is stored. For any other `country` the flag is ignored and the response
+
+            returns `emergency_enabled: false`. Defaults to `false`, which stores the address without carrier
+
+            validation.'
+          examples:
+          - true
+          default: false
+        auto_correct_address:
+          type: boolean
+          description: When the carrier suggests a corrected version of the address, `true` (the default) stores the corrected address; `false` rejects the request with the suggestion returned as candidates.
+          examples:
+          - true
+          default: true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an address.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
     AddressCandidate:
       type: object
       required:
@@ -332,78 +599,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: A carrier-suggested alternative to the submitted address.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    AddressType:
-      type: string
-      enum:
-      - Apartment
-      - Basement
-      - Building
-      - Department
-      - Floor
-      - Office
-      - Penthouse
-      - Suite
-      - Trailer
-      - Unit
-      description: Address type for sub-addresses.
-    AddressValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-        candidates:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressCandidate'
-          description: Alternative addresses suggested by the carrier. Omitted when the carrier returned no alternatives.
-      unevaluatedProperties:
-        not: {}
-      description: 'The request failed validation. See `errors` for details. When carrier validation rejected the address
-
-        and the carrier returned alternatives, a `candidates` array is included alongside `errors`; the key is
-
-        omitted when the carrier returned none.'
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -435,6 +630,43 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
     AddressListResponse:
       type: object
       required:
@@ -453,6 +685,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of addresses.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     AddressResponse:
       type: object
       required:
@@ -563,124 +807,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single address.
-    CreateAddressRequest:
-      type: object
-      required:
-      - label
-      - country
-      - first_name
-      - last_name
-      - street_number
-      - street_name
-      - city
-      - state
-      - postal_code
-      properties:
-        label:
-          type: string
-          maxLength: 250
-          description: A friendly name given to the address to help distinguish and search for different addresses within your project. When the address is assigned to a phone number for E911, this label is also sent to the carrier as the caller name. The emergency network limits that field to 32 characters, so longer labels are truncated to the first 32 characters before being sent. Truncation affects only the name shown to the dispatcher, never the address used to route the call.
-          examples:
-          - My Address
-        country:
-          type: string
-          description: The ISO 3166 Alpha 2 country code.
-          examples:
-          - US
-        first_name:
-          type: string
-          maxLength: 250
-          description: First name of the occupant associated with this address.
-          examples:
-          - Emmett
-        last_name:
-          type: string
-          maxLength: 250
-          description: Last name of the occupant associated with this address.
-          examples:
-          - Brown
-        street_number:
-          type: string
-          maxLength: 250
-          description: The number portion of the street address.
-          examples:
-          - '1640'
-        street_name:
-          type: string
-          maxLength: 250
-          description: The name portion of the street address.
-          examples:
-          - Riverside Drive
-        address_type:
-          allOf:
-          - $ref: '#/components/schemas/AddressType'
-          description: 'If the address is divided into multiple sub-addresses, this identifies how the address is divided. Possible values are: Apartment, Basement, Building, Department, Floor, Office, Penthouse, Suite, Trailer, Unit.'
-          examples:
-          - Apartment
-        address_number:
-          type: string
-          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
-          examples:
-          - '42'
-        city:
-          type: string
-          maxLength: 250
-          description: The city portion of the street address.
-          examples:
-          - Alexandria
-        state:
-          type: string
-          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
-          examples:
-          - CA
-        postal_code:
-          type: string
-          maxLength: 250
-          description: The postal code of the street address.
-          examples:
-          - '91905'
-        emergency_enabled:
-          type: boolean
-          description: 'Applies to US addresses only. When `true` and `country` is `US`, the address is validated against
-
-            the carrier before it is stored. For any other `country` the flag is ignored and the response
-
-            returns `emergency_enabled: false`. Defaults to `false`, which stores the address without carrier
-
-            validation.'
-          examples:
-          - true
-          default: false
-        auto_correct_address:
-          type: boolean
-          description: When the carrier suggests a corrected version of the address, `true` (the default) stores the corrected address; `false` rejects the request with the suggestion returned as candidates.
-          examples:
-          - true
-          default: true
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating an address.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
     Address:
       type: object
       required:
@@ -791,150 +917,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: Address model representing a physical address for regulatory compliance.
-    UpdateAddressRequest:
-      type: object
-      required:
-      - label
-      - country
-      - first_name
-      - last_name
-      - street_number
-      - street_name
-      - city
-      - state
-      - postal_code
-      properties:
-        label:
-          type: string
-          maxLength: 250
-          description: A friendly name given to the address to help distinguish and search for different addresses within your project. When the address is assigned to a phone number for E911, this label is also sent to the carrier as the caller name. The emergency network limits that field to 32 characters, so longer labels are truncated to the first 32 characters before being sent. Truncation affects only the name shown to the dispatcher, never the address used to route the call.
-          examples:
-          - My Address
-        country:
-          type: string
-          description: The ISO 3166 Alpha 2 country code.
-          examples:
-          - US
-        first_name:
-          type: string
-          maxLength: 250
-          description: First name of the occupant associated with this address.
-          examples:
-          - Emmett
-        last_name:
-          type: string
-          maxLength: 250
-          description: Last name of the occupant associated with this address.
-          examples:
-          - Brown
-        street_number:
-          type: string
-          maxLength: 250
-          description: The number portion of the street address.
-          examples:
-          - '1640'
-        street_name:
-          type: string
-          maxLength: 250
-          description: The name portion of the street address.
-          examples:
-          - Riverside Drive
-        address_type:
-          allOf:
-          - $ref: '#/components/schemas/AddressType'
-          description: 'If the address is divided into multiple sub-addresses, this identifies how the address is divided. Possible values are: Apartment, Basement, Building, Department, Floor, Office, Penthouse, Suite, Trailer, Unit.'
-          examples:
-          - Apartment
-        address_number:
-          type: string
-          description: If the address is divided into multiple sub-addresses, this identifies the particular sub-address.
-          examples:
-          - '42'
-        city:
-          type: string
-          maxLength: 250
-          description: The city portion of the street address.
-          examples:
-          - Alexandria
-        state:
-          type: string
-          description: The state/province/region of the street address. In the USA and Canada, use the two-letter abbreviated form.
-          examples:
-          - CA
-        postal_code:
-          type: string
-          maxLength: 250
-          description: The postal code of the street address.
-          examples:
-          - '91905'
-        emergency_enabled:
-          type: boolean
-          description: 'Applies to US addresses only. When `true` and `country` is `US`, the address is validated against
-
-            the carrier before it is stored. For any other `country` the flag is ignored and the response
-
-            returns `emergency_enabled: false`. Defaults to `false`, which stores the address without carrier
-
-            validation.'
-          examples:
-          - true
-          default: false
-        auto_correct_address:
-          type: boolean
-          description: When the carrier suggests a corrected version of the address, `true` (the default) stores the corrected address; `false` rejects the request with the suggestion returned as candidates.
-          examples:
-          - true
-          default: true
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating an address.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
   parameters:
-    AddressPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the address.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    ListAddressesQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve (0-indexed).
-      schema:
-        type: integer
-        format: int32
-        default: 0
-      explode: false
     ListAddressesQuery.page_size:
       name: page_size
       in: query
@@ -954,6 +937,23 @@ components:
       description: Token for cursor-based pagination. Required when page_number > 0.
       schema:
         type: string
+      explode: false
+    AddressPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the address.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ListAddressesQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        default: 0
       explode: false
     ListAddressesQuery.filter_label:
       name: filter_label

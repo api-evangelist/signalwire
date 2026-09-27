@@ -83,17 +83,18 @@ paths:
       - Phone Number Lookup
 components:
   schemas:
-    CnamInfo:
+    Types.StatusCodes.StatusCode500:
       type: object
+      required:
+      - error
       properties:
-        caller_id:
+        error:
           type: string
-          description: The caller ID associated with the number.
-          examples:
-          - John Smith
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Caller ID (CNAM) information.
+      description: An internal server error occurred.
     PhoneNumberLookupResponse:
       type: object
       properties:
@@ -164,18 +165,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing phone number lookup result.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -239,6 +228,17 @@ components:
       unevaluatedProperties:
         not: {}
       description: Carrier lookup information.
+    CnamInfo:
+      type: object
+      properties:
+        caller_id:
+          type: string
+          description: The caller ID associated with the number.
+          examples:
+          - John Smith
+      unevaluatedProperties:
+        not: {}
+      description: Caller ID (CNAM) information.
     Types.StatusCodes.StatusCode404:
       type: object
       required:

@@ -171,58 +171,69 @@ paths:
       - 'Campaign Registry: Brands'
 components:
   schemas:
-    Types.StatusCodes.SpaceApiErrorItem:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - detail
-      - status
-      - title
-      - code
+      - error
       properties:
-        detail:
+        error:
           type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Details about a specific validation error.
-    PaginationLinks:
+      description: An internal server error occurred.
+    CompanyVertical:
+      type: string
+      enum:
+      - AGRICULTURE
+      - COMMUNICATION
+      - CONSTRUCTION
+      - EDUCATION
+      - ENERGY
+      - ENTERTAINMENT
+      - FINANCIAL
+      - GAMBLING
+      - GOVERNMENT
+      - HEALTHCARE
+      - HOSPITALITY
+      - HUMAN_RESOURCES
+      - INSURANCE
+      - LEGAL
+      - MANUFACTURING
+      - NGO
+      - POLITICAL
+      - POSTAL
+      - PROFESSIONAL
+      - REAL_ESTATE
+      - RETAIL
+      - TECHNOLOGY
+      - TRANSPORTATION
+      description: Company vertical/industry classification.
+    LegalEntityType:
+      type: string
+      enum:
+      - PRIVATE_PROFIT
+      - PUBLIC_PROFIT
+      - NON_PROFIT
+      - GOVERNMENT
+      description: Legal entity type for brand registration.
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
-      - self
-      - first
+      - error
       properties:
-        self:
+        error:
           type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
+          enum:
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
+      description: Access is unauthorized.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     BrandResponse:
       type: object
       required:
@@ -313,6 +324,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single brand.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
     CreateManagedBrandRequest:
       type: object
       required:
@@ -407,72 +431,41 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode500:
+    CreateCspBrandRequest:
       type: object
       required:
-      - error
+      - csp_self_registered
+      - name
+      - csp_brand_reference
       properties:
-        error:
-          type: string
+        csp_self_registered:
+          type: boolean
           enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          - true
+          description: Set to true to indicate this is a self-registered CSP brand.
+          examples:
+          - true
+        name:
           type: string
-          enum:
-          - Unauthorized
+          minLength: 3
+          maxLength: 64
+          description: Brand/Marketing/DBA name of the business.
+          examples:
+          - My Brand
+        csp_brand_reference:
+          type: string
+          description: The approved Brand ID from TCR. Required for CSP/self-registered brands.
+          examples:
+          - B123456
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    BrandListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Brand'
-          description: List of brands.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of brands.
-    CompanyVertical:
-      type: string
-      enum:
-      - AGRICULTURE
-      - COMMUNICATION
-      - CONSTRUCTION
-      - EDUCATION
-      - ENERGY
-      - ENTERTAINMENT
-      - FINANCIAL
-      - GAMBLING
-      - GOVERNMENT
-      - HEALTHCARE
-      - HOSPITALITY
-      - HUMAN_RESOURCES
-      - INSURANCE
-      - LEGAL
-      - MANUFACTURING
-      - NGO
-      - POLITICAL
-      - POSTAL
-      - PROFESSIONAL
-      - REAL_ESTATE
-      - RETAIL
-      - TECHNOLOGY
-      - TRANSPORTATION
-      description: Company vertical/industry classification.
+      description: Request body for importing a self-registered CSP brand. Use this when you have already registered your brand directly with TCR.
     Brand:
       type: object
       required:
@@ -563,66 +556,73 @@ components:
       unevaluatedProperties:
         not: {}
       description: Brand model for 10DLC registration.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.ValidationError:
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - errors
+      - detail
+      - status
+      - title
+      - code
       properties:
-        errors:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    BrandListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
           type: array
           items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
+            $ref: '#/components/schemas/Brand'
+          description: List of brands.
       unevaluatedProperties:
         not: {}
-      description: The request failed validation. See errors for details.
-    CreateCspBrandRequest:
-      type: object
-      required:
-      - csp_self_registered
-      - name
-      - csp_brand_reference
-      properties:
-        csp_self_registered:
-          type: boolean
-          enum:
-          - true
-          description: Set to true to indicate this is a self-registered CSP brand.
-          examples:
-          - true
-        name:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: Brand/Marketing/DBA name of the business.
-          examples:
-          - My Brand
-        csp_brand_reference:
-          type: string
-          description: The approved Brand ID from TCR. Required for CSP/self-registered brands.
-          examples:
-          - B123456
-        status_callback_url:
-          type: string
-          format: uri
-          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Request body for importing a self-registered CSP brand. Use this when you have already registered your brand directly with TCR.
-    LegalEntityType:
-      type: string
-      enum:
-      - PRIVATE_PROFIT
-      - PUBLIC_PROFIT
-      - NON_PROFIT
-      - GOVERNMENT
-      description: Legal entity type for brand registration.
+      description: Response containing a list of brands.
   parameters:
     BrandPathID:
       name: id

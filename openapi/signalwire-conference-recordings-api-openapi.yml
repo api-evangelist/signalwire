@@ -267,108 +267,6 @@ paths:
       - Conference Recordings
 components:
   schemas:
-    CompatibilityErrorStringArrayResponse:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            type: string
-          description: List of validation error messages.
-          examples:
-          - - Validation error message
-      unevaluatedProperties:
-        not: {}
-      description: Error response with errors array of strings format.
-    ConferenceRecordingSource:
-      type: string
-      enum:
-      - Conference
-      - StartConferenceRecording
-      description: Recording source for conference recordings.
-    UpdateConferenceRecordingRequest:
-      type: object
-      required:
-      - Status
-      properties:
-        Status:
-          type: string
-          enum:
-          - paused
-          - in-progress
-          - stopped
-          description: The status of the recording.
-          examples:
-          - paused
-        PauseBehavior:
-          type: string
-          enum:
-          - skip
-          - silence
-          description: What to do while recording is paused. Default is `silence`.
-          examples:
-          - silence
-          default: silence
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a conference recording.
-    ConferenceRecordingListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - recordings
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings?PageToken=PA1234
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings?Page=1&PageToken=PA5678
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        recordings:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConferenceRecording'
-          description: List of recordings.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of conference recordings.
     ConferenceRecordingStatus:
       type: string
       enum:
@@ -533,6 +431,21 @@ components:
       unevaluatedProperties:
         not: {}
       description: Conference recording model.
+    CompatibilityErrorStringArrayResponse:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          description: List of validation error messages.
+          examples:
+          - - Validation error message
+      unevaluatedProperties:
+        not: {}
+      description: Error response with errors array of strings format.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -570,6 +483,106 @@ components:
       type: string
       format: uuid
       description: Universal Unique Identifier.
+    ConferenceRecordingListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - recordings
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings?PageToken=PA1234
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings?Page=1&PageToken=PA5678
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        recordings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConferenceRecording'
+          description: List of recordings.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of conference recordings.
+    ConferenceRecordingSubresourceUris:
+      type: object
+      required:
+      - transcriptions
+      properties:
+        transcriptions:
+          type: string
+          description: The URI for transcriptions.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
+      unevaluatedProperties:
+        not: {}
+      description: Recording subresource URIs.
+    ConferenceRecordingSource:
+      type: string
+      enum:
+      - Conference
+      - StartConferenceRecording
+      description: Recording source for conference recordings.
+    UpdateConferenceRecordingRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - paused
+          - in-progress
+          - stopped
+          description: The status of the recording.
+          examples:
+          - paused
+        PauseBehavior:
+          type: string
+          enum:
+          - skip
+          - silence
+          description: What to do while recording is paused. Default is `silence`.
+          examples:
+          - silence
+          default: silence
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference recording.
     ConferenceRecordingResponse:
       type: object
       required:
@@ -723,27 +736,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single conference recording.
-    ConferenceRecordingSubresourceUris:
-      type: object
-      required:
-      - transcriptions
-      properties:
-        transcriptions:
-          type: string
-          description: The URI for transcriptions.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
-      unevaluatedProperties:
-        not: {}
-      description: Recording subresource URIs.
   parameters:
-    ConferenceSidPathForParticipant:
-      name: ConferenceSid
-      in: path
-      required: true
-      description: The unique identifier for the conference this participant is in.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ConferenceRecordingSidPath:
       name: Sid
       in: path
@@ -756,6 +749,13 @@ components:
       in: path
       required: true
       description: The unique identifier for the account that created this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferenceSidPathForParticipant:
+      name: ConferenceSid
+      in: path
+      required: true
+      description: The unique identifier for the conference this participant is in.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

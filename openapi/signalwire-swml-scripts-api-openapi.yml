@@ -503,7 +503,105 @@ paths:
       tags:
       - SWML Scripts
 components:
+  parameters:
+    SWMLScriptAddressPathID:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the SWML Script.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    SwmlScriptPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a SWML Script.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    SwmlScriptListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SwmlScriptResponse'
+          description: An array of objects that contain a list of SWML Script data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SwmlScriptPaginationresponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    MessagingSwmlScriptUpdateRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Reply Bot
+        script_type:
+          type: string
+          enum:
+          - messaging
+          description: Set to `messaging` for a Messaging Script.
+          examples:
+          - messaging
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The messaging SWML document. Uses [messaging SWML methods](/docs/swml/reference/messaging).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - reply: Thanks for your message!
+      unevaluatedProperties:
+        not: {}
+      description: Request body to update an existing messaging SWML Script. All fields are optional — include only what you want to change.
+      title: Update Messaging Script
     CallingSwmlScript:
       type: object
       required:
@@ -564,19 +662,69 @@ components:
         not: {}
       description: A SWML Script that handles inbound or outbound calls. The `contents` field carries a [calling SWML document](/docs/swml/reference/calling).
       title: Calling Script
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
     SwmlScriptCreateRequest:
       oneOf:
       - $ref: '#/components/schemas/CallingSwmlScriptCreateRequest'
       - $ref: '#/components/schemas/MessagingSwmlScriptCreateRequest'
       description: Body shape for creating a SWML Script. Choose a [Calling Script](#schema/CallingSwmlScriptCreateRequest) for inbound or outbound calls or a [Messaging Script](#schema/MessagingSwmlScriptCreateRequest) for inbound SMS or MMS messages. `script_type` is optional and defaults to `"calling"` when omitted — set it explicitly to `"messaging"` to create a Messaging Script. The script kind determines whether the script can be assigned as a call handler or a message handler on a phone number.
       title: Create SWML Script
-    SwmlScriptUpdateRequest:
-      oneOf:
-      - $ref: '#/components/schemas/CallingSwmlScriptUpdateRequest'
-      - $ref: '#/components/schemas/MessagingSwmlScriptUpdateRequest'
-      description: Body shape for updating an existing SWML Script. All fields are optional — include only what you want to change. Choose a [Calling Script](#schema/CallingSwmlScriptUpdateRequest) for inbound or outbound calls or a [Messaging Script](#schema/MessagingSwmlScriptUpdateRequest) for inbound SMS or MMS messages.
-      title: Update SWML Script
-    Types.StatusCodes.StatusCode401:
+    SWMLScriptAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link of the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=1&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link of the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=2&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad
+        prev:
+          type: string
+          format: uri
+          description: Link of the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_script/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -584,63 +732,28 @@ components:
         error:
           type: string
           enum:
-          - Unauthorized
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    SwmlScriptResponse:
+      description: An internal server error occurred.
+    MessagingChannel:
       type: object
       required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - swml_script
+      - messaging
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the SWML Script.
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-        display_name:
+        messaging:
           type: string
-          description: Display name of the SWML Script Fabric Resource
+          description: Messaging Channel of Fabric Address
           examples:
-          - Welcome Script
-        type:
-          type: string
-          enum:
-          - swml_script
-          description: Type of the Fabric Resource
-          examples:
-          - swml_script
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        swml_script:
-          allOf:
-          - $ref: '#/components/schemas/SwmlScript'
-          description: SWML Script data.
+          - /external/resource_name?channel=messaging
       unevaluatedProperties:
         not: {}
+    SwmlScriptUpdateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/CallingSwmlScriptUpdateRequest'
+      - $ref: '#/components/schemas/MessagingSwmlScriptUpdateRequest'
+      description: Body shape for updating an existing SWML Script. All fields are optional — include only what you want to change. Choose a [Calling Script](#schema/CallingSwmlScriptUpdateRequest) for inbound or outbound calls or a [Messaging Script](#schema/MessagingSwmlScriptUpdateRequest) for inbound SMS or MMS messages.
+      title: Update SWML Script
     FabricAddressApp:
       type: object
       required:
@@ -705,399 +818,6 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    SWMLScriptAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link of the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=1&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link of the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=2&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad
-        prev:
-          type: string
-          format: uri
-          description: Link of the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_script/016e5773-c197-4446-bcc2-9c48f14e2d0a/addresses?page_number=0&page_size=50&page_token=PA6581c1fa-d985-4c8f-b53e-2fee11b579ad
-      unevaluatedProperties:
-        not: {}
-    CallingSwmlScriptUpdateRequest:
-      type: object
-      properties:
-        display_name:
-          type: string
-          description: Display name of the SWML Script
-          examples:
-          - Welcome Script
-        script_type:
-          type: string
-          enum:
-          - calling
-          description: Set to `calling` for a Calling Script.
-          examples:
-          - calling
-          default: calling
-        contents:
-          type: object
-          unevaluatedProperties: {}
-          description: The calling SWML document. Uses [calling SWML methods](/docs/swml/reference/calling).
-          examples:
-          - version: 1.0.0
-            sections:
-              main:
-              - play:
-                  url: https://cdn.signalwire.com/swml/audio.mp3
-        status_callback_url:
-          type: string
-          format: uri
-          description: URL that receives status callbacks for messages sent or calls made by this script.
-          examples:
-          - https://example.com/status
-      unevaluatedProperties:
-        not: {}
-      description: Request body to update an existing calling SWML Script. All fields are optional — include only what you want to change.
-      title: Update Calling Script
-    MessagingSwmlScriptUpdateRequest:
-      type: object
-      properties:
-        display_name:
-          type: string
-          description: Display name of the SWML Script
-          examples:
-          - Reply Bot
-        script_type:
-          type: string
-          enum:
-          - messaging
-          description: Set to `messaging` for a Messaging Script.
-          examples:
-          - messaging
-        contents:
-          type: object
-          unevaluatedProperties: {}
-          description: The messaging SWML document. Uses [messaging SWML methods](/docs/swml/reference/messaging).
-          examples:
-          - version: 1.0.0
-            sections:
-              main:
-              - reply: Thanks for your message!
-      unevaluatedProperties:
-        not: {}
-      description: Request body to update an existing messaging SWML Script. All fields are optional — include only what you want to change.
-      title: Update Messaging Script
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    SWMLScriptAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects that contain a list of SWML Script Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/SWMLScriptAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    SwmlScriptUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter_value
-          message: contents must be valid SWML JSON
-          attribute: contents
-          url: https://signalwire.com/docs/apis/error-codes
-    SwmlScriptListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SwmlScriptResponse'
-          description: An array of objects that contain a list of SWML Script data
-        links:
-          allOf:
-          - $ref: '#/components/schemas/SwmlScriptPaginationresponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    CallingSwmlScriptCreateRequest:
-      type: object
-      required:
-      - name
-      - contents
-      properties:
-        name:
-          type: string
-          description: Display name of the SWML Script
-          examples:
-          - Welcome Script
-        script_type:
-          type: string
-          enum:
-          - calling
-          description: Set to `calling` for a Calling Script. This is the default when `script_type` is omitted.
-          examples:
-          - calling
-          default: calling
-        contents:
-          type: object
-          unevaluatedProperties: {}
-          description: The calling SWML document. Uses [calling SWML methods](/docs/swml/reference/calling).
-          examples:
-          - version: 1.0.0
-            sections:
-              main:
-              - play:
-                  url: https://cdn.signalwire.com/swml/audio.mp3
-        status_callback_url:
-          type: string
-          format: uri
-          description: URL that receives status callbacks for messages sent or calls made by this script.
-          examples:
-          - https://example.com/status
-      unevaluatedProperties:
-        not: {}
-      description: Request body to create a SWML Script that handles inbound or outbound calls.
-      title: Create Calling Script
-    MessagingSwmlScriptCreateRequest:
-      type: object
-      required:
-      - name
-      - contents
-      properties:
-        name:
-          type: string
-          description: Display name of the SWML Script
-          examples:
-          - Reply Bot
-        script_type:
-          type: string
-          enum:
-          - messaging
-          description: Set to `messaging` to create a Messaging Script. If omitted, the API defaults to `calling`, so this field must be set explicitly for messaging scripts.
-          examples:
-          - messaging
-        contents:
-          type: object
-          unevaluatedProperties: {}
-          description: The messaging SWML document. Uses [messaging SWML methods](/docs/swml/reference/messaging).
-          examples:
-          - version: 1.0.0
-            sections:
-              main:
-              - reply: Thanks for your message!
-      unevaluatedProperties:
-        not: {}
-      description: Request body to create a SWML Script that handles inbound SMS or MMS messages.
-      title: Create Messaging Script
-    SwmlScriptPaginationresponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link to the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50&type=swml_script
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_size=50&type=swml_script
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_script
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_script
-      unevaluatedProperties:
-        not: {}
-    SwmlScript:
-      oneOf:
-      - $ref: '#/components/schemas/CallingSwmlScript'
-      - $ref: '#/components/schemas/MessagingSwmlScript'
-      description: 'A SWML Script — either a [Calling Script](#schema/CallingSwmlScript) for inbound or
-
-        outbound calls, or a [Messaging Script](#schema/MessagingSwmlScript) for inbound SMS or
-
-        MMS messages. The `script_type` field on each script (`"calling"` or `"messaging"`)
-
-        identifies which kind it is.'
-      title: SWML Script
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    SwmlScriptCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: contents is required
-          attribute: contents
-          url: https://signalwire.com/docs/apis/error-codes
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     MessagingSwmlScript:
       type: object
       required:
@@ -1144,21 +864,301 @@ components:
         not: {}
       description: A SWML Script that handles inbound SMS or MMS messages. The `contents` field carries a [messaging SWML document](/docs/swml/reference/messaging).
       title: Messaging Script
-  parameters:
-    SWMLScriptAddressPathID:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the SWML Script.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    SwmlScriptPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of a SWML Script.
-      schema:
-        $ref: '#/components/schemas/uuid'
+    CallingSwmlScriptUpdateRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Welcome Script
+        script_type:
+          type: string
+          enum:
+          - calling
+          description: Set to `calling` for a Calling Script.
+          examples:
+          - calling
+          default: calling
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL that receives status callbacks for messages sent or calls made by this script.
+          examples:
+          - https://example.com/status
+      unevaluatedProperties:
+        not: {}
+      description: Request body to update an existing calling SWML Script. All fields are optional — include only what you want to change.
+      title: Update Calling Script
+    SwmlScriptCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: contents is required
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    SwmlScriptUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: contents must be valid SWML JSON
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
+    SwmlScript:
+      oneOf:
+      - $ref: '#/components/schemas/CallingSwmlScript'
+      - $ref: '#/components/schemas/MessagingSwmlScript'
+      description: 'A SWML Script — either a [Calling Script](#schema/CallingSwmlScript) for inbound or
+
+        outbound calls, or a [Messaging Script](#schema/MessagingSwmlScript) for inbound SMS or
+
+        MMS messages. The `script_type` field on each script (`"calling"` or `"messaging"`)
+
+        identifies which kind it is.'
+      title: SWML Script
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    MessagingSwmlScriptCreateRequest:
+      type: object
+      required:
+      - name
+      - contents
+      properties:
+        name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Reply Bot
+        script_type:
+          type: string
+          enum:
+          - messaging
+          description: Set to `messaging` to create a Messaging Script. If omitted, the API defaults to `calling`, so this field must be set explicitly for messaging scripts.
+          examples:
+          - messaging
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The messaging SWML document. Uses [messaging SWML methods](/docs/swml/reference/messaging).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - reply: Thanks for your message!
+      unevaluatedProperties:
+        not: {}
+      description: Request body to create a SWML Script that handles inbound SMS or MMS messages.
+      title: Create Messaging Script
+    SWMLScriptAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects that contain a list of SWML Script Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SWMLScriptAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    SwmlScriptPaginationresponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link to the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50&type=swml_script
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_size=50&type=swml_script
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_script
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/swml_scripts?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=swml_script
+      unevaluatedProperties:
+        not: {}
+    CallingSwmlScriptCreateRequest:
+      type: object
+      required:
+      - name
+      - contents
+      properties:
+        name:
+          type: string
+          description: Display name of the SWML Script
+          examples:
+          - Welcome Script
+        script_type:
+          type: string
+          enum:
+          - calling
+          description: Set to `calling` for a Calling Script. This is the default when `script_type` is omitted.
+          examples:
+          - calling
+          default: calling
+        contents:
+          type: object
+          unevaluatedProperties: {}
+          description: The calling SWML document. Uses [calling SWML methods](/docs/swml/reference/calling).
+          examples:
+          - version: 1.0.0
+            sections:
+              main:
+              - play:
+                  url: https://cdn.signalwire.com/swml/audio.mp3
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL that receives status callbacks for messages sent or calls made by this script.
+          examples:
+          - https://example.com/status
+      unevaluatedProperties:
+        not: {}
+      description: Request body to create a SWML Script that handles inbound or outbound calls.
+      title: Create Calling Script
+    SwmlScriptResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - swml_script
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the SWML Script.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        display_name:
+          type: string
+          description: Display name of the SWML Script Fabric Resource
+          examples:
+          - Welcome Script
+        type:
+          type: string
+          enum:
+          - swml_script
+          description: Type of the Fabric Resource
+          examples:
+          - swml_script
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        swml_script:
+          allOf:
+          - $ref: '#/components/schemas/SwmlScript'
+          description: SWML Script data.
+      unevaluatedProperties:
+        not: {}
   securitySchemes:
     SignalWireBasicAuth:
       type: http
