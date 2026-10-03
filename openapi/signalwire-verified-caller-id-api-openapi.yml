@@ -358,18 +358,80 @@ paths:
               $ref: '#/components/schemas/VerifyCallerIDRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
+    VerifiedCallerIDResponse:
       type: object
       required:
-      - error
+      - id
+      - number
+      - verified
       properties:
-        error:
+        type:
+          type: string
+          description: The type of the returned object, this should be verified_caller_id.
+          examples:
+          - verified_caller_id
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the Verified Caller ID on SignalWire.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        number:
+          type: string
+          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        name:
+          type: string
+          description: String representing the name portion of the caller ID. If not provided, the default will be the formatted number that has been provided.
+          examples:
+          - C-3P0
+        extension:
+          type: string
+          description: String representing the extension of the phone number for the caller ID. This is only used when placing the verification call.
+          examples:
+          - '1234'
+        verified:
+          type: boolean
+          description: A boolean representing whether the number has been verified or not.
+          examples:
+          - false
+        verified_at:
+          type: string
+          format: date-time
+          description: Nullable DateTime field representing the date and time that the number was verified. If the number has not been verified, it will be null.
+        status:
           type: string
           enum:
-          - Internal Server Error
+          - Verified
+          - Awaiting Verification
+          description: The verification status for the caller ID.
+          examples:
+          - Awaiting Verification
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+      description: Response containing a single verified caller ID.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
     UpdateVerifiedCallerIDRequest:
       type: object
       required:
@@ -384,22 +446,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a verified caller ID.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     VerifiedCallerIDListResponse:
       type: object
       properties:
@@ -415,6 +461,31 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of verified caller IDs.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     CreateVerifiedCallerIDRequest:
       type: object
       required:
@@ -492,19 +563,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Verified caller ID model.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -517,6 +575,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     VerifyCallerIDRequest:
       type: object
       required:
@@ -561,80 +631,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    VerifiedCallerIDResponse:
-      type: object
-      required:
-      - id
-      - number
-      - verified
-      properties:
-        type:
-          type: string
-          description: The type of the returned object, this should be verified_caller_id.
-          examples:
-          - verified_caller_id
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the Verified Caller ID on SignalWire.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        number:
-          type: string
-          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in E.164 format.
-          examples:
-          - '+15551234567'
-        name:
-          type: string
-          description: String representing the name portion of the caller ID. If not provided, the default will be the formatted number that has been provided.
-          examples:
-          - C-3P0
-        extension:
-          type: string
-          description: String representing the extension of the phone number for the caller ID. This is only used when placing the verification call.
-          examples:
-          - '1234'
-        verified:
-          type: boolean
-          description: A boolean representing whether the number has been verified or not.
-          examples:
-          - false
-        verified_at:
-          type: string
-          format: date-time
-          description: Nullable DateTime field representing the date and time that the number was verified. If the number has not been verified, it will be null.
-        status:
-          type: string
-          enum:
-          - Verified
-          - Awaiting Verification
-          description: The verification status for the caller ID.
-          examples:
-          - Awaiting Verification
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single verified caller ID.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     VerifiedCallerIDPathID:
       name: id

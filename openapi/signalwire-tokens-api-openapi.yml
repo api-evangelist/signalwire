@@ -165,6 +165,37 @@ paths:
       - Tokens
 components:
   schemas:
+    CreateTokenRequest:
+      type: object
+      required:
+      - name
+      - permissions
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The name representing the project API token.
+          examples:
+          - John Doe's Token
+        permissions:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: 'The permissions you would like to enable for this project API token. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
+          examples:
+          - - calling
+            - fax
+            - messaging
+        subproject_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the subproject you would like to create a token for. Must belong to the parent project.
+          examples:
+          - 9a7fc048-984f-11ee-b9d1-0242ac120002
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an API token.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -198,6 +229,27 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
+    UpdateTokenRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The name representing the project API token.
+          examples:
+          - John Doe's Token
+        permissions:
+          type: array
+          items:
+            type: string
+          description: 'The permissions you would like to enable for this project API token. If not provided, existing permissions are kept. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
+          examples:
+          - - calling
+            - fax
+            - messaging
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an API token.
     TokenResponse:
       type: object
       required:
@@ -235,62 +287,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single token.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    CreateTokenRequest:
-      type: object
-      required:
-      - name
-      - permissions
-      properties:
-        name:
-          type: string
-          minLength: 1
-          description: The name representing the project API token.
-          examples:
-          - John Doe's Token
-        permissions:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: 'The permissions you would like to enable for this project API token. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
-          examples:
-          - - calling
-            - fax
-            - messaging
-        subproject_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the subproject you would like to create a token for. Must belong to the parent project.
-          examples:
-          - 9a7fc048-984f-11ee-b9d1-0242ac120002
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating an API token.
-    UpdateTokenRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          description: The name representing the project API token.
-          examples:
-          - John Doe's Token
-        permissions:
-          type: array
-          items:
-            type: string
-          description: 'The permissions you would like to enable for this project API token. If not provided, existing permissions are kept. Valid permissions are: calling, chat, datasphere, fax, management, messaging, numbers, pubsub, storage, tasking, and video.'
-          examples:
-          - - calling
-            - fax
-            - messaging
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating an API token.
     CompatibilityTokenValidationError:
       type: object
       properties:
@@ -313,6 +309,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Token validation error response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     TokenIdPath:
       name: token_id

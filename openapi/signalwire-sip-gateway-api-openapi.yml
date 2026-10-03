@@ -302,243 +302,6 @@ paths:
       - SIP Gateway
 components:
   schemas:
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    SipGatewayAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressCall'
-          description: An array of objects containing a list of SIP Gateway Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/SipGatewayAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    SipGatewayPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link to the current page of results
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page of results
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page of results
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page of results
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-      unevaluatedProperties:
-        not: {}
-    SipGatewayListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SipGatewayResponse'
-          description: An array of objects that contain a list of SIP Gateway data
-        links:
-          allOf:
-          - $ref: '#/components/schemas/SipGatewayPaginationResponse'
-          description: Pagination links for the response.
-      unevaluatedProperties:
-        not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
-    SipGatewayAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-      unevaluatedProperties:
-        not: {}
-    Ciphers:
-      type: string
-      enum:
-      - AEAD_AES_256_GCM_8
-      - AES_256_CM_HMAC_SHA1_80
-      - AES_CM_128_HMAC_SHA1_80
-      - AES_256_CM_HMAC_SHA1_32
-      - AES_CM_128_HMAC_SHA1_32
-    SipGatewayRequestUpdate:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Display name for the SIP Gateway.
-          examples:
-          - My SIP Gateway
-        uri:
-          type: string
-          description: External SIP URI.
-          examples:
-          - user2@domain.com
-        encryption:
-          allOf:
-          - $ref: '#/components/schemas/Encryption'
-          description: Specifies the encryption requirement for the SIP connection.
-          examples:
-          - required
-        ciphers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ciphers'
-          description: List of supported SIP ciphers.
-          examples:
-          - - AEAD_AES_256_GCM_8
-            - AES_256_CM_HMAC_SHA1_80
-        codecs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Codecs'
-          description: List of supported codecs for media transmission.
-          examples:
-          - - OPUS
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     FabricAddressCall:
       type: object
       required:
@@ -603,6 +366,50 @@ components:
       unevaluatedProperties:
         not: {}
       title: Call Address
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    SipGatewayAddressPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -615,128 +422,38 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
-    SipGatewayRequest:
+    SipGatewayPaginationResponse:
       type: object
       required:
-      - name
-      - uri
-      - encryption
-      - ciphers
-      - codecs
+      - self
+      - first
       properties:
-        name:
+        self:
           type: string
-          description: Display name for the SIP Gateway.
+          format: uri
+          description: Link to the current page of results
           examples:
-          - My SIP Gateway
-        uri:
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=0&page_size=50
+        first:
           type: string
-          description: External SIP URI.
+          format: uri
+          description: Link to the first page of results
           examples:
-          - user2@domain.com
-        encryption:
-          allOf:
-          - $ref: '#/components/schemas/Encryption'
-          description: Specifies the encryption requirement for the SIP connection.
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page of results
           examples:
-          - required
-        ciphers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ciphers'
-          description: List of supported SIP ciphers.
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page of results
           examples:
-          - - AEAD_AES_256_GCM_8
-            - AES_256_CM_HMAC_SHA1_80
-        codecs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Codecs'
-          description: List of supported codecs for media transmission.
-          examples:
-          - - OPUS
+          - https://example.signalwire.com/api/fabric/resources/sip_gateways?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
       unevaluatedProperties:
         not: {}
-    Encryption:
-      type: string
-      enum:
-      - required
-      - optional
-      - default
-    Codecs:
-      type: string
-      enum:
-      - PCMU
-      - PCMA
-      - G722
-      - G729
-      - OPUS
-      - OPUS@48000H@20I
-      - OPUS@24000H@20I
-      - OPUS@16000H@20I
-      - OPUS@8000H@20I
-      - VP8
-      - H264
-    SipGateway:
-      type: object
-      required:
-      - id
-      - uri
-      - name
-      - ciphers
-      - codecs
-      - encryption
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the SIP Gateway.
-          examples:
-          - cce59cad-104d-4c28-ada4-98cfd102ae09
-        uri:
-          type: string
-          description: The URI for the SIP Gateway.
-          examples:
-          - user3@domain.com
-        name:
-          type: string
-          description: Display name of the SIP Gateway.
-          examples:
-          - My SIP Gateway
-        ciphers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ciphers'
-          description: List of supported SIP ciphers.
-          examples:
-          - - AEAD_AES_256_GCM_8
-        codecs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Codecs'
-          description: List of supported codecs.
-          examples:
-          - - OPUS
-        encryption:
-          allOf:
-          - $ref: '#/components/schemas/Encryption'
-          description: Specifies the encryption requirement.
-          examples:
-          - required
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     SipGatewayResponse:
       type: object
       required:
@@ -811,19 +528,302 @@ components:
           message: Name can't be blank
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Codecs:
+      type: string
+      enum:
+      - PCMU
+      - PCMA
+      - G722
+      - G729
+      - OPUS
+      - OPUS@48000H@20I
+      - OPUS@24000H@20I
+      - OPUS@16000H@20I
+      - OPUS@8000H@20I
+      - VP8
+      - H264
+    SipGatewayAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressCall'
+          description: An array of objects containing a list of SIP Gateway Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SipGatewayAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    SipGateway:
+      type: object
+      required:
+      - id
+      - uri
+      - name
+      - ciphers
+      - codecs
+      - encryption
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the SIP Gateway.
+          examples:
+          - cce59cad-104d-4c28-ada4-98cfd102ae09
+        uri:
+          type: string
+          description: The URI for the SIP Gateway.
+          examples:
+          - user3@domain.com
+        name:
+          type: string
+          description: Display name of the SIP Gateway.
+          examples:
+          - My SIP Gateway
+        ciphers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ciphers'
+          description: List of supported SIP ciphers.
+          examples:
+          - - AEAD_AES_256_GCM_8
+        codecs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Codecs'
+          description: List of supported codecs.
+          examples:
+          - - OPUS
+        encryption:
+          allOf:
+          - $ref: '#/components/schemas/Encryption'
+          description: Specifies the encryption requirement.
+          examples:
+          - required
+      unevaluatedProperties:
+        not: {}
+    Encryption:
+      type: string
+      enum:
+      - required
+      - optional
+      - default
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    SipGatewayRequest:
+      type: object
+      required:
+      - name
+      - uri
+      - encryption
+      - ciphers
+      - codecs
+      properties:
+        name:
+          type: string
+          description: Display name for the SIP Gateway.
+          examples:
+          - My SIP Gateway
+        uri:
+          type: string
+          description: External SIP URI.
+          examples:
+          - user2@domain.com
+        encryption:
+          allOf:
+          - $ref: '#/components/schemas/Encryption'
+          description: Specifies the encryption requirement for the SIP connection.
+          examples:
+          - required
+        ciphers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ciphers'
+          description: List of supported SIP ciphers.
+          examples:
+          - - AEAD_AES_256_GCM_8
+            - AES_256_CM_HMAC_SHA1_80
+        codecs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Codecs'
+          description: List of supported codecs for media transmission.
+          examples:
+          - - OPUS
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    SipGatewayRequestUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Display name for the SIP Gateway.
+          examples:
+          - My SIP Gateway
+        uri:
+          type: string
+          description: External SIP URI.
+          examples:
+          - user2@domain.com
+        encryption:
+          allOf:
+          - $ref: '#/components/schemas/Encryption'
+          description: Specifies the encryption requirement for the SIP connection.
+          examples:
+          - required
+        ciphers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ciphers'
+          description: List of supported SIP ciphers.
+          examples:
+          - - AEAD_AES_256_GCM_8
+            - AES_256_CM_HMAC_SHA1_80
+        codecs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Codecs'
+          description: List of supported codecs for media transmission.
+          examples:
+          - - OPUS
+      unevaluatedProperties:
+        not: {}
+    Ciphers:
+      type: string
+      enum:
+      - AEAD_AES_256_GCM_8
+      - AES_256_CM_HMAC_SHA1_80
+      - AES_CM_128_HMAC_SHA1_80
+      - AES_256_CM_HMAC_SHA1_32
+      - AES_CM_128_HMAC_SHA1_32
+    SipGatewayListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SipGatewayResponse'
+          description: An array of objects that contain a list of SIP Gateway data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SipGatewayPaginationResponse'
+          description: Pagination links for the response.
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
   parameters:
-    SipGatewayAddressRequest:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the SIP Gateway.
-      schema:
-        $ref: '#/components/schemas/uuid'
     SipGatewayID:
       name: id
       in: path
       required: true
       description: Unique ID of a SIP Gateway.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    SipGatewayAddressRequest:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the SIP Gateway.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

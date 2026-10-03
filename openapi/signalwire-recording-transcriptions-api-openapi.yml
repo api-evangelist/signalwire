@@ -236,52 +236,22 @@ webhooks:
       security:
       - {}
 components:
+  parameters:
+    TranscriptionSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the transcription.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    TranscriptionsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that created this transcription.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
-    TranscriptionStatusCallbackPayload:
-      type: object
-      required:
-      - TranscriptionSid
-      - TranscriptionText
-      - TranscriptionStatus
-      - TranscriptionUrl
-      - RecordingSid
-      - RecordingUrl
-      properties:
-        TranscriptionSid:
-          type: string
-          description: The unique, 34-character ID of the transcription.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e984tr01
-        TranscriptionText:
-          type: string
-          description: The text of the transcription.
-          examples:
-          - Hello, I'd like to schedule an appointment for next Tuesday.
-        TranscriptionStatus:
-          type: string
-          enum:
-          - completed
-          - failed
-          description: The status of the transcription.
-          examples:
-          - completed
-        TranscriptionUrl:
-          type: string
-          description: The URL for the transcription's REST API resource.
-          examples:
-          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Transcriptions/b3877c40-da60-4998-90ad-b792e984tr01
-        RecordingSid:
-          type: string
-          description: The unique, 34-character identifier for the recording from which the transcription was generated.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e984re01
-        RecordingUrl:
-          type: string
-          description: The URL for the audio recording from which the transcription was generated.
-          examples:
-          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Recordings/b3877c40-da60-4998-90ad-b792e984re01
-      unevaluatedProperties:
-        not: {}
     CompatibilityErrorResponse:
       type: object
       required:
@@ -409,65 +379,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Transcription model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    TranscriptionListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - transcriptions
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/Transcriptions?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/Transcriptions
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page. Null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/Transcriptions?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472tr
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page. Null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number (zero-indexed).
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        transcriptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Transcription'
-          description: List of transcriptions.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of transcriptions.
     TranscriptionResponse:
       type: object
       required:
@@ -562,21 +473,110 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single transcription.
-  parameters:
-    TranscriptionsAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account that created this transcription.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    TranscriptionSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The unique identifier for the transcription.
-      schema:
-        $ref: '#/components/schemas/uuid'
+    TranscriptionStatusCallbackPayload:
+      type: object
+      required:
+      - TranscriptionSid
+      - TranscriptionText
+      - TranscriptionStatus
+      - TranscriptionUrl
+      - RecordingSid
+      - RecordingUrl
+      properties:
+        TranscriptionSid:
+          type: string
+          description: The unique, 34-character ID of the transcription.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e984tr01
+        TranscriptionText:
+          type: string
+          description: The text of the transcription.
+          examples:
+          - Hello, I'd like to schedule an appointment for next Tuesday.
+        TranscriptionStatus:
+          type: string
+          enum:
+          - completed
+          - failed
+          description: The status of the transcription.
+          examples:
+          - completed
+        TranscriptionUrl:
+          type: string
+          description: The URL for the transcription's REST API resource.
+          examples:
+          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Transcriptions/b3877c40-da60-4998-90ad-b792e984tr01
+        RecordingSid:
+          type: string
+          description: The unique, 34-character identifier for the recording from which the transcription was generated.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e984re01
+        RecordingUrl:
+          type: string
+          description: The URL for the audio recording from which the transcription was generated.
+          examples:
+          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Recordings/b3877c40-da60-4998-90ad-b792e984re01
+      unevaluatedProperties:
+        not: {}
+    TranscriptionListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - transcriptions
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/Transcriptions?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/Transcriptions
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page. Null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472ac/Transcriptions?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472tr
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page. Null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number (zero-indexed).
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        transcriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transcription'
+          description: List of transcriptions.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of transcriptions.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

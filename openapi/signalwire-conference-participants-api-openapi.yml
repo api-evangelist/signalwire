@@ -260,95 +260,6 @@ paths:
       - Conference Participants
 components:
   schemas:
-    ConferenceParticipant:
-      type: object
-      required:
-      - account_sid
-      - call_sid
-      - call_sid_to_coach
-      - coaching
-      - conference_sid
-      - date_created
-      - status
-      - date_updated
-      - end_conference_on_exit
-      - muted
-      - hold
-      - start_conference_on_enter
-      - uri
-      properties:
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account that created this conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        call_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the Participant call connected to this conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ca
-        call_sid_to_coach:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The unique identifier of the participant who is being coached.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472co
-        coaching:
-          type: boolean
-          description: Whether the participant is coaching another call.
-          examples:
-          - false
-        conference_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the conference this participant is in.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472cf
-        date_created:
-          type: string
-          description: The date, in RFC 2822 format, this conference participant was created.
-          examples:
-          - Mon, 24 Sept 2018 21:00:00 +0000
-        status:
-          allOf:
-          - $ref: '#/components/schemas/ParticipantStatus'
-          description: The status of the conference call.
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 format, this conference participant was updated.
-          examples:
-          - Tue, 25 Sept 2018 20:00:00 +0000
-        end_conference_on_exit:
-          type: boolean
-          description: Whether or not a conference ends when a participant leaves the conference call.
-          examples:
-          - false
-        muted:
-          type: boolean
-          description: Whether or not a participant is muted.
-          examples:
-          - false
-        hold:
-          type: boolean
-          description: Whether or not a participant is on hold.
-          examples:
-          - false
-        start_conference_on_enter:
-          type: boolean
-          description: Whether or not a conference will begin when this participant enters the conference call.
-          examples:
-          - true
-        uri:
-          type: string
-          description: The URI for this conference participant.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants/b3877c40-da60-4998-90ad-b792e98472ca.json
-      unevaluatedProperties:
-        not: {}
-      description: Conference participant model.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -382,88 +293,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    UpdateConferenceParticipantRequest:
-      type: object
-      properties:
-        AnnounceUrl:
-          type: string
-          format: uri
-          description: The URL to send conference announcements to.
-          examples:
-          - https://your-api-endpoint.com/announce
-        AnnounceMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-        Coaching:
-          type: boolean
-          description: Whether the participant is coaching another call. Requires `CallSidToCoach` to be set.
-          examples:
-          - false
-        CallSidToCoach:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the participant who is being coached. Required when `Coaching` is true.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472co
-        Hold:
-          type: boolean
-          description: Whether or not a participant is on hold.
-          examples:
-          - false
-        HoldMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `HoldUrl` is a `GET` or a `POST`. Default is `GET`.
-          examples:
-          - GET
-          default: GET
-        HoldUrl:
-          type: string
-          format: uri
-          description: The URL to send hold music to that will be played when participant is on hold.
-          examples:
-          - https://your-api-endpoint.com/hold-music
-        Muted:
-          type: boolean
-          description: Whether or not a participant is muted.
-          examples:
-          - false
-        WaitUrl:
-          type: string
-          format: uri
-          description: The URL for wait music to be played while a conference is not yet started.
-          examples:
-          - https://your-api-endpoint.com/wait-music
-        WaitMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `WaitUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a conference participant.
-    ParticipantStatus:
-      type: string
-      enum:
-      - completed
-      - in-progress
-      description: Conference participant status.
     ConferenceParticipantListResponse:
       type: object
       required:
@@ -608,7 +437,185 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single conference participant.
+    ParticipantStatus:
+      type: string
+      enum:
+      - completed
+      - in-progress
+      description: Conference participant status.
+    UpdateConferenceParticipantRequest:
+      type: object
+      properties:
+        AnnounceUrl:
+          type: string
+          format: uri
+          description: The URL to send conference announcements to.
+          examples:
+          - https://your-api-endpoint.com/announce
+        AnnounceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+        Coaching:
+          type: boolean
+          description: Whether the participant is coaching another call. Requires `CallSidToCoach` to be set.
+          examples:
+          - false
+        CallSidToCoach:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the participant who is being coached. Required when `Coaching` is true.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472co
+        Hold:
+          type: boolean
+          description: Whether or not a participant is on hold.
+          examples:
+          - false
+        HoldMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `HoldUrl` is a `GET` or a `POST`. Default is `GET`.
+          examples:
+          - GET
+          default: GET
+        HoldUrl:
+          type: string
+          format: uri
+          description: The URL to send hold music to that will be played when participant is on hold.
+          examples:
+          - https://your-api-endpoint.com/hold-music
+        Muted:
+          type: boolean
+          description: Whether or not a participant is muted.
+          examples:
+          - false
+        WaitUrl:
+          type: string
+          format: uri
+          description: The URL for wait music to be played while a conference is not yet started.
+          examples:
+          - https://your-api-endpoint.com/wait-music
+        WaitMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `WaitUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference participant.
+    ConferenceParticipant:
+      type: object
+      required:
+      - account_sid
+      - call_sid
+      - call_sid_to_coach
+      - coaching
+      - conference_sid
+      - date_created
+      - status
+      - date_updated
+      - end_conference_on_exit
+      - muted
+      - hold
+      - start_conference_on_enter
+      - uri
+      properties:
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that created this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the Participant call connected to this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        call_sid_to_coach:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the participant who is being coached.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472co
+        coaching:
+          type: boolean
+          description: Whether the participant is coaching another call.
+          examples:
+          - false
+        conference_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the conference this participant is in.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this conference participant was created.
+          examples:
+          - Mon, 24 Sept 2018 21:00:00 +0000
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ParticipantStatus'
+          description: The status of the conference call.
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this conference participant was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        end_conference_on_exit:
+          type: boolean
+          description: Whether or not a conference ends when a participant leaves the conference call.
+          examples:
+          - false
+        muted:
+          type: boolean
+          description: Whether or not a participant is muted.
+          examples:
+          - false
+        hold:
+          type: boolean
+          description: Whether or not a participant is on hold.
+          examples:
+          - false
+        start_conference_on_enter:
+          type: boolean
+          description: Whether or not a conference will begin when this participant enters the conference call.
+          examples:
+          - true
+        uri:
+          type: string
+          description: The URI for this conference participant.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants/b3877c40-da60-4998-90ad-b792e98472ca.json
+      unevaluatedProperties:
+        not: {}
+      description: Conference participant model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
+    ConferenceSidPathForParticipant:
+      name: ConferenceSid
+      in: path
+      required: true
+      description: The unique identifier for the conference this participant is in.
+      schema:
+        $ref: '#/components/schemas/uuid'
     ParticipantCallSidPath:
       name: CallSid
       in: path
@@ -621,13 +628,6 @@ components:
       in: path
       required: true
       description: The unique identifier for the account that created this conference.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    ConferenceSidPathForParticipant:
-      name: ConferenceSid
-      in: path
-      required: true
-      description: The unique identifier for the conference this participant is in.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

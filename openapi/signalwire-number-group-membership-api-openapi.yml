@@ -228,76 +228,6 @@ paths:
               $ref: '#/components/schemas/AddNumberGroupMembershipRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    MembershipPhoneNumber:
-      type: object
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the phone number.
-        name:
-          type: string
-          description: The name given to the phone number.
-          examples:
-          - Jenny
-        number:
-          type: string
-          description: The phone number in E.164 format.
-          examples:
-          - '+15558675309'
-        capabilities:
-          type: array
-          items:
-            type: string
-          description: The capabilities of the phone number.
-          examples:
-          - - voice
-            - sms
-            - mms
-            - fax
-      unevaluatedProperties:
-        not: {}
-      description: Phone number representation within a membership.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     NumberGroupMembershipResponse:
       type: object
       required:
@@ -336,19 +266,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single number group membership.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
     NumberGroupMembershipListResponse:
       type: object
       required:
@@ -367,63 +284,40 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of number group memberships.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.ValidationError:
       type: object
       required:
-      - error
+      - errors
       properties:
-        error:
-          type: string
-          enum:
-          - Not Found
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    AddNumberGroupMembershipRequest:
+      description: The request failed validation. See errors for details.
+    PaginationLinks:
       type: object
       required:
-      - phone_number_id
+      - self
+      - first
       properties:
-        phone_number_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The phone number ID to add to the group.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: Request body for adding a phone number to a number group.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
+      description: Pagination links for list responses.
     NumberGroupMembership:
       type: object
       required:
@@ -462,42 +356,134 @@ components:
       unevaluatedProperties:
         not: {}
       description: Number group membership model.
-    PaginationLinks:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - self
-      - first
+      - error
       properties:
-        self:
+        error:
           type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
+      description: An internal server error occurred.
+    AddNumberGroupMembershipRequest:
+      type: object
+      required:
+      - phone_number_id
+      properties:
+        phone_number_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The phone number ID to add to the group.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+      unevaluatedProperties:
+        not: {}
+      description: Request body for adding a phone number to a number group.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    MembershipPhoneNumber:
+      type: object
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the phone number.
+        name:
+          type: string
+          description: The name given to the phone number.
+          examples:
+          - Jenny
+        number:
+          type: string
+          description: The phone number in E.164 format.
+          examples:
+          - '+15558675309'
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: The capabilities of the phone number.
+          examples:
+          - - voice
+            - sms
+            - mms
+            - fax
+      unevaluatedProperties:
+        not: {}
+      description: Phone number representation within a membership.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    NumberGroupIdPath:
-      name: NumberGroupId
-      in: path
-      required: true
-      description: Unique ID of the number group.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    NumberGroupMembershipPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the number group membership.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ListNumberGroupMembershipsQuery.page_token:
       name: page_token
       in: query
@@ -505,6 +491,23 @@ components:
       description: Token for cursor-based pagination.
       schema:
         type: string
+      explode: false
+    NumberGroupMembershipPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the number group membership.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ListNumberGroupMembershipsQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve.
+      schema:
+        type: integer
+        format: int32
+        default: 0
       explode: false
     ListNumberGroupMembershipsQuery.page_size:
       name: page_size
@@ -518,16 +521,13 @@ components:
         maximum: 1000
         default: 50
       explode: false
-    ListNumberGroupMembershipsQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve.
+    NumberGroupIdPath:
+      name: NumberGroupId
+      in: path
+      required: true
+      description: Unique ID of the number group.
       schema:
-        type: integer
-        format: int32
-        default: 0
-      explode: false
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

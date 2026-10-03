@@ -266,18 +266,234 @@ paths:
       tags:
       - Conference Recordings
 components:
+  parameters:
+    ConferenceRecordingSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the recording.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferenceSidPathForParticipant:
+      name: ConferenceSid
+      in: path
+      required: true
+      description: The unique identifier for the conference this participant is in.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    ConferencesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that created this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
-    ConferenceRecordingStatus:
+    ConferenceRecordingSource:
       type: string
       enum:
-      - queued
-      - in-progress
-      - paused
-      - resumed
-      - completed
-      - absent
-      - stopped
-      description: Recording status.
+      - Conference
+      - StartConferenceRecording
+      description: Recording source for conference recordings.
+    ConferenceRecordingSubresourceUris:
+      type: object
+      required:
+      - transcriptions
+      properties:
+        transcriptions:
+          type: string
+          description: The URI for transcriptions.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
+      unevaluatedProperties:
+        not: {}
+      description: Recording subresource URIs.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    ConferenceRecordingResponse:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - api_version
+      - call_sid
+      - conference_sid
+      - channel
+      - channels
+      - date_created
+      - date_updated
+      - start_time
+      - end_time
+      - duration
+      - price
+      - price_unit
+      - source
+      - status
+      - error_code
+      - uri
+      - subresource_uris
+      - encryption_details
+      - trim
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the recording.
+          examples:
+          - 19e436af-5688-4307-b03b-bdb2b42b8142
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that is associated with this recording.
+          examples:
+          - 720796a0-8ee9-4350-83bd-2d07a3121f1e
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        call_sid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The unique identifier for the call. Always null for conference recordings.
+          examples:
+          - null
+        conference_sid:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier for the conference that is associated with this recording.
+          examples:
+          - 43bb71ee-553f-4074-bb20-8e2747647cce
+        channel:
+          type: string
+          enum:
+          - '1'
+          - '2'
+          description: The number of channels in a recording (singular key). Returns '1' for mono or '2' for stereo.
+          examples:
+          - '1'
+        channels:
+          type: string
+          enum:
+          - '1'
+          - '2'
+          description: The number of channels in a recording. Returns '1' for mono or '2' for stereo.
+          examples:
+          - '1'
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this recording was created.
+          examples:
+          - Tue, 25 Sep 2018 23:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this recording was updated.
+          examples:
+          - Wed, 26 Sep 2018 23:00:04 +0000
+        start_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The time, in RFC 2822 format, this recording started.
+          examples:
+          - Tue, 25 Sep 2018 23:00:00 +0000
+        end_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The time, in RFC 2822 format, this recording ended.
+          examples:
+          - Wed, 26 Sep 2018 23:00:04 +0000
+        duration:
+          type: integer
+          format: int32
+          description: The length, in seconds, of the recording.
+          examples:
+          - 4
+        price:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The cost for the recording.
+          examples:
+          - '-0.0025'
+        price_unit:
+          type: string
+          description: The currency of the price of the recording.
+          examples:
+          - USD
+        source:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceRecordingSource'
+          description: How the recording was made.
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceRecordingStatus'
+          description: The status of the recording.
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Further details about a failed recording.
+          examples:
+          - null
+        uri:
+          type: string
+          description: The URI of the recording.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142.json
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceRecordingSubresourceUris'
+          description: Subresource URIs.
+        encryption_details:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Encryption details. Always null.
+          examples:
+          - null
+        trim:
+          type: string
+          description: Whether leading and trailing silence is trimmed from a recording.
+          examples:
+          - do-not-trim
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single conference recording.
     ConferenceRecording:
       type: object
       required:
@@ -446,43 +662,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response with errors array of strings format.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     ConferenceRecordingListResponse:
       type: object
       required:
@@ -538,25 +717,17 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of conference recordings.
-    ConferenceRecordingSubresourceUris:
-      type: object
-      required:
-      - transcriptions
-      properties:
-        transcriptions:
-          type: string
-          description: The URI for transcriptions.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
-      unevaluatedProperties:
-        not: {}
-      description: Recording subresource URIs.
-    ConferenceRecordingSource:
+    ConferenceRecordingStatus:
       type: string
       enum:
-      - Conference
-      - StartConferenceRecording
-      description: Recording source for conference recordings.
+      - queued
+      - in-progress
+      - paused
+      - resumed
+      - completed
+      - absent
+      - stopped
+      description: Recording status.
     UpdateConferenceRecordingRequest:
       type: object
       required:
@@ -583,181 +754,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a conference recording.
-    ConferenceRecordingResponse:
-      type: object
-      required:
-      - sid
-      - account_sid
-      - api_version
-      - call_sid
-      - conference_sid
-      - channel
-      - channels
-      - date_created
-      - date_updated
-      - start_time
-      - end_time
-      - duration
-      - price
-      - price_unit
-      - source
-      - status
-      - error_code
-      - uri
-      - subresource_uris
-      - encryption_details
-      - trim
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the recording.
-          examples:
-          - 19e436af-5688-4307-b03b-bdb2b42b8142
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account that is associated with this recording.
-          examples:
-          - 720796a0-8ee9-4350-83bd-2d07a3121f1e
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        call_sid:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The unique identifier for the call. Always null for conference recordings.
-          examples:
-          - null
-        conference_sid:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The unique identifier for the conference that is associated with this recording.
-          examples:
-          - 43bb71ee-553f-4074-bb20-8e2747647cce
-        channel:
-          type: string
-          enum:
-          - '1'
-          - '2'
-          description: The number of channels in a recording (singular key). Returns '1' for mono or '2' for stereo.
-          examples:
-          - '1'
-        channels:
-          type: string
-          enum:
-          - '1'
-          - '2'
-          description: The number of channels in a recording. Returns '1' for mono or '2' for stereo.
-          examples:
-          - '1'
-        date_created:
-          type: string
-          description: The date, in RFC 2822 format, this recording was created.
-          examples:
-          - Tue, 25 Sep 2018 23:00:00 +0000
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 format, this recording was updated.
-          examples:
-          - Wed, 26 Sep 2018 23:00:04 +0000
-        start_time:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The time, in RFC 2822 format, this recording started.
-          examples:
-          - Tue, 25 Sep 2018 23:00:00 +0000
-        end_time:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The time, in RFC 2822 format, this recording ended.
-          examples:
-          - Wed, 26 Sep 2018 23:00:04 +0000
-        duration:
-          type: integer
-          format: int32
-          description: The length, in seconds, of the recording.
-          examples:
-          - 4
-        price:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The cost for the recording.
-          examples:
-          - '-0.0025'
-        price_unit:
-          type: string
-          description: The currency of the price of the recording.
-          examples:
-          - USD
-        source:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceRecordingSource'
-          description: How the recording was made.
-        status:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceRecordingStatus'
-          description: The status of the recording.
-        error_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Further details about a failed recording.
-          examples:
-          - null
-        uri:
-          type: string
-          description: The URI of the recording.
-          examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Conferences/43bb71ee-553f-4074-bb20-8e2747647cce/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142.json
-        subresource_uris:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceRecordingSubresourceUris'
-          description: Subresource URIs.
-        encryption_details:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Encryption details. Always null.
-          examples:
-          - null
-        trim:
-          type: string
-          description: Whether leading and trailing silence is trimmed from a recording.
-          examples:
-          - do-not-trim
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single conference recording.
-  parameters:
-    ConferenceRecordingSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The unique identifier for the recording.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    ConferencesAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account that created this conference.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    ConferenceSidPathForParticipant:
-      name: ConferenceSid
-      in: path
-      required: true
-      description: The unique identifier for the conference this participant is in.
-      schema:
-        $ref: '#/components/schemas/uuid'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

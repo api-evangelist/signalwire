@@ -87,51 +87,6 @@ paths:
               $ref: '#/components/schemas/DomainApplicationAssignRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    DomainApplicationCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: name is required
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -369,10 +324,36 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single domain application.
-    uuid:
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    DomainAppCallHandler:
       type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      enum:
+      - relay_topic
+      - relay_application
+      - laml_webhooks
+      - laml_application
+      - video_room
+      - relay_script
+      - dialogflow
+      - ai_agent
+      - call_flow
+      - relay_context
+      - relay_connector
+      - fabric_subscriber
+      - sip_gateway
+      - call_queue
+      description: All possible call handler types for domain applications. Includes types that can only be assigned via the Fabric API or UI.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -398,24 +379,43 @@ components:
           - 993ed018-9e79-4e50-b97b-984bd5534095
       unevaluatedProperties:
         not: {}
-    DomainAppCallHandler:
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    DomainApplicationCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: name is required
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    uuid:
       type: string
-      enum:
-      - relay_topic
-      - relay_application
-      - laml_webhooks
-      - laml_application
-      - video_room
-      - relay_script
-      - dialogflow
-      - ai_agent
-      - call_flow
-      - relay_context
-      - relay_connector
-      - fabric_subscriber
-      - sip_gateway
-      - call_queue
-      description: All possible call handler types for domain applications. Includes types that can only be assigned via the Fabric API or UI.
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     DomainApplicationPathID:
       name: id

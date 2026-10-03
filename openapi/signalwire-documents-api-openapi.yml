@@ -339,54 +339,193 @@ paths:
       tags:
       - Documents
 components:
-  parameters:
-    Datasphere.DocumentListQuery.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` > 0.
-      schema:
-        type: string
-      explode: false
-    Datasphere.DocumentListQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve (0-indexed).
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
-    Datasphere.DocumentListQuery.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
-    Datasphere.PathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of a Document.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    Datasphere.ChunkingStrategy:
+    Datasphere.SearchResponse:
+      type: object
+      required:
+      - chunks
+      properties:
+        chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Datasphere.Chunk'
+          description: A list of search result chunks.
+      unevaluatedProperties:
+        not: {}
+    Datasphere.DocumentUpdateRequest:
+      type: object
+      required:
+      - tags
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          description: Document tags.
+          examples:
+          - - sports
+            - football
+            - game
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Datasphere.DocumentCreateParagraphRequest:
+      type: object
+      properties:
+        chunking_strategy:
+          type: string
+          enum:
+          - paragraph
+          description: Strategy for chunking the document
+          examples:
+          - paragraph
+      unevaluatedProperties:
+        not: {}
+      allOf:
+      - $ref: '#/components/schemas/Datasphere.DocumentCreateRequestBase'
+      title: Paragraph strategy
+    Datasphere.CreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Invalid chunking_strategy
+          attribute: chunking_strategy
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Datasphere.DocumentStatus:
       type: string
       enum:
-      - sentence
-      - paragraph
-      - page
-      - sliding
-      description: Strategy to use when chunking the document.
+      - submitted
+      - in_progress
+      - completed
+      - failed
+      description: The current Status of the Document.
+    Datasphere.SearchStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Invalid tags
+          attribute: tags
+          url: https://signalwire.com/docs/apis/error-codes
+    Datasphere.UpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Invalid tags
+          attribute: tags
+          url: https://signalwire.com/docs/apis/error-codes
+    Datasphere.PaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link to the first page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page. Only present when there are more results.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page. Only present when not on the first page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -425,154 +564,38 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    Datasphere.DocumentStatus:
-      type: string
-      enum:
-      - submitted
-      - in_progress
-      - completed
-      - failed
-      description: The current Status of the Document.
-    Datasphere.UpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Invalid tags
-          attribute: tags
-          url: https://signalwire.com/docs/apis/error-codes
-    Datasphere.DocumentCreateParagraphRequest:
+    Datasphere.DocumentCreateSentenceRequest:
       type: object
       properties:
+        max_sentences_per_chunk:
+          type: integer
+          description: Maximum number of sentences per chunk.
+          examples:
+          - 40
+          default: 50
         chunking_strategy:
           type: string
           enum:
-          - paragraph
+          - sentence
           description: Strategy for chunking the document
           examples:
-          - paragraph
+          - sentence
+        split_newlines:
+          type: boolean
+          description: 'Whether to split chunks on new lines.
+
+
+
+
+            **Default value:** `false`'
+          examples:
+          - false
+          default: false
       unevaluatedProperties:
         not: {}
       allOf:
       - $ref: '#/components/schemas/Datasphere.DocumentCreateRequestBase'
-      title: Paragraph strategy
-    Datasphere.DocumentUpdateRequest:
-      type: object
-      required:
-      - tags
-      properties:
-        tags:
-          type: array
-          items:
-            type: string
-          description: Document tags.
-          examples:
-          - - sports
-            - football
-            - game
-      unevaluatedProperties:
-        not: {}
-    Datasphere.SearchResponse:
-      type: object
-      required:
-      - chunks
-      properties:
-        chunks:
-          type: array
-          items:
-            $ref: '#/components/schemas/Datasphere.Chunk'
-          description: A list of search result chunks.
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Datasphere.DocumentCreateRequestBase:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-          format: uri
-          description: URL of the document.
-          examples:
-          - https://example.com/document.pdf
-        tags:
-          type: array
-          items:
-            type: string
-          description: Document tags.
-          examples:
-          - - sports
-            - football
-            - game
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    Datasphere.PaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page. Only present when there are more results.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page. Only present when not on the first page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
-      unevaluatedProperties:
-        not: {}
+      title: Sentence strategy
     Datasphere.Document:
       type: object
       required:
@@ -674,44 +697,6 @@ components:
           - 2024-05-06T12:20-12Z
       unevaluatedProperties:
         not: {}
-    Datasphere.CreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Invalid chunking_strategy
-          attribute: chunking_strategy
-          url: https://signalwire.com/docs/apis/error-codes
-    Datasphere.DocumentListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Datasphere.Document'
-          description: A list of documents.
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Datasphere.PaginationResponse'
-          description: Pagination links.
-      unevaluatedProperties:
-        not: {}
     Datasphere.Chunk:
       type: object
       required:
@@ -731,81 +716,6 @@ components:
           - acaa5c49-be5e-4477-bce0-48f4b23b7720
       unevaluatedProperties:
         not: {}
-    Datasphere.DocumentCreateSentenceRequest:
-      type: object
-      properties:
-        max_sentences_per_chunk:
-          type: integer
-          description: Maximum number of sentences per chunk.
-          examples:
-          - 40
-          default: 50
-        chunking_strategy:
-          type: string
-          enum:
-          - sentence
-          description: Strategy for chunking the document
-          examples:
-          - sentence
-        split_newlines:
-          type: boolean
-          description: 'Whether to split chunks on new lines.
-
-
-
-
-            **Default value:** `false`'
-          examples:
-          - false
-          default: false
-      unevaluatedProperties:
-        not: {}
-      allOf:
-      - $ref: '#/components/schemas/Datasphere.DocumentCreateRequestBase'
-      title: Sentence strategy
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Datasphere.DocumentCreateRequest:
-      oneOf:
-      - $ref: '#/components/schemas/Datasphere.DocumentCreateSentenceRequest'
-      - $ref: '#/components/schemas/Datasphere.DocumentCreateSlidingRequest'
-      - $ref: '#/components/schemas/Datasphere.DocumentCreatePageRequest'
-      - $ref: '#/components/schemas/Datasphere.DocumentCreateParagraphRequest'
-    Datasphere.SearchStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Invalid tags
-          attribute: tags
-          url: https://signalwire.com/docs/apis/error-codes
     Datasphere.ListStatusCode422:
       type: object
       required:
@@ -827,18 +737,41 @@ components:
           message: Invalid page_token
           attribute: page_token
           url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode401:
+    Datasphere.DocumentCreateRequestBase:
       type: object
       required:
-      - error
+      - url
       properties:
-        error:
+        url:
+          type: string
+          format: uri
+          description: URL of the document.
+          examples:
+          - https://example.com/document.pdf
+        tags:
+          type: array
+          items:
+            type: string
+          description: Document tags.
+          examples:
+          - - sports
+            - football
+            - game
+    Datasphere.DocumentCreatePageRequest:
+      type: object
+      properties:
+        chunking_strategy:
           type: string
           enum:
-          - Unauthorized
+          - page
+          description: Strategy for chunking the document
+          examples:
+          - page
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
+      allOf:
+      - $ref: '#/components/schemas/Datasphere.DocumentCreateRequestBase'
+      title: Page strategy
     Datasphere.DocumentCreateSlidingRequest:
       type: object
       properties:
@@ -866,21 +799,37 @@ components:
       allOf:
       - $ref: '#/components/schemas/Datasphere.DocumentCreateRequestBase'
       title: Sliding strategy
-    Datasphere.DocumentCreatePageRequest:
+    Datasphere.DocumentCreateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/Datasphere.DocumentCreateSentenceRequest'
+      - $ref: '#/components/schemas/Datasphere.DocumentCreateSlidingRequest'
+      - $ref: '#/components/schemas/Datasphere.DocumentCreatePageRequest'
+      - $ref: '#/components/schemas/Datasphere.DocumentCreateParagraphRequest'
+    Datasphere.ChunkingStrategy:
+      type: string
+      enum:
+      - sentence
+      - paragraph
+      - page
+      - sliding
+      description: Strategy to use when chunking the document.
+    Datasphere.DocumentListResponse:
       type: object
+      required:
+      - data
+      - links
       properties:
-        chunking_strategy:
-          type: string
-          enum:
-          - page
-          description: Strategy for chunking the document
-          examples:
-          - page
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Datasphere.Document'
+          description: A list of documents.
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Datasphere.PaginationResponse'
+          description: Pagination links.
       unevaluatedProperties:
         not: {}
-      allOf:
-      - $ref: '#/components/schemas/Datasphere.DocumentCreateRequestBase'
-      title: Page strategy
     Datasphere.DocumentSearchRequest:
       type: object
       required:
@@ -948,6 +897,57 @@ components:
           default: 10
       unevaluatedProperties:
         not: {}
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+  parameters:
+    Datasphere.DocumentListQuery.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` > 0.
+      schema:
+        type: string
+      explode: false
+    Datasphere.DocumentListQuery.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Datasphere.PathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of a Document.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Datasphere.DocumentListQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
   securitySchemes:
     SignalWireBasicAuth:
       type: http

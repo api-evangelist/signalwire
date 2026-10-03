@@ -182,63 +182,38 @@ paths:
       - Chunks
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
+    Datasphere.ChunkPaginationResponse:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Datasphere.ListStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Invalid page_token
-          attribute: page_token
-          url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          format: uri
+          description: Link of the current page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
+        first:
           type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          format: uri
+          description: Link to the first page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
+        next:
           type: string
-          enum:
-          - Bad Request
+          format: uri
+          description: Link to the next page. Only present when there are more results.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page. Only present when not on the first page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -277,11 +252,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -289,10 +260,10 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+      description: An internal server error occurred.
     Datasphere.ChunkListResponse:
       type: object
       required:
@@ -310,6 +281,59 @@ components:
           description: Pagination links.
       unevaluatedProperties:
         not: {}
+    Datasphere.ChunkStatus:
+      type: string
+      enum:
+      - submitted
+      - in_progress
+      - completed
+      - failed
+      description: The current Status of the Chunk.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Datasphere.ListStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Invalid page_token
+          attribute: page_token
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     Datasphere.ChunkResponse:
       type: object
       required:
@@ -374,58 +398,23 @@ components:
           - 2024-05-06T12:20-12Z
       unevaluatedProperties:
         not: {}
-    Datasphere.ChunkStatus:
-      type: string
-      enum:
-      - submitted
-      - in_progress
-      - completed
-      - failed
-      description: The current Status of the Chunk.
-    Datasphere.ChunkPaginationResponse:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
-      - self
-      - first
+      - error
       properties:
-        self:
+        error:
           type: string
-          format: uri
-          description: Link of the current page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page. Only present when there are more results.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page. Only present when not on the first page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
+          enum:
+          - Bad Request
       unevaluatedProperties:
         not: {}
+      description: The request is invalid.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    Datasphere.ChunkListQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve (0-indexed).
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
     Datasphere.ChunkPathID.documentId:
       name: documentId
       in: path
@@ -433,6 +422,14 @@ components:
       description: Unique ID of the parent Document.
       schema:
         $ref: '#/components/schemas/uuid'
+    Datasphere.ChunkListQuery.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` > 0.
+      schema:
+        type: string
+      explode: false
     Datasphere.ChunkListQuery.page_size:
       name: page_size
       in: query
@@ -445,6 +442,17 @@ components:
         maximum: 1000
         default: 50
       explode: false
+    Datasphere.ChunkListQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
     Datasphere.ChunkPathID.chunkId:
       name: chunkId
       in: path
@@ -452,14 +460,6 @@ components:
       description: Unique ID of a Chunk.
       schema:
         $ref: '#/components/schemas/uuid'
-    Datasphere.ChunkListQuery.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` > 0.
-      schema:
-        type: string
-      explode: false
     Datasphere.DocumentPathID:
       name: documentId
       in: path

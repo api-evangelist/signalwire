@@ -181,37 +181,77 @@ paths:
               $ref: '#/components/schemas/UpdateShortCodeRequest'
 components:
   schemas:
-    ShortCodeCapability:
-      type: string
-      enum:
-      - sms
-      - mms
-      description: Short code capabilities.
-    ShortCodeListResponse:
+    UpdateShortCodeRequest:
       type: object
       required:
-      - links
-      - data
+      - name
+      - message_handler
       properties:
-        links:
+        name:
+          type: string
+          maxLength: 255
+          description: The name given to the short code.
+          examples:
+          - My Short Code
+        message_handler:
           allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ShortCode'
-          description: List of short codes.
+          - $ref: '#/components/schemas/ShortCodeMessageHandler'
+          description: The message handler type for incoming messages.
+        message_request_url:
+          type: string
+          description: The URL to send message requests to when using laml_webhooks handler.
+          examples:
+          - https://example.com/message
+        message_request_method:
+          allOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          description: The HTTP method to use for message requests. Defaults to POST.
+          default: POST
+        message_fallback_url:
+          type: string
+          description: The fallback URL for message requests.
+          examples:
+          - https://example.com/fallback
+        message_fallback_method:
+          allOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          description: The HTTP method to use for fallback requests. Defaults to POST.
+          default: POST
+        message_laml_application_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the LāML application to handle messages when using laml_application handler.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        message_relay_context:
+          type: string
+          description: The Relay context to use when using relay_context handler.
+          examples:
+          - my-context
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of short codes.
-    ShortCodeMessageHandler:
-      type: string
-      enum:
-      - relay_context
-      - laml_webhooks
-      - laml_application
-      description: Message handler type for short codes.
+      description: Request body for updating a short code.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -230,6 +270,18 @@ components:
       - vanity
       - random
       description: Short code type.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     ShortCode:
       type: object
       required:
@@ -361,7 +413,36 @@ components:
       unevaluatedProperties:
         not: {}
       description: Short code model.
-    Types.StatusCodes.StatusCode400:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    ShortCodeMessageHandler:
+      type: string
+      enum:
+      - relay_context
+      - laml_webhooks
+      - laml_application
+      description: Message handler type for short codes.
+    ShortCodeListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShortCode'
+          description: List of short codes.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of short codes.
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -369,23 +450,22 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
+      description: Access is unauthorized.
+    HttpMethod:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: HTTP method type.
+    ShortCodeCapability:
+      type: string
+      enum:
+      - sms
+      - mms
+      description: Short code capabilities.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -417,111 +497,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.ValidationError:
       type: object
       required:
-      - error
+      - errors
       properties:
-        error:
-          type: string
-          enum:
-          - Not Found
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    HttpMethod:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: HTTP method type.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    UpdateShortCodeRequest:
-      type: object
-      required:
-      - name
-      - message_handler
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          description: The name given to the short code.
-          examples:
-          - My Short Code
-        message_handler:
-          allOf:
-          - $ref: '#/components/schemas/ShortCodeMessageHandler'
-          description: The message handler type for incoming messages.
-        message_request_url:
-          type: string
-          description: The URL to send message requests to when using laml_webhooks handler.
-          examples:
-          - https://example.com/message
-        message_request_method:
-          allOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          description: The HTTP method to use for message requests. Defaults to POST.
-          default: POST
-        message_fallback_url:
-          type: string
-          description: The fallback URL for message requests.
-          examples:
-          - https://example.com/fallback
-        message_fallback_method:
-          allOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          description: The HTTP method to use for fallback requests. Defaults to POST.
-          default: POST
-        message_laml_application_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the LāML application to handle messages when using laml_application handler.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        message_relay_context:
-          type: string
-          description: The Relay context to use when using relay_context handler.
-          examples:
-          - my-context
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a short code.
+      description: The request failed validation. See errors for details.
     ShortCodeResponse:
       type: object
       required:
@@ -653,6 +641,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single short code.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
   parameters:
     ShortCodePathID:
       name: id
@@ -661,6 +661,18 @@ components:
       description: Unique ID of the short code.
       schema:
         $ref: '#/components/schemas/uuid'
+    ListShortCodesQuery.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: The number of results per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
     ListShortCodesQuery.page_number:
       name: page_number
       in: query
@@ -670,14 +682,6 @@ components:
         type: integer
         format: int32
         default: 0
-      explode: false
-    ListShortCodesQuery.filter_number:
-      name: filter_number
-      in: query
-      required: false
-      description: Filter by number. Returns all short codes containing this value as a substring.
-      schema:
-        type: string
       explode: false
     ListShortCodesQuery.page_token:
       name: page_token
@@ -695,17 +699,13 @@ components:
       schema:
         type: string
       explode: false
-    ListShortCodesQuery.page_size:
-      name: page_size
+    ListShortCodesQuery.filter_number:
+      name: filter_number
       in: query
       required: false
-      description: The number of results per page.
+      description: Filter by number. Returns all short codes containing this value as a substring.
       schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
+        type: string
       explode: false
   securitySchemes:
     SignalWireBasicAuth:

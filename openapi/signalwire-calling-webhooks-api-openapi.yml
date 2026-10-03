@@ -104,56 +104,133 @@ webhooks:
       - {}
 components:
   schemas:
-    Webhooks.Calling.InboundCallParent:
+    Webhooks.Calling.InboundCallWebhookPayload:
       type: object
       required:
-      - device_type
-      - call_id
-      - node_id
+      - call
+      - vars
+      - envs
+      - params
       properties:
-        device_type:
+        call:
+          allOf:
+          - $ref: '#/components/schemas/Webhooks.Calling.InboundCallContext'
+          description: The call that triggered this fetch.
+        vars:
+          type: object
+          unevaluatedProperties: {}
+          description: Script-scope variables for this call session. Empty on the initial document fetch.
+          examples:
+          - user_selection: '1'
+        envs:
+          type: object
+          unevaluatedProperties: {}
+          description: 'Environment variables available to this call''s SWML document, which you can reference as `${envs.<key>}`. Combines the variables you''ve configured at the account or project level with any `custom_variables` you passed on the outbound [Call commands](/docs/apis/rest/calls/call-commands) request.
+
+
+            Keys are case-sensitive. When a `custom_variables` key exactly matches an account- or project-level variable, including case, the value from the request wins; if they differ only in case, both are kept as separate variables.'
+          examples:
+          - api_key: <YOUR_API_KEY>
+            webhook_url: https://example.com/webhook
+            id: '12345'
+            case_number: '54321'
+        params:
+          type: object
+          unevaluatedProperties: {}
+          description: Parameters passed via a SWML calling `execute` or `transfer` step. An empty object on the initial document fetch.
+          examples:
+          - department: sales
+      unevaluatedProperties:
+        not: {}
+    Webhooks.Calling.InboundCallHeader:
+      type: object
+      required:
+      - name
+      - value
+      properties:
+        name:
+          type: string
+          description: The name of the header.
+          examples:
+          - X-Custom-Header
+        value:
+          type: string
+          description: The value of the header.
+          examples:
+          - custom-value
+      unevaluatedProperties:
+        not: {}
+      description: A single header associated with the call.
+      title: Call header
+    Webhooks.Calling.TranscribeStatusCallbackPayload:
+      type: object
+      required:
+      - event_type
+      - timestamp
+      - project_id
+      - space_id
+      - params
+      properties:
+        event_type:
           type: string
           enum:
-          - sip
-          - phone
-          - webrtc
-          description: The device type of the parent call.
+          - calling.transcript.completed
+          - calling.transcript.failed
+          description: Whether the transcription completed or failed.
           examples:
-          - phone
-        call_id:
-          type: string
-          description: A unique identifier for the parent call.
+          - calling.transcript.completed
+        timestamp:
+          type: number
+          description: When the event was sent, as a Unix timestamp in seconds.
           examples:
-          - a1b2c3d4-1111-2222-3333-444455556666
-        node_id:
-          type: string
-          description: A unique identifier for the node handling the parent call.
+          - 1777565701.5623918
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Your project ID.
           examples:
-          - a1b2c3d4-1111-2222-3333-444455556666
+          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
+        space_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Your Space ID.
+          examples:
+          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
+        params:
+          type: object
+          properties:
+            id:
+              allOf:
+              - $ref: '#/components/schemas/uuid'
+              description: Unique ID for this transcript.
+              examples:
+              - 0ec5a4da-46b9-4d2c-b724-151add8d4d08
+            call_id:
+              allOf:
+              - $ref: '#/components/schemas/uuid'
+              description: ID of the call that was transcribed.
+              examples:
+              - 2e1e66e5-5d07-413d-9668-55542992eec0
+            segment_id:
+              allOf:
+              - $ref: '#/components/schemas/uuid'
+              description: ID of the call leg that was transcribed.
+              examples:
+              - 2e1e66e5-5d07-413d-9668-55542992eec0
+            text:
+              type: string
+              description: The transcribed text of the call. Omitted when there is no transcribed text.
+              examples:
+              - A long time ago in a galaxy far, far away, Luke, I am your father. Do or do not, there is no try. May the force be with you. These aren't the droids you're looking for. I find your lack of faith disturbing. The force will be with you always.
+          required:
+          - id
+          - call_id
+          - segment_id
+          unevaluatedProperties:
+            not: {}
+          description: The transcript.
       unevaluatedProperties:
         not: {}
-      description: The call that created this call. Present only when this call has a parent — for example, a leg created by a `connect` or transfer.
-      title: Parent call
-    Webhooks.Calling.InboundCallPeer:
-      type: object
-      required:
-      - call_id
-      - node_id
-      properties:
-        call_id:
-          type: string
-          description: A unique identifier for the peer call.
-          examples:
-          - a1b2c3d4-1111-2222-3333-444455556666
-        node_id:
-          type: string
-          description: A unique identifier for the node handling the peer call.
-          examples:
-          - a1b2c3d4-1111-2222-3333-444455556666
-      unevaluatedProperties:
-        not: {}
-      description: The call this call is bridged to. Present only when this call has a peer.
-      title: Peer call
     Webhooks.Calling.InboundCallContext:
       type: object
       required:
@@ -273,137 +350,149 @@ components:
         not: {}
       description: Information about the call that triggered the SWML document fetch.
       title: Inbound call
-    Webhooks.Calling.InboundCallWebhookPayload:
+    Webhooks.Calling.InboundCallPeer:
       type: object
       required:
-      - call
-      - vars
-      - envs
-      - params
+      - call_id
+      - node_id
       properties:
-        call:
-          allOf:
-          - $ref: '#/components/schemas/Webhooks.Calling.InboundCallContext'
-          description: The call that triggered this fetch.
-        vars:
-          type: object
-          unevaluatedProperties: {}
-          description: Script-scope variables for this call session. Empty on the initial document fetch.
+        call_id:
+          type: string
+          description: A unique identifier for the peer call.
           examples:
-          - user_selection: '1'
-        envs:
-          type: object
-          unevaluatedProperties: {}
-          description: 'Environment variables available to this call''s SWML document, which you can reference as `${envs.<key>}`. Combines the variables you''ve configured at the account or project level with any `custom_variables` you passed on the outbound [Call commands](/docs/apis/rest/calls/call-commands) request.
-
-
-            Keys are case-sensitive. When a `custom_variables` key exactly matches an account- or project-level variable, including case, the value from the request wins; if they differ only in case, both are kept as separate variables.'
+          - a1b2c3d4-1111-2222-3333-444455556666
+        node_id:
+          type: string
+          description: A unique identifier for the node handling the peer call.
           examples:
-          - api_key: <YOUR_API_KEY>
-            webhook_url: https://example.com/webhook
-            id: '12345'
-            case_number: '54321'
-        params:
-          type: object
-          unevaluatedProperties: {}
-          description: Parameters passed via a SWML calling `execute` or `transfer` step. An empty object on the initial document fetch.
-          examples:
-          - department: sales
+          - a1b2c3d4-1111-2222-3333-444455556666
       unevaluatedProperties:
         not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Webhooks.Calling.TranscribeStatusCallbackPayload:
+      description: The call this call is bridged to. Present only when this call has a peer.
+      title: Peer call
+    Webhooks.Calling.InboundCallSipData:
       type: object
       required:
-      - event_type
-      - timestamp
-      - project_id
-      - space_id
-      - params
+      - sip_req_host
+      - sip_req_uri
+      - sip_req_user
+      - sip_from_host
+      - sip_from_uri
+      - sip_from_user
+      - sip_to_host
+      - sip_to_uri
+      - sip_to_user
+      - sip_contact_user
+      - sip_contact_port
+      - sip_contact_uri
+      - sip_contact_host
+      - sip_contact_params
       properties:
-        event_type:
+        sip_req_host:
+          type: string
+          description: The host portion of the SIP request URI.
+          examples:
+          - yourdomain.com
+        sip_req_uri:
+          type: string
+          description: The full SIP request URI.
+          examples:
+          - destination@yourdomain.com
+        sip_req_user:
+          type: string
+          description: The user portion of the SIP request URI.
+          examples:
+          - destination
+        sip_from_host:
+          type: string
+          description: The host portion of the SIP From header.
+          examples:
+          - example.com
+        sip_from_uri:
+          type: string
+          description: The full URI from the SIP From header.
+          examples:
+          - user@example.com
+        sip_from_user:
+          type: string
+          description: The user portion of the SIP From header.
+          examples:
+          - user
+        sip_to_host:
+          type: string
+          description: The host portion of the SIP To header.
+          examples:
+          - yourdomain.com
+        sip_to_uri:
+          type: string
+          description: The full URI from the SIP To header.
+          examples:
+          - destination@yourdomain.com
+        sip_to_user:
+          type: string
+          description: The user portion of the SIP To header.
+          examples:
+          - destination
+        sip_contact_user:
+          type: string
+          description: The user portion of the SIP Contact header.
+          examples:
+          - user
+        sip_contact_port:
+          type: string
+          description: The port from the SIP Contact header.
+          examples:
+          - '5060'
+        sip_contact_uri:
+          type: string
+          description: The full URI from the SIP Contact header.
+          examples:
+          - user@192.168.1.100:5060
+        sip_contact_host:
+          type: string
+          description: The host portion of the SIP Contact header.
+          examples:
+          - 192.168.1.100
+        sip_contact_params:
+          type: object
+          unevaluatedProperties: {}
+          description: Additional parameters from the SIP Contact header.
+          examples:
+          - {}
+      unevaluatedProperties:
+        not: {}
+      description: SIP-specific data for SIP calls. Only present when `call.type` is `sip`.
+      title: Inbound call SIP data
+    Webhooks.Calling.InboundCallParent:
+      type: object
+      required:
+      - device_type
+      - call_id
+      - node_id
+      properties:
+        device_type:
           type: string
           enum:
-          - calling.transcript.completed
-          - calling.transcript.failed
-          description: Whether the transcription completed or failed.
+          - sip
+          - phone
+          - webrtc
+          description: The device type of the parent call.
           examples:
-          - calling.transcript.completed
-        timestamp:
-          type: number
-          description: When the event was sent, as a Unix timestamp in seconds.
+          - phone
+        call_id:
+          type: string
+          description: A unique identifier for the parent call.
           examples:
-          - 1777565701.5623918
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Your project ID.
+          - a1b2c3d4-1111-2222-3333-444455556666
+        node_id:
+          type: string
+          description: A unique identifier for the node handling the parent call.
           examples:
-          - 4d0d6f16-5881-4fcc-92a4-02c51a91954d
-        space_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Your Space ID.
-          examples:
-          - 451ed9ff-e568-4222-8af9-4f9ab7428d09
-        params:
-          type: object
-          properties:
-            id:
-              allOf:
-              - $ref: '#/components/schemas/uuid'
-              description: Unique ID for this transcript.
-              examples:
-              - 0ec5a4da-46b9-4d2c-b724-151add8d4d08
-            call_id:
-              allOf:
-              - $ref: '#/components/schemas/uuid'
-              description: ID of the call that was transcribed.
-              examples:
-              - 2e1e66e5-5d07-413d-9668-55542992eec0
-            segment_id:
-              allOf:
-              - $ref: '#/components/schemas/uuid'
-              description: ID of the call leg that was transcribed.
-              examples:
-              - 2e1e66e5-5d07-413d-9668-55542992eec0
-            text:
-              type: string
-              description: The transcribed text of the call. Omitted when there is no transcribed text.
-              examples:
-              - A long time ago in a galaxy far, far away, Luke, I am your father. Do or do not, there is no try. May the force be with you. These aren't the droids you're looking for. I find your lack of faith disturbing. The force will be with you always.
-          required:
-          - id
-          - call_id
-          - segment_id
-          unevaluatedProperties:
-            not: {}
-          description: The transcript.
+          - a1b2c3d4-1111-2222-3333-444455556666
       unevaluatedProperties:
         not: {}
-    Webhooks.Calling.InboundCallHeader:
-      type: object
-      required:
-      - name
-      - value
-      properties:
-        name:
-          type: string
-          description: The name of the header.
-          examples:
-          - X-Custom-Header
-        value:
-          type: string
-          description: The value of the header.
-          examples:
-          - custom-value
-      unevaluatedProperties:
-        not: {}
-      description: A single header associated with the call.
-      title: Call header
+      description: The call that created this call. Present only when this call has a parent — for example, a leg created by a `connect` or transfer.
+      title: Parent call
     Webhooks.Calling.StreamStatusCallbackPayload:
       type: object
       required:
@@ -504,99 +593,10 @@ components:
           description: Details about the stream.
       unevaluatedProperties:
         not: {}
-    Webhooks.Calling.InboundCallSipData:
-      type: object
-      required:
-      - sip_req_host
-      - sip_req_uri
-      - sip_req_user
-      - sip_from_host
-      - sip_from_uri
-      - sip_from_user
-      - sip_to_host
-      - sip_to_uri
-      - sip_to_user
-      - sip_contact_user
-      - sip_contact_port
-      - sip_contact_uri
-      - sip_contact_host
-      - sip_contact_params
-      properties:
-        sip_req_host:
-          type: string
-          description: The host portion of the SIP request URI.
-          examples:
-          - yourdomain.com
-        sip_req_uri:
-          type: string
-          description: The full SIP request URI.
-          examples:
-          - destination@yourdomain.com
-        sip_req_user:
-          type: string
-          description: The user portion of the SIP request URI.
-          examples:
-          - destination
-        sip_from_host:
-          type: string
-          description: The host portion of the SIP From header.
-          examples:
-          - example.com
-        sip_from_uri:
-          type: string
-          description: The full URI from the SIP From header.
-          examples:
-          - user@example.com
-        sip_from_user:
-          type: string
-          description: The user portion of the SIP From header.
-          examples:
-          - user
-        sip_to_host:
-          type: string
-          description: The host portion of the SIP To header.
-          examples:
-          - yourdomain.com
-        sip_to_uri:
-          type: string
-          description: The full URI from the SIP To header.
-          examples:
-          - destination@yourdomain.com
-        sip_to_user:
-          type: string
-          description: The user portion of the SIP To header.
-          examples:
-          - destination
-        sip_contact_user:
-          type: string
-          description: The user portion of the SIP Contact header.
-          examples:
-          - user
-        sip_contact_port:
-          type: string
-          description: The port from the SIP Contact header.
-          examples:
-          - '5060'
-        sip_contact_uri:
-          type: string
-          description: The full URI from the SIP Contact header.
-          examples:
-          - user@192.168.1.100:5060
-        sip_contact_host:
-          type: string
-          description: The host portion of the SIP Contact header.
-          examples:
-          - 192.168.1.100
-        sip_contact_params:
-          type: object
-          unevaluatedProperties: {}
-          description: Additional parameters from the SIP Contact header.
-          examples:
-          - {}
-      unevaluatedProperties:
-        not: {}
-      description: SIP-specific data for SIP calls. Only present when `call.type` is `sip`.
-      title: Inbound call SIP data
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

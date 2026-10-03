@@ -139,231 +139,34 @@ paths:
       - Message Logs
 components:
   schemas:
-    Message.LogRetrieveResponse:
+    Message.LogPaginationResponse:
       type: object
       required:
-      - id
-      - from
-      - to
-      - status
-      - direction
-      - kind
-      - source
-      - type
-      - url
-      - number_of_segments
-      - charge
-      - charge_details
-      - created_at
-      - error_message
-      - error_code
+      - self
+      - first
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: A unique identifier for the log.
-        from:
+        self:
           type: string
-          description: The origin phone number.
+          description: URL to current page
           examples:
-          - '+12077447397'
-        to:
+          - https://example.signalwire.com/api/messaging/logs?page_number=0&page_size=50
+        first:
           type: string
-          description: The destination phone number.
+          description: URL to first page
           examples:
-          - '+12029921413'
-        status:
+          - https://example.signalwire.com/api/messaging/logs?page_size=50
+        next:
           type: string
-          enum:
-          - queued
-          - initiated
-          - delivered
-          - sent
-          - received
-          - undelivered
-          - failed
-          description: The status of the message.
+          description: URL to next page (if available)
           examples:
-          - failed
-        direction:
+          - https://example.signalwire.com/api/messaging/logs?page_number=1&page_size=50&page_token=PA6ad4c839-9329-43fe-83c6-fbe7c38583ff
+        prev:
           type: string
-          enum:
-          - inbound
-          - outbound
-          - outbound-api
-          - outbound-call
-          - outbound-reply
-          description: The direction of the message.
+          description: URL to previous page (if available)
           examples:
-          - inbound
-        kind:
-          type: string
-          enum:
-          - sms
-          - mms
-          description: The kind of message.
-          examples:
-          - sms
-        source:
-          type: string
-          enum:
-          - realtime_api
-          - laml
-          description: Source of this log entry.
-          examples:
-          - laml
-        type:
-          type: string
-          enum:
-          - relay_message
-          - laml_message
-          description: Type of this log entry.
-          examples:
-          - relay_message
-        url:
-          anyOf:
-          - type: string
-            format: uri
-          - type: 'null'
-          description: URL for the resource associated with this log entry. Null for Relay messages.
-          examples:
-          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/c38dacad-2f6c-4de1-93d6-cc732e0c70c5/Messages/9ee38635-899a-490a-bfd1-9e72f5eea53c
-        number_of_segments:
-          type: integer
-          format: int32
-          description: The number of segments.
-          examples:
-          - 1
-        charge:
-          type: number
-          format: double
-          description: The charge in dollars.
-          examples:
-          - 0
-        charge_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message.ChargeDetail'
-          description: Details on charges associated with this log.
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the message entry was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Description of the error when the message failed. Null when the message did not fail. LaML messages use the codes documented at https://signalwire.com/docs/compatibility-api/rest/error-codes.
-          examples:
-          - From number is not a SMS-capable phone number.
-        error_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Error code identifying why the message failed. Null when the message did not fail. Some Relay messages may have an `error_message` without an `error_code` — the `error_code` is a newer pattern that is not used in all Relay areas.
-          examples:
-          - '21601'
+          - https://example.signalwire.com/api/messaging/logs?page_number=0&page_size=50&page_token=PA6ad4c839-9329-43fe-83c6-fbe7c38583ff
       unevaluatedProperties:
         not: {}
-      description: Response model for message log retrieve endpoint
-    Message.MessageLogShowStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: account_error
-          code: exceeds_history_logs_limit
-          message: The value exceeds the 2025-02-09 date limit.
-          attribute: created_at
-          url: https://signalwire.com/docs/apis/error-codes
-    Message.LogListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Message.LogPaginationResponse'
-          description: Object containing pagination links
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message.MessageLog'
-          description: Array of message log entries
-      unevaluatedProperties:
-        not: {}
-    Message.ChargeDetail:
-      type: object
-      required:
-      - description
-      - charge
-      properties:
-        description:
-          type: string
-          description: Description for this charge.
-          examples:
-          - Inbound SMS
-        charge:
-          type: number
-          format: double
-          description: Charged amount.
-          examples:
-          - 0.00415
-      unevaluatedProperties:
-        not: {}
-      description: Details on charges associated with this log.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     Message.MessageLog:
       type: object
       required:
@@ -505,7 +308,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
-    Types.StatusCodes.StatusCode400:
+    Message.LogListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Message.LogPaginationResponse'
+          description: Object containing pagination links
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message.MessageLog'
+          description: Array of message log entries
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -513,10 +333,234 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
+      description: The server cannot find the requested resource.
+    Message.ChargeDetail:
+      type: object
+      required:
+      - description
+      - charge
+      properties:
+        description:
+          type: string
+          description: Description for this charge.
+          examples:
+          - Inbound SMS
+        charge:
+          type: number
+          format: double
+          description: Charged amount.
+          examples:
+          - 0.00415
+      unevaluatedProperties:
+        not: {}
+      description: Details on charges associated with this log.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Message.LogRetrieveResponse:
+      type: object
+      required:
+      - id
+      - from
+      - to
+      - status
+      - direction
+      - kind
+      - source
+      - type
+      - url
+      - number_of_segments
+      - charge
+      - charge_details
+      - created_at
+      - error_message
+      - error_code
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: A unique identifier for the log.
+        from:
+          type: string
+          description: The origin phone number.
+          examples:
+          - '+12077447397'
+        to:
+          type: string
+          description: The destination phone number.
+          examples:
+          - '+12029921413'
+        status:
+          type: string
+          enum:
+          - queued
+          - initiated
+          - delivered
+          - sent
+          - received
+          - undelivered
+          - failed
+          description: The status of the message.
+          examples:
+          - failed
+        direction:
+          type: string
+          enum:
+          - inbound
+          - outbound
+          - outbound-api
+          - outbound-call
+          - outbound-reply
+          description: The direction of the message.
+          examples:
+          - inbound
+        kind:
+          type: string
+          enum:
+          - sms
+          - mms
+          description: The kind of message.
+          examples:
+          - sms
+        source:
+          type: string
+          enum:
+          - realtime_api
+          - laml
+          description: Source of this log entry.
+          examples:
+          - laml
+        type:
+          type: string
+          enum:
+          - relay_message
+          - laml_message
+          description: Type of this log entry.
+          examples:
+          - relay_message
+        url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: URL for the resource associated with this log entry. Null for Relay messages.
+          examples:
+          - https://example.signalwire.com/api/laml/2010-04-01/Accounts/c38dacad-2f6c-4de1-93d6-cc732e0c70c5/Messages/9ee38635-899a-490a-bfd1-9e72f5eea53c
+        number_of_segments:
+          type: integer
+          format: int32
+          description: The number of segments.
+          examples:
+          - 1
+        charge:
+          type: number
+          format: double
+          description: The charge in dollars.
+          examples:
+          - 0
+        charge_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message.ChargeDetail'
+          description: Details on charges associated with this log.
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the message entry was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Description of the error when the message failed. Null when the message did not fail. LaML messages use the codes documented at https://signalwire.com/docs/compatibility-api/rest/error-codes.
+          examples:
+          - From number is not a SMS-capable phone number.
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error code identifying why the message failed. Null when the message did not fail. Some Relay messages may have an `error_message` without an `error_code` — the `error_code` is a newer pattern that is not used in all Relay areas.
+          examples:
+          - '21601'
+      unevaluatedProperties:
+        not: {}
+      description: Response model for message log retrieve endpoint
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Message.MessageLogShowStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: account_error
+          code: exceeds_history_logs_limit
+          message: The value exceeds the 2025-02-09 date limit.
+          attribute: created_at
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
     Message.MessageLogsListStatusCode422:
       type: object
       required:
@@ -538,11 +582,7 @@ components:
           message: This value must be a DateTime
           attribute: created_before
           url: https://signalwire.com/docs/apis/error-codes
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
       - error
@@ -550,51 +590,19 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    Message.LogPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: URL to current page
-          examples:
-          - https://example.signalwire.com/api/messaging/logs?page_number=0&page_size=50
-        first:
-          type: string
-          description: URL to first page
-          examples:
-          - https://example.signalwire.com/api/messaging/logs?page_size=50
-        next:
-          type: string
-          description: URL to next page (if available)
-          examples:
-          - https://example.signalwire.com/api/messaging/logs?page_number=1&page_size=50&page_token=PA6ad4c839-9329-43fe-83c6-fbe7c38583ff
-        prev:
-          type: string
-          description: URL to previous page (if available)
-          examples:
-          - https://example.signalwire.com/api/messaging/logs?page_number=0&page_size=50&page_token=PA6ad4c839-9329-43fe-83c6-fbe7c38583ff
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
+      description: The request is invalid.
   parameters:
+    Message.LogListRequest.created_before:
+      name: created_before
+      in: query
+      required: false
+      description: Return logs for activity prior to this date.
+      schema:
+        type: string
+      explode: false
     Message.LogListRequest.include_deleted:
       name: include_deleted
       in: query
@@ -603,6 +611,33 @@ components:
       schema:
         type: boolean
         default: false
+      explode: false
+    Message.LogListRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` is greater than `0`. The token is returned in pagination links.
+      schema:
+        type: string
+      explode: false
+    Message.LogListRequest.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: Page number to retrieve. Requires `page_token` when greater than `0`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
+    Message.LogListRequest.created_on:
+      name: created_on
+      in: query
+      required: false
+      description: Return logs for activity on this date.
+      schema:
+        type: string
       explode: false
     Message.LogPathID:
       name: id
@@ -630,41 +665,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 50
-      explode: false
-    Message.LogListRequest.created_on:
-      name: created_on
-      in: query
-      required: false
-      description: Return logs for activity on this date.
-      schema:
-        type: string
-      explode: false
-    Message.LogListRequest.created_before:
-      name: created_before
-      in: query
-      required: false
-      description: Return logs for activity prior to this date.
-      schema:
-        type: string
-      explode: false
-    Message.LogListRequest.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: Page number to retrieve. Requires `page_token` when greater than `0`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
-    Message.LogListRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` is greater than `0`. The token is returned in pagination links.
-      schema:
-        type: string
       explode: false
   securitySchemes:
     SignalWireBasicAuth:

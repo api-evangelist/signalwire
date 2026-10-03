@@ -309,6 +309,68 @@ paths:
               $ref: '#/components/schemas/SubscriberRefreshTokenRequest'
 components:
   schemas:
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    SubscriberRefreshTokenResponse:
+      type: object
+      required:
+      - token
+      - refresh_token
+      properties:
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: A newly generated subscriber access token, valid for 2 hours.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: A new refresh token, valid for 2 hours and 5 minutes.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode403:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Forbidden
+      unevaluatedProperties:
+        not: {}
+      description: Access is forbidden.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     RefreshTokenStatusCode422:
       type: object
       required:
@@ -330,6 +392,144 @@ components:
           message: Token has expired.
           attribute: refresh_token
           url: https://signalwire.com/docs/rest/overview/error-codes#token_expired
+    SubscriberTokenResponse:
+      type: object
+      required:
+      - subscriber_id
+      - token
+      - refresh_token
+      properties:
+        subscriber_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the subscriber that the token is associated with.
+          examples:
+          - 32d94154-9297-418c-9a85-4a69e0c67c30
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: The token that is associated with the subscriber.
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiU0FUIn0..HahMYxqt4uI14qSH.daMTBR53lfEfEFiVAhr0pPSRqZhEod_YzavoG9-4ieiRQvl8GtP3FFNx0VLfkJqNcjUNbAaiKrEMnfOtCnQjiq1Kn0Iq90MYdM00QJ7cTaQ88vfbqdE92p-d4oDeg6z_vAsgrFgEobmrlDQndKxCWOD921iYxyLP0vqNaokN3kIM06iAWu_UpnTYEeR1l068xhK2xb6P9wbI2FDKFQoMgCdbjvABF7RRyaEzUoaQ5_Wj53YO6PFYuYcPbqMhdtvSSQiK3Nw6bFer2OfFs6s2RTukRGsocgC5Q7pwQwzYky-YgrPCb-pVAJajVSXUJrayvOi8-TeyCpICW4zTeJa5icZ380cWtafUH4rEB_FOJciJf0BCy48ajbz0NE121uBl2mqA1HE0_mQA53UqVjbrbE9hVOfnN4KpwOfULhIjx54tIekJQgG-aK2AYsLPCDNhuSpHvdwJcTM0Gzy3mS2veyaDV8q2qN5F_F9OThTQzcfy.AXzVNrJc_pGVPsticsVM0w
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Refresh token.
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiUmVmcmVzaCIsImNoIjoidGVzdHB1Yy5zaWduYWx3aXJlLmNvbSJ9..sHcQL_V1tZH2JEAh.FNKYe_49CazNthkgSphf-ov8_I2wGLGWKD6t2q7kiG0guBxBjGzpgD8Y-LM-Nu7ePRUg7Z6vBkKAvh3rjtZpkeXoRXobJ1lov9AO72l8tB9K9RLo-TnBxLDbh0BCDGWVBgGq8DOh9kzHz4Tot-_B8pHXY_bqXX5kC4UUszXCO9nhSi1a4rp6QMD_8b0Mm8pHDK9EtW8I-tfM0HPmXuPMuOnlft3hmZo3tiKN2CarWscveQPCGetufHfQJJssdHjjYup8USAX0gJM8dpsV7FpF9fxfpy4ZU7N9MJXgSYJM5cPrxpLLx3Lj291egob14jDkn7kZQpv7jbCtsGyYxC7HAi1FgGr_sw3AeGaf2esGCkaeE11MxL05_kwdiNYBSOaHqaY62kOzu5pIdfTKQekOogCS1fgiyBgisBZeSIEBWWF.neE9KnL5AzS165dXFXUqhQ
+      unevaluatedProperties:
+        not: {}
+    GuestTokenCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: must_belong_to_project
+          message: The addresses must belong to the project
+          attribute: allowed_addresses
+          url: https://signalwire.com/docs/apis/error-codes
+    InviteTokenCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Address is invalid
+          attribute: address_id
+          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
+        - type: validation_error
+          code: invalid_parameter
+          message: Expires At must be an integer
+          attribute: expires_at
+          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
+        - type: validation_error
+          code: invalid_parameter
+          message: Expires At must be greater than 1733254773
+          attribute: expires_at
+          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
+    SubscriberGuestTokenCreateRequest:
+      type: object
+      required:
+      - allowed_addresses
+      properties:
+        allowed_addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+          maxItems: 10
+          description: List of up to 10 UUIDs representing the allowed Fabric addresses.
+        expire_at:
+          type: integer
+          description: A unixtime (the number of seconds since 1970-01-01 00:00:00) at which the token should no longer be valid. Defaults to 'two hours from now'
+          examples:
+          - 1725513600
+        region:
+          type: string
+          enum:
+          - us-central
+          description: A routing override that controls which regional cluster the SDK connects to.
+          examples:
+          - us-central
+        ch:
+          type: string
+          enum:
+          - us-central
+          description: A direct routing override specifying the regional cluster endpoint, set as the `ch` claim in the SAT JWE header.
+          examples:
+          - us-central
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    EmbedsTokensResponse:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          format: jwt
+          description: Encrypted guest token.
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMubHZoLm1lIiwidHlwIjoiU0FUIn0..
+      unevaluatedProperties:
+        not: {}
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -368,27 +568,23 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    SubscriberTokenStatusCode422:
+    jwt:
+      type: string
+      format: jwt
+    SubscriberRefreshTokenRequest:
       type: object
       required:
-      - errors
+      - refresh_token
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: The refresh token previously issued alongside a subscriber access token. This token is used to request a new access token.
+          examples:
+          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
       unevaluatedProperties:
         not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: Required parameter is missing
-          attribute: reference
-          url: https://signalwire.com/docs/apis/error-codes
     EmbedTokenCreateStatusCode422:
       type: object
       required:
@@ -410,40 +606,6 @@ components:
           message: token is required
           attribute: token
           url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    SubscriberRefreshTokenResponse:
-      type: object
-      required:
-      - token
-      - refresh_token
-      properties:
-        token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: A newly generated subscriber access token, valid for 2 hours.
-          examples:
-          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        refresh_token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: A new refresh token, valid for 2 hours and 5 minutes.
-          examples:
-          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-      unevaluatedProperties:
-        not: {}
     SubscriberInviteTokenCreateRequest:
       type: object
       required:
@@ -462,21 +624,63 @@ components:
           - 1725513600
       unevaluatedProperties:
         not: {}
-    EmbedsTokensRequest:
+    SubscriberTokenStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: Required parameter is missing
+          attribute: reference
+          url: https://signalwire.com/docs/apis/error-codes
+    SubscriberInviteTokenCreateResponse:
       type: object
       required:
       - token
       properties:
         token:
-          type: string
-          description: Click to Call Token
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Invite Token
           examples:
-          - c2c_7acc0e5e968706a032983cd80cdca219
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc2lnbmFsd2lyZS5jb20iLCJ0eXAiOiJTQVQifQ..8O4EJs349q97jAcd.H4GNrC6gsWdz91ArWF9ce00Cm62iHfsrFRRUUGW3e96j9C3IphiJXvHYHTmD4qMt8czZ8cniF8c53vVAIZF-yBQibejiMxwnqW6KkLct2EJoPUf9g-wQwM0-lGGj9iPx_7yprkQekFK-7svkLcKlo1voZyavxIsWQlXByppmR_ospVx2u8jbAab0ZjKJNEnr1yPF9oNkyMAnkpkS8k8PwKaxUHBc5SGumKlexUjL3ixZDR6UOcbApVXxrB-DmQBs3otOT7hzME7oKvR-6Xy0XJ1pt4Of7MEzNBUK5Z5NMjtFiA8IqwDlNJz3I5gn8hbjSZwSMJHRJGx2DKpNKiu6fcd-3i2VwCpnKHaNUybMJ5gV3cTNfTFJQBSearCLv-7gMx6Gqy9FF_Hm2bGlfnjTQ9BCsCqXBkQ9EQD6yboi2uUhPyLmpzPqlrBc9ik0c3qR5ey5Jym_VnZXaT_S5NxjzIjLzvs33GOKiooGMsBWOm6mzTPcf398xaSErT4dF2wXwtZANou7Dt4BoTKa.DcLVYpma-iItaGhaOStu9A
       unevaluatedProperties:
         not: {}
-    jwt:
-      type: string
-      format: jwt
+    SubscriberGuestTokenCreateResponse:
+      type: object
+      required:
+      - token
+      - refresh_token
+      properties:
+        token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Guest Token
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc2lnbmFsd2lyZS5jb20iLCJ0eXAiOiJTQVQifQ..8O4EJs349q97jAcd.H4GNrC6gsWdz91ArWF9ce00Cm62iHfsrFRRUUGW3e96j9C3IphiJXvHYHTmD4qMt8czZ8cniF8c53vVAIZF-yBQibejiMxwnqW6KkLct2EJoPUf9g-wQwM0-lGGj9iPx_7yprkQekFK-7svkLcKlo1voZyavxIsWQlXByppmR_ospVx2u8jbAab0ZjKJNEnr1yPF9oNkyMAnkpkS8k8PwKaxUHBc5SGumKlexUjL3ixZDR6UOcbApVXxrB-DmQBs3otOT7hzME7oKvR-6Xy0XJ1pt4Of7MEzNBUK5Z5NMjtFiA8IqwDlNJz3I5gn8hbjSZwSMJHRJGx2DKpNKiu6fcd-3i2VwCpnKHaNUybMJ5gV3cTNfTFJQBSearCLv-7gMx6Gqy9FF_Hm2bGlfnjTQ9BCsCqXBkQ9EQD6yboi2uUhPyLmpzPqlrBc9ik0c3qR5ey5Jym_VnZXaT_S5NxjzIjLzvs33GOKiooGMsBWOm6mzTPcf398xaSErT4dF2wXwtZANou7Dt4BoTKa.DcLVYpma-iItaGhaOStu9A
+        refresh_token:
+          allOf:
+          - $ref: '#/components/schemas/jwt'
+          format: jwt
+          description: Refresh Token
+          examples:
+          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiUmVmcmVzaCIsImNoIjoidGVzdHB1Yy5zaWduYWx3aXJlLmNvbSJ9..sHcQL_V1tZH2JEAh.FNKYe_49CazNthkgSphf-ov8_I2wGLGWKD6t2q7kiG0guBxBjGzpgD8Y-LM-Nu7ePRUg7Z6vBkKAvh3rjtZpkeXoRXobJ1lov9AO72l8tB9K9RLo-TnBxLDbh0BCDGWVBgGq8DOh9kzHz4Tot-_B8pHXY_bqXX5kC4UUszXCO9nhSi1a4rp6QMD_8b0Mm8pHDK9EtW8I-tfM0HPmXuPMuOnlft3hmZo3tiKN2CarWscveQPCGetufHfQJJssdHjjYup8USAX0gJM8dpsV7FpF9fxfpy4ZU7N9MJXgSYJM5cPrxpLLx3Lj291egob14jDkn7kZQpv7jbCtsGyYxC7HAi1FgGr_sw3AeGaf2esGCkaeE11MxL05_kwdiNYBSOaHqaY62kOzu5pIdfTKQekOogCS1fgiyBgisBZeSIEBWWF.neE9KnL5AzS165dXFXUqhQ
+      unevaluatedProperties:
+        not: {}
     SubscriberTokenRequest:
       type: object
       required:
@@ -588,220 +792,16 @@ components:
           - SignalWire
       unevaluatedProperties:
         not: {}
-    SubscriberRefreshTokenRequest:
-      type: object
-      required:
-      - refresh_token
-      properties:
-        refresh_token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: The refresh token previously issued alongside a subscriber access token. This token is used to request a new access token.
-          examples:
-          - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-      unevaluatedProperties:
-        not: {}
-    SubscriberGuestTokenCreateResponse:
-      type: object
-      required:
-      - token
-      - refresh_token
-      properties:
-        token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: Guest Token
-          examples:
-          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc2lnbmFsd2lyZS5jb20iLCJ0eXAiOiJTQVQifQ..8O4EJs349q97jAcd.H4GNrC6gsWdz91ArWF9ce00Cm62iHfsrFRRUUGW3e96j9C3IphiJXvHYHTmD4qMt8czZ8cniF8c53vVAIZF-yBQibejiMxwnqW6KkLct2EJoPUf9g-wQwM0-lGGj9iPx_7yprkQekFK-7svkLcKlo1voZyavxIsWQlXByppmR_ospVx2u8jbAab0ZjKJNEnr1yPF9oNkyMAnkpkS8k8PwKaxUHBc5SGumKlexUjL3ixZDR6UOcbApVXxrB-DmQBs3otOT7hzME7oKvR-6Xy0XJ1pt4Of7MEzNBUK5Z5NMjtFiA8IqwDlNJz3I5gn8hbjSZwSMJHRJGx2DKpNKiu6fcd-3i2VwCpnKHaNUybMJ5gV3cTNfTFJQBSearCLv-7gMx6Gqy9FF_Hm2bGlfnjTQ9BCsCqXBkQ9EQD6yboi2uUhPyLmpzPqlrBc9ik0c3qR5ey5Jym_VnZXaT_S5NxjzIjLzvs33GOKiooGMsBWOm6mzTPcf398xaSErT4dF2wXwtZANou7Dt4BoTKa.DcLVYpma-iItaGhaOStu9A
-        refresh_token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: Refresh Token
-          examples:
-          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiUmVmcmVzaCIsImNoIjoidGVzdHB1Yy5zaWduYWx3aXJlLmNvbSJ9..sHcQL_V1tZH2JEAh.FNKYe_49CazNthkgSphf-ov8_I2wGLGWKD6t2q7kiG0guBxBjGzpgD8Y-LM-Nu7ePRUg7Z6vBkKAvh3rjtZpkeXoRXobJ1lov9AO72l8tB9K9RLo-TnBxLDbh0BCDGWVBgGq8DOh9kzHz4Tot-_B8pHXY_bqXX5kC4UUszXCO9nhSi1a4rp6QMD_8b0Mm8pHDK9EtW8I-tfM0HPmXuPMuOnlft3hmZo3tiKN2CarWscveQPCGetufHfQJJssdHjjYup8USAX0gJM8dpsV7FpF9fxfpy4ZU7N9MJXgSYJM5cPrxpLLx3Lj291egob14jDkn7kZQpv7jbCtsGyYxC7HAi1FgGr_sw3AeGaf2esGCkaeE11MxL05_kwdiNYBSOaHqaY62kOzu5pIdfTKQekOogCS1fgiyBgisBZeSIEBWWF.neE9KnL5AzS165dXFXUqhQ
-      unevaluatedProperties:
-        not: {}
-    GuestTokenCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: must_belong_to_project
-          message: The addresses must belong to the project
-          attribute: allowed_addresses
-          url: https://signalwire.com/docs/apis/error-codes
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    SubscriberGuestTokenCreateRequest:
-      type: object
-      required:
-      - allowed_addresses
-      properties:
-        allowed_addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/uuid'
-          maxItems: 10
-          description: List of up to 10 UUIDs representing the allowed Fabric addresses.
-        expire_at:
-          type: integer
-          description: A unixtime (the number of seconds since 1970-01-01 00:00:00) at which the token should no longer be valid. Defaults to 'two hours from now'
-          examples:
-          - 1725513600
-        region:
-          type: string
-          enum:
-          - us-central
-          description: A routing override that controls which regional cluster the SDK connects to.
-          examples:
-          - us-central
-        ch:
-          type: string
-          enum:
-          - us-central
-          description: A direct routing override specifying the regional cluster endpoint, set as the `ch` claim in the SAT JWE header.
-          examples:
-          - us-central
-      unevaluatedProperties:
-        not: {}
-    InviteTokenCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Address is invalid
-          attribute: address_id
-          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
-        - type: validation_error
-          code: invalid_parameter
-          message: Expires At must be an integer
-          attribute: expires_at
-          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
-        - type: validation_error
-          code: invalid_parameter
-          message: Expires At must be greater than 1733254773
-          attribute: expires_at
-          url: https://signalwire.com/docs/rest/overview/error-codes#invalid_parameter
-    Types.StatusCodes.StatusCode403:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Forbidden
-      unevaluatedProperties:
-        not: {}
-      description: Access is forbidden.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    SubscriberInviteTokenCreateResponse:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: Invite Token
-          examples:
-          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMuc2lnbmFsd2lyZS5jb20iLCJ0eXAiOiJTQVQifQ..8O4EJs349q97jAcd.H4GNrC6gsWdz91ArWF9ce00Cm62iHfsrFRRUUGW3e96j9C3IphiJXvHYHTmD4qMt8czZ8cniF8c53vVAIZF-yBQibejiMxwnqW6KkLct2EJoPUf9g-wQwM0-lGGj9iPx_7yprkQekFK-7svkLcKlo1voZyavxIsWQlXByppmR_ospVx2u8jbAab0ZjKJNEnr1yPF9oNkyMAnkpkS8k8PwKaxUHBc5SGumKlexUjL3ixZDR6UOcbApVXxrB-DmQBs3otOT7hzME7oKvR-6Xy0XJ1pt4Of7MEzNBUK5Z5NMjtFiA8IqwDlNJz3I5gn8hbjSZwSMJHRJGx2DKpNKiu6fcd-3i2VwCpnKHaNUybMJ5gV3cTNfTFJQBSearCLv-7gMx6Gqy9FF_Hm2bGlfnjTQ9BCsCqXBkQ9EQD6yboi2uUhPyLmpzPqlrBc9ik0c3qR5ey5Jym_VnZXaT_S5NxjzIjLzvs33GOKiooGMsBWOm6mzTPcf398xaSErT4dF2wXwtZANou7Dt4BoTKa.DcLVYpma-iItaGhaOStu9A
-      unevaluatedProperties:
-        not: {}
-    EmbedsTokensResponse:
+    EmbedsTokensRequest:
       type: object
       required:
       - token
       properties:
         token:
           type: string
-          format: jwt
-          description: Encrypted guest token.
+          description: Click to Call Token
           examples:
-          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiY2giOiJwdWMubHZoLm1lIiwidHlwIjoiU0FUIn0..
-      unevaluatedProperties:
-        not: {}
-    SubscriberTokenResponse:
-      type: object
-      required:
-      - subscriber_id
-      - token
-      - refresh_token
-      properties:
-        subscriber_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the subscriber that the token is associated with.
-          examples:
-          - 32d94154-9297-418c-9a85-4a69e0c67c30
-        token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: The token that is associated with the subscriber.
-          examples:
-          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiU0FUIn0..HahMYxqt4uI14qSH.daMTBR53lfEfEFiVAhr0pPSRqZhEod_YzavoG9-4ieiRQvl8GtP3FFNx0VLfkJqNcjUNbAaiKrEMnfOtCnQjiq1Kn0Iq90MYdM00QJ7cTaQ88vfbqdE92p-d4oDeg6z_vAsgrFgEobmrlDQndKxCWOD921iYxyLP0vqNaokN3kIM06iAWu_UpnTYEeR1l068xhK2xb6P9wbI2FDKFQoMgCdbjvABF7RRyaEzUoaQ5_Wj53YO6PFYuYcPbqMhdtvSSQiK3Nw6bFer2OfFs6s2RTukRGsocgC5Q7pwQwzYky-YgrPCb-pVAJajVSXUJrayvOi8-TeyCpICW4zTeJa5icZ380cWtafUH4rEB_FOJciJf0BCy48ajbz0NE121uBl2mqA1HE0_mQA53UqVjbrbE9hVOfnN4KpwOfULhIjx54tIekJQgG-aK2AYsLPCDNhuSpHvdwJcTM0Gzy3mS2veyaDV8q2qN5F_F9OThTQzcfy.AXzVNrJc_pGVPsticsVM0w
-        refresh_token:
-          allOf:
-          - $ref: '#/components/schemas/jwt'
-          format: jwt
-          description: Refresh token.
-          examples:
-          - eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwidHlwIjoiUmVmcmVzaCIsImNoIjoidGVzdHB1Yy5zaWduYWx3aXJlLmNvbSJ9..sHcQL_V1tZH2JEAh.FNKYe_49CazNthkgSphf-ov8_I2wGLGWKD6t2q7kiG0guBxBjGzpgD8Y-LM-Nu7ePRUg7Z6vBkKAvh3rjtZpkeXoRXobJ1lov9AO72l8tB9K9RLo-TnBxLDbh0BCDGWVBgGq8DOh9kzHz4Tot-_B8pHXY_bqXX5kC4UUszXCO9nhSi1a4rp6QMD_8b0Mm8pHDK9EtW8I-tfM0HPmXuPMuOnlft3hmZo3tiKN2CarWscveQPCGetufHfQJJssdHjjYup8USAX0gJM8dpsV7FpF9fxfpy4ZU7N9MJXgSYJM5cPrxpLLx3Lj291egob14jDkn7kZQpv7jbCtsGyYxC7HAi1FgGr_sw3AeGaf2esGCkaeE11MxL05_kwdiNYBSOaHqaY62kOzu5pIdfTKQekOogCS1fgiyBgisBZeSIEBWWF.neE9KnL5AzS165dXFXUqhQ
+          - c2c_7acc0e5e968706a032983cd80cdca219
       unevaluatedProperties:
         not: {}
   securitySchemes:

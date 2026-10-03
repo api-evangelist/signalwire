@@ -83,6 +83,68 @@ paths:
       - Phone Number Lookup
 components:
   schemas:
+    CnamInfo:
+      type: object
+      properties:
+        caller_id:
+          type: string
+          description: The caller ID associated with the number.
+          examples:
+          - John Smith
+      unevaluatedProperties:
+        not: {}
+      description: Caller ID (CNAM) information.
+    CarrierLookupInfo:
+      type: object
+      properties:
+        lrn:
+          type: string
+          description: The LRN associated with the number.
+          examples:
+          - '15551234567'
+        spid:
+          type: string
+          description: The Service Profile Identifier associated with the number.
+          examples:
+          - 683X
+        ocn:
+          type: string
+          description: The Operating Company Number associated with the number.
+          examples:
+          - '12345'
+        lata:
+          type: string
+          description: The Local Access and Transport Area number associated with the number.
+          examples:
+          - '99999'
+        city:
+          type: string
+          description: The City associated with the number.
+          examples:
+          - Aberdeen
+        state:
+          type: string
+          description: The State/Province/Region associated with the number.
+          examples:
+          - WA
+        jurisdiction:
+          type: string
+          description: The Jurisdiction associated with the number.
+          examples:
+          - indeterminate
+        lec:
+          type: string
+          description: The LEC or Carrier of the number.
+          examples:
+          - Verizon
+        linetype:
+          type: string
+          description: The type of line the number is. Generally either wireless or landline.
+          examples:
+          - landline
+      unevaluatedProperties:
+        not: {}
+      description: Carrier lookup information.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -95,6 +157,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     PhoneNumberLookupResponse:
       type: object
       properties:
@@ -177,80 +251,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    CarrierLookupInfo:
-      type: object
-      properties:
-        lrn:
-          type: string
-          description: The LRN associated with the number.
-          examples:
-          - '15551234567'
-        spid:
-          type: string
-          description: The Service Profile Identifier associated with the number.
-          examples:
-          - 683X
-        ocn:
-          type: string
-          description: The Operating Company Number associated with the number.
-          examples:
-          - '12345'
-        lata:
-          type: string
-          description: The Local Access and Transport Area number associated with the number.
-          examples:
-          - '99999'
-        city:
-          type: string
-          description: The City associated with the number.
-          examples:
-          - Aberdeen
-        state:
-          type: string
-          description: The State/Province/Region associated with the number.
-          examples:
-          - WA
-        jurisdiction:
-          type: string
-          description: The Jurisdiction associated with the number.
-          examples:
-          - indeterminate
-        lec:
-          type: string
-          description: The LEC or Carrier of the number.
-          examples:
-          - Verizon
-        linetype:
-          type: string
-          description: The type of line the number is. Generally either wireless or landline.
-          examples:
-          - landline
-      unevaluatedProperties:
-        not: {}
-      description: Carrier lookup information.
-    CnamInfo:
-      type: object
-      properties:
-        caller_id:
-          type: string
-          description: The caller ID associated with the number.
-          examples:
-          - John Smith
-      unevaluatedProperties:
-        not: {}
-      description: Caller ID (CNAM) information.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
   parameters:
     E164NumberPath:
       name: e164_number

@@ -223,10 +223,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     FaxMedia:
       type: object
       required:
@@ -282,61 +278,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Fax media model.
-    FaxMediaResponse:
-      type: object
-      required:
-      - account_sid
-      - content_type
-      - date_created
-      - date_updated
-      - fax_sid
-      - sid
-      - uri
-      - url
-      properties:
-        account_sid:
-          type: string
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ac
-        content_type:
-          type: string
-          description: The content type of the media.
-          examples:
-          - application/pdf
-        date_created:
-          type: string
-          description: The date, in ISO 8601 format, this media was created.
-          examples:
-          - '2018-11-26T20:00:00Z'
-        date_updated:
-          type: string
-          description: The date, in ISO 8601 format, this media was updated.
-          examples:
-          - '2018-11-27T20:00:00Z'
-        fax_sid:
-          type: string
-          description: The unique identifier for the fax.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472fx
-        sid:
-          type: string
-          description: The unique identifier for the media.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472me
-        uri:
-          type: string
-          description: The URI for the media.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
-        url:
-          type: string
-          description: The URL for the media.
-          examples:
-          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single fax media.
     FaxMediaListResponse:
       type: object
       required:
@@ -398,9 +339,68 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of fax media.
+    FaxMediaResponse:
+      type: object
+      required:
+      - account_sid
+      - content_type
+      - date_created
+      - date_updated
+      - fax_sid
+      - sid
+      - uri
+      - url
+      properties:
+        account_sid:
+          type: string
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ac
+        content_type:
+          type: string
+          description: The content type of the media.
+          examples:
+          - application/pdf
+        date_created:
+          type: string
+          description: The date, in ISO 8601 format, this media was created.
+          examples:
+          - '2018-11-26T20:00:00Z'
+        date_updated:
+          type: string
+          description: The date, in ISO 8601 format, this media was updated.
+          examples:
+          - '2018-11-27T20:00:00Z'
+        fax_sid:
+          type: string
+          description: The unique identifier for the fax.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472fx
+        sid:
+          type: string
+          description: The unique identifier for the media.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472me
+        uri:
+          type: string
+          description: The URI for the media.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+        url:
+          type: string
+          description: The URL for the media.
+          examples:
+          - /fax/v1/Faxes/b3877c40-da60-4998-90ad-b792e98472fx/Media/b3877c40-da60-4998-90ad-b792e98472me.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single fax media.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    FaxSidPathForMedia:
-      name: FaxSid
+    FaxSidPath:
+      name: Sid
       in: path
       required: true
       description: The Fax ID that uniquely identifies the Fax.
@@ -413,8 +413,8 @@ components:
       description: The Project ID that uniquely identifies the Account.
       schema:
         $ref: '#/components/schemas/uuid'
-    FaxSidPath:
-      name: Sid
+    FaxSidPathForMedia:
+      name: FaxSid
       in: path
       required: true
       description: The Fax ID that uniquely identifies the Fax.

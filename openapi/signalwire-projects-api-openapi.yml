@@ -345,123 +345,6 @@ paths:
       - Projects
 components:
   schemas:
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    Projects.Project:
-      type: object
-      required:
-      - id
-      - name
-      - parent_project_id
-      - subproject
-      - region_preference
-      - protect_recordings
-      - protect_message_media
-      - protect_fax_media
-      - force_https_requests
-      - created_at
-      - updated_at
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the project.
-          examples:
-          - 8f14e45f-ceea-467d-9c2b-7a1d3a9b2c34
-        name:
-          type: string
-          description: The name of the project.
-          examples:
-          - Acme Staging
-        parent_project_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The unique identifier of the root project. `null` when this project is itself a root project.
-          examples:
-          - b3877739-5c7e-4d4f-9d1a-2f0c8c2f1a11
-        subproject:
-          type: boolean
-          description: '`true` when this project is a subproject.'
-          examples:
-          - true
-        region_preference:
-          type: string
-          description: The effective region preference for the project. Returned in all responses; it is not currently settable through this API.
-          examples:
-          - us-west
-        protect_recordings:
-          type: boolean
-          description: When enabled, recordings created within the project require authentication to access.
-          examples:
-          - false
-        protect_message_media:
-          type: boolean
-          description: When enabled, message media created within the project requires authentication to access.
-          examples:
-          - false
-        protect_fax_media:
-          type: boolean
-          description: When enabled, fax media created within the project requires authentication to access.
-          examples:
-          - false
-        force_https_requests:
-          type: boolean
-          description: When enabled, requests made to the project's webhooks and callbacks must use HTTPS.
-          examples:
-          - true
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the project was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the project was last updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-      unevaluatedProperties:
-        not: {}
-      description: A project or subproject within the caller's project tree.
-      title: Project
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -474,6 +357,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     Projects.ProjectWithSigningKey:
       type: object
       required:
@@ -566,6 +461,81 @@ components:
 
         signing key. It is not retrievable afterward, so capture it from the response.'
       title: Project with signing key
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Projects.UpdateProjectStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation, for example a blank or overly long `name`.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes#invalid_parameter
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
     Projects.CreateProjectRequest:
       type: object
       required:
@@ -625,105 +595,6 @@ components:
           message: Subprojects can only be created under a top-level project.
           attribute: null
           url: https://signalwire.com/docs/apis/error-codes#nested_subprojects_not_allowed
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Projects.UpdateProjectRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 250
-          description: The name of the project.
-          examples:
-          - Acme Staging (EU)
-        protect_recordings:
-          type: boolean
-          description: When enabled, recordings created within the project require authentication to access.
-          examples:
-          - true
-        protect_message_media:
-          type: boolean
-          description: When enabled, message media created within the project requires authentication to access.
-          examples:
-          - true
-        protect_fax_media:
-          type: boolean
-          description: When enabled, fax media created within the project requires authentication to access.
-          examples:
-          - false
-        force_https_requests:
-          type: boolean
-          description: When enabled, requests made to the project's webhooks and callbacks must use HTTPS.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a project's name and settings.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Projects.UpdateProjectStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation, for example a blank or overly long `name`.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Name must be present
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes#invalid_parameter
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Projects.ProjectListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Projects.ProjectPaginationLinks'
-          description: Pagination links for the list of projects.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Projects.Project'
-          description: The projects on this page.
-      unevaluatedProperties:
-        not: {}
-      description: A page of projects.
     Projects.ProjectPaginationLinks:
       type: object
       required:
@@ -757,6 +628,38 @@ components:
       unevaluatedProperties:
         not: {}
       description: Pagination links for a list of projects.
+    Projects.UpdateProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+          description: The name of the project.
+          examples:
+          - Acme Staging (EU)
+        protect_recordings:
+          type: boolean
+          description: When enabled, recordings created within the project require authentication to access.
+          examples:
+          - true
+        protect_message_media:
+          type: boolean
+          description: When enabled, message media created within the project requires authentication to access.
+          examples:
+          - true
+        protect_fax_media:
+          type: boolean
+          description: When enabled, fax media created within the project requires authentication to access.
+          examples:
+          - false
+        force_https_requests:
+          type: boolean
+          description: When enabled, requests made to the project's webhooks and callbacks must use HTTPS.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a project's name and settings.
     Projects.DeleteProjectStatusCode422:
       type: object
       required:
@@ -782,7 +685,112 @@ components:
           message: All phone numbers must be removed from the project before it can be deleted.
           attribute: null
           url: https://signalwire.com/docs/apis/error-codes#phone_numbers_must_be_removed
+    Projects.ProjectListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Projects.ProjectPaginationLinks'
+          description: Pagination links for the list of projects.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Projects.Project'
+          description: The projects on this page.
+      unevaluatedProperties:
+        not: {}
+      description: A page of projects.
+    Projects.Project:
+      type: object
+      required:
+      - id
+      - name
+      - parent_project_id
+      - subproject
+      - region_preference
+      - protect_recordings
+      - protect_message_media
+      - protect_fax_media
+      - force_https_requests
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the project.
+          examples:
+          - 8f14e45f-ceea-467d-9c2b-7a1d3a9b2c34
+        name:
+          type: string
+          description: The name of the project.
+          examples:
+          - Acme Staging
+        parent_project_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The unique identifier of the root project. `null` when this project is itself a root project.
+          examples:
+          - b3877739-5c7e-4d4f-9d1a-2f0c8c2f1a11
+        subproject:
+          type: boolean
+          description: '`true` when this project is a subproject.'
+          examples:
+          - true
+        region_preference:
+          type: string
+          description: The effective region preference for the project. Returned in all responses; it is not currently settable through this API.
+          examples:
+          - us-west
+        protect_recordings:
+          type: boolean
+          description: When enabled, recordings created within the project require authentication to access.
+          examples:
+          - false
+        protect_message_media:
+          type: boolean
+          description: When enabled, message media created within the project requires authentication to access.
+          examples:
+          - false
+        protect_fax_media:
+          type: boolean
+          description: When enabled, fax media created within the project requires authentication to access.
+          examples:
+          - false
+        force_https_requests:
+          type: boolean
+          description: When enabled, requests made to the project's webhooks and callbacks must use HTTPS.
+          examples:
+          - true
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the project was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the project was last updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: A project or subproject within the caller's project tree.
+      title: Project
   parameters:
+    Projects.ListProjectsQuery.name:
+      name: name
+      in: query
+      required: false
+      description: Filter projects by name.
+      schema:
+        type: string
+      explode: false
     Projects.ListProjectsQuery.page_size:
       name: page_size
       in: query
@@ -795,14 +803,6 @@ components:
         maximum: 1000
         default: 50
       explode: false
-    Projects.ListProjectsQuery.name:
-      name: name
-      in: query
-      required: false
-      description: Filter projects by name.
-      schema:
-        type: string
-      explode: false
     Projects.ListProjectsQuery.page_number:
       name: page_number
       in: query
@@ -814,13 +814,6 @@ components:
         minimum: 0
         default: 0
       explode: false
-    Projects.ProjectPathID:
-      name: id
-      in: path
-      required: true
-      description: The unique identifier of the project or subproject.
-      schema:
-        $ref: '#/components/schemas/uuid'
     Projects.ListProjectsQuery.page_token:
       name: page_token
       in: query
@@ -829,6 +822,13 @@ components:
       schema:
         type: string
       explode: false
+    Projects.ProjectPathID:
+      name: id
+      in: path
+      required: true
+      description: The unique identifier of the project or subproject.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

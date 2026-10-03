@@ -410,46 +410,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    CountryResource:
-      type: object
-      required:
-      - country_code
-      - country
-      - uri
-      - beta
-      - subresource_uris
-      properties:
-        country_code:
-          type: string
-          description: The ISO country code of the number.
-          examples:
-          - US
-        country:
-          type: string
-          description: The country the number is from.
-          examples:
-          - United States
-        uri:
-          type: string
-          description: The URI for the API call.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US
-        beta:
-          type: boolean
-          description: Always `false`. Included for Twilio API compatibility.
-          examples:
-          - false
-        subresource_uris:
-          allOf:
-          - $ref: '#/components/schemas/CountrySubresourceUris'
-          description: URIs for subresources.
-      unevaluatedProperties:
-        not: {}
-      description: Country resource for available phone numbers.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     AvailablePhoneNumberResourcesResponse:
       type: object
       required:
@@ -469,6 +429,25 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of available phone number resources (countries).
+    AvailablePhoneNumberListResponse:
+      type: object
+      required:
+      - uri
+      - available_phone_numbers
+      properties:
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
+        available_phone_numbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailablePhoneNumber'
+          description: List of available phone numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of available phone numbers.
     AvailablePhoneNumberByCountryResponse:
       type: object
       required:
@@ -505,6 +484,61 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing available phone number resources for a specific country.
+    CountryResource:
+      type: object
+      required:
+      - country_code
+      - country
+      - uri
+      - beta
+      - subresource_uris
+      properties:
+        country_code:
+          type: string
+          description: The ISO country code of the number.
+          examples:
+          - US
+        country:
+          type: string
+          description: The country the number is from.
+          examples:
+          - United States
+        uri:
+          type: string
+          description: The URI for the API call.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US
+        beta:
+          type: boolean
+          description: Always `false`. Included for Twilio API compatibility.
+          examples:
+          - false
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/CountrySubresourceUris'
+          description: URIs for subresources.
+      unevaluatedProperties:
+        not: {}
+      description: Country resource for available phone numbers.
+    CountrySubresourceUris:
+      type: object
+      required:
+      - local
+      - toll_free
+      properties:
+        local:
+          type: string
+          description: The URI for local numbers.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
+        toll_free:
+          type: string
+          description: The URI for toll-free numbers.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/TollFree
+      unevaluatedProperties:
+        not: {}
+      description: Country subresource URIs.
     AvailablePhoneNumber:
       type: object
       required:
@@ -597,44 +631,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Available phone number model.
-    CountrySubresourceUris:
-      type: object
-      required:
-      - local
-      - toll_free
-      properties:
-        local:
-          type: string
-          description: The URI for local numbers.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
-        toll_free:
-          type: string
-          description: The URI for toll-free numbers.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/TollFree
-      unevaluatedProperties:
-        not: {}
-      description: Country subresource URIs.
-    AvailablePhoneNumberListResponse:
-      type: object
-      required:
-      - uri
-      - available_phone_numbers
-      properties:
-        uri:
-          type: string
-          description: The URI for the API call.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/AvailablePhoneNumbers/US/Local
-        available_phone_numbers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailablePhoneNumber'
-          description: List of available phone numbers.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of available phone numbers.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     IsoCountryPath:
       name: IsoCountry

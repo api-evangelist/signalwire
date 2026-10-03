@@ -125,6 +125,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    WhatsAppBusinessListResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppBusiness'
+          description: List of WhatsApp Business Accounts connected to the Space.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of WhatsApp Business Accounts.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -141,19 +154,6 @@ components:
       type: string
       format: uuid
       description: Universal Unique Identifier.
-    WhatsAppBusinessListResponse:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WhatsAppBusiness'
-          description: List of WhatsApp Business Accounts connected to the Space.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of WhatsApp Business Accounts.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

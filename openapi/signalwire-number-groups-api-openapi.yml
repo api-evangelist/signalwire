@@ -273,141 +273,6 @@ paths:
       - Number Groups
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    NumberGroup:
-      type: object
-      required:
-      - id
-      - name
-      - sticky_sender
-      - phone_number_count
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the Number Group on SignalWire. This can be used to update or delete the group programmatically.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        name:
-          type: string
-          description: The name given to the number group. Helps to distinguish different groups within your project.
-          examples:
-          - My Number Group
-        sticky_sender:
-          type: boolean
-          description: Whether the number group uses the same 'From' number for outbound requests to a number, or chooses a random one.
-          examples:
-          - false
-        phone_number_count:
-          type: integer
-          format: int32
-          description: The number of phone numbers within the group.
-          examples:
-          - 4
-      unevaluatedProperties:
-        not: {}
-      description: Number group model.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    NumberGroupListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/NumberGroup'
-          description: List of number groups.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of number groups.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    CreateNumberGroupRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name given to the number group. Helps to distinguish different groups within your project.
-          examples:
-          - My Number Group
-        sticky_sender:
-          type: boolean
-          description: Whether the number group uses the same 'From' number for outbound requests to a number, or chooses a random one.
-          examples:
-          - false
-          default: false
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a number group.
     NumberGroupResponse:
       type: object
       required:
@@ -441,6 +306,115 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single number group.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    NumberGroup:
+      type: object
+      required:
+      - id
+      - name
+      - sticky_sender
+      - phone_number_count
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the Number Group on SignalWire. This can be used to update or delete the group programmatically.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: The name given to the number group. Helps to distinguish different groups within your project.
+          examples:
+          - My Number Group
+        sticky_sender:
+          type: boolean
+          description: Whether the number group uses the same 'From' number for outbound requests to a number, or chooses a random one.
+          examples:
+          - false
+        phone_number_count:
+          type: integer
+          format: int32
+          description: The number of phone numbers within the group.
+          examples:
+          - 4
+      unevaluatedProperties:
+        not: {}
+      description: Number group model.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    NumberGroupListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NumberGroup'
+          description: List of number groups.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of number groups.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -472,6 +446,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
     UpdateNumberGroupRequest:
       type: object
       required:
@@ -490,28 +476,50 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a number group.
-    PaginationLinks:
+    CreateNumberGroupRequest:
       type: object
       required:
-      - self
-      - first
+      - name
       properties:
-        self:
+        name:
           type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
+          description: The name given to the number group. Helps to distinguish different groups within your project.
+          examples:
+          - My Number Group
+        sticky_sender:
+          type: boolean
+          description: Whether the number group uses the same 'From' number for outbound requests to a number, or chooses a random one.
+          examples:
+          - false
+          default: false
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
+      description: Request body for creating a number group.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
+    ListNumberGroupsQuery.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination.
+      schema:
+        type: string
+      explode: false
     ListNumberGroupsQuery.page_number:
       name: page_number
       in: query
@@ -522,13 +530,14 @@ components:
         format: int32
         default: 0
       explode: false
-    ListNumberGroupsQuery.page_token:
-      name: page_token
+    ListNumberGroupsQuery.filter_name:
+      name: filter_name
       in: query
       required: false
-      description: Token for cursor-based pagination.
+      description: Filter by name. Returns all number groups containing this value as a substring.
       schema:
         type: string
+        maxLength: 255
       explode: false
     ListNumberGroupsQuery.page_size:
       name: page_size
@@ -541,15 +550,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 50
-      explode: false
-    ListNumberGroupsQuery.filter_name:
-      name: filter_name
-      in: query
-      required: false
-      description: Filter by name. Returns all number groups containing this value as a substring.
-      schema:
-        type: string
-        maxLength: 255
       explode: false
     NumberGroupPathID:
       name: id

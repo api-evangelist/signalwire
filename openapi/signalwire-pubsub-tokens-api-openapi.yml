@@ -83,78 +83,16 @@ paths:
               $ref: '#/components/schemas/PubSub.NewPubSubToken'
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
+    PubSub.PubSubState:
       type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    PubSub.NewPubSubToken:
-      type: object
-      required:
-      - ttl
-      - channels
-      properties:
-        ttl:
-          type: integer
-          minimum: 1
-          maximum: 43200
-          description: The maximum time, in minutes, for which the access token will be valid. Between 1 and 43,200 (30 days).
-          examples:
-          - 15
-        channels:
-          allOf:
-          - $ref: '#/components/schemas/PubSub.PubSubChannels'
-          minProperties: 1
-          maxProperties: 500
-          description: 'Each channel with `write` and `read` objects with boolean as values. Max of 500 channels inside main `channels`.
-
-            Either `read`, `write`, or both are required inside each channel and default to false.
-
-            Each channel name can be up to 250 characters. Must be valid JSON.'
-          examples:
-          - channela:
-              read: true
-              write: false
-            channelb:
-              read: true
-        member_id:
-          type: string
-          maxLength: 250
-          description: The unique identifier of the member. Up to 250 characters. If not specified, a random UUID will be generated.
-          examples:
-          - John Doe
-        state:
-          allOf:
-          - $ref: '#/components/schemas/PubSub.PubSubState'
-          description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
-          examples:
-          - display_name: Joe
-            an_array:
-            - foo
-            - bar
-            - baz
-          default: {}
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
+      unevaluatedProperties: {}
+      description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
+      examples:
+      - display_name: Joe
+        an_array:
+        - foo
+        - bar
+        - baz
     Types.StatusCodes.StatusCode400:
       type: object
       required:
@@ -223,6 +161,60 @@ components:
       unevaluatedProperties:
         not: {}
       title: Read Permission
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    PubSub.PubSubPermissionWithWrite:
+      type: object
+      required:
+      - write
+      properties:
+        read:
+          type: boolean
+          description: Gives the token read access to the channel.
+          examples:
+          - true
+        write:
+          type: boolean
+          description: Gives the token write access to the channel.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+      title: Write Permission
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    PubSub.PubSubToken:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: A PubSub Token to be used to authenticate clients to the PubSub Service.
+          examples:
+          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
+      unevaluatedProperties:
+        not: {}
     PubSub.PubSubToken422Error:
       type: object
       required:
@@ -244,44 +236,52 @@ components:
           message: Permissions must be valid JSON
           attribute: permissions
           url: https://signalwire.com/docs/apis/error-codes
-    PubSub.PubSubState:
-      type: object
-      unevaluatedProperties: {}
-      description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
-      examples:
-      - display_name: Joe
-        an_array:
-        - foo
-        - bar
-        - baz
-    PubSub.PubSubPermissionWithWrite:
+    PubSub.NewPubSubToken:
       type: object
       required:
-      - write
+      - ttl
+      - channels
       properties:
-        read:
-          type: boolean
-          description: Gives the token read access to the channel.
+        ttl:
+          type: integer
+          minimum: 1
+          maximum: 43200
+          description: The maximum time, in minutes, for which the access token will be valid. Between 1 and 43,200 (30 days).
           examples:
-          - true
-        write:
-          type: boolean
-          description: Gives the token write access to the channel.
+          - 15
+        channels:
+          allOf:
+          - $ref: '#/components/schemas/PubSub.PubSubChannels'
+          minProperties: 1
+          maxProperties: 500
+          description: 'Each channel with `write` and `read` objects with boolean as values. Max of 500 channels inside main `channels`.
+
+            Either `read`, `write`, or both are required inside each channel and default to false.
+
+            Each channel name can be up to 250 characters. Must be valid JSON.'
           examples:
-          - false
-      unevaluatedProperties:
-        not: {}
-      title: Write Permission
-    PubSub.PubSubToken:
-      type: object
-      required:
-      - token
-      properties:
-        token:
+          - channela:
+              read: true
+              write: false
+            channelb:
+              read: true
+        member_id:
           type: string
-          description: A PubSub Token to be used to authenticate clients to the PubSub Service.
+          maxLength: 250
+          description: The unique identifier of the member. Up to 250 characters. If not specified, a random UUID will be generated.
           examples:
-          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
+          - John Doe
+        state:
+          allOf:
+          - $ref: '#/components/schemas/PubSub.PubSubState'
+          description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
+          examples:
+          - display_name: Joe
+            an_array:
+            - foo
+            - bar
+            - baz
+          default: {}
       unevaluatedProperties:
         not: {}
     PubSub.PubSubChannels:

@@ -254,6 +254,61 @@ paths:
               $ref: '#/components/schemas/UpdateConferenceRequest'
 components:
   schemas:
+    ConferenceListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - conferences
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?PageToken=PA1234
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?Page=1&PageToken=PA5678
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number.
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        conferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conference'
+          description: List of conferences.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of conferences.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -287,29 +342,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    ConferenceSubresourceUris:
-      type: object
-      required:
-      - participants
-      - recordings
-      properties:
-        participants:
-          type: string
-          description: Links to the participants.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants.json
-        recordings:
-          type: string
-          description: Links to the recordings.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Recordings.json
-      unevaluatedProperties:
-        not: {}
-      description: Conference subresource URIs.
     Conference:
       type: object
       required:
@@ -377,6 +409,53 @@ components:
       unevaluatedProperties:
         not: {}
       description: Conference model.
+    UpdateConferenceRequest:
+      type: object
+      properties:
+        Status:
+          type: string
+          enum:
+          - completed
+          description: The status of this conference. Only 'completed' is allowed to end the conference.
+          examples:
+          - completed
+        AnnounceUrl:
+          type: string
+          format: uri
+          description: The URL to send conference announcements to.
+          examples:
+          - https://your-api-endpoint.com/announce
+        AnnounceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference.
+    ConferenceSubresourceUris:
+      type: object
+      required:
+      - participants
+      - recordings
+      properties:
+        participants:
+          type: string
+          description: Links to the participants.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants.json
+        recordings:
+          type: string
+          description: Links to the recordings.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Recordings.json
+      unevaluatedProperties:
+        not: {}
+      description: Conference subresource URIs.
     ConferenceStatus:
       type: string
       enum:
@@ -451,89 +530,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single conference.
-    ConferenceListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - conferences
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?PageToken=PA1234
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences?Page=1&PageToken=PA5678
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        conferences:
-          type: array
-          items:
-            $ref: '#/components/schemas/Conference'
-          description: List of conferences.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of conferences.
-    UpdateConferenceRequest:
-      type: object
-      properties:
-        Status:
-          type: string
-          enum:
-          - completed
-          description: The status of this conference. Only 'completed' is allowed to end the conference.
-          examples:
-          - completed
-        AnnounceUrl:
-          type: string
-          format: uri
-          description: The URL to send conference announcements to.
-          examples:
-          - https://your-api-endpoint.com/announce
-        AnnounceMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a conference.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     ConferencesAccountSidPath:
       name: AccountSid

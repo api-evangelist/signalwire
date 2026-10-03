@@ -285,169 +285,61 @@ paths:
       - Applications
 components:
   schemas:
-    Application:
+    ApplicationListResponse:
       type: object
       required:
-      - sid
-      - account_sid
-      - api_version
-      - date_created
-      - date_updated
-      - friendly_name
       - uri
-      - voice_url
-      - voice_method
-      - voice_fallback_url
-      - voice_fallback_method
-      - status_callback
-      - status_callback_method
-      - voice_caller_id_lookup
-      - sms_url
-      - sms_method
-      - sms_fallback_url
-      - sms_fallback_method
-      - sms_status_callback
-      - sms_status_callback_method
-      - message_status_callback
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - applications
       properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the Application.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the Account that created this Application.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        date_created:
-          type: string
-          description: The date, in RFC 2822 GMT format, this Application was created.
-          examples:
-          - Sat, 15 Sept 2018 10:00:00 +0000
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 GMT format, this Application was updated.
-          examples:
-          - Sat, 16 Sept 2018 10:00:00 +0000
-        friendly_name:
-          type: string
-          description: A named unique identifier for the resource.
-          examples:
-          - My Friendly Name
         uri:
           type: string
-          description: The URI for this Application.
+          description: The URI for this resource.
           examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications/b3877c40-da60-4998-90ad-b792e98472af.json
-        voice_url:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI for the first page of results.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
+        next_page_uri:
           anyOf:
           - type: string
           - type: 'null'
-          description: The URL to request when a phone number receives a call or fax.
+          description: The URI for the next page of results. Null if there are no more pages.
           examples:
-          - http://example.com
-        voice_method:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=1&PageSize=50
+        previous_page_uri:
           anyOf:
           - type: string
           - type: 'null'
-          description: Whether the request to `VoiceUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-        voice_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL SignalWire will request if errors occur when fetching the `VoiceUrl`.
-          examples:
-          - http://example.com
-        voice_fallback_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Whether the request to `VoiceFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-        status_callback:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to pass status updates to the Application.
-          examples:
-          - http://example.com
-        status_callback_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Whether the request to the `StatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-        voice_caller_id_lookup:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: Whether or not to look up a caller's ID from the database. Always null.
+          description: The URI for the previous page of results. Null if this is the first page.
           examples:
           - null
-        sms_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to request when an SMS is received.
+        page:
+          type: integer
+          format: int32
+          description: The current page number. Zero-indexed.
           examples:
-          - http://example.com
-        sms_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Whether the request to `SmsUrl` is a `GET` or a `POST`. Default is `POST`.
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of results per page.
           examples:
-          - POST
-        sms_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL SignalWire will request if errors occur when fetching the `SmsUrl`.
-          examples:
-          - http://www.example.com/sms-fallback
-        sms_fallback_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-        sms_status_callback:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to receive status updates for messages sent via this Application.
-          examples:
-          - http://www.example.com/sms-status-callback
-        sms_status_callback_method:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Whether the request to `SmsStatusCallback` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-        message_status_callback:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to receive status updates for messages sent via this Application.
-          examples:
-          - http://www.example.com/sms-status-callback
+          - 50
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Application'
+          description: List of applications.
       unevaluatedProperties:
         not: {}
-      description: Application model representing a cXML application.
+      description: Response containing a list of applications.
     CompatibilityErrorResponse:
       type: object
       required:
@@ -689,10 +581,169 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating an application.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+    Application:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - api_version
+      - date_created
+      - date_updated
+      - friendly_name
+      - uri
+      - voice_url
+      - voice_method
+      - voice_fallback_url
+      - voice_fallback_method
+      - status_callback
+      - status_callback_method
+      - voice_caller_id_lookup
+      - sms_url
+      - sms_method
+      - sms_fallback_url
+      - sms_fallback_method
+      - sms_status_callback
+      - sms_status_callback_method
+      - message_status_callback
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the Application.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the Account that created this Application.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        date_created:
+          type: string
+          description: The date, in RFC 2822 GMT format, this Application was created.
+          examples:
+          - Sat, 15 Sept 2018 10:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this Application was updated.
+          examples:
+          - Sat, 16 Sept 2018 10:00:00 +0000
+        friendly_name:
+          type: string
+          description: A named unique identifier for the resource.
+          examples:
+          - My Friendly Name
+        uri:
+          type: string
+          description: The URI for this Application.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications/b3877c40-da60-4998-90ad-b792e98472af.json
+        voice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when a phone number receives a call or fax.
+          examples:
+          - http://example.com
+        voice_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Whether the request to `VoiceUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+        voice_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL SignalWire will request if errors occur when fetching the `VoiceUrl`.
+          examples:
+          - http://example.com
+        voice_fallback_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Whether the request to `VoiceFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+        status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to pass status updates to the Application.
+          examples:
+          - http://example.com
+        status_callback_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Whether the request to the `StatusCallback` URL is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+        voice_caller_id_lookup:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether or not to look up a caller's ID from the database. Always null.
+          examples:
+          - null
+        sms_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to request when an SMS is received.
+          examples:
+          - http://example.com
+        sms_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Whether the request to `SmsUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+        sms_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL SignalWire will request if errors occur when fetching the `SmsUrl`.
+          examples:
+          - http://www.example.com/sms-fallback
+        sms_fallback_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Whether the request to `SmsFallbackUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+        sms_status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to receive status updates for messages sent via this Application.
+          examples:
+          - http://www.example.com/sms-status-callback
+        sms_status_callback_method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Whether the request to `SmsStatusCallback` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+        message_status_callback:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to receive status updates for messages sent via this Application.
+          examples:
+          - http://www.example.com/sms-status-callback
+      unevaluatedProperties:
+        not: {}
+      description: Application model representing a cXML application.
     ApplicationResponse:
       type: object
       required:
@@ -856,74 +907,23 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single application.
-    ApplicationListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - applications
-      properties:
-        uri:
-          type: string
-          description: The URI for this resource.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI for the first page of results.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=0&PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI for the next page of results. Null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Applications?Page=1&PageSize=50
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI for the previous page of results. Null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number. Zero-indexed.
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of results per page.
-          examples:
-          - 50
-        applications:
-          type: array
-          items:
-            $ref: '#/components/schemas/Application'
-          description: List of applications.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of applications.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
-    AccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The Account ID that has the Application.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ApplicationPathSid:
       name: Sid
       in: path
       required: true
       description: The Application ID that uniquely identifies the Application.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    AccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Account ID that has the Application.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

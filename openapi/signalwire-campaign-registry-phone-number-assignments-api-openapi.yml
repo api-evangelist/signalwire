@@ -264,6 +264,28 @@ paths:
       tags:
       - 'Campaign Registry: Phone Number Assignments'
 components:
+  parameters:
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    OrderPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the order.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    AssignedNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the assigned number.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
     CreateOrderRequest:
       type: object
@@ -283,34 +305,42 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating an order.
-    Types.StatusCodes.StatusCode500:
+    OrderListResponse:
       type: object
-      required:
-      - error
       properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+          description: List of orders.
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode401:
+      description: Response containing a list of orders.
+    PaginationLinks:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Unauthorized
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      description: Pagination links for list responses.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -324,7 +354,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode404:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -332,25 +362,46 @@ components:
         error:
           type: string
           enum:
-          - Not Found
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
-    AssignedNumberListResponse:
+      description: An internal server error occurred.
+    OrderResponse:
       type: object
+      required:
+      - id
       properties:
-        links:
+        id:
           allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AssignedNumber'
-          description: List of assigned numbers.
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the order.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the order.
+          examples:
+          - pending
+        processed_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was processed.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was last updated.
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
       unevaluatedProperties:
         not: {}
-      description: Response containing a list of assigned numbers.
+      description: Response containing a single order.
     Order:
       type: object
       required:
@@ -387,6 +438,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Order model for campaign registry operations.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     AssignedPhoneNumber:
       type: object
       properties:
@@ -412,37 +475,33 @@ components:
       unevaluatedProperties:
         not: {}
       description: Phone number details in an assignment.
-    Types.StatusCodes.SpaceApiErrorItem:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
-      - detail
-      - status
-      - title
-      - code
+      - error
       properties:
-        detail:
+        error:
           type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
+          enum:
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: Details about a specific validation error.
+      description: Access is unauthorized.
+    AssignedNumberListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignedNumber'
+          description: List of assigned numbers.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of assigned numbers.
     AssignedNumber:
       type: object
       required:
@@ -480,100 +539,41 @@ components:
       unevaluatedProperties:
         not: {}
       description: Assigned number model for campaign registration.
-    OrderListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Order'
-          description: List of orders.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of orders.
-    PaginationLinks:
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - self
-      - first
+      - detail
+      - status
+      - title
+      - code
       properties:
-        self:
+        detail:
           type: string
-          description: Link to the current page.
-        first:
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
           type: string
-          description: Link to the first page.
-        next:
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
           type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
           type: string
-          description: Link to the previous page. Only present when not on the first page.
+          description: The error code.
+          examples:
+          - '422'
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
-    OrderResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the order.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        state:
-          type: string
-          description: The current state of the order.
-          examples:
-          - pending
-        processed_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was processed.
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was last updated.
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single order.
-  parameters:
-    AssignedNumberPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the assigned number.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    CampaignPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the campaign.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    OrderPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the order.
-      schema:
-        $ref: '#/components/schemas/uuid'
+      description: Details about a specific validation error.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

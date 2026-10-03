@@ -107,6 +107,14 @@ paths:
       tags:
       - WhatsApp Numbers
 components:
+  parameters:
+    WhatsAppNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: The SignalWire identifier of the WhatsApp number.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
     Types.StatusCodes.StatusCode500:
       type: object
@@ -120,6 +128,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -132,6 +152,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
+    WhatsAppNumberListResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppNumber'
+          description: List of WhatsApp numbers available to the Space.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of WhatsApp numbers.
     WhatsAppNumber:
       type: object
       required:
@@ -219,35 +252,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: A WhatsApp phone number connected to your Space. Numbers are linked during the Meta embedded signup flow and used as the `from` address when sending messages.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    WhatsAppNumberListResponse:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WhatsAppNumber'
-          description: List of WhatsApp numbers available to the Space.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of WhatsApp numbers.
     WhatsAppNumberResponse:
       type: object
       required:
@@ -335,14 +339,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single WhatsApp number.
-  parameters:
-    WhatsAppNumberPathID:
-      name: id
-      in: path
-      required: true
-      description: The SignalWire identifier of the WhatsApp number.
-      schema:
-        $ref: '#/components/schemas/uuid'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

@@ -84,42 +84,6 @@ paths:
               $ref: '#/components/schemas/PhoneRouteAssignRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -158,10 +122,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     PhoneRouteAssignRequest:
       type: object
       required:
@@ -182,27 +142,30 @@ components:
           - calling
       unevaluatedProperties:
         not: {}
-    PhoneRouteCreateStatusCode422:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - errors
+      - error
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
+        error:
+          type: string
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: phone_number is required
-          attribute: phone_number
-          url: https://signalwire.com/docs/apis/error-codes
+      description: An internal server error occurred.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -215,17 +178,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
-    UsedForType:
-      type: string
-      enum:
-      - calling
-      - messaging
-      description: Sets the handler to handle incoming `calls` or `messages`.
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
     VideoChannel:
       type: object
       required:
@@ -238,18 +190,18 @@ components:
           - /external/resource_name?channel=video
       unevaluatedProperties:
         not: {}
-    AudioChannel:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
-      - audio
+      - error
       properties:
-        audio:
+        error:
           type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
+          enum:
+          - Unauthorized
       unevaluatedProperties:
         not: {}
+      description: Access is unauthorized.
     PhoneRouteResponse:
       type: object
       required:
@@ -314,6 +266,54 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
+    UsedForType:
+      type: string
+      enum:
+      - calling
+      - messaging
+      description: Sets the handler to handle incoming `calls` or `messages`.
+    PhoneRouteCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: phone_number is required
+          attribute: phone_number
+          url: https://signalwire.com/docs/apis/error-codes
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
   parameters:
     PhoneRoutePathID:
       name: id
