@@ -112,6 +112,96 @@ paths:
               $ref: '#/components/schemas/UpdateSipProfileRequest'
 components:
   schemas:
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    UpdateSipProfileRequest:
+      type: object
+      properties:
+        domain_identifier:
+          type: string
+          description: String representing the domain_identifier portion of the profile. Must be unique across your project.
+          examples:
+          - example
+        default_codecs:
+          type: array
+          items:
+            type: string
+          description: 'A list of codecs this profile will support. Currently supported values are: OPUS, G722, PCMU, PCMA, VP8, H264.'
+        default_ciphers:
+          type: array
+          items:
+            type: string
+          description: 'A list of encryption ciphers this profile will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, AES_CM_128_HMAC_SHA1_32.'
+        default_encryption:
+          type: string
+          enum:
+          - required
+          - optional
+          description: A string representing whether connections to an endpoint that uses this profile require encryption or if encryption is optional. Encryption will always be used if possible. Possible values are required or optional.
+          examples:
+          - optional
+        default_send_as:
+          type: string
+          description: The e164 formatted number you wish to set as the originating number when dialing PSTN phone numbers from a SIP Endpoint that uses this profile. Specify null or an empty string to randomly choose a purchased or verified number from within the project.
+          examples:
+          - '+15551234567'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating the SIP profile.
     SipProfileResponse:
       type: object
       properties:
@@ -151,65 +241,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing the SIP profile.
-    UpdateSipProfileRequest:
-      type: object
-      properties:
-        domain_identifier:
-          type: string
-          description: String representing the domain_identifier portion of the profile. Must be unique across your project.
-          examples:
-          - example
-        default_codecs:
-          type: array
-          items:
-            type: string
-          description: 'A list of codecs this profile will support. Currently supported values are: OPUS, G722, PCMU, PCMA, VP8, H264.'
-        default_ciphers:
-          type: array
-          items:
-            type: string
-          description: 'A list of encryption ciphers this profile will support. Currently supported values are: AEAD_AES_256_GCM_8, AES_256_CM_HMAC_SHA1_80, AES_CM_128_HMAC_SHA1_80, AES_256_CM_HMAC_SHA1_32, AES_CM_128_HMAC_SHA1_32.'
-        default_encryption:
-          type: string
-          enum:
-          - required
-          - optional
-          description: A string representing whether connections to an endpoint that uses this profile require encryption or if encryption is optional. Encryption will always be used if possible. Possible values are required or optional.
-          examples:
-          - optional
-        default_send_as:
-          type: string
-          description: The e164 formatted number you wish to set as the originating number when dialing PSTN phone numbers from a SIP Endpoint that uses this profile. Specify null or an empty string to randomly choose a purchased or verified number from within the project.
-          examples:
-          - '+15551234567'
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating the SIP profile.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -222,37 +253,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

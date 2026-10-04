@@ -231,57 +231,168 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a short code.
-    PaginationLinks:
+    Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
-      - self
-      - first
+      - detail
+      - status
+      - title
+      - code
       properties:
-        self:
+        detail:
           type: string
-          description: Link to the current page.
-        first:
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
           type: string
-          description: Link to the first page.
-        next:
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
           type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
           type: string
-          description: Link to the previous page. Only present when not on the first page.
+          description: The error code.
+          examples:
+          - '422'
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.StatusCode500:
+      description: Details about a specific validation error.
+    ShortCodeResponse:
       type: object
       required:
-      - error
+      - id
+      - name
+      - number
+      - capabilities
+      - number_type
+      - code_type
+      - country_code
+      - created_at
+      - updated_at
+      - next_billed_at
+      - lease_duration
+      - message_handler
+      - message_request_url
+      - message_request_method
+      - message_fallback_url
+      - message_fallback_method
+      - message_laml_application_id
+      - message_relay_context
       properties:
-        error:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the short code.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name given to the short code.
+          examples:
+          - My Short Code
+        number:
+          type: string
+          description: The short code number.
+          examples:
+          - '12345'
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShortCodeCapability'
+          description: The messaging capabilities of the short code.
+        number_type:
           type: string
           enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    ShortCodeType:
-      type: string
-      enum:
-      - vanity
-      - random
-      description: Short code type.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          - shortcode
+          description: The type of number (always 'shortcode').
+          examples:
+          - shortcode
+        code_type:
+          allOf:
+          - $ref: '#/components/schemas/ShortCodeType'
+          description: The type of short code.
+        country_code:
           type: string
-          enum:
-          - Not Found
+          description: The ISO 3166-1 alpha-2 country code.
+          examples:
+          - US
+        created_at:
+          type: string
+          description: The date and time when the short code was created.
+          examples:
+          - '2023-01-15T10:30:00Z'
+        updated_at:
+          type: string
+          description: The date and time when the short code was last updated.
+          examples:
+          - '2023-01-15T10:30:00Z'
+        next_billed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The date and time when the short code will next be billed.
+          examples:
+          - '2024-01-15T10:30:00Z'
+        lease_duration:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The lease duration of the short code (e.g., '12 months').
+          examples:
+          - 12 months
+        message_handler:
+          anyOf:
+          - $ref: '#/components/schemas/ShortCodeMessageHandler'
+          - type: 'null'
+          description: The message handler type for incoming messages.
+        message_request_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URL to send message requests to when using laml_webhooks handler.
+          examples:
+          - https://example.com/message
+        message_request_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use for message requests.
+        message_fallback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The fallback URL for message requests.
+          examples:
+          - https://example.com/fallback
+        message_fallback_method:
+          anyOf:
+          - $ref: '#/components/schemas/HttpMethod'
+          - type: 'null'
+          description: The HTTP method to use for fallback requests.
+        message_laml_application_id:
+          anyOf:
+          - $ref: '#/components/schemas/uuid'
+          - type: 'null'
+          description: The ID of the LāML application to handle messages when using laml_application handler.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        message_relay_context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The Relay context to use when using relay_context handler.
+          examples:
+          - my-context
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+      description: Response containing a single short code.
     ShortCode:
       type: object
       required:
@@ -417,6 +528,42 @@ components:
       type: string
       format: uuid
       description: Universal Unique Identifier.
+    ShortCodeCapability:
+      type: string
+      enum:
+      - sms
+      - mms
+      description: Short code capabilities.
+    ShortCodeType:
+      type: string
+      enum:
+      - vanity
+      - random
+      description: Short code type.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     ShortCodeMessageHandler:
       type: string
       enum:
@@ -424,6 +571,49 @@ components:
       - laml_webhooks
       - laml_application
       description: Message handler type for short codes.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    HttpMethod:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: HTTP method type.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
     ShortCodeListResponse:
       type: object
       required:
@@ -442,225 +632,28 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of short codes.
-    Types.StatusCodes.StatusCode401:
+    PaginationLinks:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Unauthorized
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    HttpMethod:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: HTTP method type.
-    ShortCodeCapability:
-      type: string
-      enum:
-      - sms
-      - mms
-      description: Short code capabilities.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    ShortCodeResponse:
-      type: object
-      required:
-      - id
-      - name
-      - number
-      - capabilities
-      - number_type
-      - code_type
-      - country_code
-      - created_at
-      - updated_at
-      - next_billed_at
-      - lease_duration
-      - message_handler
-      - message_request_url
-      - message_request_method
-      - message_fallback_url
-      - message_fallback_method
-      - message_laml_application_id
-      - message_relay_context
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the short code.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name given to the short code.
-          examples:
-          - My Short Code
-        number:
-          type: string
-          description: The short code number.
-          examples:
-          - '12345'
-        capabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/ShortCodeCapability'
-          description: The messaging capabilities of the short code.
-        number_type:
-          type: string
-          enum:
-          - shortcode
-          description: The type of number (always 'shortcode').
-          examples:
-          - shortcode
-        code_type:
-          allOf:
-          - $ref: '#/components/schemas/ShortCodeType'
-          description: The type of short code.
-        country_code:
-          type: string
-          description: The ISO 3166-1 alpha-2 country code.
-          examples:
-          - US
-        created_at:
-          type: string
-          description: The date and time when the short code was created.
-          examples:
-          - '2023-01-15T10:30:00Z'
-        updated_at:
-          type: string
-          description: The date and time when the short code was last updated.
-          examples:
-          - '2023-01-15T10:30:00Z'
-        next_billed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The date and time when the short code will next be billed.
-          examples:
-          - '2024-01-15T10:30:00Z'
-        lease_duration:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The lease duration of the short code (e.g., '12 months').
-          examples:
-          - 12 months
-        message_handler:
-          anyOf:
-          - $ref: '#/components/schemas/ShortCodeMessageHandler'
-          - type: 'null'
-          description: The message handler type for incoming messages.
-        message_request_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URL to send message requests to when using laml_webhooks handler.
-          examples:
-          - https://example.com/message
-        message_request_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use for message requests.
-        message_fallback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The fallback URL for message requests.
-          examples:
-          - https://example.com/fallback
-        message_fallback_method:
-          anyOf:
-          - $ref: '#/components/schemas/HttpMethod'
-          - type: 'null'
-          description: The HTTP method to use for fallback requests.
-        message_laml_application_id:
-          anyOf:
-          - $ref: '#/components/schemas/uuid'
-          - type: 'null'
-          description: The ID of the LāML application to handle messages when using laml_application handler.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        message_relay_context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The Relay context to use when using relay_context handler.
-          examples:
-          - my-context
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single short code.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
+      description: Pagination links for list responses.
   parameters:
-    ShortCodePathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the short code.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ListShortCodesQuery.page_size:
       name: page_size
       in: query
@@ -683,6 +676,14 @@ components:
         format: int32
         default: 0
       explode: false
+    ListShortCodesQuery.filter_number:
+      name: filter_number
+      in: query
+      required: false
+      description: Filter by number. Returns all short codes containing this value as a substring.
+      schema:
+        type: string
+      explode: false
     ListShortCodesQuery.page_token:
       name: page_token
       in: query
@@ -691,19 +692,18 @@ components:
       schema:
         type: string
       explode: false
+    ShortCodePathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the short code.
+      schema:
+        $ref: '#/components/schemas/uuid'
     ListShortCodesQuery.filter_name:
       name: filter_name
       in: query
       required: false
       description: Filter by name. Returns all short codes containing this value as a substring.
-      schema:
-        type: string
-      explode: false
-    ListShortCodesQuery.filter_number:
-      name: filter_number
-      in: query
-      required: false
-      description: Filter by number. Returns all short codes containing this value as a substring.
       schema:
         type: string
       explode: false

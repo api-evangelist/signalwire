@@ -358,6 +358,158 @@ paths:
               $ref: '#/components/schemas/VerifyCallerIDRequest'
 components:
   schemas:
+    UpdateVerifiedCallerIDRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          description: The name portion of the caller ID.
+          examples:
+          - C-3P0
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a verified caller ID.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    VerifiedCallerID:
+      type: object
+      required:
+      - id
+      - number
+      - verified
+      properties:
+        type:
+          type: string
+          description: The type of the returned object, this should be verified_caller_id.
+          examples:
+          - verified_caller_id
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the Verified Caller ID on SignalWire.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        number:
+          type: string
+          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in E.164 format.
+          examples:
+          - '+15551234567'
+        name:
+          type: string
+          description: String representing the name portion of the caller ID. If not provided, the default will be the formatted number that has been provided.
+          examples:
+          - C-3P0
+        extension:
+          type: string
+          description: String representing the extension of the phone number for the caller ID. This is only used when placing the verification call.
+          examples:
+          - '1234'
+        verified:
+          type: boolean
+          description: A boolean representing whether the number has been verified or not.
+          examples:
+          - false
+        verified_at:
+          type: string
+          format: date-time
+          description: Nullable DateTime field representing the date and time that the number was verified. If the number has not been verified, it will be null.
+        status:
+          type: string
+          enum:
+          - Verified
+          - Awaiting Verification
+          description: The verification status for the caller ID.
+          examples:
+          - Awaiting Verification
+      unevaluatedProperties:
+        not: {}
+      description: Verified caller ID model.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    VerifyCallerIDRequest:
+      type: object
+      required:
+      - verification_code
+      properties:
+        verification_code:
+          type: string
+          description: The verification code received via call or SMS.
+          examples:
+          - '123456'
+      unevaluatedProperties:
+        not: {}
+      description: Request body for verifying a caller ID.
     VerifiedCallerIDResponse:
       type: object
       required:
@@ -432,60 +584,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Pagination links for list responses.
-    UpdateVerifiedCallerIDRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          maxLength: 200
-          description: The name portion of the caller ID.
-          examples:
-          - C-3P0
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a verified caller ID.
-    VerifiedCallerIDListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VerifiedCallerID'
-          description: List of verified caller IDs.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of verified caller IDs.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
     CreateVerifiedCallerIDRequest:
       type: object
       required:
@@ -510,71 +608,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a verified caller ID.
-    VerifiedCallerID:
-      type: object
-      required:
-      - id
-      - number
-      - verified
-      properties:
-        type:
-          type: string
-          description: The type of the returned object, this should be verified_caller_id.
-          examples:
-          - verified_caller_id
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the Verified Caller ID on SignalWire.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        number:
-          type: string
-          description: String representing the phone number for the caller ID. This must be a valid, routeable phone number in E.164 format.
-          examples:
-          - '+15551234567'
-        name:
-          type: string
-          description: String representing the name portion of the caller ID. If not provided, the default will be the formatted number that has been provided.
-          examples:
-          - C-3P0
-        extension:
-          type: string
-          description: String representing the extension of the phone number for the caller ID. This is only used when placing the verification call.
-          examples:
-          - '1234'
-        verified:
-          type: boolean
-          description: A boolean representing whether the number has been verified or not.
-          examples:
-          - false
-        verified_at:
-          type: string
-          format: date-time
-          description: Nullable DateTime field representing the date and time that the number was verified. If the number has not been verified, it will be null.
-        status:
-          type: string
-          enum:
-          - Verified
-          - Awaiting Verification
-          description: The verification status for the caller ID.
-          examples:
-          - Awaiting Verification
-      unevaluatedProperties:
-        not: {}
-      description: Verified caller ID model.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -587,54 +620,21 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    VerifyCallerIDRequest:
+    VerifiedCallerIDListResponse:
       type: object
-      required:
-      - verification_code
       properties:
-        verification_code:
-          type: string
-          description: The verification code received via call or SMS.
-          examples:
-          - '123456'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerifiedCallerID'
+          description: List of verified caller IDs.
       unevaluatedProperties:
         not: {}
-      description: Request body for verifying a caller ID.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      description: Response containing a list of verified caller IDs.
   parameters:
     VerifiedCallerIDPathID:
       name: id

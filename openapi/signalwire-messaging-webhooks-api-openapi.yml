@@ -227,6 +227,45 @@ components:
           description: The phone number in E.164 format. Present only in number assignment events.
       unevaluatedProperties:
         not: {}
+    Message.MessageStatus:
+      type: string
+      enum:
+      - queued
+      - initiated
+      - sent
+      - delivered
+      - undelivered
+      - failed
+      - read
+      description: Delivery state of a message.
+    Webhooks.Messaging.InboundMessageMediaItem:
+      type: object
+      required:
+      - url
+      - content_type
+      - size
+      properties:
+        url:
+          type: string
+          format: uri
+          description: URL to download the media file.
+          examples:
+          - https://example.com/media/abc123.jpg
+        content_type:
+          type: string
+          description: MIME type of the media file.
+          examples:
+          - image/jpeg
+        size:
+          type: integer
+          format: int32
+          description: File size in bytes.
+          examples:
+          - 48213
+      unevaluatedProperties:
+        not: {}
+      description: A single MMS media attachment included on an inbound message.
+      title: Inbound message media item
     Webhooks.Messaging.InboundMessageWebhookPayload:
       type: object
       required:
@@ -252,6 +291,10 @@ components:
           - {}
       unevaluatedProperties:
         not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     Webhooks.Messaging.MessageStatusCallbackPayload:
       type: object
       required:
@@ -423,49 +466,6 @@ components:
         not: {}
       description: Information about the inbound message that triggered the SWML document fetch.
       title: Inbound message
-    Message.MessageStatus:
-      type: string
-      enum:
-      - queued
-      - initiated
-      - sent
-      - delivered
-      - undelivered
-      - failed
-      - read
-      description: Delivery state of a message.
-    Webhooks.Messaging.InboundMessageMediaItem:
-      type: object
-      required:
-      - url
-      - content_type
-      - size
-      properties:
-        url:
-          type: string
-          format: uri
-          description: URL to download the media file.
-          examples:
-          - https://example.com/media/abc123.jpg
-        content_type:
-          type: string
-          description: MIME type of the media file.
-          examples:
-          - image/jpeg
-        size:
-          type: integer
-          format: int32
-          description: File size in bytes.
-          examples:
-          - 48213
-      unevaluatedProperties:
-        not: {}
-      description: A single MMS media attachment included on an inbound message.
-      title: Inbound message media item
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

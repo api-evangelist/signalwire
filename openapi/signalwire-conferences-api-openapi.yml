@@ -254,6 +254,191 @@ paths:
               $ref: '#/components/schemas/UpdateConferenceRequest'
 components:
   schemas:
+    UpdateConferenceRequest:
+      type: object
+      properties:
+        Status:
+          type: string
+          enum:
+          - completed
+          description: The status of this conference. Only 'completed' is allowed to end the conference.
+          examples:
+          - completed
+        AnnounceUrl:
+          type: string
+          format: uri
+          description: The URL to send conference announcements to.
+          examples:
+          - https://your-api-endpoint.com/announce
+        AnnounceMethod:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
+          examples:
+          - POST
+          default: POST
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a conference.
+    ConferenceSubresourceUris:
+      type: object
+      required:
+      - participants
+      - recordings
+      properties:
+        participants:
+          type: string
+          description: Links to the participants.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants.json
+        recordings:
+          type: string
+          description: Links to the recordings.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Recordings.json
+      unevaluatedProperties:
+        not: {}
+      description: Conference subresource URIs.
+    ConferenceResponse:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - date_created
+      - date_updated
+      - friendly_name
+      - status
+      - api_version
+      - region
+      - uri
+      - subresource_uris
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that created this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this conference was created.
+          examples:
+          - Mon, 24 Sept 2018 21:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this conference was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        friendly_name:
+          type: string
+          description: A description, up to 64 characters, of the conference room.
+          examples:
+          - My Conference Room
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceStatus'
+          description: The status of this conference.
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        region:
+          type: string
+          description: The region where this conference audio was mixed.
+          examples:
+          - us1
+        uri:
+          type: string
+          description: The URI for this conference.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf.json
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceSubresourceUris'
+          description: The links to associated subresources.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single conference.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Conference:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - date_created
+      - date_updated
+      - friendly_name
+      - status
+      - api_version
+      - region
+      - uri
+      - subresource_uris
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472cf
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account that created this conference.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        date_created:
+          type: string
+          description: The date, in RFC 2822 format, this conference was created.
+          examples:
+          - Mon, 24 Sept 2018 21:00:00 +0000
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 format, this conference was updated.
+          examples:
+          - Tue, 25 Sept 2018 20:00:00 +0000
+        friendly_name:
+          type: string
+          description: A description, up to 64 characters, of the conference room.
+          examples:
+          - My Conference Room
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceStatus'
+          description: The status of this conference.
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        region:
+          type: string
+          description: The region where this conference audio was mixed.
+          examples:
+          - us1
+        uri:
+          type: string
+          description: The URI for this conference.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf.json
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/ConferenceSubresourceUris'
+          description: The links to associated subresources.
+      unevaluatedProperties:
+        not: {}
+      description: Conference model.
     ConferenceListResponse:
       type: object
       required:
@@ -342,120 +527,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    Conference:
-      type: object
-      required:
-      - sid
-      - account_sid
-      - date_created
-      - date_updated
-      - friendly_name
-      - status
-      - api_version
-      - region
-      - uri
-      - subresource_uris
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for this conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472cf
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account that created this conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        date_created:
-          type: string
-          description: The date, in RFC 2822 format, this conference was created.
-          examples:
-          - Mon, 24 Sept 2018 21:00:00 +0000
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 format, this conference was updated.
-          examples:
-          - Tue, 25 Sept 2018 20:00:00 +0000
-        friendly_name:
-          type: string
-          description: A description, up to 64 characters, of the conference room.
-          examples:
-          - My Conference Room
-        status:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceStatus'
-          description: The status of this conference.
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        region:
-          type: string
-          description: The region where this conference audio was mixed.
-          examples:
-          - us1
-        uri:
-          type: string
-          description: The URI for this conference.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf.json
-        subresource_uris:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceSubresourceUris'
-          description: The links to associated subresources.
-      unevaluatedProperties:
-        not: {}
-      description: Conference model.
-    UpdateConferenceRequest:
-      type: object
-      properties:
-        Status:
-          type: string
-          enum:
-          - completed
-          description: The status of this conference. Only 'completed' is allowed to end the conference.
-          examples:
-          - completed
-        AnnounceUrl:
-          type: string
-          format: uri
-          description: The URL to send conference announcements to.
-          examples:
-          - https://your-api-endpoint.com/announce
-        AnnounceMethod:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: Whether the request to `AnnounceUrl` is a `GET` or a `POST`. Default is `POST`.
-          examples:
-          - POST
-          default: POST
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a conference.
-    ConferenceSubresourceUris:
-      type: object
-      required:
-      - participants
-      - recordings
-      properties:
-        participants:
-          type: string
-          description: Links to the participants.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Participants.json
-        recordings:
-          type: string
-          description: Links to the recordings.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf/Recordings.json
-      unevaluatedProperties:
-        not: {}
-      description: Conference subresource URIs.
     ConferenceStatus:
       type: string
       enum:
@@ -463,77 +534,6 @@ components:
       - in-progress
       - completed
       description: Conference status.
-    ConferenceResponse:
-      type: object
-      required:
-      - sid
-      - account_sid
-      - date_created
-      - date_updated
-      - friendly_name
-      - status
-      - api_version
-      - region
-      - uri
-      - subresource_uris
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for this conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472cf
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account that created this conference.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        date_created:
-          type: string
-          description: The date, in RFC 2822 format, this conference was created.
-          examples:
-          - Mon, 24 Sept 2018 21:00:00 +0000
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 format, this conference was updated.
-          examples:
-          - Tue, 25 Sept 2018 20:00:00 +0000
-        friendly_name:
-          type: string
-          description: A description, up to 64 characters, of the conference room.
-          examples:
-          - My Conference Room
-        status:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceStatus'
-          description: The status of this conference.
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        region:
-          type: string
-          description: The region where this conference audio was mixed.
-          examples:
-          - us1
-        uri:
-          type: string
-          description: The URI for this conference.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Conferences/b3877c40-da60-4998-90ad-b792e98472cf.json
-        subresource_uris:
-          allOf:
-          - $ref: '#/components/schemas/ConferenceSubresourceUris'
-          description: The links to associated subresources.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single conference.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
   parameters:
     ConferencesAccountSidPath:
       name: AccountSid

@@ -304,258 +304,6 @@ paths:
       - Subscribers
 components:
   schemas:
-    SubscriberAddressesResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressSubscriber'
-          description: An array of objects that contain a list of Subscriber addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/SubscriberAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    FabricAddressSubscriber:
-      type: object
-      required:
-      - id
-      - name
-      - display_name
-      - cover_url
-      - preview_url
-      - locked
-      - channels
-      - created_at
-      - type
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Fabric Address.
-          examples:
-          - 691af061-cd86-4893-a605-173f47afc4c2
-        name:
-          type: string
-          description: Name of the Fabric Address.
-          examples:
-          - justice-league
-        display_name:
-          type: string
-          description: Display name of the Fabric Address.
-          examples:
-          - Justice League
-        cover_url:
-          type: string
-          description: Cover url of the Fabric Address.
-          examples:
-          - https://coverurl.com
-        preview_url:
-          type: string
-          description: Preview url of the Fabric Address.
-          examples:
-          - https://previewurl.com
-        locked:
-          type: boolean
-          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
-          examples:
-          - true
-        channels:
-          allOf:
-          - $ref: '#/components/schemas/AddressChannel'
-          description: Channels of the Fabric Address.
-        created_at:
-          type: string
-          format: date-time
-          description: Fabric Address Creation Date.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        type:
-          type: string
-          enum:
-          - subscriber
-          description: The display type of a fabric address pointing to a [Subscriber](/docs/platform/subscribers).
-          examples:
-          - subscriber
-      unevaluatedProperties:
-        not: {}
-      title: Subscriber Address
-    SubscriberListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriberResponse'
-          description: An array of objects that contain a list of Subscriber data
-        links:
-          allOf:
-          - $ref: '#/components/schemas/SubscriberPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    SubscriberCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: Required parameter is missing
-          attribute: password
-          url: https://signalwire.com/docs/apis/error-codes
-    SubscriberPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-      unevaluatedProperties:
-        not: {}
-    Subscriber:
-      type: object
-      required:
-      - id
-      - email
-      - first_name
-      - last_name
-      - display_name
-      - job_title
-      - timezone
-      - country
-      - company_name
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Subscriber.
-          examples:
-          - d369a402-7b43-4512-8735-9d5e1f387814
-        email:
-          type: string
-          description: Email of the Subscriber.
-          examples:
-          - johndoe@example.com
-        first_name:
-          type: string
-          description: First name of the Subscriber.
-          examples:
-          - John
-        last_name:
-          type: string
-          description: Last name of the Subscriber.
-          examples:
-          - Doe
-        display_name:
-          type: string
-          description: Display name of the Subscriber.
-          examples:
-          - John Doe
-        job_title:
-          type: string
-          description: Job title of the Subscriber.
-          examples:
-          - Software Engineer
-        timezone:
-          type: string
-          description: Timezone of the Subscriber.
-          examples:
-          - America/New_York
-        country:
-          type: string
-          description: Country of the Subscriber.
-          examples:
-          - United States
-        company_name:
-          type: string
-          description: Company name of the Subscriber.
-          examples:
-          - SignalWire
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     SubscriberAddressPaginationResponse:
       type: object
       required:
@@ -642,89 +390,6 @@ components:
           - SignalWire
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    MessagingChannel:
-      type: object
-      required:
-      - messaging
-      properties:
-        messaging:
-          type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
-      unevaluatedProperties:
-        not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    SubscriberUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: Required parameter is missing
-          attribute: password
-          url: https://signalwire.com/docs/apis/error-codes
     AudioChannel:
       type: object
       required:
@@ -737,11 +402,6 @@ components:
           - /external/resource_name?channel=audio
       unevaluatedProperties:
         not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
     SubscriberResponse:
       type: object
       required:
@@ -791,6 +451,346 @@ components:
           allOf:
           - $ref: '#/components/schemas/Subscriber'
           description: Subscriber data.
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    SubscriberAddressesResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressSubscriber'
+          description: An array of objects that contain a list of Subscriber addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SubscriberAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    SubscriberCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: Required parameter is missing
+          attribute: password
+          url: https://signalwire.com/docs/apis/error-codes
+    SubscriberListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriberResponse'
+          description: An array of objects that contain a list of Subscriber data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/SubscriberPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    SubscriberPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/subscribers?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    SubscriberUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: Required parameter is missing
+          attribute: password
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    MessagingChannel:
+      type: object
+      required:
+      - messaging
+      properties:
+        messaging:
+          type: string
+          description: Messaging Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=messaging
+      unevaluatedProperties:
+        not: {}
+    FabricAddressSubscriber:
+      type: object
+      required:
+      - id
+      - name
+      - display_name
+      - cover_url
+      - preview_url
+      - locked
+      - channels
+      - created_at
+      - type
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Fabric Address.
+          examples:
+          - 691af061-cd86-4893-a605-173f47afc4c2
+        name:
+          type: string
+          description: Name of the Fabric Address.
+          examples:
+          - justice-league
+        display_name:
+          type: string
+          description: Display name of the Fabric Address.
+          examples:
+          - Justice League
+        cover_url:
+          type: string
+          description: Cover url of the Fabric Address.
+          examples:
+          - https://coverurl.com
+        preview_url:
+          type: string
+          description: Preview url of the Fabric Address.
+          examples:
+          - https://previewurl.com
+        locked:
+          type: boolean
+          description: Locks the Fabric Address. This is used to prevent the Fabric Address from accepting calls.
+          examples:
+          - true
+        channels:
+          allOf:
+          - $ref: '#/components/schemas/AddressChannel'
+          description: Channels of the Fabric Address.
+        created_at:
+          type: string
+          format: date-time
+          description: Fabric Address Creation Date.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        type:
+          type: string
+          enum:
+          - subscriber
+          description: The display type of a fabric address pointing to a [Subscriber](/docs/platform/subscribers).
+          examples:
+          - subscriber
+      unevaluatedProperties:
+        not: {}
+      title: Subscriber Address
+    Subscriber:
+      type: object
+      required:
+      - id
+      - email
+      - first_name
+      - last_name
+      - display_name
+      - job_title
+      - timezone
+      - country
+      - company_name
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Subscriber.
+          examples:
+          - d369a402-7b43-4512-8735-9d5e1f387814
+        email:
+          type: string
+          description: Email of the Subscriber.
+          examples:
+          - johndoe@example.com
+        first_name:
+          type: string
+          description: First name of the Subscriber.
+          examples:
+          - John
+        last_name:
+          type: string
+          description: Last name of the Subscriber.
+          examples:
+          - Doe
+        display_name:
+          type: string
+          description: Display name of the Subscriber.
+          examples:
+          - John Doe
+        job_title:
+          type: string
+          description: Job title of the Subscriber.
+          examples:
+          - Software Engineer
+        timezone:
+          type: string
+          description: Timezone of the Subscriber.
+          examples:
+          - America/New_York
+        country:
+          type: string
+          description: Country of the Subscriber.
+          examples:
+          - United States
+        company_name:
+          type: string
+          description: Company name of the Subscriber.
+          examples:
+          - SignalWire
       unevaluatedProperties:
         not: {}
   parameters:

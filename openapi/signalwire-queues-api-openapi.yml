@@ -562,6 +562,108 @@ paths:
           description: Your SignalWire Space name
 components:
   schemas:
+    Queue:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - friendly_name
+      - max_size
+      - current_size
+      - average_wait_time
+      - date_created
+      - date_updated
+      - api_version
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the queue.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472qu
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account this Queue is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        friendly_name:
+          type: string
+          description: A description that distinguishes a queue.
+          examples:
+          - Queue1
+        max_size:
+          anyOf:
+          - type: integer
+            format: int32
+          - type: 'null'
+          description: The maximum number of calls that are allowed to wait in a queue. Null if no limit is set.
+          examples:
+          - 100
+        current_size:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The number of calls currently waiting in the queue.
+          examples:
+          - 0
+        average_wait_time:
+          type: integer
+          format: int32
+          minimum: 0
+          description: The average wait time, in seconds, of callers in a queue.
+          examples:
+          - 0
+        date_created:
+          type: string
+          description: The date and time, in RFC 2822 format, the Queue was created.
+          examples:
+          - Wed, 26 Sep 2018 18:00:00 +0000
+        date_updated:
+          type: string
+          description: The date and time, in RFC 2822 format, the Queue was updated.
+          examples:
+          - Thu, 27 Sep 2018 19:00:00 +0000
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        uri:
+          type: string
+          description: The URI of this resource, relative to the API base URL.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu.json
+      unevaluatedProperties:
+        not: {}
+      description: Queue model.
+    UpdateQueueRequest:
+      type: object
+      required:
+      - FriendlyName
+      properties:
+        FriendlyName:
+          type: string
+          minLength: 1
+          pattern: ^\w+$
+          description: A unique name for the queue. Must contain only alphanumeric characters and underscores.
+          examples:
+          - Queue1
+        MaxSize:
+          type: integer
+          format: int32
+          description: The maximum number of calls that are allowed to wait in a queue. Must be a positive integer.
+          exclusiveMinimum: 0
+          examples:
+          - 100
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a queue.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     CreateQueueRequest:
       type: object
       required:
@@ -584,6 +686,61 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a queue.
+    QueueListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - queues
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page. Null if there are no more pages.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472qu
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page. Null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number (zero-indexed).
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of items per page.
+          examples:
+          - 50
+        queues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Queue'
+          description: List of queues.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of queues.
     QueueResponse:
       type: object
       required:
@@ -693,323 +850,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Error response model.
-    QueueListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - queues
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page. Null if there are no more pages.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues?Page=1&PageSize=50&PageToken=PAb3877c40-da60-4998-90ad-b792e98472qu
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page. Null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number (zero-indexed).
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of items per page.
-          examples:
-          - 50
-        queues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Queue'
-          description: List of queues.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of queues.
-    Queue:
-      type: object
-      required:
-      - sid
-      - account_sid
-      - friendly_name
-      - max_size
-      - current_size
-      - average_wait_time
-      - date_created
-      - date_updated
-      - api_version
-      - uri
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the queue.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472qu
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account this Queue is associated with.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        friendly_name:
-          type: string
-          description: A description that distinguishes a queue.
-          examples:
-          - Queue1
-        max_size:
-          anyOf:
-          - type: integer
-            format: int32
-          - type: 'null'
-          description: The maximum number of calls that are allowed to wait in a queue. Null if no limit is set.
-          examples:
-          - 100
-        current_size:
-          type: integer
-          format: int32
-          minimum: 0
-          description: The number of calls currently waiting in the queue.
-          examples:
-          - 0
-        average_wait_time:
-          type: integer
-          format: int32
-          minimum: 0
-          description: The average wait time, in seconds, of callers in a queue.
-          examples:
-          - 0
-        date_created:
-          type: string
-          description: The date and time, in RFC 2822 format, the Queue was created.
-          examples:
-          - Wed, 26 Sep 2018 18:00:00 +0000
-        date_updated:
-          type: string
-          description: The date and time, in RFC 2822 format, the Queue was updated.
-          examples:
-          - Thu, 27 Sep 2018 19:00:00 +0000
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        uri:
-          type: string
-          description: The URI of this resource, relative to the API base URL.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Queues/b3877c40-da60-4998-90ad-b792e98472qu.json
-      unevaluatedProperties:
-        not: {}
-      description: Queue model.
-    UpdateQueueRequest:
-      type: object
-      required:
-      - FriendlyName
-      properties:
-        FriendlyName:
-          type: string
-          minLength: 1
-          pattern: ^\w+$
-          description: A unique name for the queue. Must contain only alphanumeric characters and underscores.
-          examples:
-          - Queue1
-        MaxSize:
-          type: integer
-          format: int32
-          description: The maximum number of calls that are allowed to wait in a queue. Must be a positive integer.
-          exclusiveMinimum: 0
-          examples:
-          - 100
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a queue.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    CreateQueueRequest_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the queue.
-          examples:
-          - Name 2
-        max_size:
-          type: integer
-          format: int32
-          description: The maximum number of callers allowed in the queue.
-          examples:
-          - 600
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a queue.
-    QueueResponse_2:
-      type: object
-      required:
-      - id
-      - project_id
-      - friendly_name
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the queue.
-          examples:
-          - aae131db-214c-46f5-88b6-92004f8467cf
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The project ID associated with this queue.
-          examples:
-          - c6c4679b-716a-456a-9e41-a03821005005
-        friendly_name:
-          type: string
-          description: The friendly name of the queue.
-          examples:
-          - test
-        max_size:
-          type: integer
-          format: int32
-          description: The maximum number of callers allowed in the queue.
-          examples:
-          - 5
-        current_size:
-          type: integer
-          format: int32
-          description: The current number of callers in the queue.
-          examples:
-          - 0
-        average_wait_time:
-          type: integer
-          format: int32
-          description: The average wait time in seconds.
-          examples:
-          - 0
-        uri:
-          type: string
-          description: The URL of this queue.
-          examples:
-          - /api/relay/rest/queues/aae131db-214c-46f5-88b6-92004f8467cf
-        date_created:
-          type: string
-          format: date-time
-          description: Timestamp when the queue was created.
-        date_updated:
-          type: string
-          format: date-time
-          description: Timestamp when the queue was last updated.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single queue.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    QueueListResponse_2:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Queue_2'
-          description: List of queues.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of queues.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Queue_2:
       type: object
       required:
@@ -1080,6 +920,30 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request is invalid.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -1111,6 +975,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
     UpdateQueueRequest_2:
       type: object
       properties:
@@ -1128,6 +1005,129 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a queue.
+    CreateQueueRequest_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the queue.
+          examples:
+          - Name 2
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 600
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a queue.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    QueueListResponse_2:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Queue_2'
+          description: List of queues.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of queues.
+    QueueResponse_2:
+      type: object
+      required:
+      - id
+      - project_id
+      - friendly_name
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the queue.
+          examples:
+          - aae131db-214c-46f5-88b6-92004f8467cf
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The project ID associated with this queue.
+          examples:
+          - c6c4679b-716a-456a-9e41-a03821005005
+        friendly_name:
+          type: string
+          description: The friendly name of the queue.
+          examples:
+          - test
+        max_size:
+          type: integer
+          format: int32
+          description: The maximum number of callers allowed in the queue.
+          examples:
+          - 5
+        current_size:
+          type: integer
+          format: int32
+          description: The current number of callers in the queue.
+          examples:
+          - 0
+        average_wait_time:
+          type: integer
+          format: int32
+          description: The average wait time in seconds.
+          examples:
+          - 0
+        uri:
+          type: string
+          description: The URL of this queue.
+          examples:
+          - /api/relay/rest/queues/aae131db-214c-46f5-88b6-92004f8467cf
+        date_created:
+          type: string
+          format: date-time
+          description: Timestamp when the queue was created.
+        date_updated:
+          type: string
+          format: date-time
+          description: Timestamp when the queue was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single queue.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
   parameters:
     QueuesAccountSidPath:
       name: AccountSid

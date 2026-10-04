@@ -386,6 +386,109 @@ paths:
       - 'AI Agents: Custom'
 components:
   schemas:
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    AIAgentListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AIAgentResponse'
+          description: An array of objects containing the list of AI Agent data.
+        links:
+          allOf:
+          - $ref: '#/components/schemas/AIAgentPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    AIAgentResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - ai_agent
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the AIAgent.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 99151cf8-9548-4860-ba70-a8de824f3312
+        display_name:
+          type: string
+          description: Display name of the AIAgent Fabric Resource
+          examples:
+          - Booking Assistant
+        type:
+          type: string
+          enum:
+          - ai_agent
+          description: Type of the Fabric Resource
+          examples:
+          - ai_agent
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        ai_agent:
+          allOf:
+          - $ref: '#/components/schemas/AIAgent'
+          description: AIAgent data.
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     AIAgent:
       type: object
       required:
@@ -500,45 +603,36 @@ components:
 
         See the [SWML `ai` method reference](/docs/swml/reference/calling/ai) for the complete configuration contract.'
       title: AI Agent
-    Types.StatusCodes.StatusCode500:
+    AIAgentPaginationResponse:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=0&page_size=50&type=ai_agent
+        first:
           type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    AIAgentListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AIAgentResponse'
-          description: An array of objects containing the list of AI Agent data.
-        links:
-          allOf:
-          - $ref: '#/components/schemas/AIAgentPaginationResponse'
-          description: Object containing pagination links
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=0&page_size=50&type=ai_agent
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
       unevaluatedProperties:
         not: {}
     AIAgentCreateStatusCode422:
@@ -562,27 +656,132 @@ components:
           message: Name can't be blank
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    AIAgentAddressListResponse:
+    AIAgentUpdateRequest:
       type: object
-      required:
-      - data
-      - links
       properties:
-        data:
+        hints:
           type: array
           items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects containing the address data
-        links:
-          allOf:
-          - $ref: '#/components/schemas/AIAddressPaginationResponse'
-          description: Object containing pagination links
+            type: string
+          description: 'Hints help the AI agent understand certain words or phrases better. Words that can commonly be misinterpreted can be added to the hints to help the AI speak more accurately.
+
+
+            See [`ai.hints` in the SWML reference](/docs/swml/reference/calling/ai#aihints).'
+          examples:
+          - - pizza
+            - pepperoni
+        languages:
+          type: array
+          items:
+            type: object
+            unevaluatedProperties: {}
+          description: 'An array of JSON objects defining supported languages in the conversation.
+
+            Mutually exclusive with `multilingual`: if both are set, `multilingual` is used and
+
+            this array is ignored.
+
+
+            See [`ai.languages` in the SWML reference](/docs/swml/reference/calling/ai#ailanguages).'
+          examples:
+          - - name: English
+              code: en-US
+              voice: rime.spore
+        params:
+          type: object
+          unevaluatedProperties: {}
+          description: 'A JSON object containing parameters as key-value pairs.
+
+
+            See [`ai.params` in the SWML reference](/docs/swml/reference/calling/ai#aiparams).'
+          examples:
+          - ai_model: gpt-4o-mini
+            wait_for_user: true
+        post_prompt:
+          type: object
+          unevaluatedProperties: {}
+          description: 'The final set of instructions and configuration settings to send to the agent.
+
+
+            See [`ai.post_prompt` in the SWML reference](/docs/swml/reference/calling/ai#aipost_prompt).'
+          examples:
+          - text: Summarize the conversation and provide any follow-up action items.
+        pronounce:
+          type: array
+          items:
+            type: object
+            unevaluatedProperties: {}
+          description: 'An array of JSON objects to clarify the AI''s pronunciation of words or expressions.
+
+
+            See [`ai.pronounce` in the SWML reference](/docs/swml/reference/calling/ai#aipronounce).'
+          examples:
+          - - replace: SWML
+              with: swim-el
+              ignore_case: true
+        prompt:
+          type: object
+          unevaluatedProperties: {}
+          description: 'Defines the AI agent''s personality, goals, behaviors, and instructions for handling conversations.
+
+            The prompt establishes how the agent should interact with callers, what information it should gather,
+
+            and how it should respond to various scenarios. It is recommended to write prompts using markdown formatting.
+
+
+            See [`ai.prompt` in the SWML reference](/docs/swml/reference/calling/ai#aiprompt).'
+          examples:
+          - text: You are a helpful customer support assistant.
+        SWAIG:
+          type: object
+          unevaluatedProperties: {}
+          description: 'An array of JSON objects to create user-defined functions/endpoints that can be executed during the dialogue.
+
+
+            See [`ai.SWAIG` in the SWML reference](/docs/swml/reference/calling/ai#aiswaig).'
+          examples:
+          - native_functions:
+            - check_time
+        name:
+          type: string
+          description: Name of the AI Agent.
+          examples:
+          - My AI Agent
       unevaluatedProperties:
         not: {}
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    AIAgentUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: missing_required_parameter
+          message: Name can't be blank
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
     FabricAddressApp:
       type: object
       required:
@@ -697,112 +896,19 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    AIAgentUpdateRequest:
-      type: object
-      properties:
-        hints:
-          type: array
-          items:
-            type: string
-          description: 'Hints help the AI agent understand certain words or phrases better. Words that can commonly be misinterpreted can be added to the hints to help the AI speak more accurately.
-
-
-            See [`ai.hints` in the SWML reference](/docs/swml/reference/calling/ai#aihints).'
-          examples:
-          - - pizza
-            - pepperoni
-        languages:
-          type: array
-          items:
-            type: object
-            unevaluatedProperties: {}
-          description: 'An array of JSON objects defining supported languages in the conversation.
-
-            Mutually exclusive with `multilingual`: if both are set, `multilingual` is used and
-
-            this array is ignored.
-
-
-            See [`ai.languages` in the SWML reference](/docs/swml/reference/calling/ai#ailanguages).'
-          examples:
-          - - name: English
-              code: en-US
-              voice: rime.spore
-        params:
-          type: object
-          unevaluatedProperties: {}
-          description: 'A JSON object containing parameters as key-value pairs.
-
-
-            See [`ai.params` in the SWML reference](/docs/swml/reference/calling/ai#aiparams).'
-          examples:
-          - ai_model: gpt-4o-mini
-            wait_for_user: true
-        post_prompt:
-          type: object
-          unevaluatedProperties: {}
-          description: 'The final set of instructions and configuration settings to send to the agent.
-
-
-            See [`ai.post_prompt` in the SWML reference](/docs/swml/reference/calling/ai#aipost_prompt).'
-          examples:
-          - text: Summarize the conversation and provide any follow-up action items.
-        pronounce:
-          type: array
-          items:
-            type: object
-            unevaluatedProperties: {}
-          description: 'An array of JSON objects to clarify the AI''s pronunciation of words or expressions.
-
-
-            See [`ai.pronounce` in the SWML reference](/docs/swml/reference/calling/ai#aipronounce).'
-          examples:
-          - - replace: SWML
-              with: swim-el
-              ignore_case: true
-        prompt:
-          type: object
-          unevaluatedProperties: {}
-          description: 'Defines the AI agent''s personality, goals, behaviors, and instructions for handling conversations.
-
-            The prompt establishes how the agent should interact with callers, what information it should gather,
-
-            and how it should respond to various scenarios. It is recommended to write prompts using markdown formatting.
-
-
-            See [`ai.prompt` in the SWML reference](/docs/swml/reference/calling/ai#aiprompt).'
-          examples:
-          - text: You are a helpful customer support assistant.
-        SWAIG:
-          type: object
-          unevaluatedProperties: {}
-          description: 'An array of JSON objects to create user-defined functions/endpoints that can be executed during the dialogue.
-
-
-            See [`ai.SWAIG` in the SWML reference](/docs/swml/reference/calling/ai#aiswaig).'
-          examples:
-          - native_functions:
-            - check_time
-        name:
-          type: string
-          description: Name of the AI Agent.
-          examples:
-          - My AI Agent
-      unevaluatedProperties:
-        not: {}
-    MessagingChannel:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - messaging
+      - error
       properties:
-        messaging:
+        error:
           type: string
-          description: Messaging Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=messaging
+          enum:
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-    AIAgentPaginationResponse:
+      description: An internal server error occurred.
+    AIAddressPaginationResponse:
       type: object
       required:
       - self
@@ -813,25 +919,25 @@ components:
           format: uri
           description: Link of the current page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=0&page_size=50&type=ai_agent
+          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=ai_agent
         first:
           type: string
           format: uri
           description: Link to the first page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=0&page_size=50&type=ai_agent
+          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=ai_agent
         next:
           type: string
           format: uri
           description: Link to the next page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
+          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
         prev:
           type: string
           format: uri
           description: Link to the previous page
           examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
+          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
       unevaluatedProperties:
         not: {}
     AIAgentCreateRequest:
@@ -930,154 +1036,48 @@ components:
           - My AI Agent
       unevaluatedProperties:
         not: {}
-    AIAgentResponse:
+    AIAgentAddressListResponse:
       type: object
       required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - ai_agent
+      - data
+      - links
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the AIAgent.
-          examples:
-          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 99151cf8-9548-4860-ba70-a8de824f3312
-        display_name:
-          type: string
-          description: Display name of the AIAgent Fabric Resource
-          examples:
-          - Booking Assistant
-        type:
-          type: string
-          enum:
-          - ai_agent
-          description: Type of the Fabric Resource
-          examples:
-          - ai_agent
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        ai_agent:
-          allOf:
-          - $ref: '#/components/schemas/AIAgent'
-          description: AIAgent data.
-      unevaluatedProperties:
-        not: {}
-    AIAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=ai_agent
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&type=ai_agent
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/ai_agents/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=ai_agent
-      unevaluatedProperties:
-        not: {}
-    AIAgentUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
+        data:
           type: array
           items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects containing the address data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/AIAddressPaginationResponse'
+          description: Object containing pagination links
       unevaluatedProperties:
         not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: missing_required_parameter
-          message: Name can't be blank
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
-    VideoChannel:
+    MessagingChannel:
       type: object
       required:
-      - video
+      - messaging
       properties:
-        video:
+        messaging:
           type: string
-          description: Video Channel of Fabric Address
+          description: Messaging Channel of Fabric Address
           examples:
-          - /external/resource_name?channel=video
+          - /external/resource_name?channel=messaging
       unevaluatedProperties:
         not: {}
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
   parameters:
-    AIAgentIDPath:
-      name: ai_agent_id
-      in: path
-      required: true
-      description: Unique ID of a AI Agent.
-      schema:
-        $ref: '#/components/schemas/uuid'
     AIAgentPathID:
       name: id
       in: path
       required: true
       description: Unique ID of an AI Agent.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    AIAgentIDPath:
+      name: ai_agent_id
+      in: path
+      required: true
+      description: Unique ID of a AI Agent.
       schema:
         $ref: '#/components/schemas/uuid'
   securitySchemes:

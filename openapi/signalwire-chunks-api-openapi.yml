@@ -182,76 +182,6 @@ paths:
       - Chunks
 components:
   schemas:
-    Datasphere.ChunkPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
-        first:
-          type: string
-          format: uri
-          description: Link to the first page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
-        next:
-          type: string
-          format: uri
-          description: Link to the next page. Only present when there are more results.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page. Only present when not on the first page.
-          examples:
-          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -264,23 +194,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
-    Datasphere.ChunkListResponse:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
-      - data
-      - links
+      - error
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Datasphere.ChunkResponse'
-          description: A list of chunks.
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Datasphere.ChunkPaginationResponse'
-          description: Pagination links.
+        error:
+          type: string
+          enum:
+          - Bad Request
       unevaluatedProperties:
         not: {}
+      description: The request is invalid.
     Datasphere.ChunkStatus:
       type: string
       enum:
@@ -289,18 +214,6 @@ components:
       - completed
       - failed
       description: The current Status of the Chunk.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
     Datasphere.ListStatusCode422:
       type: object
       required:
@@ -322,7 +235,7 @@ components:
           message: Invalid page_token
           attribute: page_token
           url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.StatusCode404:
       type: object
       required:
       - error
@@ -330,10 +243,14 @@ components:
         error:
           type: string
           enum:
-          - Unauthorized
+          - Not Found
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
+      description: The server cannot find the requested resource.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     Datasphere.ChunkResponse:
       type: object
       required:
@@ -398,7 +315,62 @@ components:
           - 2024-05-06T12:20-12Z
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.StatusCode400:
+    Datasphere.ChunkListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Datasphere.ChunkResponse'
+          description: A list of chunks.
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Datasphere.ChunkPaginationResponse'
+          description: Pagination links.
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -406,15 +378,50 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      description: Access is unauthorized.
+    Datasphere.ChunkPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
+        first:
+          type: string
+          format: uri
+          description: Link to the first page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50
+        next:
+          type: string
+          format: uri
+          description: Link to the next page. Only present when there are more results.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page. Only present when not on the first page.
+          examples:
+          - https://{space_name}.signalwire.com/api/datasphere/documents/{document_id}/chunks?page_number=0&page_size=50&page_token=PBbff61159-faab-48b3-959a-3021a8f5beca
+      unevaluatedProperties:
+        not: {}
   parameters:
+    Datasphere.ChunkPathID.chunkId:
+      name: chunkId
+      in: path
+      required: true
+      description: Unique ID of a Chunk.
+      schema:
+        $ref: '#/components/schemas/uuid'
     Datasphere.ChunkPathID.documentId:
       name: documentId
       in: path
@@ -422,14 +429,6 @@ components:
       description: Unique ID of the parent Document.
       schema:
         $ref: '#/components/schemas/uuid'
-    Datasphere.ChunkListQuery.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` > 0.
-      schema:
-        type: string
-      explode: false
     Datasphere.ChunkListQuery.page_size:
       name: page_size
       in: query
@@ -442,6 +441,14 @@ components:
         maximum: 1000
         default: 50
       explode: false
+    Datasphere.ChunkListQuery.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` > 0.
+      schema:
+        type: string
+      explode: false
     Datasphere.ChunkListQuery.page_number:
       name: page_number
       in: query
@@ -453,13 +460,6 @@ components:
         minimum: 0
         default: 0
       explode: false
-    Datasphere.ChunkPathID.chunkId:
-      name: chunkId
-      in: path
-      required: true
-      description: Unique ID of a Chunk.
-      schema:
-        $ref: '#/components/schemas/uuid'
     Datasphere.DocumentPathID:
       name: documentId
       in: path

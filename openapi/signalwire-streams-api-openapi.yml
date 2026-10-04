@@ -500,6 +500,42 @@ paths:
           default: '{Your_Space_Name}'
           description: Your SignalWire Space name
 components:
+  parameters:
+    CallSidPath:
+      name: Sid
+      in: path
+      required: true
+      description: The unique identifier for the call.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The Project ID that uniquely identifies the Account.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CallSidPathForRecording:
+      name: CallSid
+      in: path
+      required: true
+      description: The unique identifier for the call.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.StreamPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the stream.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.RoomPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the video room.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
     StreamStatus:
       type: string
@@ -508,105 +544,6 @@ components:
       - in-progress
       - stopped
       description: Stream status.
-    UpdateCallStreamRequest:
-      type: object
-      required:
-      - Status
-      properties:
-        Status:
-          type: string
-          enum:
-          - stopped
-          description: The status of the stream. Only 'stopped' is allowed.
-          examples:
-          - stopped
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a call stream.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-    CallStreamResponse:
-      type: object
-      required:
-      - sid
-      - account_sid
-      - call_sid
-      - name
-      - status
-      - date_updated
-      - uri
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the stream.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472st
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        call_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the call.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472ca
-        name:
-          type: string
-          description: The name of the stream.
-          examples:
-          - my_first_stream
-        status:
-          allOf:
-          - $ref: '#/components/schemas/StreamStatus'
-          description: The status of the stream.
-        date_updated:
-          type: string
-          description: The date, in RFC 2822 GMT format, this stream was updated.
-          examples:
-          - Wed, 19 Sep 2018 21:00:00 +0000
-        uri:
-          type: string
-          description: The URI for the stream.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Calls/b3877c40-da60-4998-90ad-b792e98472ca/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single call stream.
     CreateCallStreamRequest:
       type: object
       required:
@@ -676,48 +613,175 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a call stream.
+    UpdateCallStreamRequest:
+      type: object
+      required:
+      - Status
+      properties:
+        Status:
+          type: string
+          enum:
+          - stopped
+          description: The status of the stream. Only 'stopped' is allowed.
+          examples:
+          - stopped
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a call stream.
+    CallStreamResponse:
+      type: object
+      required:
+      - sid
+      - account_sid
+      - call_sid
+      - name
+      - status
+      - date_updated
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the stream.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472st
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        call_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the call.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472ca
+        name:
+          type: string
+          description: The name of the stream.
+          examples:
+          - my_first_stream
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StreamStatus'
+          description: The status of the stream.
+        date_updated:
+          type: string
+          description: The date, in RFC 2822 GMT format, this stream was updated.
+          examples:
+          - Wed, 19 Sep 2018 21:00:00 +0000
+        uri:
+          type: string
+          description: The URI for the stream.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/Calls/b3877c40-da60-4998-90ad-b792e98472ca/Streams/b3877c40-da60-4998-90ad-b792e98472st.json
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single call stream.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
-    Types.StatusCodes.RestApiErrorItem:
+    CompatibilityErrorResponse:
       type: object
       required:
-      - type
       - code
       - message
-      - url
+      - more_info
+      - status
       properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
         code:
-          type: string
-          description: A specific error code.
+          type: integer
+          format: int32
+          description: Error code.
           examples:
-          - invalid_parameter
+          - 20003
         message:
           type: string
-          description: A description of what caused the error.
+          description: Error message.
           examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
+          - Authentication failed
+        more_info:
           type: string
-          description: A link to documentation about this error.
+          description: URL for more information about the error.
           examples:
-          - https://signalwire.com/docs/apis/error-codes
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
       unevaluatedProperties:
         not: {}
-      description: Details about a specific error.
+      description: Error response model.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Video.UpdateStreamRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          examples:
+          - rtmp://broadcaster
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a stream.
+    Video.PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=2
+        first:
+          type: string
+          description: Link to the first page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+        next:
+          type: string
+          description: Link to the next page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=3
+        prev:
+          type: string
+          description: Link to the previous page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     Video.Stream:
       type: object
       required:
@@ -789,60 +853,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: A video stream object.
-    Video.PaginationLinks:
+    Video.ListStreamsResponse:
       type: object
       required:
-      - self
-      - first
+      - links
+      - data
       properties:
-        self:
-          type: string
-          description: Link to the current page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=2
-        first:
-          type: string
-          description: Link to the first page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=1
-        next:
-          type: string
-          description: Link to the next page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=3
-        prev:
-          type: string
-          description: Link to the previous page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=1
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.Stream'
+          description: List of streams.
       unevaluatedProperties:
         not: {}
-      description: Pagination links for list responses.
-    Video.CreateStreamRequest:
-      type: object
-      required:
-      - url
-      properties:
-        url:
-          type: string
-          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
-          examples:
-          - rtmp://broadcaster
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a stream.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
+      description: List streams response.
     Video.VideoStatusCode422:
       type: object
       required:
@@ -864,18 +892,19 @@ components:
           message: Name must be present
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode404:
+    Video.CreateStreamRequest:
       type: object
       required:
-      - error
+      - url
       properties:
-        error:
+        url:
           type: string
-          enum:
-          - Not Found
+          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          examples:
+          - rtmp://broadcaster
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+      description: Request body for creating a stream.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -888,73 +917,44 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    Video.UpdateStreamRequest:
+    Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
+      - type
+      - code
+      - message
       - url
       properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
         url:
           type: string
-          description: RTMP or RTMPS URL. This must be the address of a server accepting incoming RTMP/RTMPS streams.
+          description: A link to documentation about this error.
           examples:
-          - rtmp://broadcaster
+          - https://signalwire.com/docs/apis/error-codes
       unevaluatedProperties:
         not: {}
-      description: Request body for updating a stream.
-    Video.ListStreamsResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Video.PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Video.Stream'
-          description: List of streams.
-      unevaluatedProperties:
-        not: {}
-      description: List streams response.
-  parameters:
-    CallSidPathForRecording:
-      name: CallSid
-      in: path
-      required: true
-      description: The unique identifier for the call.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    CallSidPath:
-      name: Sid
-      in: path
-      required: true
-      description: The unique identifier for the call.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    CallsAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The Project ID that uniquely identifies the Account.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.RoomPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the video room.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.StreamPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the stream.
-      schema:
-        $ref: '#/components/schemas/uuid'
+      description: Details about a specific error.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

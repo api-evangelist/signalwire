@@ -174,64 +174,6 @@ paths:
               $ref: '#/components/schemas/MfaVerifyRequest'
 components:
   schemas:
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    MfaResponse:
-      type: object
-      required:
-      - id
-      - success
-      - to
-      - channel
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The MFA request ID. Save this for verification.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        success:
-          type: boolean
-          description: Whether the request was successfully queued.
-          examples:
-          - true
-        to:
-          type: string
-          description: The destination of the MFA request.
-          examples:
-          - '+15554422333'
-        channel:
-          type: string
-          description: Can be sms for a text message or call for a phone call.
-          examples:
-          - call
-      unevaluatedProperties:
-        not: {}
-      description: MFA response model.
-    MfaVerifyRequest:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: The token to verify.
-          examples:
-          - '123456'
-      unevaluatedProperties:
-        not: {}
-      description: MFA verification request model.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -257,18 +199,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA verification response model.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -300,6 +230,23 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     MfaRequest:
       type: object
       required:
@@ -351,10 +298,63 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA request model.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+    MfaResponse:
+      type: object
+      required:
+      - id
+      - success
+      - to
+      - channel
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The MFA request ID. Save this for verification.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        success:
+          type: boolean
+          description: Whether the request was successfully queued.
+          examples:
+          - true
+        to:
+          type: string
+          description: The destination of the MFA request.
+          examples:
+          - '+15554422333'
+        channel:
+          type: string
+          description: Can be sms for a text message or call for a phone call.
+          examples:
+          - call
+      unevaluatedProperties:
+        not: {}
+      description: MFA response model.
+    MfaVerifyRequest:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: The token to verify.
+          examples:
+          - '123456'
+      unevaluatedProperties:
+        not: {}
+      description: MFA verification request model.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
   parameters:
     MfaRequestIdPath:
       name: mfa_request_id

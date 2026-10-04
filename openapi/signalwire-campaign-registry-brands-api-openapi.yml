@@ -170,272 +170,7 @@ paths:
       tags:
       - 'Campaign Registry: Brands'
 components:
-  parameters:
-    BrandPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the brand.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    BrandListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Brand'
-          description: List of brands.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of brands.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    CreateManagedBrandRequest:
-      type: object
-      required:
-      - name
-      - company_name
-      - contact_email
-      - contact_phone
-      - ein_issuing_country
-      - legal_entity_type
-      - ein
-      - company_address
-      - company_website
-      properties:
-        name:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: Brand/Marketing/DBA name of the business.
-          examples:
-          - My Brand
-        company_name:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: The legal name of the business.
-          examples:
-          - BrandCo
-        contact_email:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: A company contact email for this brand.
-          examples:
-          - brand_info@example.com
-        contact_phone:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: A contact phone number for this brand.
-          examples:
-          - '+18995551212'
-        ein_issuing_country:
-          type: string
-          description: Country of registration.
-          examples:
-          - United States
-        legal_entity_type:
-          allOf:
-          - $ref: '#/components/schemas/LegalEntityType'
-          description: What type of legal entity is the organization?
-          examples:
-          - PRIVATE_PROFIT
-        ein:
-          type: string
-          description: Company EIN Number/Tax ID.
-          examples:
-          - 12-3456789
-        company_address:
-          type: string
-          description: Full company address.
-          examples:
-          - 123 Brand St, Hill Valley CA, 91905
-        company_vertical:
-          allOf:
-          - $ref: '#/components/schemas/CompanyVertical'
-          description: An optional Vertical for the brand.
-          examples:
-          - HEALTHCARE
-        company_website:
-          type: string
-          description: Link to the company website.
-          examples:
-          - www.example.com
-        status_callback_url:
-          type: string
-          format: uri
-          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Request body for registering a new managed brand for 10DLC registration.
-    BrandResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the brand.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        state:
-          type: string
-          description: The current state of the brand.
-          examples:
-          - pending
-        name:
-          type: string
-          description: Brand/Marketing/DBA name of the business if applicable.
-          examples:
-          - My Brand
-        company_name:
-          type: string
-          description: The legal name of the business.
-          examples:
-          - BrandCo
-        contact_email:
-          type: string
-          description: A company contact email for this brand.
-          examples:
-          - brand_info@example.com
-        contact_phone:
-          type: string
-          description: A contact phone number for this brand.
-          examples:
-          - '+18995551212'
-        ein_issuing_country:
-          type: string
-          description: Country of registration.
-          examples:
-          - United States
-        legal_entity_type:
-          type: string
-          description: What type of legal entity is the organization? (PRIVATE_PROFIT, PUBLIC_PROFIT, NON_PROFIT)
-          examples:
-          - Private Company
-        ein:
-          type: string
-          description: Company EIN Number/Tax ID.
-          examples:
-          - 12-3456789
-        company_address:
-          type: string
-          description: Full company address.
-          examples:
-          - 123 Brand St, Hill Valley CA, 91905
-        company_vertical:
-          type: string
-          description: An optional Vertical for the brand (REAL_ESTATE, HEALTHCARE, ENERGY, ENTERTAINMENT, RETAIL, AGRICULTURE, INSURANCE, EDUCATION, HOSPITALITY, FINANCIAL, GAMBLING, CONSTRUCTION, NGO, MANUFACTURING, GOVERNMENT, TECHNOLOGY, COMMUNICATION).
-          examples:
-          - Healthcare
-        company_website:
-          type: string
-          description: Link to the company website.
-          examples:
-          - www.example.com
-        csp_brand_reference:
-          type: string
-          description: If you are your own Campaign Service Provider, this is the approved Brand ID (Mandatory for CSPs, otherwise please omit).
-        csp_self_registered:
-          type: boolean
-          description: This value must be true for all self-registered brands.
-          examples:
-          - false
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications when your brand''s state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the brand was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the brand was last updated.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single brand.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     CompanyVertical:
       type: string
       enum:
@@ -463,80 +198,18 @@ components:
       - TECHNOLOGY
       - TRANSPORTATION
       description: Company vertical/industry classification.
-    Types.StatusCodes.SpaceApiErrorItem:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - detail
-      - status
-      - title
-      - code
+      - error
       properties:
-        detail:
+        error:
           type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    LegalEntityType:
-      type: string
-      enum:
-      - PRIVATE_PROFIT
-      - PUBLIC_PROFIT
-      - NON_PROFIT
-      - GOVERNMENT
-      description: Legal entity type for brand registration.
-    CreateCspBrandRequest:
-      type: object
-      required:
-      - csp_self_registered
-      - name
-      - csp_brand_reference
-      properties:
-        csp_self_registered:
-          type: boolean
           enum:
-          - true
-          description: Set to true to indicate this is a self-registered CSP brand.
-          examples:
-          - true
-        name:
-          type: string
-          minLength: 3
-          maxLength: 64
-          description: Brand/Marketing/DBA name of the business.
-          examples:
-          - My Brand
-        csp_brand_reference:
-          type: string
-          description: The approved Brand ID from TCR. Required for CSP/self-registered brands.
-          examples:
-          - B123456
-        status_callback_url:
-          type: string
-          format: uri
-          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
-          examples:
-          - https://example.com/handle_callback
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Request body for importing a self-registered CSP brand. Use this when you have already registered your brand directly with TCR.
+      description: An internal server error occurred.
     Brand:
       type: object
       required:
@@ -627,10 +300,337 @@ components:
       unevaluatedProperties:
         not: {}
       description: Brand model for 10DLC registration.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
+    BrandListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Brand'
+          description: List of brands.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of brands.
+    CreateCspBrandRequest:
+      type: object
+      required:
+      - csp_self_registered
+      - name
+      - csp_brand_reference
+      properties:
+        csp_self_registered:
+          type: boolean
+          enum:
+          - true
+          description: Set to true to indicate this is a self-registered CSP brand.
+          examples:
+          - true
+        name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: Brand/Marketing/DBA name of the business.
+          examples:
+          - My Brand
+        csp_brand_reference:
+          type: string
+          description: The approved Brand ID from TCR. Required for CSP/self-registered brands.
+          examples:
+          - B123456
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for importing a self-registered CSP brand. Use this when you have already registered your brand directly with TCR.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    BrandResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the brand.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the brand.
+          examples:
+          - pending
+        name:
+          type: string
+          description: Brand/Marketing/DBA name of the business if applicable.
+          examples:
+          - My Brand
+        company_name:
+          type: string
+          description: The legal name of the business.
+          examples:
+          - BrandCo
+        contact_email:
+          type: string
+          description: A company contact email for this brand.
+          examples:
+          - brand_info@example.com
+        contact_phone:
+          type: string
+          description: A contact phone number for this brand.
+          examples:
+          - '+18995551212'
+        ein_issuing_country:
+          type: string
+          description: Country of registration.
+          examples:
+          - United States
+        legal_entity_type:
+          type: string
+          description: What type of legal entity is the organization? (PRIVATE_PROFIT, PUBLIC_PROFIT, NON_PROFIT)
+          examples:
+          - Private Company
+        ein:
+          type: string
+          description: Company EIN Number/Tax ID.
+          examples:
+          - 12-3456789
+        company_address:
+          type: string
+          description: Full company address.
+          examples:
+          - 123 Brand St, Hill Valley CA, 91905
+        company_vertical:
+          type: string
+          description: An optional Vertical for the brand (REAL_ESTATE, HEALTHCARE, ENERGY, ENTERTAINMENT, RETAIL, AGRICULTURE, INSURANCE, EDUCATION, HOSPITALITY, FINANCIAL, GAMBLING, CONSTRUCTION, NGO, MANUFACTURING, GOVERNMENT, TECHNOLOGY, COMMUNICATION).
+          examples:
+          - Healthcare
+        company_website:
+          type: string
+          description: Link to the company website.
+          examples:
+          - www.example.com
+        csp_brand_reference:
+          type: string
+          description: If you are your own Campaign Service Provider, this is the approved Brand ID (Mandatory for CSPs, otherwise please omit).
+        csp_self_registered:
+          type: boolean
+          description: This value must be true for all self-registered brands.
+          examples:
+          - false
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your brand''s state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the brand was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the brand was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single brand.
+    CreateManagedBrandRequest:
+      type: object
+      required:
+      - name
+      - company_name
+      - contact_email
+      - contact_phone
+      - ein_issuing_country
+      - legal_entity_type
+      - ein
+      - company_address
+      - company_website
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: Brand/Marketing/DBA name of the business.
+          examples:
+          - My Brand
+        company_name:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: The legal name of the business.
+          examples:
+          - BrandCo
+        contact_email:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: A company contact email for this brand.
+          examples:
+          - brand_info@example.com
+        contact_phone:
+          type: string
+          minLength: 3
+          maxLength: 64
+          description: A contact phone number for this brand.
+          examples:
+          - '+18995551212'
+        ein_issuing_country:
+          type: string
+          description: Country of registration.
+          examples:
+          - United States
+        legal_entity_type:
+          allOf:
+          - $ref: '#/components/schemas/LegalEntityType'
+          description: What type of legal entity is the organization?
+          examples:
+          - PRIVATE_PROFIT
+        ein:
+          type: string
+          description: Company EIN Number/Tax ID.
+          examples:
+          - 12-3456789
+        company_address:
+          type: string
+          description: Full company address.
+          examples:
+          - 123 Brand St, Hill Valley CA, 91905
+        company_vertical:
+          allOf:
+          - $ref: '#/components/schemas/CompanyVertical'
+          description: An optional Vertical for the brand.
+          examples:
+          - HEALTHCARE
+        company_website:
+          type: string
+          description: Link to the company website.
+          examples:
+          - www.example.com
+        status_callback_url:
+          type: string
+          format: uri
+          description: Specify a URL to receive webhook notifications when your brand's state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for registering a new managed brand for 10DLC registration.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    LegalEntityType:
+      type: string
+      enum:
+      - PRIVATE_PROFIT
+      - PUBLIC_PROFIT
+      - NON_PROFIT
+      - GOVERNMENT
+      description: Legal entity type for brand registration.
+  parameters:
+    BrandPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the brand.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

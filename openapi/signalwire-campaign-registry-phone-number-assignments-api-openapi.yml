@@ -264,96 +264,7 @@ paths:
       tags:
       - 'Campaign Registry: Phone Number Assignments'
 components:
-  parameters:
-    CampaignPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the campaign.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    OrderPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the order.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    AssignedNumberPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the assigned number.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    CreateOrderRequest:
-      type: object
-      properties:
-        phone_numbers:
-          type: array
-          items:
-            type: string
-          description: A list of phone numbers in E164 format.
-          examples:
-          - - '+15558675309'
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating an order.
-    OrderListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Order'
-          description: List of orders.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of orders.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -366,127 +277,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
-    OrderResponse:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the order.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        state:
-          type: string
-          description: The current state of the order.
-          examples:
-          - pending
-        processed_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was processed.
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was last updated.
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single order.
-    Order:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the order.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        state:
-          type: string
-          description: The current state of the order.
-          examples:
-          - pending
-        processed_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was processed.
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the order was last updated.
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Order model for campaign registry operations.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    AssignedPhoneNumber:
-      type: object
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the phone number.
-        name:
-          type: string
-          description: The name of the phone number.
-          examples:
-          - Jenny
-        number:
-          type: string
-          description: The phone number in E.164 format.
-          examples:
-          - '+15558675309'
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-      unevaluatedProperties:
-        not: {}
-      description: Phone number details in an assignment.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     AssignedNumberListResponse:
       type: object
       properties:
@@ -502,6 +292,62 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of assigned numbers.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
     AssignedNumber:
       type: object
       required:
@@ -539,41 +385,195 @@ components:
       unevaluatedProperties:
         not: {}
       description: Assigned number model for campaign registration.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
+    AssignedPhoneNumber:
+      type: object
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the phone number.
+        name:
+          type: string
+          description: The name of the phone number.
+          examples:
+          - Jenny
+        number:
+          type: string
+          description: The phone number in E.164 format.
+          examples:
+          - '+15558675309'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Phone number details in an assignment.
+    OrderResponse:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the order.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the order.
+          examples:
+          - pending
+        processed_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was processed.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was last updated.
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single order.
+    OrderListResponse:
+      type: object
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+          description: List of orders.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of orders.
+    PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Order:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the order.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        state:
+          type: string
+          description: The current state of the order.
+          examples:
+          - pending
+        processed_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was processed.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the order was last updated.
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Order model for campaign registry operations.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    CreateOrderRequest:
+      type: object
+      properties:
+        phone_numbers:
+          type: array
+          items:
+            type: string
+          description: A list of phone numbers in E164 format.
+          examples:
+          - - '+15558675309'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your number assignment order and the number assignments that belong to it change state. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating an order.
+  parameters:
+    AssignedNumberPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the assigned number.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    OrderPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the order.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

@@ -238,196 +238,88 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateCampaignRequest'
 components:
-  parameters:
-    CampaignPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the campaign.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    BrandPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the brand.
-      schema:
-        $ref: '#/components/schemas/uuid'
   schemas:
-    Campaign:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - id
+      - error
       properties:
-        id:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CampaignListResponse:
+      type: object
+      properties:
+        links:
           allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the campaign.
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+          description: List of campaigns.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of campaigns.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
           examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    UpdateCampaignRequest:
+      type: object
+      properties:
         name:
           type: string
           description: A name for the campaign.
           examples:
           - My Campaign
-        state:
-          type: string
-          description: The current state of the campaign.
-          examples:
-          - pending
-        sms_use_case:
-          type: string
-          description: An SMS Use Case category for the campaign (2FA, ACCOUNT_NOTIFICATION, AGENTS_FRANCHISES, CARRIER_EXEMPT, CHARITY, CUSTOMER_CARE, DELIVERY_NOTIFICATION, EMERGENCY, FRAUD_ALERT, HIGHER_EDUCATION, K12_EDUCATION, LOW_VOLUME_MIXED, MARKETING, MIXED, POLITICAL, POLITICAL_SECTION_527, POLLING_VOTING, PROXY, PUBLIC_SERVICE_ANNOUNCEMENT, SECURITY_ALERT, SOCIAL, SWEEPSTAKE, TRIAL, UCAAS_HIGH_VOLUME, UCAAS_LOW_VOLUME).
-          examples:
-          - MARKETING
-        sub_use_cases:
-          type: array
-          items:
-            type: string
-          description: A sub use case category for MIXED or LOW_VOLUME_MIXED campaigns (CUSTOMER_CARE, HIGHER_EDUCATION, POLLING_VOTING, PUBLIC_SERVICE_ANNOUNCEMENT, MARKETING, SECURITY_ALERT, 2FA, ACCOUNT_NOTIFICATION, DELIVERY_NOTIFICATION, FRAUD_ALERT).
-        campaign_verify_token:
-          type: string
-          description: Campaign Verify token. Required if sms use case is POLITICAL_SECTION_527.
-        description:
-          type: string
-          description: A description for the campaign. Please use at least 40 characters.
-        sample1:
-          type: string
-          description: Sample message template/content. At least two samples are required and up to five can be provided. Please use at least 20 characters.
-          examples:
-          - this is a sample message your customer might receive
-        sample2:
-          type: string
-          description: Sample 2.
-          examples:
-          - this is a sample message your customer might receive
-        sample3:
-          type: string
-          description: Sample 3.
-        sample4:
-          type: string
-          description: Sample 4.
-        sample5:
-          type: string
-          description: Sample 5.
-        dynamic_templates:
-          type: string
-          description: If your messaging content will be modified in any way beyond what you shared in your templates, please describe the nature of how the content will change.
-        message_flow:
-          type: string
-          description: Please describe the call to action/message flow your intended recipients will experience.
-          examples:
-          - Users will opt in to receive messages from their doctor through a written form and we will send them an opt in message. Appointment reminders will then be sent ahead of their appointments.
-        opt_in_message:
-          type: string
-          description: Please share the message subscribers receive when they opt in.
-          examples:
-          - Thanks for subscribing. Reply STOP to cancel at any time.
-        opt_out_message:
-          type: string
-          description: Please share the message subscribers receive when they opt out.
-          examples:
-          - You have successfully been opted out. Reply START to opt back in at any time.
-        help_message:
-          type: string
-          description: Please share the message subscribers receive when they request help.
-          examples:
-          - You have successfully been opted out. Reply SUBSCRIBE to opt back in at any time.
-        opt_in_keywords:
-          type: string
-          description: Opt in keywords that subscribers can use.
-          examples:
-          - Start,Subscribe,Opt In
-          default: START
-        opt_out_keywords:
-          type: string
-          description: Opt out keywords that subscribers can use.
-          examples:
-          - Stop,Opt Out,Unsubscribe
-          default: STOP
-        help_keywords:
-          type: string
-          description: Help keywords that subscribers can use.
-          examples:
-          - Help,Support,Request Call
-          default: HELP
-        number_pooling_required:
-          type: boolean
-          description: Will 50 or more numbers be used with this single campaign? If so, please enter true.
-          examples:
-          - true
-        number_pooling_per_campaign:
-          type: string
-          description: If you will be using number pooling, please provide an explanation as to why it is needed.
-          examples:
-          - We have customer reps in every state and they each need their own number with local area code.
-        direct_lending:
-          type: boolean
-          description: Will this campaign include content related to direct lending or other loan agreements?
-          examples:
-          - true
-        embedded_link:
-          type: boolean
-          description: Will you be using an embedded link of any kind? Note that public URL shorteners (bitly, tinyurl) will not be accepted.
-          examples:
-          - false
-        embedded_phone:
-          type: boolean
-          description: Are you using an embedded phone number (except the required HELP information contact phone number)?
-          examples:
-          - false
-        age_gated_content:
-          type: boolean
-          description: Will this campaign include any age gated content as defined by carrier and CTA guidelines?
-          examples:
-          - true
-        lead_generation:
-          type: boolean
-          description: Is there any intent of this campaign to generate leads?
-          examples:
-          - true
-        csp_campaign_reference:
-          type: string
-          description: If you are your own Campaign Service Provider, what is the approved Campaign ID? (Mandatory for CSPs, otherwise please omit)
-          examples:
-          - '1231231'
-        status_callback_url:
-          type: string
-          description: 'Optional: Specify a URL to receive webhook notifications when your campaign''s state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
-          examples:
-          - https://example.com/handle_callback
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the campaign was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the campaign was last updated.
       unevaluatedProperties:
         not: {}
-      description: Campaign model for 10DLC registration.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
+      description: Request body for updating a campaign.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -441,18 +333,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     CreatePartnerCampaignRequest:
       type: object
       required:
@@ -654,18 +538,27 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for creating a managed campaign. Used when the brand is a managed (non-CSP) brand.
-    Types.StatusCodes.StatusCode404:
+    PaginationLinks:
       type: object
       required:
-      - error
+      - self
+      - first
       properties:
-        error:
+        self:
           type: string
-          enum:
-          - Not Found
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+      description: Pagination links for list responses.
     CampaignResponse:
       type: object
       required:
@@ -819,6 +712,159 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single campaign.
+    Campaign:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the campaign.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        name:
+          type: string
+          description: A name for the campaign.
+          examples:
+          - My Campaign
+        state:
+          type: string
+          description: The current state of the campaign.
+          examples:
+          - pending
+        sms_use_case:
+          type: string
+          description: An SMS Use Case category for the campaign (2FA, ACCOUNT_NOTIFICATION, AGENTS_FRANCHISES, CARRIER_EXEMPT, CHARITY, CUSTOMER_CARE, DELIVERY_NOTIFICATION, EMERGENCY, FRAUD_ALERT, HIGHER_EDUCATION, K12_EDUCATION, LOW_VOLUME_MIXED, MARKETING, MIXED, POLITICAL, POLITICAL_SECTION_527, POLLING_VOTING, PROXY, PUBLIC_SERVICE_ANNOUNCEMENT, SECURITY_ALERT, SOCIAL, SWEEPSTAKE, TRIAL, UCAAS_HIGH_VOLUME, UCAAS_LOW_VOLUME).
+          examples:
+          - MARKETING
+        sub_use_cases:
+          type: array
+          items:
+            type: string
+          description: A sub use case category for MIXED or LOW_VOLUME_MIXED campaigns (CUSTOMER_CARE, HIGHER_EDUCATION, POLLING_VOTING, PUBLIC_SERVICE_ANNOUNCEMENT, MARKETING, SECURITY_ALERT, 2FA, ACCOUNT_NOTIFICATION, DELIVERY_NOTIFICATION, FRAUD_ALERT).
+        campaign_verify_token:
+          type: string
+          description: Campaign Verify token. Required if sms use case is POLITICAL_SECTION_527.
+        description:
+          type: string
+          description: A description for the campaign. Please use at least 40 characters.
+        sample1:
+          type: string
+          description: Sample message template/content. At least two samples are required and up to five can be provided. Please use at least 20 characters.
+          examples:
+          - this is a sample message your customer might receive
+        sample2:
+          type: string
+          description: Sample 2.
+          examples:
+          - this is a sample message your customer might receive
+        sample3:
+          type: string
+          description: Sample 3.
+        sample4:
+          type: string
+          description: Sample 4.
+        sample5:
+          type: string
+          description: Sample 5.
+        dynamic_templates:
+          type: string
+          description: If your messaging content will be modified in any way beyond what you shared in your templates, please describe the nature of how the content will change.
+        message_flow:
+          type: string
+          description: Please describe the call to action/message flow your intended recipients will experience.
+          examples:
+          - Users will opt in to receive messages from their doctor through a written form and we will send them an opt in message. Appointment reminders will then be sent ahead of their appointments.
+        opt_in_message:
+          type: string
+          description: Please share the message subscribers receive when they opt in.
+          examples:
+          - Thanks for subscribing. Reply STOP to cancel at any time.
+        opt_out_message:
+          type: string
+          description: Please share the message subscribers receive when they opt out.
+          examples:
+          - You have successfully been opted out. Reply START to opt back in at any time.
+        help_message:
+          type: string
+          description: Please share the message subscribers receive when they request help.
+          examples:
+          - You have successfully been opted out. Reply SUBSCRIBE to opt back in at any time.
+        opt_in_keywords:
+          type: string
+          description: Opt in keywords that subscribers can use.
+          examples:
+          - Start,Subscribe,Opt In
+          default: START
+        opt_out_keywords:
+          type: string
+          description: Opt out keywords that subscribers can use.
+          examples:
+          - Stop,Opt Out,Unsubscribe
+          default: STOP
+        help_keywords:
+          type: string
+          description: Help keywords that subscribers can use.
+          examples:
+          - Help,Support,Request Call
+          default: HELP
+        number_pooling_required:
+          type: boolean
+          description: Will 50 or more numbers be used with this single campaign? If so, please enter true.
+          examples:
+          - true
+        number_pooling_per_campaign:
+          type: string
+          description: If you will be using number pooling, please provide an explanation as to why it is needed.
+          examples:
+          - We have customer reps in every state and they each need their own number with local area code.
+        direct_lending:
+          type: boolean
+          description: Will this campaign include content related to direct lending or other loan agreements?
+          examples:
+          - true
+        embedded_link:
+          type: boolean
+          description: Will you be using an embedded link of any kind? Note that public URL shorteners (bitly, tinyurl) will not be accepted.
+          examples:
+          - false
+        embedded_phone:
+          type: boolean
+          description: Are you using an embedded phone number (except the required HELP information contact phone number)?
+          examples:
+          - false
+        age_gated_content:
+          type: boolean
+          description: Will this campaign include any age gated content as defined by carrier and CTA guidelines?
+          examples:
+          - true
+        lead_generation:
+          type: boolean
+          description: Is there any intent of this campaign to generate leads?
+          examples:
+          - true
+        csp_campaign_reference:
+          type: string
+          description: If you are your own Campaign Service Provider, what is the approved Campaign ID? (Mandatory for CSPs, otherwise please omit)
+          examples:
+          - '1231231'
+        status_callback_url:
+          type: string
+          description: 'Optional: Specify a URL to receive webhook notifications when your campaign''s state changes. See the [10DLC status callback](/docs/apis/rest/webhooks/ten-dlc-status-callback) docs for the webhook payload.'
+          examples:
+          - https://example.com/handle_callback
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the campaign was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the campaign was last updated.
+      unevaluatedProperties:
+        not: {}
+      description: Campaign model for 10DLC registration.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -831,67 +877,21 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    UpdateCampaignRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: A name for the campaign.
-          examples:
-          - My Campaign
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a campaign.
-    CampaignListResponse:
-      type: object
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Campaign'
-          description: List of campaigns.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of campaigns.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+  parameters:
+    BrandPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the brand.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CampaignPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the campaign.
+      schema:
+        $ref: '#/components/schemas/uuid'
   securitySchemes:
     SignalWireBasicAuth:
       type: http

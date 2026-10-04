@@ -612,40 +612,7 @@ paths:
           description: Your SignalWire Space name
 components:
   schemas:
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-    CreateCxmlScriptRequest:
+    UpdateCxmlScriptRequest:
       type: object
       required:
       - Name
@@ -658,12 +625,12 @@ components:
           - Death Star IVR
         Contents:
           type: string
-          description: The cXML contents of the script. Must be valid XML with proper Mustache syntax if templates are used. Defaults to an empty Response element.
+          description: The cXML contents of the script. Must be valid XML with proper Mustache syntax if templates are used.
           examples:
           - <Response><Say>Hello!</Say></Response>
       unevaluatedProperties:
         not: {}
-      description: Request body for creating a cXML script.
+      description: Request body for updating a cXML script.
     CxmlScriptListResponse:
       type: object
       required:
@@ -719,104 +686,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of cXML scripts.
-    CxmlScript:
-      type: object
-      required:
-      - sid
-      - date_created
-      - date_updated
-      - date_last_accessed
-      - account_sid
-      - name
-      - contents
-      - request_url
-      - num_requests
-      - api_version
-      - uri
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the cXML script on SignalWire.
-          examples:
-          - 5184b831-184f-4209-872d-ccdccc80f2f1
-        date_created:
-          type: string
-          description: The date and time, in ISO 8601 format, the script was created.
-          examples:
-          - '2019-11-26T20:00:00Z'
-        date_updated:
-          type: string
-          description: The date and time, in ISO 8601 format, the script was updated.
-          examples:
-          - '2019-11-26T20:00:00Z'
-        date_last_accessed:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The date and time, in ISO 8601 format, the script was last accessed, or null if never accessed.
-          examples:
-          - '2020-06-05T20:00:00Z'
-        account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for the account this script is associated with.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        name:
-          type: string
-          description: A friendly name given to the cXML script.
-          examples:
-          - Death Star IVR
-        contents:
-          type: string
-          description: The contents of the cXML script.
-          examples:
-          - <Response><Say>Hello!</Say></Response>
-        request_url:
-          type: string
-          format: uri
-          description: The unique URL to the raw contents of the cXML script.
-          examples:
-          - https://example.signalwire.com/laml-bins/5184b831-184f-4209-872d-ccdccc80f2f1
-        num_requests:
-          type: integer
-          format: int32
-          description: The number of times this cXML script has been accessed.
-          examples:
-          - 42
-        api_version:
-          type: string
-          description: The version of the SignalWire API.
-          examples:
-          - '2010-04-01'
-        uri:
-          type: string
-          description: The URL of this resource.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins/5184b831-184f-4209-872d-ccdccc80f2f1
-      unevaluatedProperties:
-        not: {}
-      description: cXML Script model.
-    UpdateCxmlScriptRequest:
-      type: object
-      required:
-      - Name
-      properties:
-        Name:
-          type: string
-          minLength: 1
-          description: A friendly name given to the cXML script. Required.
-          examples:
-          - Death Star IVR
-        Contents:
-          type: string
-          description: The cXML contents of the script. Must be valid XML with proper Mustache syntax if templates are used.
-          examples:
-          - <Response><Say>Hello!</Say></Response>
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a cXML script.
     CxmlScriptResponse:
       type: object
       required:
@@ -896,64 +765,165 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single cXML script.
+    CxmlScript:
+      type: object
+      required:
+      - sid
+      - date_created
+      - date_updated
+      - date_last_accessed
+      - account_sid
+      - name
+      - contents
+      - request_url
+      - num_requests
+      - api_version
+      - uri
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the cXML script on SignalWire.
+          examples:
+          - 5184b831-184f-4209-872d-ccdccc80f2f1
+        date_created:
+          type: string
+          description: The date and time, in ISO 8601 format, the script was created.
+          examples:
+          - '2019-11-26T20:00:00Z'
+        date_updated:
+          type: string
+          description: The date and time, in ISO 8601 format, the script was updated.
+          examples:
+          - '2019-11-26T20:00:00Z'
+        date_last_accessed:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The date and time, in ISO 8601 format, the script was last accessed, or null if never accessed.
+          examples:
+          - '2020-06-05T20:00:00Z'
+        account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for the account this script is associated with.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        name:
+          type: string
+          description: A friendly name given to the cXML script.
+          examples:
+          - Death Star IVR
+        contents:
+          type: string
+          description: The contents of the cXML script.
+          examples:
+          - <Response><Say>Hello!</Say></Response>
+        request_url:
+          type: string
+          format: uri
+          description: The unique URL to the raw contents of the cXML script.
+          examples:
+          - https://example.signalwire.com/laml-bins/5184b831-184f-4209-872d-ccdccc80f2f1
+        num_requests:
+          type: integer
+          format: int32
+          description: The number of times this cXML script has been accessed.
+          examples:
+          - 42
+        api_version:
+          type: string
+          description: The version of the SignalWire API.
+          examples:
+          - '2010-04-01'
+        uri:
+          type: string
+          description: The URL of this resource.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af/LamlBins/5184b831-184f-4209-872d-ccdccc80f2f1
+      unevaluatedProperties:
+        not: {}
+      description: cXML Script model.
     uuid:
       type: string
       format: uuid
       description: Universal Unique Identifier.
-    CXMLScriptCreateRequest:
+    CreateCxmlScriptRequest:
       type: object
       required:
-      - display_name
-      - contents
+      - Name
       properties:
-        display_name:
+        Name:
           type: string
-          description: Display name of the cXML Script
+          minLength: 1
+          description: A friendly name given to the cXML script. Required.
           examples:
-          - Reception Script
-        contents:
+          - Death Star IVR
+        Contents:
           type: string
-          description: The cXML script contents
+          description: The cXML contents of the script. Must be valid XML with proper Mustache syntax if templates are used. Defaults to an empty Response element.
           examples:
-          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
-        status_callback_url:
-          type: string
-          format: uri
-          description: URL to send status callbacks to
-          examples:
-          - https://example.com/status
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: HTTP method to use for status callbacks
-          examples:
-          - GET
+          - <Response><Say>Hello!</Say></Response>
       unevaluatedProperties:
         not: {}
-    Types.StatusCodes.StatusCode500:
+      description: Request body for creating a cXML script.
+    CompatibilityErrorResponse:
       type: object
       required:
-      - error
+      - code
+      - message
+      - more_info
+      - status
       properties:
-        error:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
           type: string
-          enum:
-          - Internal Server Error
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode404:
+      description: Error response model.
+    AudioChannel:
       type: object
       required:
-      - error
+      - audio
       properties:
-        error:
+        audio:
           type: string
-          enum:
-          - Not Found
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
       unevaluatedProperties:
         not: {}
-      description: The server cannot find the requested resource.
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
     CXMLScriptCreateStatusCode422:
       type: object
       required:
@@ -975,6 +945,114 @@ components:
           message: contents is required
           attribute: contents
           url: https://signalwire.com/docs/apis/error-codes
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    CXMLScriptUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter_value
+          message: contents must be valid cXML
+          attribute: contents
+          url: https://signalwire.com/docs/apis/error-codes
+    CXMLScriptListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CXMLScriptResponse'
+          description: An array of objects containing a list of cXML Script data
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
+          description: Object containing pagination links
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    CXMLScriptResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - name
+      - type
+      - created_at
+      - updated_at
+      - cxml_script
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the cXML Script.
+          examples:
+          - 993ed018-9e79-4e50-b97b-984bd5534095
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
+        name:
+          type: string
+          description: Display name of the cXML Script Fabric Resource
+          examples:
+          - Reception Script
+        type:
+          type: string
+          enum:
+          - cxml_script
+          description: Type of the Fabric Resource
+          examples:
+          - cxml_script
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        cxml_script:
+          allOf:
+          - $ref: '#/components/schemas/CXMLScript'
+          description: cXML Script data.
+      unevaluatedProperties:
+        not: {}
     CXMLScript:
       type: object
       required:
@@ -1046,97 +1124,18 @@ components:
           - POST
       unevaluatedProperties:
         not: {}
-    CXMLScriptResponse:
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
-      - id
-      - project_id
-      - name
-      - type
-      - created_at
-      - updated_at
-      - cxml_script
+      - error
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the cXML Script.
-          examples:
-          - 993ed018-9e79-4e50-b97b-984bd5534095
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 1313fe58-5e14-4c11-bbe7-6fdfa11fe780
-        name:
-          type: string
-          description: Display name of the cXML Script Fabric Resource
-          examples:
-          - Reception Script
-        type:
+        error:
           type: string
           enum:
-          - cxml_script
-          description: Type of the Fabric Resource
-          examples:
-          - cxml_script
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        cxml_script:
-          allOf:
-          - $ref: '#/components/schemas/CXMLScript'
-          description: cXML Script data.
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-    CXMLScriptUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter_value
-          message: contents must be valid cXML
-          attribute: contents
-          url: https://signalwire.com/docs/apis/error-codes
-    CXMLScriptAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressApp'
-          description: An array of objects that contain a list of cXML Script Addresses
-        links:
-          allOf:
-          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
-          description: Object containing pagination links
-      unevaluatedProperties:
-        not: {}
+      description: Access is unauthorized.
     FabricAddressApp:
       type: object
       required:
@@ -1201,50 +1200,6 @@ components:
       unevaluatedProperties:
         not: {}
       title: Application Address
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    CXMLScriptAddressPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=0&page_size=50&type=cxml_script
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_size=50&type=cxml_script
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=1&page_size=50&page_token=PA08cdad0c-e7e6-4a75-8244-902524f38d55&type=cxml_script
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=0&page_size=50&page_token=PA08cdad0c-e7e6-4a75-8244-902524f38d55&type=cxml_script
-      unevaluatedProperties:
-        not: {}
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -1283,6 +1238,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     MessagingChannel:
       type: object
       required:
@@ -1295,21 +1268,34 @@ components:
           - /external/resource_name?channel=messaging
       unevaluatedProperties:
         not: {}
-    CXMLScriptListResponse:
+    CXMLScriptCreateRequest:
       type: object
       required:
-      - data
-      - links
+      - display_name
+      - contents
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CXMLScriptResponse'
-          description: An array of objects containing a list of cXML Script data
-        links:
+        display_name:
+          type: string
+          description: Display name of the cXML Script
+          examples:
+          - Reception Script
+        contents:
+          type: string
+          description: The cXML script contents
+          examples:
+          - <?xml version="1.0" encoding="UTF-8"?><Response><Say>Hello World</Say></Response>
+        status_callback_url:
+          type: string
+          format: uri
+          description: URL to send status callbacks to
+          examples:
+          - https://example.com/status
+        status_callback_method:
           allOf:
-          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
-          description: Object containing pagination links
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: HTTP method to use for status callbacks
+          examples:
+          - GET
       unevaluatedProperties:
         not: {}
     CXMLScriptUpdateRequest:
@@ -1339,54 +1325,68 @@ components:
           - GET
       unevaluatedProperties:
         not: {}
-    VideoChannel:
+    CXMLScriptAddressPaginationResponse:
       type: object
       required:
-      - video
+      - self
+      - first
       properties:
-        video:
+        self:
           type: string
-          description: Video Channel of Fabric Address
+          format: uri
+          description: Link of the current page
           examples:
-          - /external/resource_name?channel=video
+          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=0&page_size=50&type=cxml_script
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_size=50&type=cxml_script
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=1&page_size=50&page_token=PA08cdad0c-e7e6-4a75-8244-902524f38d55&type=cxml_script
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_scripts?page_number=0&page_size=50&page_token=PA08cdad0c-e7e6-4a75-8244-902524f38d55&type=cxml_script
       unevaluatedProperties:
         not: {}
-    RequestUrlMethodType:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: The method type to use for the URL
-    AudioChannel:
+    CXMLScriptAddressListResponse:
       type: object
       required:
-      - audio
+      - data
+      - links
       properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+          description: An array of objects that contain a list of cXML Script Addresses
+        links:
+          allOf:
+          - $ref: '#/components/schemas/CXMLScriptAddressPaginationResponse'
+          description: Object containing pagination links
       unevaluatedProperties:
         not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
   parameters:
-    CxmlScriptsAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account this script is associated with.
-      schema:
-        $ref: '#/components/schemas/uuid'
     CxmlScriptSidPath:
       name: Sid
       in: path
       required: true
       description: The unique identifier of the cXML script.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    CxmlScriptsAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account this script is associated with.
       schema:
         $ref: '#/components/schemas/uuid'
     CXMLScriptAddressPathID:

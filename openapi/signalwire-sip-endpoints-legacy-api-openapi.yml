@@ -285,350 +285,6 @@ paths:
       - SIP Endpoints (Legacy)
 components:
   schemas:
-    UpdateSipEndpointRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          description: String representing the username portion of the endpoint. Must be unique across your project and must not contain white space characters or @.
-          examples:
-          - c3p0
-        password:
-          type: string
-          description: A password to authenticate registrations to this endpoint.
-          examples:
-          - yavinOrBust
-        caller_id:
-          type: string
-          description: Friendly Caller ID used as the CNAM when dialing a phone number or the From when dialing another SIP Endpoint.
-          examples:
-          - C-3P0
-        send_as:
-          type: string
-          description: When dialing a PSTN phone number, you must send it From a number you have purchased or verified. send_as indicates which number this endpoint has set as its origination. random indicates it will randomly choose a purchased or verified number from within the project.
-          examples:
-          - random
-        ciphers:
-          type: array
-          items:
-            type: string
-          description: A list of encryption ciphers this endpoint will support.
-        codecs:
-          type: array
-          items:
-            type: string
-          description: A list of codecs this endpoint will support.
-        encryption:
-          type: string
-          enum:
-          - default
-          - required
-          - optional
-          description: Specifies the encryption requirements for connections to this endpoint.
-          examples:
-          - required
-        call_handler:
-          type: string
-          enum:
-          - relay_context
-          - relay_topic
-          - relay_application
-          - relay_connector
-          - relay_script
-          - laml_webhooks
-          - laml_application
-          - dialogflow
-          - video_room
-          - call_flow
-          - ai_agent
-          description: What type of handler you want to run on inbound calls.
-          examples:
-          - ai_agent
-        call_request_url:
-          type: string
-          description: The LaML URL to access when a call is received. Required when call_handler is laml_webhooks.
-        call_request_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use with call_request_url.
-          examples:
-          - POST
-        call_fallback_url:
-          type: string
-          description: The LaML URL to access when the call to call_request_url fails. Required when call_handler is laml_webhooks.
-        call_fallback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use with call_fallback_url.
-          examples:
-          - POST
-        call_status_callback_url:
-          type: string
-          description: A URL to send status change messages to. Required when call_handler is laml_webhooks.
-        call_status_callback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use with call_status_callback_url.
-          examples:
-          - POST
-        call_laml_application_id:
-          type: string
-          description: The ID of the LaML application to forward incoming calls to. Required when call_handler is laml_application.
-        call_dialogflow_agent_id:
-          type: string
-          description: The ID of the Dialogflow agent to forward incoming calls to. Required when call_handler is dialogflow.
-        call_relay_topic:
-          type: string
-          description: The Relay topic to forward incoming calls to. Required when call_handler is relay_topic.
-          examples:
-          - office
-        call_relay_topic_status_callback_url:
-          type: string
-          description: A URL to send status change messages to. Required when call_handler is relay_topic.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_context:
-          type: string
-          description: The Relay context to forward incoming calls to. Required when call_handler is relay_context.
-          examples:
-          - office
-        call_relay_context_status_callback_url:
-          type: string
-          description: A URL to send status change messages to. Required when call_handler is relay_context.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_application:
-          type: string
-          description: The Relay application to forward incoming calls to. Required when call_handler is relay_application.
-          examples:
-          - my-relay-app
-        call_video_room_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the Video Room to forward incoming calls to. Required when call_handler is video_room.
-        call_flow_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the Call Flow to forward incoming calls to. Required when call_handler is call_flow.
-        call_flow_version:
-          type: string
-          description: The version of the Call Flow to use. Valid values are 'working_copy' or 'current_deployed'.
-        call_ai_agent_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the AI Agent to forward incoming calls to. Required when call_handler is ai_agent.
-        call_relay_script_url:
-          type: string
-          description: A URL of a SWML script to respond to incoming calls. Required when call_handler is relay_script.
-          examples:
-          - https://dev.signalwire.com/relay-bins/f9d13f68-f71e-4042-95bb-b07b9e2f2f92
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating a SIP endpoint.
-    PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-        first:
-          type: string
-          description: Link to the first page.
-        next:
-          type: string
-          description: Link to the next page. Only present when there are more results.
-        prev:
-          type: string
-          description: Link to the previous page. Only present when not on the first page.
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    CreateSipEndpointRequest:
-      type: object
-      required:
-      - username
-      - password
-      properties:
-        username:
-          type: string
-          description: String representing the username portion of the endpoint. Must be unique across your project and must not contain white space characters or @.
-          examples:
-          - c3p0
-        password:
-          type: string
-          description: A password to authenticate registrations to this endpoint.
-          examples:
-          - yavinOrBust
-        caller_id:
-          type: string
-          description: Friendly Caller ID used as the CNAM when dialing a phone number or the From when dialing another SIP Endpoint.
-          examples:
-          - C-3P0
-        send_as:
-          type: string
-          description: When dialing a PSTN phone number, you must send it From a number you have purchased or verified. send_as indicates which number this endpoint has set as its origination. random indicates it will randomly choose a purchased or verified number from within the project.
-          examples:
-          - random
-        ciphers:
-          type: array
-          items:
-            type: string
-          description: A list of encryption ciphers this endpoint will support.
-        codecs:
-          type: array
-          items:
-            type: string
-          description: A list of codecs this endpoint will support.
-        encryption:
-          type: string
-          enum:
-          - default
-          - required
-          - optional
-          description: Specifies the encryption requirements for connections to this endpoint.
-          examples:
-          - required
-        call_handler:
-          type: string
-          enum:
-          - relay_context
-          - relay_topic
-          - relay_application
-          - relay_connector
-          - relay_script
-          - laml_webhooks
-          - laml_application
-          - dialogflow
-          - video_room
-          - call_flow
-          - ai_agent
-          description: What type of handler you want to run on inbound calls.
-          examples:
-          - ai_agent
-        call_request_url:
-          type: string
-          description: The LaML URL to access when a call is received. Required when call_handler is laml_webhooks.
-        call_request_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use with call_request_url.
-          examples:
-          - POST
-        call_fallback_url:
-          type: string
-          description: The LaML URL to access when the call to call_request_url fails. Required when call_handler is laml_webhooks.
-        call_fallback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use with call_fallback_url.
-          examples:
-          - POST
-        call_status_callback_url:
-          type: string
-          description: A URL to send status change messages to. Required when call_handler is laml_webhooks.
-        call_status_callback_method:
-          type: string
-          enum:
-          - GET
-          - POST
-          description: The HTTP method to use with call_status_callback_url.
-          examples:
-          - POST
-        call_laml_application_id:
-          type: string
-          description: The ID of the LaML application to forward incoming calls to. Required when call_handler is laml_application.
-        call_dialogflow_agent_id:
-          type: string
-          description: The ID of the Dialogflow agent to forward incoming calls to. Required when call_handler is dialogflow.
-        call_relay_topic:
-          type: string
-          description: The Relay topic to forward incoming calls to. Required when call_handler is relay_topic.
-          examples:
-          - office
-        call_relay_topic_status_callback_url:
-          type: string
-          description: A URL to send status change messages to. Required when call_handler is relay_topic.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_context:
-          type: string
-          description: The Relay context to forward incoming calls to. Required when call_handler is relay_context.
-          examples:
-          - office
-        call_relay_context_status_callback_url:
-          type: string
-          description: A URL to send status change messages to. Required when call_handler is relay_context.
-          examples:
-          - https://myapplication/handle_relay_callbacks
-        call_relay_application:
-          type: string
-          description: The Relay application to forward incoming calls to. Required when call_handler is relay_application.
-          examples:
-          - my-relay-app
-        call_video_room_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the Video Room to forward incoming calls to. Required when call_handler is video_room.
-        call_flow_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the Call Flow to forward incoming calls to. Required when call_handler is call_flow.
-        call_flow_version:
-          type: string
-          description: The version of the Call Flow to use. Valid values are 'working_copy' or 'current_deployed'.
-        call_ai_agent_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The ID of the AI Agent to forward incoming calls to. Required when call_handler is ai_agent.
-        call_relay_script_url:
-          type: string
-          description: A URL of a SWML script to respond to incoming calls. Required when call_handler is relay_script.
-          examples:
-          - https://dev.signalwire.com/relay-bins/f9d13f68-f71e-4042-95bb-b07b9e2f2f92
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a SIP endpoint.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     SipEndpointResponse:
       type: object
       required:
@@ -820,6 +476,244 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single SIP endpoint.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
+    UpdateSipEndpointRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: String representing the username portion of the endpoint. Must be unique across your project and must not contain white space characters or @.
+          examples:
+          - c3p0
+        password:
+          type: string
+          description: A password to authenticate registrations to this endpoint.
+          examples:
+          - yavinOrBust
+        caller_id:
+          type: string
+          description: Friendly Caller ID used as the CNAM when dialing a phone number or the From when dialing another SIP Endpoint.
+          examples:
+          - C-3P0
+        send_as:
+          type: string
+          description: When dialing a PSTN phone number, you must send it From a number you have purchased or verified. send_as indicates which number this endpoint has set as its origination. random indicates it will randomly choose a purchased or verified number from within the project.
+          examples:
+          - random
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: A list of encryption ciphers this endpoint will support.
+        codecs:
+          type: array
+          items:
+            type: string
+          description: A list of codecs this endpoint will support.
+        encryption:
+          type: string
+          enum:
+          - default
+          - required
+          - optional
+          description: Specifies the encryption requirements for connections to this endpoint.
+          examples:
+          - required
+        call_handler:
+          type: string
+          enum:
+          - relay_context
+          - relay_topic
+          - relay_application
+          - relay_connector
+          - relay_script
+          - laml_webhooks
+          - laml_application
+          - dialogflow
+          - video_room
+          - call_flow
+          - ai_agent
+          description: What type of handler you want to run on inbound calls.
+          examples:
+          - ai_agent
+        call_request_url:
+          type: string
+          description: The LaML URL to access when a call is received. Required when call_handler is laml_webhooks.
+        call_request_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use with call_request_url.
+          examples:
+          - POST
+        call_fallback_url:
+          type: string
+          description: The LaML URL to access when the call to call_request_url fails. Required when call_handler is laml_webhooks.
+        call_fallback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use with call_fallback_url.
+          examples:
+          - POST
+        call_status_callback_url:
+          type: string
+          description: A URL to send status change messages to. Required when call_handler is laml_webhooks.
+        call_status_callback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use with call_status_callback_url.
+          examples:
+          - POST
+        call_laml_application_id:
+          type: string
+          description: The ID of the LaML application to forward incoming calls to. Required when call_handler is laml_application.
+        call_dialogflow_agent_id:
+          type: string
+          description: The ID of the Dialogflow agent to forward incoming calls to. Required when call_handler is dialogflow.
+        call_relay_topic:
+          type: string
+          description: The Relay topic to forward incoming calls to. Required when call_handler is relay_topic.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          type: string
+          description: A URL to send status change messages to. Required when call_handler is relay_topic.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_context:
+          type: string
+          description: The Relay context to forward incoming calls to. Required when call_handler is relay_context.
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          type: string
+          description: A URL to send status change messages to. Required when call_handler is relay_context.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_application:
+          type: string
+          description: The Relay application to forward incoming calls to. Required when call_handler is relay_application.
+          examples:
+          - my-relay-app
+        call_video_room_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the Video Room to forward incoming calls to. Required when call_handler is video_room.
+        call_flow_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the Call Flow to forward incoming calls to. Required when call_handler is call_flow.
+        call_flow_version:
+          type: string
+          description: The version of the Call Flow to use. Valid values are 'working_copy' or 'current_deployed'.
+        call_ai_agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the AI Agent to forward incoming calls to. Required when call_handler is ai_agent.
+        call_relay_script_url:
+          type: string
+          description: A URL of a SWML script to respond to incoming calls. Required when call_handler is relay_script.
+          examples:
+          - https://dev.signalwire.com/relay-bins/f9d13f68-f71e-4042-95bb-b07b9e2f2f92
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating a SIP endpoint.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    SipEndpointCallHandler:
+      type: string
+      enum:
+      - relay_context
+      - relay_topic
+      - relay_application
+      - relay_connector
+      - relay_script
+      - laml_webhooks
+      - laml_application
+      - dialogflow
+      - video_room
+      - call_flow
+      - ai_agent
+      description: Call handler type for SIP endpoints.
+    SipEndpointListResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SipEndpoint'
+          description: List of SIP endpoints.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of SIP endpoints.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -832,6 +726,167 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    CreateSipEndpointRequest:
+      type: object
+      required:
+      - username
+      - password
+      properties:
+        username:
+          type: string
+          description: String representing the username portion of the endpoint. Must be unique across your project and must not contain white space characters or @.
+          examples:
+          - c3p0
+        password:
+          type: string
+          description: A password to authenticate registrations to this endpoint.
+          examples:
+          - yavinOrBust
+        caller_id:
+          type: string
+          description: Friendly Caller ID used as the CNAM when dialing a phone number or the From when dialing another SIP Endpoint.
+          examples:
+          - C-3P0
+        send_as:
+          type: string
+          description: When dialing a PSTN phone number, you must send it From a number you have purchased or verified. send_as indicates which number this endpoint has set as its origination. random indicates it will randomly choose a purchased or verified number from within the project.
+          examples:
+          - random
+        ciphers:
+          type: array
+          items:
+            type: string
+          description: A list of encryption ciphers this endpoint will support.
+        codecs:
+          type: array
+          items:
+            type: string
+          description: A list of codecs this endpoint will support.
+        encryption:
+          type: string
+          enum:
+          - default
+          - required
+          - optional
+          description: Specifies the encryption requirements for connections to this endpoint.
+          examples:
+          - required
+        call_handler:
+          type: string
+          enum:
+          - relay_context
+          - relay_topic
+          - relay_application
+          - relay_connector
+          - relay_script
+          - laml_webhooks
+          - laml_application
+          - dialogflow
+          - video_room
+          - call_flow
+          - ai_agent
+          description: What type of handler you want to run on inbound calls.
+          examples:
+          - ai_agent
+        call_request_url:
+          type: string
+          description: The LaML URL to access when a call is received. Required when call_handler is laml_webhooks.
+        call_request_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use with call_request_url.
+          examples:
+          - POST
+        call_fallback_url:
+          type: string
+          description: The LaML URL to access when the call to call_request_url fails. Required when call_handler is laml_webhooks.
+        call_fallback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use with call_fallback_url.
+          examples:
+          - POST
+        call_status_callback_url:
+          type: string
+          description: A URL to send status change messages to. Required when call_handler is laml_webhooks.
+        call_status_callback_method:
+          type: string
+          enum:
+          - GET
+          - POST
+          description: The HTTP method to use with call_status_callback_url.
+          examples:
+          - POST
+        call_laml_application_id:
+          type: string
+          description: The ID of the LaML application to forward incoming calls to. Required when call_handler is laml_application.
+        call_dialogflow_agent_id:
+          type: string
+          description: The ID of the Dialogflow agent to forward incoming calls to. Required when call_handler is dialogflow.
+        call_relay_topic:
+          type: string
+          description: The Relay topic to forward incoming calls to. Required when call_handler is relay_topic.
+          examples:
+          - office
+        call_relay_topic_status_callback_url:
+          type: string
+          description: A URL to send status change messages to. Required when call_handler is relay_topic.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_context:
+          type: string
+          description: The Relay context to forward incoming calls to. Required when call_handler is relay_context.
+          examples:
+          - office
+        call_relay_context_status_callback_url:
+          type: string
+          description: A URL to send status change messages to. Required when call_handler is relay_context.
+          examples:
+          - https://myapplication/handle_relay_callbacks
+        call_relay_application:
+          type: string
+          description: The Relay application to forward incoming calls to. Required when call_handler is relay_application.
+          examples:
+          - my-relay-app
+        call_video_room_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the Video Room to forward incoming calls to. Required when call_handler is video_room.
+        call_flow_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the Call Flow to forward incoming calls to. Required when call_handler is call_flow.
+        call_flow_version:
+          type: string
+          description: The version of the Call Flow to use. Valid values are 'working_copy' or 'current_deployed'.
+        call_ai_agent_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The ID of the AI Agent to forward incoming calls to. Required when call_handler is ai_agent.
+        call_relay_script_url:
+          type: string
+          description: A URL of a SWML script to respond to incoming calls. Required when call_handler is relay_script.
+          examples:
+          - https://dev.signalwire.com/relay-bins/f9d13f68-f71e-4042-95bb-b07b9e2f2f92
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a SIP endpoint.
     SipEndpoint:
       type: object
       required:
@@ -1023,37 +1078,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: SIP endpoint model.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -1067,52 +1091,38 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    SipEndpointListResponse:
+    PaginationLinks:
       type: object
       required:
-      - links
-      - data
+      - self
+      - first
       properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SipEndpoint'
-          description: List of SIP endpoints.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of SIP endpoints.
-    SipEndpointCallHandler:
-      type: string
-      enum:
-      - relay_context
-      - relay_topic
-      - relay_application
-      - relay_connector
-      - relay_script
-      - laml_webhooks
-      - laml_application
-      - dialogflow
-      - video_room
-      - call_flow
-      - ai_agent
-      description: Call handler type for SIP endpoints.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
+        self:
           type: string
-          enum:
-          - Bad Request
+          description: Link to the current page.
+        first:
+          type: string
+          description: Link to the first page.
+        next:
+          type: string
+          description: Link to the next page. Only present when there are more results.
+        prev:
+          type: string
+          description: Link to the previous page. Only present when not on the first page.
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
+      description: Pagination links for list responses.
   parameters:
+    ListSipEndpointsQuery.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: The page number to retrieve (0-indexed).
+      schema:
+        type: integer
+        format: int32
+        default: 0
+      explode: false
     ListSipEndpointsQuery.page_size:
       name: page_size
       in: query
@@ -1125,6 +1135,14 @@ components:
         maximum: 1000
         default: 50
       explode: false
+    ListSipEndpointsQuery.filter_username:
+      name: filter_username
+      in: query
+      required: false
+      description: Filter SIP endpoints by username (partial match).
+      schema:
+        type: string
+      explode: false
     SipEndpointPathID:
       name: id
       in: path
@@ -1132,24 +1150,6 @@ components:
       description: Unique ID of the SIP endpoint.
       schema:
         $ref: '#/components/schemas/uuid'
-    ListSipEndpointsQuery.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when page_number > 0.
-      schema:
-        type: string
-      explode: false
-    ListSipEndpointsQuery.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: The page number to retrieve (0-indexed).
-      schema:
-        type: integer
-        format: int32
-        default: 0
-      explode: false
     ListSipEndpointsQuery.filter_caller_id:
       name: filter_caller_id
       in: query
@@ -1158,11 +1158,11 @@ components:
       schema:
         type: string
       explode: false
-    ListSipEndpointsQuery.filter_username:
-      name: filter_username
+    ListSipEndpointsQuery.page_token:
+      name: page_token
       in: query
       required: false
-      description: Filter SIP endpoints by username (partial match).
+      description: Token for cursor-based pagination. Required when page_number > 0.
       schema:
         type: string
       explode: false

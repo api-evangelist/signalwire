@@ -427,91 +427,6 @@ paths:
       - Rooms
 components:
   schemas:
-    Video.ListRoomsResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Video.PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Video.RoomResponse'
-          description: List of rooms.
-      unevaluatedProperties:
-        not: {}
-      description: List rooms response.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    Video.VideoQuality:
-      type: string
-      enum:
-      - 720p
-      - 1080p
-      description: Video quality resolution.
-    Video.RoomLayout:
-      type: string
-      enum:
-      - grid-responsive
-      - grid-responsive-mobile
-      - highlight-1-responsive
-      - 1x1
-      - 2x1
-      - 2x2
-      - 5up
-      - 3x3
-      - 4x4
-      - 5x5
-      - 6x6
-      - 8x8
-      - 10x10
-      description: The room's layout.
-    Video.VideoFps:
-      type: number
-      enum:
-      - 20
-      - 30
-      description: Video frames per second.
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -524,6 +439,111 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
+    Video.VideoFps:
+      type: number
+      enum:
+      - 20
+      - 30
+      description: Video frames per second.
+    Video.CreateRoomRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          pattern: ^[A-Za-z0-9_\-]+$
+          description: 'A named unique identifier for the room. Allowed characters: `A-Za-z0-9_-`. Maximum of 100 characters.'
+          examples:
+          - my_room
+        display_name:
+          type: string
+          maxLength: 200
+          description: Display name of the room. Maximum of 200 characters. Defaults to the value of name.
+          examples:
+          - My Room's Name
+        description:
+          type: string
+          maxLength: 3000
+          description: Description of the room. Maximum of 3000 characters.
+          examples:
+          - This room will be used for full company all hands meetings
+        max_members:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 300
+          description: The maximum number of members in the room at a time. Must be at least 1 to a maximum of 300.
+          examples:
+          - 20
+          default: 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The room's resolution.
+          examples:
+          - 720p
+          default: 720p
+        join_from:
+          type: string
+          format: date-time
+          description: 'Room does not accept new participants before this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: 'Room stops accepting new participants at this time, but keeps running until all participants leave. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          type: string
+          format: date-time
+          description: 'Remove users from the room at this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 200000
+          description: Remove users after they are in the room for N seconds.
+          examples:
+          - 120
+        layout:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomLayout'
+          description: The room's initial layout.
+          examples:
+          - grid-responsive
+          default: grid-responsive
+        record_on_start:
+          type: boolean
+          description: Specifies whether to start recording a Room Session when one is started for this Room.
+          examples:
+          - false
+          default: false
+        enable_room_previews:
+          type: boolean
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - false
+          default: false
+        meta:
+          type: object
+          unevaluatedProperties: {}
+          description: User-defined metadata for the room. Must be a valid JSON object. Maximum of 2000 characters when serialized.
+          examples:
+          - {}
+        sync_audio_video:
+          type: boolean
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a room.
     Video.PaginationLinks:
       type: object
       required:
@@ -553,27 +573,18 @@ components:
       unevaluatedProperties:
         not: {}
       description: Pagination links for list responses.
-    Video.VideoStatusCode422:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
-      - errors
+      - error
       properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
+        error:
+          type: string
+          enum:
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Name must be present
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
+      description: The request is invalid.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -676,141 +687,23 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a room.
-    Video.RoomSessionStatus:
+    Video.RoomLayout:
       type: string
       enum:
-      - in-progress
-      - completed
-      description: Status of a room session.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Video.ActiveSession:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique ID of the session.
-          examples:
-          - c22d24f6-5a47-4597-9a23-c7d01e696b92
-        room_id:
-          type: string
-          description: Unique ID of the Room if the Session was created from a Room and was not an auto-created Session.
-          examples:
-          - a1b2c3d4-5e6f-7890-abcd-ef1234567890
-        name:
-          type: string
-          description: The named identifier of room session.
-          examples:
-          - my_example_room
-        display_name:
-          type: string
-          description: Display name of room, no character limitations. Maximum of 200 characters. Defaults to the value of name.
-          examples:
-          - My Room's Name
-        join_from:
-          type: string
-          format: date-time
-          description: Room Session does not accept new Members before this time.
-          examples:
-          - '2022-01-01T00:00:00Z'
-        join_until:
-          type: string
-          format: date-time
-          description: Room Session stops accepting new Members at this time.
-          examples:
-          - '2022-12-31T23:59:59Z'
-        remove_at:
-          type: string
-          format: date-time
-          description: Remove Members from the Room Session at this time.
-          examples:
-          - '2022-12-31T23:59:59Z'
-        remove_after_seconds_elapsed:
-          type: integer
-          format: int32
-          description: Remove Members after they are in the Room Session for N seconds.
-          examples:
-          - 120
-        layout:
-          type: string
-          description: The Room Session's initial layout. See documentation for a full list of supported layouts.
-          examples:
-          - grid-responsive
-        max_members:
-          type: integer
-          format: int32
-          description: The maximum number of members allowed in the room at a time.
-          examples:
-          - 20
-        fps:
-          allOf:
-          - $ref: '#/components/schemas/Video.VideoFps'
-          description: The Room Session's frames per second.
-          examples:
-          - 20
-        quality:
-          allOf:
-          - $ref: '#/components/schemas/Video.VideoQuality'
-          description: The Room Session's resolution.
-          examples:
-          - 720p
-        start_time:
-          type: string
-          format: date-time
-          description: Start time of the session.
-          examples:
-          - '2022-01-01T10:00:00Z'
-        end_time:
-          type: string
-          format: date-time
-          description: End time of the session.
-          examples:
-          - '2022-01-01T11:00:00Z'
-        duration:
-          type: integer
-          format: int32
-          description: How long, in seconds, the Room Session lasted.
-          examples:
-          - 120
-        status:
-          allOf:
-          - $ref: '#/components/schemas/Video.RoomSessionStatus'
-          description: Status of the session.
-          examples:
-          - completed
-        record_on_start:
-          type: boolean
-          description: Whether a recording was automatically started when this Room Session began.
-          examples:
-          - true
-        enable_room_previews:
-          type: boolean
-          description: Whether a video with a preview of the content of the room is to be generated.
-          examples:
-          - true
-        preview_url:
-          type: string
-          description: If room previews are enabled and the room session is in progress, this is the URL of the preview video.
-          examples:
-          - https://example.signalwire.com/api/video/room_sessions/c22d24f6-5a47-4597-9a23-c7d01e696b92/preview
-        audio_video_sync:
-          type: boolean
-          description: Enable/disable jitter buffer audio-video sync.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: Active session information for a room.
+      - grid-responsive
+      - grid-responsive-mobile
+      - highlight-1-responsive
+      - 1x1
+      - 2x1
+      - 2x2
+      - 5up
+      - 3x3
+      - 4x4
+      - 5x5
+      - 6x6
+      - 8x8
+      - 10x10
+      description: The room's layout.
     Video.RoomResponse:
       type: object
       required:
@@ -984,7 +877,199 @@ components:
       unevaluatedProperties:
         not: {}
       description: Room response object.
-    Types.StatusCodes.StatusCode400:
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Video.VideoQuality:
+      type: string
+      enum:
+      - 720p
+      - 1080p
+      description: Video quality resolution.
+    Video.ActiveSession:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the session.
+          examples:
+          - c22d24f6-5a47-4597-9a23-c7d01e696b92
+        room_id:
+          type: string
+          description: Unique ID of the Room if the Session was created from a Room and was not an auto-created Session.
+          examples:
+          - a1b2c3d4-5e6f-7890-abcd-ef1234567890
+        name:
+          type: string
+          description: The named identifier of room session.
+          examples:
+          - my_example_room
+        display_name:
+          type: string
+          description: Display name of room, no character limitations. Maximum of 200 characters. Defaults to the value of name.
+          examples:
+          - My Room's Name
+        join_from:
+          type: string
+          format: date-time
+          description: Room Session does not accept new Members before this time.
+          examples:
+          - '2022-01-01T00:00:00Z'
+        join_until:
+          type: string
+          format: date-time
+          description: Room Session stops accepting new Members at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_at:
+          type: string
+          format: date-time
+          description: Remove Members from the Room Session at this time.
+          examples:
+          - '2022-12-31T23:59:59Z'
+        remove_after_seconds_elapsed:
+          type: integer
+          format: int32
+          description: Remove Members after they are in the Room Session for N seconds.
+          examples:
+          - 120
+        layout:
+          type: string
+          description: The Room Session's initial layout. See documentation for a full list of supported layouts.
+          examples:
+          - grid-responsive
+        max_members:
+          type: integer
+          format: int32
+          description: The maximum number of members allowed in the room at a time.
+          examples:
+          - 20
+        fps:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoFps'
+          description: The Room Session's frames per second.
+          examples:
+          - 20
+        quality:
+          allOf:
+          - $ref: '#/components/schemas/Video.VideoQuality'
+          description: The Room Session's resolution.
+          examples:
+          - 720p
+        start_time:
+          type: string
+          format: date-time
+          description: Start time of the session.
+          examples:
+          - '2022-01-01T10:00:00Z'
+        end_time:
+          type: string
+          format: date-time
+          description: End time of the session.
+          examples:
+          - '2022-01-01T11:00:00Z'
+        duration:
+          type: integer
+          format: int32
+          description: How long, in seconds, the Room Session lasted.
+          examples:
+          - 120
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Video.RoomSessionStatus'
+          description: Status of the session.
+          examples:
+          - completed
+        record_on_start:
+          type: boolean
+          description: Whether a recording was automatically started when this Room Session began.
+          examples:
+          - true
+        enable_room_previews:
+          type: boolean
+          description: Whether a video with a preview of the content of the room is to be generated.
+          examples:
+          - true
+        preview_url:
+          type: string
+          description: If room previews are enabled and the room session is in progress, this is the URL of the preview video.
+          examples:
+          - https://example.signalwire.com/api/video/room_sessions/c22d24f6-5a47-4597-9a23-c7d01e696b92/preview
+        audio_video_sync:
+          type: boolean
+          description: Enable/disable jitter buffer audio-video sync.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: Active session information for a room.
+    Video.RoomSessionStatus:
+      type: string
+      enum:
+      - in-progress
+      - completed
+      description: Status of a room session.
+    Video.VideoStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
+    Types.StatusCodes.StatusCode401:
       type: object
       required:
       - error
@@ -992,113 +1077,28 @@ components:
         error:
           type: string
           enum:
-          - Bad Request
+          - Unauthorized
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
-    Video.CreateRoomRequest:
+      description: Access is unauthorized.
+    Video.ListRoomsResponse:
       type: object
       required:
-      - name
+      - links
+      - data
       properties:
-        name:
-          type: string
-          maxLength: 100
-          pattern: ^[A-Za-z0-9_\-]+$
-          description: 'A named unique identifier for the room. Allowed characters: `A-Za-z0-9_-`. Maximum of 100 characters.'
-          examples:
-          - my_room
-        display_name:
-          type: string
-          maxLength: 200
-          description: Display name of the room. Maximum of 200 characters. Defaults to the value of name.
-          examples:
-          - My Room's Name
-        description:
-          type: string
-          maxLength: 3000
-          description: Description of the room. Maximum of 3000 characters.
-          examples:
-          - This room will be used for full company all hands meetings
-        max_members:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 300
-          description: The maximum number of members in the room at a time. Must be at least 1 to a maximum of 300.
-          examples:
-          - 20
-          default: 20
-        quality:
+        links:
           allOf:
-          - $ref: '#/components/schemas/Video.VideoQuality'
-          description: The room's resolution.
-          examples:
-          - 720p
-          default: 720p
-        join_from:
-          type: string
-          format: date-time
-          description: 'Room does not accept new participants before this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
-          examples:
-          - '2022-01-01T00:00:00Z'
-        join_until:
-          type: string
-          format: date-time
-          description: 'Room stops accepting new participants at this time, but keeps running until all participants leave. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
-          examples:
-          - '2022-12-31T23:59:59Z'
-        remove_at:
-          type: string
-          format: date-time
-          description: 'Remove users from the room at this time. Expects RFC 3339 datetime: `2022-01-01T23:59:60Z`. Date only: `2022-01-01` will be converted to `2022-01-01T00:00:00Z`.'
-          examples:
-          - '2022-12-31T23:59:59Z'
-        remove_after_seconds_elapsed:
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 200000
-          description: Remove users after they are in the room for N seconds.
-          examples:
-          - 120
-        layout:
-          allOf:
-          - $ref: '#/components/schemas/Video.RoomLayout'
-          description: The room's initial layout.
-          examples:
-          - grid-responsive
-          default: grid-responsive
-        record_on_start:
-          type: boolean
-          description: Specifies whether to start recording a Room Session when one is started for this Room.
-          examples:
-          - false
-          default: false
-        enable_room_previews:
-          type: boolean
-          description: Whether a video with a preview of the content of the room is to be generated.
-          examples:
-          - false
-          default: false
-        meta:
-          type: object
-          unevaluatedProperties: {}
-          description: User-defined metadata for the room. Must be a valid JSON object. Maximum of 2000 characters when serialized.
-          examples:
-          - {}
-        sync_audio_video:
-          type: boolean
-          description: Enable/disable jitter buffer audio-video sync.
-          examples:
-          - true
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.RoomResponse'
+          description: List of rooms.
       unevaluatedProperties:
         not: {}
-      description: Request body for creating a room.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      description: List rooms response.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

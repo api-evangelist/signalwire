@@ -65,6 +65,35 @@ paths:
       - WhatsApp Businesses
 components:
   schemas:
+    WhatsAppBusinessListResponse:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WhatsAppBusiness'
+          description: List of WhatsApp Business Accounts connected to the Space.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of WhatsApp Business Accounts.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     WhatsAppBusiness:
       type: object
       required:
@@ -113,31 +142,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: A WhatsApp Business Account (WABA) connected to your SignalWire Space. Each business account can have its own set of phone numbers and message templates.
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    WhatsAppBusinessListResponse:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WhatsAppBusiness'
-          description: List of WhatsApp Business Accounts connected to the Space.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of WhatsApp Business Accounts.
     Types.StatusCodes.StatusCode401:
       type: object
       required:
@@ -150,10 +154,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

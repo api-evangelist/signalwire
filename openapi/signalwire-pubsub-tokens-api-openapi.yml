@@ -83,84 +83,6 @@ paths:
               $ref: '#/components/schemas/PubSub.NewPubSubToken'
 components:
   schemas:
-    PubSub.PubSubState:
-      type: object
-      unevaluatedProperties: {}
-      description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
-      examples:
-      - display_name: Joe
-        an_array:
-        - foo
-        - bar
-        - baz
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    PubSub.PubSubPermissionWithRead:
-      type: object
-      required:
-      - read
-      properties:
-        read:
-          type: boolean
-          description: Gives the token read access to the channel.
-          examples:
-          - true
-        write:
-          type: boolean
-          description: Gives the token write access to the channel.
-          examples:
-          - false
-      unevaluatedProperties:
-        not: {}
-      title: Read Permission
     Types.StatusCodes.StatusCode500:
       type: object
       required:
@@ -173,25 +95,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
-    PubSub.PubSubPermissionWithWrite:
-      type: object
-      required:
-      - write
-      properties:
-        read:
-          type: boolean
-          description: Gives the token read access to the channel.
-          examples:
-          - true
-        write:
-          type: boolean
-          description: Gives the token write access to the channel.
-          examples:
-          - false
-      unevaluatedProperties:
-        not: {}
-      title: Write Permission
-    Types.StatusCodes.StatusCode401:
+    Types.StatusCodes.StatusCode400:
       type: object
       required:
       - error
@@ -199,22 +103,10 @@ components:
         error:
           type: string
           enum:
-          - Unauthorized
+          - Bad Request
       unevaluatedProperties:
         not: {}
-      description: Access is unauthorized.
-    PubSub.PubSubToken:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: A PubSub Token to be used to authenticate clients to the PubSub Service.
-          examples:
-          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
-      unevaluatedProperties:
-        not: {}
+      description: The request is invalid.
     PubSub.PubSubToken422Error:
       type: object
       required:
@@ -236,6 +128,59 @@ components:
           message: Permissions must be valid JSON
           attribute: permissions
           url: https://signalwire.com/docs/apis/error-codes
+    PubSub.PubSubChannels:
+      type: object
+      unevaluatedProperties:
+        anyOf:
+        - $ref: '#/components/schemas/PubSub.PubSubPermissionWithRead'
+        - $ref: '#/components/schemas/PubSub.PubSubPermissionWithWrite'
+      description: 'User-defined channel names. Each channel is an object with `read` and/or `write` properties.
+
+        Max of 500 channels. Either `read`, `write`, or both are required inside each channel and default to `false`.
+
+        Each channel name can be up to 250 characters. Must be valid JSON.'
+      examples:
+      - channela:
+          read: true
+          write: false
+        channelb:
+          read: true
+    PubSub.PubSubPermissionWithWrite:
+      type: object
+      required:
+      - write
+      properties:
+        read:
+          type: boolean
+          description: Gives the token read access to the channel.
+          examples:
+          - true
+        write:
+          type: boolean
+          description: Gives the token write access to the channel.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+      title: Write Permission
+    PubSub.PubSubPermissionWithRead:
+      type: object
+      required:
+      - read
+      properties:
+        read:
+          type: boolean
+          description: Gives the token read access to the channel.
+          examples:
+          - true
+        write:
+          type: boolean
+          description: Gives the token write access to the channel.
+          examples:
+          - false
+      unevaluatedProperties:
+        not: {}
+      title: Read Permission
     PubSub.NewPubSubToken:
       type: object
       required:
@@ -284,23 +229,78 @@ components:
           default: {}
       unevaluatedProperties:
         not: {}
-    PubSub.PubSubChannels:
+    PubSub.PubSubState:
       type: object
-      unevaluatedProperties:
-        anyOf:
-        - $ref: '#/components/schemas/PubSub.PubSubPermissionWithRead'
-        - $ref: '#/components/schemas/PubSub.PubSubPermissionWithWrite'
-      description: 'User-defined channel names. Each channel is an object with `read` and/or `write` properties.
-
-        Max of 500 channels. Either `read`, `write`, or both are required inside each channel and default to `false`.
-
-        Each channel name can be up to 250 characters. Must be valid JSON.'
+      unevaluatedProperties: {}
+      description: An arbitrary JSON object available to store stateful application information in. Must be valid JSON and have a maximum size of 2,000 characters.
       examples:
-      - channela:
-          read: true
-          write: false
-        channelb:
-          read: true
+      - display_name: Joe
+        an_array:
+        - foo
+        - bar
+        - baz
+    PubSub.PubSubToken:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: A PubSub Token to be used to authenticate clients to the PubSub Service.
+          examples:
+          - eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MjIxMjAxMjMsI...wMCwicnNlIjo5MDB9-BqG-DqC5LhpsdMWEFjhVkTBpQ
+      unevaluatedProperties:
+        not: {}
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

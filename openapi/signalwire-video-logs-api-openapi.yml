@@ -150,8 +150,80 @@ paths:
       tags:
       - Video Logs
 components:
+  parameters:
+    Video.ListLogsRequest.created_after:
+      name: created_after
+      in: query
+      required: false
+      description: Return logs for activity after this date. Accepts date (YYYY-MM-DD) or ISO 8601 datetime formats.
+      schema:
+        type: string
+      explode: false
+    Video.ListLogsRequest.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: Page number to return.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
+    Video.ListLogsRequest.created_on:
+      name: created_on
+      in: query
+      required: false
+      description: Return logs for activity on this date. Accepts date (YYYY-MM-DD) or ISO 8601 datetime formats.
+      schema:
+        type: string
+      explode: false
+    Video.ListLogsRequest.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Video.ListLogsRequest.created_before:
+      name: created_before
+      in: query
+      required: false
+      description: Return logs for activity prior to this date. Accepts date (YYYY-MM-DD) or ISO 8601 datetime formats.
+      schema:
+        type: string
+      explode: false
+    Video.ListLogsRequest.include_deleted:
+      name: include_deleted
+      in: query
+      required: false
+      description: Include logs for deleted activity.
+      schema:
+        type: boolean
+        default: false
+      explode: false
+    Video.LogPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the log.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.ListLogsRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination.
+      schema:
+        type: string
+      explode: false
   schemas:
-    Types.StatusCodes.StatusCode500:
+    Types.StatusCodes.StatusCode403:
       type: object
       required:
       - error
@@ -159,10 +231,109 @@ components:
         error:
           type: string
           enum:
-          - Internal Server Error
+          - Forbidden
       unevaluatedProperties:
         not: {}
-      description: An internal server error occurred.
+      description: Access is forbidden.
+    Video.LogSource:
+      type: string
+      enum:
+      - realtime_api
+      description: Source of a video log entry.
+    Video.PaginationLinks:
+      type: object
+      required:
+      - self
+      - first
+      properties:
+        self:
+          type: string
+          description: Link to the current page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=2
+        first:
+          type: string
+          description: Link to the first page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+        next:
+          type: string
+          description: Link to the next page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=3
+        prev:
+          type: string
+          description: Link to the previous page.
+          examples:
+          - https://example.signalwire.com/api/video/rooms?page=1
+      unevaluatedProperties:
+        not: {}
+      description: Pagination links for list responses.
+    Video.ChargeDetail:
+      type: object
+      required:
+      - description
+      - charge
+      properties:
+        description:
+          type: string
+          description: Description for this charge.
+          examples:
+          - Video conference session charge
+        charge:
+          type: number
+          format: double
+          description: Charged amount, in dollars.
+          examples:
+          - 0.005
+      unevaluatedProperties:
+        not: {}
+      description: Charge detail item for logs.
+    Video.LogStatus:
+      type: string
+      enum:
+      - in-progress
+      - completed
+      description: Status of a video room session.
+    Video.VideoLog:
+      anyOf:
+      - $ref: '#/components/schemas/Video.Log'
+      - $ref: '#/components/schemas/Video.DiscardedLog'
+      description: A video log entry. Discarded logs return only `id`, `discarded_at`, and `created_at`.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Video.ListLogsResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.VideoLog'
+          description: List of logs.
+      unevaluatedProperties:
+        not: {}
+      description: List logs response.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -175,6 +346,56 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.RestApiErrorItem:
+      type: object
+      required:
+      - type
+      - code
+      - message
+      - url
+      properties:
+        type:
+          type: string
+          description: The category of error.
+          examples:
+          - validation_error
+        code:
+          type: string
+          description: A specific error code.
+          examples:
+          - invalid_parameter
+        message:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Name must be present
+        attribute:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The request parameter that caused the error, if applicable.
+          examples:
+          - name
+        url:
+          type: string
+          description: A link to documentation about this error.
+          examples:
+          - https://signalwire.com/docs/apis/error-codes
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific error.
     Video.Log:
       type: object
       required:
@@ -272,12 +493,7 @@ components:
       unevaluatedProperties:
         not: {}
       description: Log object representing a video activity entry.
-    Video.VideoLog:
-      anyOf:
-      - $ref: '#/components/schemas/Video.Log'
-      - $ref: '#/components/schemas/Video.DiscardedLog'
-      description: A video log entry. Discarded logs return only `id`, `discarded_at`, and `created_at`.
-    Types.StatusCodes.StatusCode403:
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
       - error
@@ -285,130 +501,10 @@ components:
         error:
           type: string
           enum:
-          - Forbidden
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-      description: Access is forbidden.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Video.PaginationLinks:
-      type: object
-      required:
-      - self
-      - first
-      properties:
-        self:
-          type: string
-          description: Link to the current page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=2
-        first:
-          type: string
-          description: Link to the first page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=1
-        next:
-          type: string
-          description: Link to the next page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=3
-        prev:
-          type: string
-          description: Link to the previous page.
-          examples:
-          - https://example.signalwire.com/api/video/rooms?page=1
-      unevaluatedProperties:
-        not: {}
-      description: Pagination links for list responses.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
-    Video.LogSource:
-      type: string
-      enum:
-      - realtime_api
-      description: Source of a video log entry.
-    Types.StatusCodes.RestApiErrorItem:
-      type: object
-      required:
-      - type
-      - code
-      - message
-      - url
-      properties:
-        type:
-          type: string
-          description: The category of error.
-          examples:
-          - validation_error
-        code:
-          type: string
-          description: A specific error code.
-          examples:
-          - invalid_parameter
-        message:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Name must be present
-        attribute:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The request parameter that caused the error, if applicable.
-          examples:
-          - name
-        url:
-          type: string
-          description: A link to documentation about this error.
-          examples:
-          - https://signalwire.com/docs/apis/error-codes
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific error.
-    Video.ChargeDetail:
-      type: object
-      required:
-      - description
-      - charge
-      properties:
-        description:
-          type: string
-          description: Description for this charge.
-          examples:
-          - Video conference session charge
-        charge:
-          type: number
-          format: double
-          description: Charged amount, in dollars.
-          examples:
-          - 0.005
-      unevaluatedProperties:
-        not: {}
-      description: Charge detail item for logs.
-    Video.LogStatus:
-      type: string
-      enum:
-      - in-progress
-      - completed
-      description: Status of a video room session.
-    Video.LogType:
-      type: string
-      enum:
-      - video_room_session
-      - video_conference_session
-      description: Type of video activity recorded in the log.
+      description: An internal server error occurred.
     Video.DiscardedLog:
       type: object
       required:
@@ -438,24 +534,6 @@ components:
         not: {}
       description: A discarded/deleted video log entry. Returned when the log has been deleted. Only present when `include_deleted` is `true`.
       title: Deleted Log
-    Video.ListLogsResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Video.PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Video.VideoLog'
-          description: List of logs.
-      unevaluatedProperties:
-        not: {}
-      description: List logs response.
     Video.VideoStatusCode422:
       type: object
       required:
@@ -477,90 +555,12 @@ components:
           message: Name must be present
           attribute: name
           url: https://signalwire.com/docs/apis/error-codes
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
-  parameters:
-    Video.ListLogsRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination.
-      schema:
-        type: string
-      explode: false
-    Video.ListLogsRequest.include_deleted:
-      name: include_deleted
-      in: query
-      required: false
-      description: Include logs for deleted activity.
-      schema:
-        type: boolean
-        default: false
-      explode: false
-    Video.ListLogsRequest.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
-    Video.ListLogsRequest.created_on:
-      name: created_on
-      in: query
-      required: false
-      description: Return logs for activity on this date. Accepts date (YYYY-MM-DD) or ISO 8601 datetime formats.
-      schema:
-        type: string
-      explode: false
-    Video.LogPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the log.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.ListLogsRequest.created_before:
-      name: created_before
-      in: query
-      required: false
-      description: Return logs for activity prior to this date. Accepts date (YYYY-MM-DD) or ISO 8601 datetime formats.
-      schema:
-        type: string
-      explode: false
-    Video.ListLogsRequest.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: Page number to return.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
-    Video.ListLogsRequest.created_after:
-      name: created_after
-      in: query
-      required: false
-      description: Return logs for activity after this date. Accepts date (YYYY-MM-DD) or ISO 8601 datetime formats.
-      schema:
-        type: string
-      explode: false
+    Video.LogType:
+      type: string
+      enum:
+      - video_room_session
+      - video_conference_session
+      description: Type of video activity recorded in the log.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

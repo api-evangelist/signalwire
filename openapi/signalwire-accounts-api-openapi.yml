@@ -242,218 +242,6 @@ paths:
               $ref: '#/components/schemas/UpdateAccountRequest'
 components:
   schemas:
-    AccountListResponse:
-      type: object
-      required:
-      - uri
-      - first_page_uri
-      - next_page_uri
-      - previous_page_uri
-      - page
-      - page_size
-      - accounts
-      properties:
-        uri:
-          type: string
-          description: The URI of the current page.
-          examples:
-          - /api/laml/2010-04-01/Accounts?Page=0&PageSize=50
-        first_page_uri:
-          type: string
-          description: The URI of the first page.
-          examples:
-          - /api/laml/2010-04-01/Accounts?Page=0&PageSize=50
-        next_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the next page. Null if there are no more results.
-          examples:
-          - /api/laml/2010-04-01/Accounts?Page=1&PageSize=50
-        previous_page_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The URI of the previous page. Null if this is the first page.
-          examples:
-          - null
-        page:
-          type: integer
-          format: int32
-          description: The current page number (zero-indexed).
-          examples:
-          - 0
-        page_size:
-          type: integer
-          format: int32
-          description: The number of results per page.
-          examples:
-          - 50
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
-          description: List of accounts.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of accounts.
-    UpdateAccountRequest:
-      type: object
-      required:
-      - FriendlyName
-      properties:
-        FriendlyName:
-          type: string
-          maxLength: 250
-          description: The new name for the Project.
-          examples:
-          - My Project
-      unevaluatedProperties:
-        not: {}
-      description: Request body for updating an account.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
-    AccountStatus:
-      type: string
-      enum:
-      - active
-      description: The status of the Project.
-    CreateSubprojectRequest:
-      type: object
-      required:
-      - FriendlyName
-      properties:
-        FriendlyName:
-          type: string
-          maxLength: 250
-          description: The name of the Project, up to 250 characters long.
-          examples:
-          - My Project
-      unevaluatedProperties:
-        not: {}
-      description: Request body for creating a subproject.
-    AccountResponse:
-      type: object
-      required:
-      - sid
-      - friendly_name
-      - status
-      - auth_token
-      - date_created
-      - date_updated
-      - type
-      - owner_account_sid
-      - region_preference
-      - uri
-      - subproject
-      - signing_key
-      - subresource_uris
-      properties:
-        sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier for this Project.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        friendly_name:
-          type: string
-          description: The name of the Project.
-          examples:
-          - My Project
-        status:
-          allOf:
-          - $ref: '#/components/schemas/AccountStatus'
-          description: The status of the Project. Always 'active'.
-        auth_token:
-          type: string
-          description: The authorization token for this Project. Always returns 'redacted' for security.
-          examples:
-          - redacted
-        date_created:
-          type: string
-          description: The date and time this Project was created, in RFC 2822 format.
-          examples:
-          - Sat, 15 Sep 2018 10:00:00 +0000
-        date_updated:
-          type: string
-          description: The date and time this Project was last updated, in RFC 2822 format.
-          examples:
-          - Sat, 16 Sep 2018 10:00:00 +0000
-        type:
-          allOf:
-          - $ref: '#/components/schemas/AccountType'
-          description: The type of the Project. Always 'Full'.
-        owner_account_sid:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The Project ID of the parent project. For parent projects, this is the same as sid.
-          examples:
-          - b3877c40-da60-4998-90ad-b792e98472af
-        region_preference:
-          type: string
-          description: The preferred region for the Project.
-          examples:
-          - us-east
-        uri:
-          type: string
-          description: The URI for the Project.
-          examples:
-          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af
-        subproject:
-          type: boolean
-          description: Whether this project is a sub-project of another project.
-          examples:
-          - false
-        signing_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The signing key for the Project. Only returned once when a subproject is created. Subsequent requests return null.
-          examples:
-          - null
-        subresource_uris:
-          allOf:
-          - $ref: '#/components/schemas/SubresourceUris'
-          description: A map of URIs for sub-resources linked to this Project.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single account.
-    AccountType:
-      type: string
-      enum:
-      - Full
-      description: The type of the Project.
     Account:
       type: object
       required:
@@ -540,6 +328,70 @@ components:
       unevaluatedProperties:
         not: {}
       description: Account/Project model representing a SignalWire project.
+    AccountType:
+      type: string
+      enum:
+      - Full
+      description: The type of the Project.
+    AccountListResponse:
+      type: object
+      required:
+      - uri
+      - first_page_uri
+      - next_page_uri
+      - previous_page_uri
+      - page
+      - page_size
+      - accounts
+      properties:
+        uri:
+          type: string
+          description: The URI of the current page.
+          examples:
+          - /api/laml/2010-04-01/Accounts?Page=0&PageSize=50
+        first_page_uri:
+          type: string
+          description: The URI of the first page.
+          examples:
+          - /api/laml/2010-04-01/Accounts?Page=0&PageSize=50
+        next_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the next page. Null if there are no more results.
+          examples:
+          - /api/laml/2010-04-01/Accounts?Page=1&PageSize=50
+        previous_page_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The URI of the previous page. Null if this is the first page.
+          examples:
+          - null
+        page:
+          type: integer
+          format: int32
+          description: The current page number (zero-indexed).
+          examples:
+          - 0
+        page_size:
+          type: integer
+          format: int32
+          description: The number of results per page.
+          examples:
+          - 50
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+          description: List of accounts.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a list of accounts.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     SubresourceUris:
       type: object
       required:
@@ -661,10 +513,158 @@ components:
       unevaluatedProperties:
         not: {}
       description: A Map of sub-resources that are linked to the given Project.
-    uuid:
+    AccountStatus:
       type: string
-      format: uuid
-      description: Universal Unique Identifier.
+      enum:
+      - active
+      description: The status of the Project.
+    CompatibilityErrorResponse:
+      type: object
+      required:
+      - code
+      - message
+      - more_info
+      - status
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code.
+          examples:
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
+      unevaluatedProperties:
+        not: {}
+      description: Error response model.
+    CreateSubprojectRequest:
+      type: object
+      required:
+      - FriendlyName
+      properties:
+        FriendlyName:
+          type: string
+          maxLength: 250
+          description: The name of the Project, up to 250 characters long.
+          examples:
+          - My Project
+      unevaluatedProperties:
+        not: {}
+      description: Request body for creating a subproject.
+    AccountResponse:
+      type: object
+      required:
+      - sid
+      - friendly_name
+      - status
+      - auth_token
+      - date_created
+      - date_updated
+      - type
+      - owner_account_sid
+      - region_preference
+      - uri
+      - subproject
+      - signing_key
+      - subresource_uris
+      properties:
+        sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier for this Project.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        friendly_name:
+          type: string
+          description: The name of the Project.
+          examples:
+          - My Project
+        status:
+          allOf:
+          - $ref: '#/components/schemas/AccountStatus'
+          description: The status of the Project. Always 'active'.
+        auth_token:
+          type: string
+          description: The authorization token for this Project. Always returns 'redacted' for security.
+          examples:
+          - redacted
+        date_created:
+          type: string
+          description: The date and time this Project was created, in RFC 2822 format.
+          examples:
+          - Sat, 15 Sep 2018 10:00:00 +0000
+        date_updated:
+          type: string
+          description: The date and time this Project was last updated, in RFC 2822 format.
+          examples:
+          - Sat, 16 Sep 2018 10:00:00 +0000
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AccountType'
+          description: The type of the Project. Always 'Full'.
+        owner_account_sid:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The Project ID of the parent project. For parent projects, this is the same as sid.
+          examples:
+          - b3877c40-da60-4998-90ad-b792e98472af
+        region_preference:
+          type: string
+          description: The preferred region for the Project.
+          examples:
+          - us-east
+        uri:
+          type: string
+          description: The URI for the Project.
+          examples:
+          - /api/laml/2010-04-01/Accounts/b3877c40-da60-4998-90ad-b792e98472af
+        subproject:
+          type: boolean
+          description: Whether this project is a sub-project of another project.
+          examples:
+          - false
+        signing_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The signing key for the Project. Only returned once when a subproject is created. Subsequent requests return null.
+          examples:
+          - null
+        subresource_uris:
+          allOf:
+          - $ref: '#/components/schemas/SubresourceUris'
+          description: A map of URIs for sub-resources linked to this Project.
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single account.
+    UpdateAccountRequest:
+      type: object
+      required:
+      - FriendlyName
+      properties:
+        FriendlyName:
+          type: string
+          maxLength: 250
+          description: The new name for the Project.
+          examples:
+          - My Project
+      unevaluatedProperties:
+        not: {}
+      description: Request body for updating an account.
   parameters:
     AccountPathSid:
       name: Sid

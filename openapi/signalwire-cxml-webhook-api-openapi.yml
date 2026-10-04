@@ -302,6 +302,329 @@ paths:
       - cXML Webhook
 components:
   schemas:
+    AudioChannel:
+      type: object
+      required:
+      - audio
+      properties:
+        audio:
+          type: string
+          description: Audio Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=audio
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookCreateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: http_url_required
+          message: This value must be an HTTP or HTTPS URL.
+          attribute: status_callback_url
+          url: https://signalwire.com/docs/apis/error-codes
+    CXMLWebhookAddressListResponse:
+      type: object
+      required:
+      - data
+      - links
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FabricAddressApp'
+        links:
+          $ref: '#/components/schemas/CXMLWebhookAddressPaginationResponse'
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookCreateRequest:
+      type: object
+      required:
+      - primary_request_url
+      properties:
+        name:
+          type: string
+          description: Name of the CXML Webhook.
+          examples:
+          - My CXML Webhook
+        used_for:
+          allOf:
+          - $ref: '#/components/schemas/UsedForType'
+          description: Used for of the CXML Webhook.
+          examples:
+          - calling
+          default: calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: Primary request url of the CXML Webhook.
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+        fallback_request_url:
+          type: string
+          format: uri
+          description: Fallback request url of the CXML Webhook.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+        status_callback_url:
+          type: string
+          format: uri
+          description: Status callback url of the CXML Webhook.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the CXML Webhook.
+          examples:
+          - GET
+          default: POST
+      unevaluatedProperties:
+        not: {}
+    VideoChannel:
+      type: object
+      required:
+      - video
+      properties:
+        video:
+          type: string
+          description: Video Channel of Fabric Address
+          examples:
+          - /external/resource_name?channel=video
+      unevaluatedProperties:
+        not: {}
+    AddressChannel:
+      anyOf:
+      - $ref: '#/components/schemas/AudioChannel'
+      - $ref: '#/components/schemas/MessagingChannel'
+      - $ref: '#/components/schemas/VideoChannel'
+    UsedForType:
+      type: string
+      enum:
+      - calling
+      - messaging
+      description: Sets the handler to handle incoming `calls` or `messages`.
+    CXMLWebhookPaginationResponse:
+      type: object
+      required:
+      - self
+      - first
+      - next
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Link of the current page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&type=cxml_webhook
+        first:
+          type: string
+          format: uri
+          description: Link to the first page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&type=cxml_webhook
+        next:
+          type: string
+          format: uri
+          description: Link to the next page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
+        prev:
+          type: string
+          format: uri
+          description: Link to the previous page
+          examples:
+          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
+      unevaluatedProperties:
+        not: {}
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    CXMLWebhookResponse:
+      type: object
+      required:
+      - id
+      - project_id
+      - display_name
+      - type
+      - created_at
+      - updated_at
+      - cxml_webhook
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the CXMLWebhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        project_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the Project.
+          examples:
+          - 99151cf8-9548-4860-ba70-a8de824f3312
+        display_name:
+          type: string
+          description: Display name of the CXMLWebhook Fabric Resource
+          examples:
+          - Booking Assistant
+        type:
+          type: string
+          enum:
+          - cxml_webhook
+          description: Type of the Fabric Resource
+          examples:
+          - cxml_webhook
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was created.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Date and time when the resource was updated.
+          examples:
+          - '2024-05-06T12:20:00Z'
+        cxml_webhook:
+          allOf:
+          - $ref: '#/components/schemas/CXMLWebhook'
+          description: CXMLWebhook data.
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhook:
+      type: object
+      required:
+      - id
+      - name
+      - used_for
+      - primary_request_url
+      - primary_request_method
+      - fallback_request_url
+      - fallback_request_method
+      - status_callback_url
+      - status_callback_method
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: Unique ID of the CXML Webhook.
+          examples:
+          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
+        name:
+          type: string
+          description: Name of the CXML Webhook.
+          examples:
+          - My CXML Webhook
+        used_for:
+          allOf:
+          - $ref: '#/components/schemas/UsedForType'
+          description: Used for of the CXML Webhook.
+          examples:
+          - calling
+        primary_request_url:
+          type: string
+          format: uri
+          description: Primary request url of the CXML Webhook.
+          examples:
+          - https://primary.com
+        primary_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Primary request method of the CXML Webhook.
+          examples:
+          - GET
+        fallback_request_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Fallback request url of the CXML Webhook.
+          examples:
+          - https://fallback.com
+        fallback_request_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Fallback request method of the CXML Webhook.
+          examples:
+          - GET
+        status_callback_url:
+          anyOf:
+          - type: string
+            format: uri
+          - type: 'null'
+          description: Status callback url of the CXML Webhook.
+          examples:
+          - https://callback.com
+        status_callback_method:
+          allOf:
+          - $ref: '#/components/schemas/RequestUrlMethodType'
+          description: Status callback method of the CXML Webhook.
+          examples:
+          - POST
+      unevaluatedProperties:
+        not: {}
+    CXMLWebhookUpdateStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: http_url_required
+          message: This value must be an HTTP or HTTPS URL.
+          attribute: status_callback_url
+          url: https://signalwire.com/docs/apis/error-codes
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
     CXMLWebhookUpdateRequest:
       type: object
       properties:
@@ -356,108 +679,6 @@ components:
           examples:
           - POST
           default: POST
-      unevaluatedProperties:
-        not: {}
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    UsedForType:
-      type: string
-      enum:
-      - calling
-      - messaging
-      description: Sets the handler to handle incoming `calls` or `messages`.
-    CXMLWebhookCreateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: http_url_required
-          message: This value must be an HTTP or HTTPS URL.
-          attribute: status_callback_url
-          url: https://signalwire.com/docs/apis/error-codes
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    CXMLWebhookAddressListResponse:
-      type: object
-      required:
-      - data
-      - links
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FabricAddressApp'
-        links:
-          $ref: '#/components/schemas/CXMLWebhookAddressPaginationResponse'
-      unevaluatedProperties:
-        not: {}
-    CXMLWebhookPaginationResponse:
-      type: object
-      required:
-      - self
-      - first
-      - next
-      properties:
-        self:
-          type: string
-          format: uri
-          description: Link of the current page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&type=cxml_webhook
-        first:
-          type: string
-          format: uri
-          description: Link to the first page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&type=cxml_webhook
-        next:
-          type: string
-          format: uri
-          description: Link to the next page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=1&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
-        prev:
-          type: string
-          format: uri
-          description: Link to the previous page
-          examples:
-          - https://example.signalwire.com/api/fabric/resources/cxml_webhooks?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
       unevaluatedProperties:
         not: {}
     FabricAddressApp:
@@ -574,117 +795,24 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific error.
-    CXMLWebhookResponse:
+    RequestUrlMethodType:
+      type: string
+      enum:
+      - GET
+      - POST
+      description: The method type to use for the URL
+    Types.StatusCodes.StatusCode500:
       type: object
       required:
-      - id
-      - project_id
-      - display_name
-      - type
-      - created_at
-      - updated_at
-      - cxml_webhook
+      - error
       properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the CXMLWebhook.
-          examples:
-          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
-        project_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the Project.
-          examples:
-          - 99151cf8-9548-4860-ba70-a8de824f3312
-        display_name:
-          type: string
-          description: Display name of the CXMLWebhook Fabric Resource
-          examples:
-          - Booking Assistant
-        type:
+        error:
           type: string
           enum:
-          - cxml_webhook
-          description: Type of the Fabric Resource
-          examples:
-          - cxml_webhook
-        created_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was created.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Date and time when the resource was updated.
-          examples:
-          - '2024-05-06T12:20:00Z'
-        cxml_webhook:
-          allOf:
-          - $ref: '#/components/schemas/CXMLWebhook'
-          description: CXMLWebhook data.
+          - Internal Server Error
       unevaluatedProperties:
         not: {}
-    CXMLWebhookCreateRequest:
-      type: object
-      required:
-      - primary_request_url
-      properties:
-        name:
-          type: string
-          description: Name of the CXML Webhook.
-          examples:
-          - My CXML Webhook
-        used_for:
-          allOf:
-          - $ref: '#/components/schemas/UsedForType'
-          description: Used for of the CXML Webhook.
-          examples:
-          - calling
-          default: calling
-        primary_request_url:
-          type: string
-          format: uri
-          description: Primary request url of the CXML Webhook.
-          examples:
-          - https://primary.com
-        primary_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Primary request method of the CXML Webhook.
-          examples:
-          - GET
-          default: POST
-        fallback_request_url:
-          type: string
-          format: uri
-          description: Fallback request url of the CXML Webhook.
-          examples:
-          - https://fallback.com
-        fallback_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Fallback request method of the CXML Webhook.
-          examples:
-          - GET
-          default: POST
-        status_callback_url:
-          type: string
-          format: uri
-          description: Status callback url of the CXML Webhook.
-          examples:
-          - https://callback.com
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Status callback method of the CXML Webhook.
-          examples:
-          - GET
-          default: POST
-      unevaluatedProperties:
-        not: {}
+      description: An internal server error occurred.
     MessagingChannel:
       type: object
       required:
@@ -730,99 +858,6 @@ components:
           - https://example.signalwire.com/api/fabric/resources/cxml_webhooks/a87db7ed-8ebe-42e4-829f-8ba5a4152f54/addresses?page_number=0&page_size=50&page_token=PAbff61159-faab-48b3-959a-3021a8f5beca&type=cxml_webhook
       unevaluatedProperties:
         not: {}
-    CXMLWebhookUpdateStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: http_url_required
-          message: This value must be an HTTP or HTTPS URL.
-          attribute: status_callback_url
-          url: https://signalwire.com/docs/apis/error-codes
-    CXMLWebhook:
-      type: object
-      required:
-      - id
-      - name
-      - used_for
-      - primary_request_url
-      - primary_request_method
-      - fallback_request_url
-      - fallback_request_method
-      - status_callback_url
-      - status_callback_method
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: Unique ID of the CXML Webhook.
-          examples:
-          - a87db7ed-8ebe-42e4-829f-8ba5a4152f54
-        name:
-          type: string
-          description: Name of the CXML Webhook.
-          examples:
-          - My CXML Webhook
-        used_for:
-          allOf:
-          - $ref: '#/components/schemas/UsedForType'
-          description: Used for of the CXML Webhook.
-          examples:
-          - calling
-        primary_request_url:
-          type: string
-          format: uri
-          description: Primary request url of the CXML Webhook.
-          examples:
-          - https://primary.com
-        primary_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Primary request method of the CXML Webhook.
-          examples:
-          - GET
-        fallback_request_url:
-          anyOf:
-          - type: string
-            format: uri
-          - type: 'null'
-          description: Fallback request url of the CXML Webhook.
-          examples:
-          - https://fallback.com
-        fallback_request_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Fallback request method of the CXML Webhook.
-          examples:
-          - GET
-        status_callback_url:
-          anyOf:
-          - type: string
-            format: uri
-          - type: 'null'
-          description: Status callback url of the CXML Webhook.
-          examples:
-          - https://callback.com
-        status_callback_method:
-          allOf:
-          - $ref: '#/components/schemas/RequestUrlMethodType'
-          description: Status callback method of the CXML Webhook.
-          examples:
-          - POST
-      unevaluatedProperties:
-        not: {}
     CXMLWebhookListResponse:
       type: object
       required:
@@ -840,41 +875,6 @@ components:
           description: Object containing pagination links
       unevaluatedProperties:
         not: {}
-    VideoChannel:
-      type: object
-      required:
-      - video
-      properties:
-        video:
-          type: string
-          description: Video Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=video
-      unevaluatedProperties:
-        not: {}
-    RequestUrlMethodType:
-      type: string
-      enum:
-      - GET
-      - POST
-      description: The method type to use for the URL
-    AudioChannel:
-      type: object
-      required:
-      - audio
-      properties:
-        audio:
-          type: string
-          description: Audio Channel of Fabric Address
-          examples:
-          - /external/resource_name?channel=audio
-      unevaluatedProperties:
-        not: {}
-    AddressChannel:
-      anyOf:
-      - $ref: '#/components/schemas/AudioChannel'
-      - $ref: '#/components/schemas/MessagingChannel'
-      - $ref: '#/components/schemas/VideoChannel'
   parameters:
     CXMLWebhookID:
       name: id
