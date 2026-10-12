@@ -1,0 +1,20 @@
+edges:
+- partner_name: WhatsApp
+  partner: whatsapp
+  partner_match: domain
+  type: contract
+  channel: contract-enum
+  relationship: messaging-channel
+  direction: provider-built
+  evidence: https://github.com/api-evangelist/signalwire/blob/main/openapi/signalwire-messages-api-openapi.yml
+  contract_reference:
+    repo: signalwire
+    spec_file: signalwire-messages-api-openapi.yml
+    value: whatsapp
+    property: components.schemas.Message.MessageKind
+    matched_domain: whatsapp.com
+    detected_by: sweep-cpaas.py
+    detected: '2026-10-12'
+generated: '2026-10-12'
+method: searched
+checked: []
