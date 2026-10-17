@@ -82,30 +82,15 @@ paths:
       tags:
       - Phone Number Lookup
 components:
+  parameters:
+    E164NumberPath:
+      name: e164_number
+      in: path
+      required: true
+      description: The phone number in E.164 format.
+      schema:
+        type: string
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    CnamInfo:
-      type: object
-      properties:
-        caller_id:
-          type: string
-          description: The caller ID associated with the number.
-          examples:
-          - John Smith
-      unevaluatedProperties:
-        not: {}
-      description: Caller ID (CNAM) information.
     PhoneNumberLookupResponse:
       type: object
       properties:
@@ -176,6 +161,29 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing phone number lookup result.
+    CnamInfo:
+      type: object
+      properties:
+        caller_id:
+          type: string
+          description: The caller ID associated with the number.
+          examples:
+          - John Smith
+      unevaluatedProperties:
+        not: {}
+      description: Caller ID (CNAM) information.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -251,14 +259,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-  parameters:
-    E164NumberPath:
-      name: e164_number
-      in: path
-      required: true
-      description: The phone number in E.164 format.
-      schema:
-        type: string
   securitySchemes:
     SignalWireBasicAuth:
       type: http

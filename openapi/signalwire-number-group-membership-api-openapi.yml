@@ -228,18 +228,87 @@ paths:
               $ref: '#/components/schemas/AddNumberGroupMembershipRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode400:
+    MembershipPhoneNumber:
       type: object
-      required:
-      - error
       properties:
-        error:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the phone number.
+        name:
           type: string
-          enum:
-          - Bad Request
+          description: The name given to the phone number.
+          examples:
+          - Jenny
+        number:
+          type: string
+          description: The phone number in E.164 format.
+          examples:
+          - '+15558675309'
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: The capabilities of the phone number.
+          examples:
+          - - voice
+            - sms
+            - mms
+            - fax
       unevaluatedProperties:
         not: {}
-      description: The request is invalid.
+      description: Phone number representation within a membership.
+    Types.StatusCodes.ValidationError:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request failed validation. See errors for details.
+    NumberGroupMembershipResponse:
+      type: object
+      required:
+      - id
+      - number_group_id
+      - phone_number
+      - created_at
+      - updated_at
+      properties:
+        id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the Number Group Membership on SignalWire. This can be used to delete the membership programmatically.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        number_group_id:
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+          description: The unique identifier of the Number Group this membership is associated with.
+          examples:
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        phone_number:
+          allOf:
+          - $ref: '#/components/schemas/MembershipPhoneNumber'
+          description: A representation of the phone number this membership is associated with.
+        created_at:
+          type: string
+          description: The date and time when the membership was created.
+          examples:
+          - '2023-01-15T10:30:00Z'
+        updated_at:
+          type: string
+          description: The date and time when the membership was last updated.
+          examples:
+          - '2023-01-15T10:30:00Z'
+      unevaluatedProperties:
+        not: {}
+      description: Response containing a single number group membership.
     NumberGroupMembership:
       type: object
       required:
@@ -290,36 +359,32 @@ components:
       unevaluatedProperties:
         not: {}
       description: An internal server error occurred.
-    MembershipPhoneNumber:
+    AddNumberGroupMembershipRequest:
       type: object
+      required:
+      - phone_number_id
       properties:
-        id:
+        phone_number_id:
           allOf:
           - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the phone number.
-        name:
-          type: string
-          description: The name given to the phone number.
+          description: The phone number ID to add to the group.
           examples:
-          - Jenny
-        number:
-          type: string
-          description: The phone number in E.164 format.
-          examples:
-          - '+15558675309'
-        capabilities:
-          type: array
-          items:
-            type: string
-          description: The capabilities of the phone number.
-          examples:
-          - - voice
-            - sms
-            - mms
-            - fax
+          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
       unevaluatedProperties:
         not: {}
-      description: Phone number representation within a membership.
+      description: Request body for adding a phone number to a number group.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
     Types.StatusCodes.StatusCode404:
       type: object
       required:
@@ -332,6 +397,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: The server cannot find the requested resource.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     Types.StatusCodes.SpaceApiErrorItem:
       type: object
       required:
@@ -363,79 +432,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Details about a specific validation error.
-    Types.StatusCodes.ValidationError:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.SpaceApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request failed validation. See errors for details.
-    NumberGroupMembershipListResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/NumberGroupMembership'
-          description: List of number group memberships.
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a list of number group memberships.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    NumberGroupMembershipResponse:
-      type: object
-      required:
-      - id
-      - number_group_id
-      - phone_number
-      - created_at
-      - updated_at
-      properties:
-        id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the Number Group Membership on SignalWire. This can be used to delete the membership programmatically.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        number_group_id:
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The unique identifier of the Number Group this membership is associated with.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
-        phone_number:
-          allOf:
-          - $ref: '#/components/schemas/MembershipPhoneNumber'
-          description: A representation of the phone number this membership is associated with.
-        created_at:
-          type: string
-          description: The date and time when the membership was created.
-          examples:
-          - '2023-01-15T10:30:00Z'
-        updated_at:
-          type: string
-          description: The date and time when the membership was last updated.
-          examples:
-          - '2023-01-15T10:30:00Z'
-      unevaluatedProperties:
-        not: {}
-      description: Response containing a single number group membership.
     PaginationLinks:
       type: object
       required:
@@ -469,21 +465,44 @@ components:
       unevaluatedProperties:
         not: {}
       description: Access is unauthorized.
-    AddNumberGroupMembershipRequest:
+    NumberGroupMembershipListResponse:
       type: object
       required:
-      - phone_number_id
+      - links
+      - data
       properties:
-        phone_number_id:
+        links:
           allOf:
-          - $ref: '#/components/schemas/uuid'
-          description: The phone number ID to add to the group.
-          examples:
-          - 3fa85f64-5717-4562-b3fc-2c963f66afa6
+          - $ref: '#/components/schemas/PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NumberGroupMembership'
+          description: List of number group memberships.
       unevaluatedProperties:
         not: {}
-      description: Request body for adding a phone number to a number group.
+      description: Response containing a list of number group memberships.
   parameters:
+    ListNumberGroupMembershipsQuery.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: The number of results per page.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    NumberGroupMembershipPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the number group membership.
+      schema:
+        $ref: '#/components/schemas/uuid'
     ListNumberGroupMembershipsQuery.page_token:
       name: page_token
       in: query
@@ -502,13 +521,6 @@ components:
         format: int32
         default: 0
       explode: false
-    NumberGroupMembershipPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the number group membership.
-      schema:
-        $ref: '#/components/schemas/uuid'
     NumberGroupIdPath:
       name: NumberGroupId
       in: path
@@ -516,18 +528,6 @@ components:
       description: Unique ID of the number group.
       schema:
         $ref: '#/components/schemas/uuid'
-    ListNumberGroupMembershipsQuery.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: The number of results per page.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
   securitySchemes:
     SignalWireBasicAuth:
       type: http

@@ -174,62 +174,6 @@ paths:
               $ref: '#/components/schemas/MfaVerifyRequest'
 components:
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    MfaVerifyResponse:
-      type: object
-      required:
-      - success
-      properties:
-        success:
-          type: boolean
-          description: Whether the token was successfully verified by the API. When `max_attempts` are reached or the request is no longer valid, the endpoint will return a `404 Not Found`.
-          examples:
-          - true
-      unevaluatedProperties:
-        not: {}
-      description: MFA verification response model.
-    Types.StatusCodes.SpaceApiErrorItem:
-      type: object
-      required:
-      - detail
-      - status
-      - title
-      - code
-      properties:
-        detail:
-          type: string
-          description: A description of what caused the error.
-          examples:
-          - Label can't be blank
-        status:
-          type: string
-          description: The HTTP status code.
-          examples:
-          - '422'
-        title:
-          type: string
-          description: A short summary of the error type.
-          examples:
-          - Invalid Attribute
-        code:
-          type: string
-          description: The error code.
-          examples:
-          - '422'
-      unevaluatedProperties:
-        not: {}
-      description: Details about a specific validation error.
     Types.StatusCodes.ValidationError:
       type: object
       required:
@@ -243,10 +187,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: The request failed validation. See errors for details.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     MfaRequest:
       type: object
       required:
@@ -298,6 +238,31 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA request model.
+    MfaVerifyResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+          description: Whether the token was successfully verified by the API. When `max_attempts` are reached or the request is no longer valid, the endpoint will return a `404 Not Found`.
+          examples:
+          - true
+      unevaluatedProperties:
+        not: {}
+      description: MFA verification response model.
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
     MfaResponse:
       type: object
       required:
@@ -330,6 +295,10 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA response model.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
     MfaVerifyRequest:
       type: object
       required:
@@ -343,6 +312,37 @@ components:
       unevaluatedProperties:
         not: {}
       description: MFA verification request model.
+    Types.StatusCodes.SpaceApiErrorItem:
+      type: object
+      required:
+      - detail
+      - status
+      - title
+      - code
+      properties:
+        detail:
+          type: string
+          description: A description of what caused the error.
+          examples:
+          - Label can't be blank
+        status:
+          type: string
+          description: The HTTP status code.
+          examples:
+          - '422'
+        title:
+          type: string
+          description: A short summary of the error type.
+          examples:
+          - Invalid Attribute
+        code:
+          type: string
+          description: The error code.
+          examples:
+          - '422'
+      unevaluatedProperties:
+        not: {}
+      description: Details about a specific validation error.
     Types.StatusCodes.StatusCode401:
       type: object
       required:

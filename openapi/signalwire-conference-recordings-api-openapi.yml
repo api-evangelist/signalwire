@@ -267,13 +267,6 @@ paths:
       - Conference Recordings
 components:
   parameters:
-    ConferencesAccountSidPath:
-      name: AccountSid
-      in: path
-      required: true
-      description: The unique identifier for the account that created this conference.
-      schema:
-        $ref: '#/components/schemas/uuid'
     ConferenceSidPathForParticipant:
       name: ConferenceSid
       in: path
@@ -288,20 +281,58 @@ components:
       description: The unique identifier for the recording.
       schema:
         $ref: '#/components/schemas/uuid'
+    ConferencesAccountSidPath:
+      name: AccountSid
+      in: path
+      required: true
+      description: The unique identifier for the account that created this conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
   schemas:
-    ConferenceRecordingSubresourceUris:
+    ConferenceRecordingStatus:
+      type: string
+      enum:
+      - queued
+      - in-progress
+      - paused
+      - resumed
+      - completed
+      - absent
+      - stopped
+      description: Recording status.
+    CompatibilityErrorResponse:
       type: object
       required:
-      - transcriptions
+      - code
+      - message
+      - more_info
+      - status
       properties:
-        transcriptions:
-          type: string
-          description: The URI for transcriptions.
+        code:
+          type: integer
+          format: int32
+          description: Error code.
           examples:
-          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
+          - 20003
+        message:
+          type: string
+          description: Error message.
+          examples:
+          - Authentication failed
+        more_info:
+          type: string
+          description: URL for more information about the error.
+          examples:
+          - https://signalwire.com/docs/compatibility-api/reference/errors
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          examples:
+          - 401
       unevaluatedProperties:
         not: {}
-      description: Recording subresource URIs.
+      description: Error response model.
     UpdateConferenceRecordingRequest:
       type: object
       required:
@@ -328,21 +359,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Request body for updating a conference recording.
-    ConferenceRecordingStatus:
-      type: string
-      enum:
-      - queued
-      - in-progress
-      - paused
-      - resumed
-      - completed
-      - absent
-      - stopped
-      description: Recording status.
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
     ConferenceRecordingResponse:
       type: object
       required:
@@ -496,6 +512,29 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a single conference recording.
+    ConferenceRecordingSource:
+      type: string
+      enum:
+      - Conference
+      - StartConferenceRecording
+      description: Recording source for conference recordings.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    ConferenceRecordingSubresourceUris:
+      type: object
+      required:
+      - transcriptions
+      properties:
+        transcriptions:
+          type: string
+          description: The URI for transcriptions.
+          examples:
+          - /api/laml/2010-04-01/Accounts/720796a0-8ee9-4350-83bd-2d07a3121f1e/Recordings/19e436af-5688-4307-b03b-bdb2b42b8142/Transcriptions.json
+      unevaluatedProperties:
+        not: {}
+      description: Recording subresource URIs.
     CompatibilityErrorStringArrayResponse:
       type: object
       required:
@@ -566,12 +605,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Response containing a list of conference recordings.
-    ConferenceRecordingSource:
-      type: string
-      enum:
-      - Conference
-      - StartConferenceRecording
-      description: Recording source for conference recordings.
     ConferenceRecording:
       type: object
       required:
@@ -725,39 +758,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Conference recording model.
-    CompatibilityErrorResponse:
-      type: object
-      required:
-      - code
-      - message
-      - more_info
-      - status
-      properties:
-        code:
-          type: integer
-          format: int32
-          description: Error code.
-          examples:
-          - 20003
-        message:
-          type: string
-          description: Error message.
-          examples:
-          - Authentication failed
-        more_info:
-          type: string
-          description: URL for more information about the error.
-          examples:
-          - https://signalwire.com/docs/compatibility-api/reference/errors
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          examples:
-          - 401
-      unevaluatedProperties:
-        not: {}
-      description: Error response model.
   securitySchemes:
     SignalWireBasicAuth:
       type: http

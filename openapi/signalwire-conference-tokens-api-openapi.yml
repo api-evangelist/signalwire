@@ -184,31 +184,53 @@ paths:
       tags:
       - Conference Tokens
 components:
+  parameters:
+    Video.ListConferenceTokensRequest.page_size:
+      name: page_size
+      in: query
+      required: false
+      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 50
+      explode: false
+    Video.ListConferenceTokensRequest.page_number:
+      name: page_number
+      in: query
+      required: false
+      description: Page number to return. Requires `page_token` for values greater than 0.
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+      explode: false
+    Video.ConferencePathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the video conference.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.ConferenceTokenPathID:
+      name: id
+      in: path
+      required: true
+      description: Unique ID of the conference token.
+      schema:
+        $ref: '#/components/schemas/uuid'
+    Video.ListConferenceTokensRequest.page_token:
+      name: page_token
+      in: query
+      required: false
+      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
+      schema:
+        type: string
+      explode: false
   schemas:
-    Types.StatusCodes.StatusCode500:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Internal Server Error
-      unevaluatedProperties:
-        not: {}
-      description: An internal server error occurred.
-    Types.StatusCodes.StatusCode400:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Bad Request
-      unevaluatedProperties:
-        not: {}
-      description: The request is invalid.
     Video.PaginationLinks:
       type: object
       required:
@@ -238,73 +260,6 @@ components:
       unevaluatedProperties:
         not: {}
       description: Pagination links for list responses.
-    Types.StatusCodes.StatusCode404:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Not Found
-      unevaluatedProperties:
-        not: {}
-      description: The server cannot find the requested resource.
-    Video.VideoStatusCode422:
-      type: object
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
-          description: List of validation errors.
-      unevaluatedProperties:
-        not: {}
-      description: The request contains invalid parameters. See errors for details.
-      examples:
-      - statusCode: 422
-        errors:
-        - type: validation_error
-          code: invalid_parameter
-          message: Name must be present
-          attribute: name
-          url: https://signalwire.com/docs/apis/error-codes
-    uuid:
-      type: string
-      format: uuid
-      description: Universal Unique Identifier.
-    Video.ListConferenceTokensResponse:
-      type: object
-      required:
-      - links
-      - data
-      properties:
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Video.PaginationLinks'
-          description: Pagination links.
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Video.ConferenceToken'
-          description: List of conference tokens.
-      unevaluatedProperties:
-        not: {}
-      description: List conference tokens response.
-    Types.StatusCodes.StatusCode401:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          enum:
-          - Unauthorized
-      unevaluatedProperties:
-        not: {}
-      description: Access is unauthorized.
     Types.StatusCodes.RestApiErrorItem:
       type: object
       required:
@@ -379,52 +334,97 @@ components:
       unevaluatedProperties:
         not: {}
       description: A conference token object.
-  parameters:
-    Video.ConferenceTokenPathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the conference token.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.ListConferenceTokensRequest.page_token:
-      name: page_token
-      in: query
-      required: false
-      description: Token for cursor-based pagination. Required when `page_number` is greater than 0.
-      schema:
-        type: string
-      explode: false
-    Video.ConferencePathID:
-      name: id
-      in: path
-      required: true
-      description: Unique ID of the video conference.
-      schema:
-        $ref: '#/components/schemas/uuid'
-    Video.ListConferenceTokensRequest.page_size:
-      name: page_size
-      in: query
-      required: false
-      description: Specify the number of results to return on a single page. The default page size is `50` and the maximum is `1000`.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 1000
-        default: 50
-      explode: false
-    Video.ListConferenceTokensRequest.page_number:
-      name: page_number
-      in: query
-      required: false
-      description: Page number to return. Requires `page_token` for values greater than 0.
-      schema:
-        type: integer
-        format: int32
-        minimum: 0
-        default: 0
-      explode: false
+    Types.StatusCodes.StatusCode500:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Internal Server Error
+      unevaluatedProperties:
+        not: {}
+      description: An internal server error occurred.
+    Types.StatusCodes.StatusCode401:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Unauthorized
+      unevaluatedProperties:
+        not: {}
+      description: Access is unauthorized.
+    Types.StatusCodes.StatusCode404:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Not Found
+      unevaluatedProperties:
+        not: {}
+      description: The server cannot find the requested resource.
+    Types.StatusCodes.StatusCode400:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          enum:
+          - Bad Request
+      unevaluatedProperties:
+        not: {}
+      description: The request is invalid.
+    uuid:
+      type: string
+      format: uuid
+      description: Universal Unique Identifier.
+    Video.ListConferenceTokensResponse:
+      type: object
+      required:
+      - links
+      - data
+      properties:
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Video.PaginationLinks'
+          description: Pagination links.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video.ConferenceToken'
+          description: List of conference tokens.
+      unevaluatedProperties:
+        not: {}
+      description: List conference tokens response.
+    Video.VideoStatusCode422:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Types.StatusCodes.RestApiErrorItem'
+          description: List of validation errors.
+      unevaluatedProperties:
+        not: {}
+      description: The request contains invalid parameters. See errors for details.
+      examples:
+      - statusCode: 422
+        errors:
+        - type: validation_error
+          code: invalid_parameter
+          message: Name must be present
+          attribute: name
+          url: https://signalwire.com/docs/apis/error-codes
   securitySchemes:
     SignalWireBasicAuth:
       type: http
