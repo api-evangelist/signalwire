@@ -20,28 +20,24 @@ server_info:
   transport: Streamable HTTP (text/event-stream response to POST)
 advertised_at: https://signalwire.com/docs/llms.txt
 advertised_endpoint: https://signalwire.com/_mcp/server
-discovery_note: >-
-  SignalWire's own llms.txt tells AI clients to "connect to the MCP server at
-  https://signalwire.com/_mcp/server". That exact URL returns HTTP 404 from the Framer marketing
-  site (nginx, "Page Not Found | SignalWire") because the Fern docs are mounted under /docs. The
-  working endpoint is https://signalwire.com/docs/_mcp/server, which answered tools/list and
-  initialize anonymously on 2026-08-27. The same server is reachable at
-  https://signalwire.com/docs/_mcp/server and https://signalwire.docs.buildwithfern.com/_mcp/server.
-  This is a published-endpoint defect worth reporting back to the provider.
-scope_note: >-
-  This is a documentation-search MCP server provided by the Fern docs platform, not an
-  API-operations MCP server. It exposes one read-only tool over the docs corpus; none of the 332
-  REST operations in SignalWire's two OpenAPI contracts is callable through it. SignalWire's
-  Agents SDK separately ships an MCP GATEWAY that lets a SignalWire AI agent CONSUME third-party
-  MCP servers, and AgentBase methods (enable_mcp_server / handle_mcp_request) that let a
-  self-hosted agent EXPOSE itself as an MCP server — both are customer-run, not a SignalWire-hosted
-  agent surface, and are recorded below rather than as deployment modes.
+discovery_note: SignalWire's own llms.txt tells AI clients to "connect to the MCP server at https://signalwire.com/_mcp/server".
+  That exact URL returns HTTP 404 from the Framer marketing site (nginx, "Page Not Found | SignalWire")
+  because the Fern docs are mounted under /docs. The working endpoint is https://signalwire.com/docs/_mcp/server,
+  which answered tools/list and initialize anonymously on 2026-08-27. The same server is reachable at
+  https://signalwire.com/docs/_mcp/server and https://signalwire.docs.buildwithfern.com/_mcp/server. This
+  is a published-endpoint defect worth reporting back to the provider.
+scope_note: This is a documentation-search MCP server provided by the Fern docs platform, not an API-operations
+  MCP server. It exposes one read-only tool over the docs corpus; none of the 332 REST operations in SignalWire's
+  two OpenAPI contracts is callable through it. SignalWire's Agents SDK separately ships an MCP GATEWAY
+  that lets a SignalWire AI agent CONSUME third-party MCP servers, and AgentBase methods (enable_mcp_server
+  / handle_mcp_request) that let a self-hosted agent EXPOSE itself as an MCP server — both are customer-run,
+  not a SignalWire-hosted agent surface, and are recorded below rather than as deployment modes.
 tool_count: 1
 tools:
 - name: searchDocs
   title: Search signalwire.com Docs
-  description: Search the documentation at https://signalwire.com. Returns relevant doc passages
-    with source URLs.
+  description: Search the documentation at https://signalwire.com. Returns relevant doc passages with
+    source URLs.
   read_only: true
   input_schema:
     type: object
@@ -60,6 +56,30 @@ related_customer_run_mcp:
 - name: AgentBase.enable_mcp_server / handle_mcp_request
   kind: self-hosted-server
   docs: https://signalwire.com/docs/server-sdks/reference/typescript/agents/agent-base/enable-mcp-server
-  note: >-
-    Turns a customer's own deployed SignalWire agent into an MCP server. The endpoint is the
-    customer's host, not SignalWire's, so it is not a provider-operated agent surface.
+  note: Turns a customer's own deployed SignalWire agent into an MCP server. The endpoint is the customer's
+    host, not SignalWire's, so it is not a provider-operated agent surface.
+tool_quality:
+  tool_count: 1
+  tokens_total: 147
+  tokens_per_tool_median: 147
+  heavy_tools: []
+  heavy_tool_count: 0
+  params_total: 2
+  params_undescribed: 0
+  params_described_pct: 100.0
+  tools_with_undescribed_params: 0
+  tools_annotated: 1
+  annotated_pct: 100.0
+  state_changing_unhinted: []
+  tools_missing_schema: 0
+  short_descriptions: 0
+  duplicate_descriptions: 0
+  duplicate_names: 0
+  nonportable_names: []
+  output_schema_count: 0
+  token_estimate: chars/3.6 of each compact tool definition
+  source: mcp/signalwire-mcp-tools.json
+  measured: '2026-10-20'
+  scored: false
+  note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
+    from Glimind's agent-readiness audit.
