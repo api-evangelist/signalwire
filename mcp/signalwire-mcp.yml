@@ -35,9 +35,9 @@ scope_note: This is a documentation-search MCP server provided by the Fern docs 
 tool_count: 1
 tools:
 - name: searchDocs
+  description: Search the documentation at https://signalwire.com/docs. Returns relevant doc passages
+    with source URLs.
   title: Search signalwire.com Docs
-  description: Search the documentation at https://signalwire.com. Returns relevant doc passages with
-    source URLs.
   read_only: true
   input_schema:
     type: object
@@ -83,3 +83,4 @@ tool_quality:
   scored: false
   note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
     from Glimind's agent-readiness audit.
+tools_count: 1
